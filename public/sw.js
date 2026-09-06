@@ -1,23 +1,33 @@
 /* عامل الخدمة لتطبيق حرفة برو — تخزين مؤقّت يسمح بالعمل دون إنترنت. */
 
-const VERSION = 'herfah-pro-v1';
+const VERSION = 'herfah-pro-v2';
 const APP_SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
+// مسار التطبيق مشتقّ من موقع هذا الملف، فيعمل على الجذر وعلى مسار فرعي
+// مثل GitHub Pages (‎/<اسم-المستودع>/‎) دون تعديل.
+const BASE = new URL('./', self.location).pathname;
+const INDEX = `${BASE}index.html`;
+
 const PRECACHE = [
-  '/',
-  '/index.html',
-  '/manifest.webmanifest',
-  '/icons/icon.svg',
-  '/icons/icon-192.png',
-  '/icons/icon-512.png',
+  BASE,
+  INDEX,
+  `${BASE}manifest.webmanifest`,
+  `${BASE}icons/icon.svg`,
+  `${BASE}icons/icon-192.png`,
+  `${BASE}icons/icon-512.png`,
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
       .open(APP_SHELL)
-      .then((cache) => cache.addAll(PRECACHE))
+      // addAll تفشل كلّها إذا فشل ملف واحد، لذا نخزّن كل ملف على حدة.
+      .then((cache) =>
+        Promise.all(
+          PRECACHE.map((url) => cache.add(url).catch(() => undefined)),
+        ),
+      )
       .then(() => self.skipWaiting())
       .catch(() => undefined),
   );
@@ -57,13 +67,13 @@ self.addEventListener('fetch', (event) => {
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(APP_SHELL).then((cache) => cache.put('/index.html', copy));
+          caches.open(APP_SHELL).then((cache) => cache.put(INDEX, copy));
           return response;
         })
         .catch(() =>
           caches
-            .match('/index.html')
-            .then((cached) => cached || caches.match('/'))
+            .match(INDEX)
+            .then((cached) => cached || caches.match(BASE))
             .then((cached) => cached || Response.error()),
         ),
     );

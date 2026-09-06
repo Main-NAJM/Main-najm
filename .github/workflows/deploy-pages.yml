@@ -1,0 +1,75 @@
+name: نشر على GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # يسمح بتشغيل النشر يدوياً من تبويب Actions.
+  workflow_dispatch:
+
+# صلاحيات النشر على Pages فقط.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# نشر واحد في كل مرة، مع ترك عملية النشر الجارية تكتمل.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: بناء التطبيق
+    runs-on: ubuntu-latest
+    steps:
+      - name: جلب الشيفرة
+        uses: actions/checkout@v4
+
+      - name: تهيئة Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: تثبيت الاعتماديات
+        run: npm ci
+
+      - name: فحص الأنواع
+        run: npm run lint
+
+      - name: بناء نسخة الإنتاج
+        env:
+          # GitHub Pages يخدم المشروع من مسار فرعي باسم المستودع.
+          BASE_PATH: /${{ github.event.repository.name }}/
+          # تُقرأ من أسرار المستودع إن أُضيفت، وإلّا يعمل التطبيق بالتخزين المحلي.
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+        run: npm run build
+
+      - name: تهيئة مخرجات النشر
+        run: |
+          # GitHub Pages لا يعيد توجيه المسارات، وصفحة 404 تتكفّل بتوجيه التطبيق.
+          cp dist/index.html dist/404.html
+          # يمنع معالجة الملفات بـ Jekyll.
+          touch dist/.nojekyll
+
+      - name: تجهيز حزمة Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: نشر
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: النشر على GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
