@@ -56,7 +56,7 @@ export default function Login() {
   return (
     <div className="auth">
       <div className="auth__card">
-        <img className="auth__logo" src="/icons/icon.svg" alt="" />
+        <img className="auth__logo" src={`${import.meta.env.BASE_URL}icons/icon.svg`} alt="" />
         <h1 className="auth__title">{APP_NAME}</h1>
         <p className="auth__sub">إدارة الطلبيات والمواعيد والتكاليف والديون في مكان واحد</p>
 

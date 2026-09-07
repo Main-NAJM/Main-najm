@@ -12,7 +12,7 @@ if (!container) throw new Error('لم يُعثر على عنصر الجذر #roo
 
 createRoot(container).render(
   <StrictMode>
-    <BrowserRouter>
+    <BrowserRouter basename={import.meta.env.BASE_URL}>
       <AuthProvider>
         <ToastProvider>
           <App />

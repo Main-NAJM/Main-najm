@@ -4,8 +4,9 @@ export const registerServiceWorker = (): void => {
   if (import.meta.env.DEV) return;
 
   window.addEventListener('load', () => {
+    const base = import.meta.env.BASE_URL;
     navigator.serviceWorker
-      .register('/sw.js', { scope: '/' })
+      .register(`${base}sw.js`, { scope: base })
       .then((registration) => {
         // تحديث صامت عند توفّر نسخة جديدة.
         registration.addEventListener('updatefound', () => {
