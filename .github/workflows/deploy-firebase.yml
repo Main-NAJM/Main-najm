@@ -30,6 +30,16 @@ jobs:
           node-version: 20
           cache: npm
 
+      - name: تشخيص — أسماء الأسرار المتاحة فقط (لا قيمها)
+        env:
+          ALL_SECRETS: ${{ toJSON(secrets) }}
+          ALL_VARS: ${{ toJSON(vars) }}
+        run: |
+          echo "الأسرار المرئية لهذا التشغيل:"
+          printf '%s' "$ALL_SECRETS" | python3 -c "import json,sys;[print(' -',k) for k in sorted(json.load(sys.stdin))]"
+          echo "المتغيّرات المرئية:"
+          printf '%s' "$ALL_VARS" | python3 -c "import json,sys;[print(' -',k) for k in sorted(json.load(sys.stdin))] or None"
+
       - name: التحقّق من وجود المفاتيح المطلوبة
         env:
           SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
