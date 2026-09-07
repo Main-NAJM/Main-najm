@@ -179,7 +179,7 @@ export default function MarketPrices() {
       </p>
 
       {grouped.length === 0 ? (
-        <div className="mt-16">
+        <div className="u-mt-16">
           <EmptyState
             title="لا توجد أسعار مسجّلة"
             description="أضف المواد التي تستعملها (خشب، حديد، قماش) لتتابع تغيّر أسعارها."
@@ -401,7 +401,7 @@ export default function MarketPrices() {
           <strong>{updating ? formatMoney(updating.price, profile.currency) : ''}</strong> — سيُحفظ
           كسعر سابق لحساب نسبة التغيّر.
         </p>
-        <div className="mt-12">
+        <div className="u-mt-12">
           <NumberInput label="السعر الجديد" value={newPrice} onChange={setNewPrice} />
         </div>
       </Modal>

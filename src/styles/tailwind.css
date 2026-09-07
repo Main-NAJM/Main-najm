@@ -1,0 +1,79 @@
+/* ============================ حرفة برو — مدخل التنسيق ============================
+ *
+ * هذا هو ملف CSS الوحيد الذي يستورده main.tsx. يجمع بين Tailwind والتنسيق
+ * اليدوي الموجود في global.css بحيث يعمل الاثنان معاً دون تعارض.
+ *
+ * ملاحظتان مهمتان:
+ *
+ * 1) Preflight (إعادة ضبط Tailwind الافتراضية) *غير مُفعّلة* عن قصد.
+ *    global.css يعرّف h1‑h4 بدون font-size، وPreflight يصفّر أحجام العناوين،
+ *    فتفعيلها يصغّر كل عناوين التطبيق. نستورد theme + utilities فقط.
+ *
+ * 2) ترتيب الطبقات أدناه يجعل أدوات Tailwind تتغلّب على global.css عند التعارض
+ *    (مثل عنصر <button> الذي يضبطه global.css). لولا الطبقات لكان global.css
+ *    غير المُطبّق داخل طبقة يفوز دائماً على Tailwind مهما كانت الأولوية.
+ */
+
+@layer theme, app, components, utilities;
+
+@import 'tailwindcss/theme.css' layer(theme);
+@import './global.css' layer(app);
+@import 'tailwindcss/utilities.css' layer(utilities) source(none);
+
+/* الملفات التي يفحصها Tailwind بحثاً عن أسماء الأدوات المستخدمة.
+ * `source(none)` أعلاه يعطّل الفحص التلقائي للمستودع بأكمله؛ لولاه لفحص Tailwind
+ * ملفات بيانات مهارة .claude/skills وولّد منها آلاف السطور من CSS غير المستخدم. */
+@source '../../index.html';
+@source '../**/*.{ts,tsx}';
+
+/* ============================ رموز التصميم (Design Tokens) ============================
+ *
+ * `inline` تجعل الأدوات تشير إلى متغيّرات global.css مباشرة، فيتبدّل الوضع
+ * الليلي/النهاري تلقائياً دون أي إعداد إضافي — المصدر الوحيد للحقيقة يبقى
+ * كتلة :root في global.css.
+ */
+@theme inline {
+  /* الهوية */
+  --color-brand: var(--brand);
+  --color-brand-strong: var(--brand-strong);
+  --color-brand-soft: var(--brand-soft);
+  --color-brand-tint: var(--brand-tint);
+
+  /* الأسطح */
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-border: var(--border);
+  --color-border-strong: var(--border-strong);
+
+  /* النصوص */
+  --color-text: var(--text);
+  --color-text-muted: var(--text-muted);
+  --color-text-soft: var(--text-soft);
+
+  /* الحالات */
+  --color-ok: var(--ok);
+  --color-ok-bg: var(--ok-bg);
+  --color-warn: var(--warn);
+  --color-warn-bg: var(--warn-bg);
+  --color-info: var(--info);
+  --color-info-bg: var(--info-bg);
+  --color-danger: var(--danger);
+  --color-danger-bg: var(--danger-bg);
+
+  /* الخط العربي المعتمد في التطبيق */
+  --font-sans: 'Segoe UI', Tahoma, 'Noto Naskh Arabic', 'Cairo', system-ui, sans-serif;
+
+  /* الانحناءات والظلال */
+  --radius-card: var(--radius);
+  --radius-control: var(--radius-sm);
+  --shadow-card-sm: var(--shadow-sm);
+  --shadow-card: var(--shadow);
+  --shadow-card-lg: var(--shadow-lg);
+
+  /* القياسات */
+  --container-content: var(--content-max);
+  /* لا تُضِف رموزاً في نطاق --spacing-*: أي رمز باسم x يولّد mt-x وbottom-x
+   * وغيرها، وقد يصطدم باسم صنف موجود في global.css.
+   * لارتفاع الشريط السفلي استخدم h-[var(--nav-height)] مباشرة. */
+}

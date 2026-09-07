@@ -87,7 +87,7 @@ export default function Dashboard() {
             ) : null}
           </div>
         </div>
-        <div className="mt-16">
+        <div className="u-mt-16">
           <EmptyState
             title="لا توجد بيانات بعد"
             description="أضف أول طلبية أو موعد أو دين وستظهر ملخّصات يومك هنا."

@@ -210,7 +210,7 @@ export default function Print() {
           />
         ) : null}
 
-        <div className="summary-box mt-8">
+        <div className="summary-box u-mt-8">
           <div className="summary-row">
             <span>محتوى المستند</span>
             <span>{summary}</span>
@@ -227,7 +227,7 @@ export default function Print() {
         </div>
       </div>
 
-      <div className="notice notice--info mt-16">
+      <div className="notice notice--info u-mt-16">
         على الهاتف اختر «طباعة» ثم «حفظ كـ PDF» من نافذة الطباعة لمشاركة المستند مع الزبون. تظهر
         بيانات الورشة في رأس كل مستند، ويمكنك تعديلها من الإعدادات.
       </div>

@@ -471,7 +471,7 @@ export default function Orders() {
           toNumber={(value) => toNumber(value)}
         />
 
-        <div className="grid-3 mt-12">
+        <div className="grid-3 u-mt-12">
           <NumberInput
             label="أجور إضافية"
             value={draft.extraCharges}
@@ -495,7 +495,7 @@ export default function Orders() {
           />
         </div>
 
-        <div className="summary-box mt-8">
+        <div className="summary-box u-mt-8">
           <div className="summary-row">
             <span>مجموع البنود</span>
             <span>{formatMoney(draftTotals.itemsTotal, profile.currency)}</span>

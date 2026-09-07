@@ -200,7 +200,7 @@ export default function Calculator() {
         />
 
         {marketPrices.length > 0 ? (
-          <div className="mt-12">
+          <div className="u-mt-12">
             <label className="field__label" htmlFor="market-pick">
               إضافة مادة من مؤشرات السوق
             </label>
@@ -267,7 +267,7 @@ export default function Calculator() {
           />
         </div>
 
-        <div className="summary-box mt-12">
+        <div className="summary-box u-mt-12">
           <div className="summary-row">
             <span>تكلفة المواد (مع الهالك)</span>
             <span>{money(result.materialsCost)}</span>
@@ -292,7 +292,7 @@ export default function Calculator() {
             <span>السعر المقترح</span>
             <span>{money(result.suggestedPrice)}</span>
           </div>
-          <p className="small muted mt-8">
+          <p className="small muted u-mt-8">
             هامش الربح من سعر البيع: {percent(result.marginOfPrice)}
           </p>
         </div>

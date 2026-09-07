@@ -224,7 +224,7 @@ export default function Debts() {
         <StatCard label="متأخر السداد" value={money(totals.overdue)} tone="danger" />
       </div>
 
-      <div className="search-bar mt-16">
+      <div className="search-bar u-mt-16">
         <span className="search-bar__icon">⌕</span>
         <input
           className="input"
@@ -545,7 +545,7 @@ export default function Debts() {
           المتبقّي حالياً:{' '}
           <strong>{payingFor ? money(debtTotals(payingFor).remaining) : ''}</strong>
         </p>
-        <div className="mt-12">
+        <div className="u-mt-12">
           <NumberInput
             label="مبلغ الدفعة"
             value={paymentAmount}

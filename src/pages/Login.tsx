@@ -111,7 +111,7 @@ export default function Login() {
                 onChange={setPassword}
                 hint={mode === 'signup' ? '٦ أحرف على الأقل' : undefined}
               />
-              <button type="submit" className="btn btn--block mt-8" disabled={busy}>
+              <button type="submit" className="btn btn--block u-mt-8" disabled={busy}>
                 {busy ? 'جارٍ…' : mode === 'signin' ? 'دخول' : 'إنشاء الحساب'}
               </button>
             </form>
@@ -136,7 +136,7 @@ export default function Login() {
         <button type="button" className="btn btn--ghost btn--block" onClick={useLocalAccount}>
           المتابعة بدون حساب (على هذا الجهاز)
         </button>
-        <p className="small muted mt-8" style={{ textAlign: 'center' }}>
+        <p className="small muted u-mt-8" style={{ textAlign: 'center' }}>
           في الوضع المحلي تُحفظ البيانات داخل المتصفّح فقط ولا تتزامن بين الأجهزة.
         </p>
       </div>

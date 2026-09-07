@@ -236,7 +236,7 @@ export default function Schedule() {
       </div>
 
       {grouped.length === 0 ? (
-        <div className="mt-16">
+        <div className="u-mt-16">
           <EmptyState
             title="لا توجد مواعيد في هذه القائمة"
             description="نظّم يومك بإضافة مواعيد القياس والتسليم والزيارات."
@@ -298,7 +298,7 @@ export default function Schedule() {
                       ) : null}
                       {linkedOrder ? <span>الطلبية: <strong>{linkedOrder.title}</strong></span> : null}
                     </div>
-                    {item.notes ? <p className="small muted mt-8">{item.notes}</p> : null}
+                    {item.notes ? <p className="small muted u-mt-8">{item.notes}</p> : null}
 
                     <div className="card__actions">
                       <button

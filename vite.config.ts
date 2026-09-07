@@ -1,5 +1,6 @@
 import { defineConfig } from 'vite';
 import react from '@vitejs/plugin-react';
+import tailwindcss from '@tailwindcss/vite';
 import { fileURLToPath, URL } from 'node:url';
 
 // مسار النشر: يبقى "/" محلياً وعلى الاستضافات التي تخدم الجذر (مثل Firebase Hosting)،
@@ -8,7 +9,7 @@ const base = process.env.BASE_PATH || '/';
 
 export default defineConfig({
   base,
-  plugins: [react()],
+  plugins: [react(), tailwindcss()],
   resolve: {
     alias: {
       '@': fileURLToPath(new URL('./src', import.meta.url)),

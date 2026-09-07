@@ -98,7 +98,7 @@ export default function Settings() {
       <div className="card">
         <SectionTitle>بيانات الورشة</SectionTitle>
         <p className="small muted">تظهر هذه البيانات في رأس كل فاتورة أو كشف تطبعه.</p>
-        <div className="mt-12">
+        <div className="u-mt-12">
           <TextInput
             label="اسم الورشة أو المحل"
             value={draft.businessName}
