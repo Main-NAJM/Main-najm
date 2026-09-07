@@ -74,10 +74,30 @@ npm run lint      # فحص الأنواع بـ TypeScript
 export TWENTY_FIRST_API_KEY="your-key"
 ```
 
-> خادم `shadcn` يتطلّب وجود ملف `components.json` في المشروع لإضافة المكوّنات. المشروع لا
-> يستخدم shadcn/ui حالياً؛ لتفعيله شغّل `npx shadcn@latest init` (لاحظ أن `init` يضيف رموز
-> تصميم خاصة به ويفترض تفعيل Preflight، بينما `src/styles/tailwind.css` يعطّلها عمداً
-> لحماية التنسيق الحالي — راجع التعليقات داخل الملف قبل الدمج).
+### shadcn/ui
+
+المشروع مهيّأ لاستقبال مكوّنات shadcn/ui، فتُضاف مباشرة:
+
+```bash
+npx shadcn@latest add button dialog
+```
+
+> **لا تشغّل `npx shadcn@latest init`.** الإعداد مضبوط يدوياً ليتعايش مع `global.css`،
+> و`init` سيعيد كتابة ملف CSS ويفعّل Preflight التي عطّلناها عمداً (تفاصيل السبب في
+> تعليقات `src/styles/tailwind.css`).
+
+ما هو مهيّأ مسبقاً:
+
+| العنصر | القيمة |
+|--------|--------|
+| `components.json` | نمط `new-york`، متغيّرات CSS، أيقونات `lucide` |
+| اختصارات المسارات | `@/components`، `@/components/ui`، `@/lib/utils` |
+| `cn()` | في `src/lib/utils.ts` (clsx + tailwind-merge) |
+| رموز التصميم | `bg-primary` و`bg-card` و`border-border` وغيرها مربوطة بلوحة ألوان التطبيق |
+| طبقة `reset` | أصغر جزء من Preflight تحتاجه مكوّنات shadcn، معزول تحت `global.css` |
+
+رموز shadcn مشتقّة من متغيّرات `global.css` نفسها، لذا تتبع المكوّنات المضافة الوضع
+الليلي واتجاه RTL تلقائياً دون ضبط إضافي.
 
 ---
 

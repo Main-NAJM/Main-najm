@@ -14,11 +14,42 @@
  *    غير المُطبّق داخل طبقة يفوز دائماً على Tailwind مهما كانت الأولوية.
  */
 
-@layer theme, app, components, utilities;
+@layer theme, reset, app, components, utilities;
 
 @import 'tailwindcss/theme.css' layer(theme);
 @import './global.css' layer(app);
 @import 'tailwindcss/utilities.css' layer(utilities) source(none);
+@import 'tw-animate-css';
+
+/* ============================ توافق shadcn/ui ============================
+ *
+ * أصغر جزء من Preflight تحتاجه مكوّنات shadcn فعلياً، معزولاً في طبقة `reset`
+ * تحت طبقة `app` — فكل قاعدة في global.css تتغلّب عليها ولا يتغيّر شيء في
+ * مظهر التطبيق الحالي (روجِع: كل زر في التطبيق يحمل صنفاً يضبط الخلفية).
+ */
+@layer reset {
+  /* تصفير حدود المتصفّح الافتراضية. صيغ أزرار shadcn التي لا تضبط حدّاً
+   * (default وghost وlink وsecondary) تفترض أن Preflight صفّرت حدّ <button>
+   * الأصلي، وبدون ذلك يظهر إطار المتصفّح الافتراضي حولها.
+   * (ملاحظة: أدوات border-* في Tailwind 4 تضبط border-style بنفسها، فالمقصود
+   * هنا حدود المتصفّح لا أدوات Tailwind.) */
+  *,
+  ::before,
+  ::after,
+  ::backdrop,
+  ::file-selector-button {
+    border: 0 solid;
+  }
+
+  /* صيغتا ghost وlink من أزرار shadcn لا تضبطان خلفية وتعتمدان على شفافيتها. */
+  button,
+  [type='button'],
+  [type='reset'],
+  [type='submit'],
+  ::file-selector-button {
+    background-color: transparent;
+  }
+}
 
 /* الملفات التي يفحصها Tailwind بحثاً عن أسماء الأدوات المستخدمة.
  * `source(none)` أعلاه يعطّل الفحص التلقائي للمستودع بأكمله؛ لولاه لفحص Tailwind
@@ -64,7 +95,35 @@
   /* الخط العربي المعتمد في التطبيق */
   --font-sans: 'Segoe UI', Tahoma, 'Noto Naskh Arabic', 'Cairo', system-ui, sans-serif;
 
-  /* الانحناءات والظلال */
+  /* ---- رموز shadcn/ui، مربوطة بلوحة ألوان التطبيق نفسها ----
+   * كل زوج (خلفية/نص) مختار ليبقى تبايُنه صحيحاً في الوضعين النهاري والليلي،
+   * لأن متغيّرات global.css تنقلب بينهما. */
+  --color-background: var(--bg);
+  --color-foreground: var(--text);
+  --color-card: var(--surface);
+  --color-card-foreground: var(--text);
+  --color-popover: var(--surface);
+  --color-popover-foreground: var(--text);
+  --color-primary: var(--brand);
+  --color-primary-foreground: var(--surface);
+  --color-secondary: var(--surface-2);
+  --color-secondary-foreground: var(--text);
+  --color-muted: var(--surface-2);
+  --color-muted-foreground: var(--text-muted);
+  --color-accent: var(--brand-soft);
+  --color-accent-foreground: var(--brand-strong);
+  --color-destructive: var(--danger);
+  --color-destructive-foreground: var(--surface);
+  --color-input: var(--border-strong);
+  --color-ring: var(--brand);
+  /* --color-border معرّف أعلاه ويخدم border-border الذي تستعمله مكوّنات shadcn */
+
+  /* الانحناءات والظلال — نفس معادلة shadcn لكن مشتقّة من --radius الخاص بالتطبيق
+   * (‎14px)، فتتطابق rounded-sm مع ‎--radius-sm‎ الموجود في global.css (‎10px). */
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
   --radius-card: var(--radius);
   --radius-control: var(--radius-sm);
   --shadow-card-sm: var(--shadow-sm);
