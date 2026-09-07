@@ -1,0 +1,77 @@
+name: نشر على Firebase Hosting
+
+on:
+  push:
+    branches: [main]
+  # يسمح بتشغيل النشر يدوياً من تبويب Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+# نشر واحد في كل مرة.
+concurrency:
+  group: firebase-hosting
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: بناء ونشر
+    runs-on: ubuntu-latest
+    # لا يعمل إلا إذا أُضيف مفتاح حساب الخدمة، فلا يفشل النشر على المستودعات المستنسخة.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
+    steps:
+      - name: جلب الشيفرة
+        uses: actions/checkout@v4
+
+      - name: تهيئة Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: التحقّق من وجود المفاتيح المطلوبة
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          missing=""
+          [ -z "$SA" ] && missing="$missing FIREBASE_SERVICE_ACCOUNT"
+          [ -z "$PROJECT" ] && missing="$missing FIREBASE_PROJECT_ID"
+          if [ -n "$missing" ]; then
+            echo "::error::أسرار مفقودة:$missing — أضفها من Settings ← Secrets and variables ← Actions"
+            exit 1
+          fi
+          echo "المفاتيح المطلوبة موجودة."
+
+      - name: تثبيت الاعتماديات
+        run: npm ci
+
+      - name: فحص الأنواع
+        run: npm run lint
+
+      - name: بناء نسخة الإنتاج
+        env:
+          # استضافة Firebase تخدم التطبيق من الجذر، فلا يُضبط BASE_PATH.
+          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+        run: npm run build
+
+      - name: النشر على Firebase
+        env:
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+        run: |
+          # يُكتب المفتاح إلى ملف مؤقّت خارج مساحة العمل ولا يُطبع أبداً.
+          key="$(mktemp)"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$key"
+          trap 'rm -f "$key"' EXIT
+          export GOOGLE_APPLICATION_CREDENTIALS="$key"
+          npx --yes firebase-tools@13 deploy \
+            --only hosting,firestore:rules \
+            --project "$FIREBASE_PROJECT_ID" \
+            --non-interactive

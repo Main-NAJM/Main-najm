@@ -101,30 +101,34 @@ users/{uid}/debts/{id}           ← سجل الديون
 
 ## النشر
 
-### GitHub Pages (تلقائي)
+### Firebase Hosting — تلقائياً من GitHub (موصى به)
 
-المستودع يحتوي على سير عمل جاهز في `.github/workflows/deploy-pages.yml` يبني التطبيق وينشره
-مع كل دفعة إلى `main`.
+المستودع يحتوي على سير عمل جاهز في `.github/workflows/deploy-firebase.yml` يبني التطبيق
+وينشره على Firebase Hosting مع كل دفعة إلى `main`، وينشر معه قواعد أمان Firestore.
 
-**التفعيل لمرة واحدة:** من صفحة المستودع اذهب إلى **Settings → Pages**، وفي خانة **Source**
-اختر **GitHub Actions**. بعدها يعمل النشر تلقائياً عند أول دفعة، ويصبح الرابط:
+**الإعداد لمرة واحدة.** أضف سرّين من **Settings → Secrets and variables → Actions →
+New repository secret**:
+
+| اسم السرّ | من أين تأتي قيمته |
+| --- | --- |
+| `FIREBASE_PROJECT_ID` | كونسول Firebase → Project settings → General → حقل **Project ID** |
+| `FIREBASE_SERVICE_ACCOUNT` | كونسول Firebase → Project settings → **Service accounts** → **Generate new private key** → افتح الملف المنزَّل والصق محتواه كاملاً |
+
+بعدها يعمل النشر تلقائياً عند أول دفعة إلى `main`، أو يدوياً من تبويب **Actions** عبر
+**Run workflow**. الرابط الناتج شكله:
 
 ```
-https://<اسم-المستخدم>.github.io/<اسم-المستودع>/
+https://<project-id>.web.app
 ```
 
-يمكن أيضاً تشغيل النشر يدوياً من تبويب **Actions** عبر زر **Run workflow**.
+**مفاتيح التطبيق (اختيارية).** لتفعيل تسجيل الدخول والمزامنة بين الأجهزة أضف أيضاً أسرار
+`VITE_FIREBASE_*` بنفس أسماء `.env.example`. بدونها يُنشر التطبيق ويعمل بالتخزين المحلي على
+جهاز كل مستخدم.
 
-**مفاتيح Firebase على Pages:** أضفها من **Settings → Secrets and variables → Actions**
-بنفس أسماء متغيّرات `.env.example` (`VITE_FIREBASE_API_KEY` وبقيّتها). إن لم تُضف يُنشر
-التطبيق ويعمل بالتخزين المحلي على جهاز كل مستخدم.
+> سير العمل يتوقّف برسالة واضحة إن كان أحد السرّين ناقصاً، بدل أن يفشل في منتصف النشر.
+> ومفتاح حساب الخدمة يُكتب إلى ملف مؤقّت ولا يُطبع في السجلّات إطلاقاً.
 
-> يخدم GitHub Pages المشروع من مسار فرعي باسم المستودع، لذا يضبط سير العمل المتغيّر
-> `BASE_PATH` تلقائياً. التطبيق يقرأ المسار عند التشغيل، فيعمل على الجذر وعلى المسار الفرعي
-> دون تعديل في الشيفرة. كما يُنسخ `index.html` إلى `404.html` حتى تعمل الروابط المباشرة
-> للصفحات الداخلية، لأن GitHub Pages لا يدعم إعادة توجيه المسارات.
-
-### Firebase Hosting
+### Firebase Hosting — يدوياً من جهازك
 
 ```bash
 npm run build
@@ -133,8 +137,11 @@ npx firebase-tools use --add          # اختر مشروعك
 npx firebase-tools deploy --only hosting
 ```
 
-ملف `firebase.json` جاهز: يوجّه كل المسارات إلى `index.html` (توجيه من طرف العميل)، ويمنع
-تخزين `sw.js` مؤقتاً حتى تصل التحديثات للمستخدمين.
+ملف `firebase.json` جاهز: ينشر مجلّد `dist`، ويوجّه كل المسارات إلى `index.html` (توجيه من
+طرف العميل)، ويمنع تخزين `sw.js` مؤقتاً حتى تصل التحديثات للمستخدمين.
+
+> انتبه إلى `--only hosting`. بدونها قد يدخل Firebase في مسار **App Hosting**، وهو منتج
+> مختلف مخصّص للتطبيقات التي تُصيَّر على الخادم. هذا التطبيق موقع ثابت ولا يحتاجه.
 
 ### أي استضافة ثابتة أخرى
 
