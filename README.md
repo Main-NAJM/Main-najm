@@ -57,6 +57,30 @@ npm run lint      # فحص الأنواع بـ TypeScript
 
 ---
 
+## أدوات المساعد الذكي (MCP)
+
+ملف `.mcp.json` في جذر المستودع يعرّف خادمَي MCP يستعملهما Claude Code لبناء الواجهات:
+
+| الخادم | الغرض | يحتاج مفتاحاً |
+|--------|-------|----------------|
+| `21st` | توليد مكوّنات واجهة وبحث في كتالوج 21st.dev | نعم |
+| `shadcn` | بحث وإضافة مكوّنات shadcn/ui من السجلّات | لا |
+
+خادم `21st` يقرأ المفتاح من متغيّر البيئة `TWENTY_FIRST_API_KEY`، فلا يُكتب المفتاح داخل
+المستودع أبداً. احصل على مفتاح من [21st.dev/mcp](https://21st.dev/mcp) ثم صدّره في صدفتك
+قبل تشغيل Claude Code:
+
+```bash
+export TWENTY_FIRST_API_KEY="your-key"
+```
+
+> خادم `shadcn` يتطلّب وجود ملف `components.json` في المشروع لإضافة المكوّنات. المشروع لا
+> يستخدم shadcn/ui حالياً؛ لتفعيله شغّل `npx shadcn@latest init` (لاحظ أن `init` يضيف رموز
+> تصميم خاصة به ويفترض تفعيل Preflight، بينما `src/styles/tailwind.css` يعطّلها عمداً
+> لحماية التنسيق الحالي — راجع التعليقات داخل الملف قبل الدمج).
+
+---
+
 ## ربط Firebase
 
 1. أنشئ مشروعاً على [console.firebase.google.com](https://console.firebase.google.com).
