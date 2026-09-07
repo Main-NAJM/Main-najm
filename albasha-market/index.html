@@ -1,0 +1,479 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+
+    <title>متجر الباشا — منتجات رقمية جاهزة للتحميل</title>
+    <meta
+      name="description"
+      content="متجر الباشا (Albasha Market): كتب إلكترونية وقوالب وتصاميم ومنتجات رقمية جاهزة للتحميل الفوري بعد الدفع، عبر منصة Payhip الآمنة."
+    />
+    <meta name="theme-color" content="#faf9f7" media="(prefers-color-scheme: light)" />
+    <meta name="theme-color" content="#0c0a09" media="(prefers-color-scheme: dark)" />
+    <link rel="canonical" href="https://payhip.com/Najmstars" />
+
+    <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Albasha Market" />
+    <meta property="og:title" content="متجر الباشا — منتجات رقمية جاهزة للتحميل" />
+    <meta
+      property="og:description"
+      content="كتب إلكترونية وقوالب وتصاميم ومنتجات رقمية بتحميل فوري بعد الدفع."
+    />
+    <meta property="og:image" content="assets/img/og-cover.svg" />
+    <meta name="twitter:card" content="summary_large_image" />
+
+    <link rel="icon" href="assets/img/favicon.svg" type="image/svg+xml" />
+    <link rel="apple-touch-icon" href="assets/img/favicon.svg" />
+
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Cormorant:wght@500;600;700&family=Tajawal:wght@300;400;500;700;800&display=swap"
+    />
+    <link rel="stylesheet" href="assets/css/styles.css" />
+
+    <!-- يطبّق اللغة والسمة المحفوظتين قبل أول رسم لتفادي وميض الألوان -->
+    <script>
+      (function () {
+        try {
+          var lang = localStorage.getItem('albasha.lang') || 'ar';
+          var theme =
+            localStorage.getItem('albasha.theme') ||
+            (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+          var el = document.documentElement;
+          el.lang = lang;
+          el.dir = lang === 'ar' ? 'rtl' : 'ltr';
+          el.dataset.theme = theme;
+        } catch (e) {
+          /* التخزين المحلي قد يكون معطّلاً — نُبقي القيم الافتراضية */
+        }
+      })();
+    </script>
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "OnlineStore",
+        "name": "Albasha Market",
+        "alternateName": "متجر الباشا",
+        "url": "https://payhip.com/Najmstars",
+        "description": "Digital products store: ebooks, templates and designs with instant download.",
+        "sameAs": ["https://payhip.com/Najmstars"]
+      }
+    </script>
+  </head>
+
+  <body>
+    <a class="skip-link" href="#main" data-i18n="skip">تخطَّ إلى المحتوى</a>
+
+    <header class="site-header" id="top">
+      <div class="wrap header-inner">
+        <a class="brand" href="#top">
+          <span class="brand-mark" aria-hidden="true">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+              <path
+                d="M12 2.6l2.7 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17l-5.6 3.1 1.2-6.4L2.9 9.3l6.4-.8z"
+                stroke-linejoin="round"
+              />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <strong data-i18n="brand">متجر الباشا</strong>
+            <small data-i18n="brandTag">منتجات رقمية</small>
+          </span>
+        </a>
+
+        <button
+          class="icon-btn nav-toggle"
+          type="button"
+          aria-expanded="false"
+          aria-controls="site-nav"
+          data-i18n-aria-label="menu"
+          aria-label="القائمة"
+        >
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+            <path d="M4 7h16M4 12h16M4 17h16" stroke-linecap="round" />
+          </svg>
+        </button>
+
+        <nav class="site-nav" id="site-nav" data-i18n-aria-label="mainNav" aria-label="التنقّل الرئيسي">
+          <a href="#products" data-i18n="navProducts">المنتجات</a>
+          <a href="#features" data-i18n="navFeatures">لماذا نحن</a>
+          <a href="#how" data-i18n="navHow">كيف يعمل</a>
+          <a href="#faq" data-i18n="navFaq">الأسئلة الشائعة</a>
+          <a href="#contact" data-i18n="navContact">تواصل</a>
+        </nav>
+
+        <div class="header-actions">
+          <button class="icon-btn" type="button" data-action="toggle-lang" aria-label="English">
+            <span class="lang-label" data-lang-label>EN</span>
+          </button>
+          <button
+            class="icon-btn"
+            type="button"
+            data-action="toggle-theme"
+            data-i18n-aria-label="toggleTheme"
+            aria-label="تبديل السمة"
+          >
+            <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <circle cx="12" cy="12" r="4" />
+              <path d="M12 2v2m0 16v2M4.9 4.9l1.4 1.4m11.4 11.4l1.4 1.4M2 12h2m16 0h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4" stroke-linecap="round" />
+            </svg>
+            <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+              <path d="M20 14.5A8.5 8.5 0 019.5 4a8.5 8.5 0 1010.5 10.5z" stroke-linejoin="round" />
+            </svg>
+          </button>
+          <a class="btn btn-primary btn-sm header-cta" data-store-link href="#" data-i18n="visitStore">
+            زيارة المتجر
+          </a>
+        </div>
+      </div>
+    </header>
+
+    <main id="main">
+      <!-- ============ Hero ============ -->
+      <section class="hero">
+        <div class="wrap hero-inner">
+          <div class="hero-copy">
+            <p class="eyebrow" data-i18n="heroEyebrow">متجر رقمي · تحميل فوري</p>
+            <h1 class="hero-title" data-i18n="heroTitle">
+              منتجات رقمية تُختصر عليك الطريق
+            </h1>
+            <p class="hero-lead" data-i18n="heroLead">
+              كتب إلكترونية وقوالب وتصاميم جاهزة للاستخدام. تدفع مرة واحدة، وتصلك الملفات
+              فوراً على بريدك — بلا انتظار وبلا شحن.
+            </p>
+            <div class="hero-actions">
+              <a class="btn btn-primary" href="#products" data-i18n="browseProducts">تصفّح المنتجات</a>
+              <a class="btn btn-ghost" data-store-link href="#" data-i18n="openPayhip">
+                افتح المتجر على Payhip
+              </a>
+            </div>
+            <ul class="trust-row" role="list">
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M12 3l7.5 3v5.2c0 4.4-3 8.3-7.5 9.8-4.5-1.5-7.5-5.4-7.5-9.8V6z" stroke-linejoin="round" />
+                  <path d="M9 12l2.2 2.2L15.5 10" stroke-linecap="round" stroke-linejoin="round" />
+                </svg>
+                <span data-i18n="trustSecure">دفع آمن عبر Payhip</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M12 4v10m0 0l-3.5-3.5M12 14l3.5-3.5" stroke-linecap="round" stroke-linejoin="round" />
+                  <path d="M5 17.5v1.2A1.3 1.3 0 006.3 20h11.4a1.3 1.3 0 001.3-1.3v-1.2" stroke-linecap="round" />
+                </svg>
+                <span data-i18n="trustInstant">تحميل فوري بعد الدفع</span>
+              </li>
+              <li>
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                  <path d="M21 11.5a7.5 7.5 0 01-10.8 6.7L4 20l1.8-6.1A7.5 7.5 0 1121 11.5z" stroke-linejoin="round" />
+                </svg>
+                <span data-i18n="trustSupport">دعم بعد الشراء</span>
+              </li>
+            </ul>
+          </div>
+
+          <div class="hero-visual" aria-hidden="true">
+            <div class="glass-card glass-card-a">
+              <span class="gc-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <path d="M4 5.5A1.5 1.5 0 015.5 4H11v16H5.5A1.5 1.5 0 014 18.5z" stroke-linejoin="round" />
+                  <path d="M20 5.5A1.5 1.5 0 0018.5 4H13v16h5.5a1.5 1.5 0 001.5-1.5z" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <span class="gc-lines"><i></i><i></i><i></i></span>
+            </div>
+            <div class="glass-card glass-card-b">
+              <span class="gc-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <rect x="3.5" y="4.5" width="17" height="15" rx="2" />
+                  <path d="M3.5 9.5h17M9 9.5V19.5" />
+                </svg>
+              </span>
+              <span class="gc-lines"><i></i><i></i></span>
+            </div>
+            <div class="glass-card glass-card-c">
+              <span class="gc-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                  <circle cx="12" cy="12" r="8.5" />
+                  <path d="M12 7.5v9M7.5 12h9" stroke-linecap="round" />
+                </svg>
+              </span>
+              <span class="gc-lines"><i></i><i></i><i></i></span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Features ============ -->
+      <section class="section" id="features">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="eyebrow" data-i18n="featuresEyebrow">لماذا نحن</p>
+            <h2 data-i18n="featuresTitle">تجربة شراء بسيطة من أولها لآخرها</h2>
+            <p class="section-lead" data-i18n="featuresLead">
+              لا حسابات معقّدة ولا خطوات زائدة — اختر المنتج، ادفع، وحمّل.
+            </p>
+          </header>
+
+          <div class="grid grid-4">
+            <article class="card feature">
+              <span class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M13 2.5L4.5 13.5H11l-1 8 8.5-11H12z" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <h3 data-i18n="feat1Title">تسليم لحظي</h3>
+              <p data-i18n="feat1Body">
+                رابط التحميل يصل إلى بريدك مباشرة بعد إتمام الدفع، في أي وقت من اليوم.
+              </p>
+            </article>
+
+            <article class="card feature">
+              <span class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <rect x="4" y="10" width="16" height="10" rx="2" />
+                  <path d="M8 10V7.5a4 4 0 018 0V10" stroke-linecap="round" />
+                </svg>
+              </span>
+              <h3 data-i18n="feat2Title">دفع موثوق</h3>
+              <p data-i18n="feat2Body">
+                عملية الدفع تتم على منصة Payhip، فلا تمر بياناتك البنكية عبر هذا الموقع إطلاقاً.
+              </p>
+            </article>
+
+            <article class="card feature">
+              <span class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M12 3l2.6 5.4 5.9.8-4.3 4.1 1 5.9L12 16.4 6.8 19.2l1-5.9L3.5 9.2l5.9-.8z" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <h3 data-i18n="feat3Title">جودة مُراجعة</h3>
+              <p data-i18n="feat3Body">
+                كل ملف يُراجع قبل النشر: تنسيق نظيف، ملفات مفتوحة للتعديل، وتعليمات استخدام واضحة.
+              </p>
+            </article>
+
+            <article class="card feature">
+              <span class="feature-icon">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true">
+                  <path d="M4 6.5A2.5 2.5 0 016.5 4h11A2.5 2.5 0 0120 6.5v8A2.5 2.5 0 0117.5 17H9l-5 3.5z" stroke-linejoin="round" />
+                </svg>
+              </span>
+              <h3 data-i18n="feat4Title">دعم بالعربية</h3>
+              <p data-i18n="feat4Body">
+                عندك سؤال قبل الشراء أو مشكلة في التحميل؟ راسلنا وسنرد عليك.
+              </p>
+            </article>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ Products ============ -->
+      <section class="section section-alt" id="products">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="eyebrow" data-i18n="productsEyebrow">الكتالوج</p>
+            <h2 data-i18n="productsTitle">المنتجات</h2>
+            <p class="section-lead" data-i18n="productsLead">
+              اختر ما يناسبك، ثم أكمل الشراء والتحميل على Payhip.
+            </p>
+          </header>
+
+          <div class="catalog-controls">
+            <div class="search-field">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" aria-hidden="true">
+                <circle cx="11" cy="11" r="6.5" />
+                <path d="M16 16l4 4" stroke-linecap="round" />
+              </svg>
+              <label class="sr-only" for="product-search" data-i18n="searchLabel">ابحث في المنتجات</label>
+              <input
+                id="product-search"
+                type="search"
+                autocomplete="off"
+                data-i18n-placeholder="searchPlaceholder"
+                placeholder="ابحث باسم المنتج…"
+              />
+            </div>
+            <div class="chips" id="category-chips" role="group" data-i18n-aria-label="filterLabel" aria-label="تصفية حسب الفئة"></div>
+          </div>
+
+          <div class="grid grid-3" id="product-grid"></div>
+
+          <p class="empty-state" id="empty-state" hidden data-i18n="noResults">
+            لا توجد منتجات مطابقة لبحثك.
+          </p>
+
+          <div class="catalog-foot">
+            <a class="btn btn-ghost" data-store-link href="#" data-i18n="seeAllOnPayhip">
+              شاهد كل المنتجات على Payhip
+            </a>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ How it works ============ -->
+      <section class="section" id="how">
+        <div class="wrap">
+          <header class="section-head">
+            <p class="eyebrow" data-i18n="howEyebrow">الخطوات</p>
+            <h2 data-i18n="howTitle">كيف تشتري؟</h2>
+          </header>
+
+          <ol class="steps" role="list">
+            <li class="card step">
+              <span class="step-num">1</span>
+              <h3 data-i18n="step1Title">اختر المنتج</h3>
+              <p data-i18n="step1Body">تصفّح الكتالوج واقرأ تفاصيل المنتج ومحتوياته.</p>
+            </li>
+            <li class="card step">
+              <span class="step-num">2</span>
+              <h3 data-i18n="step2Title">ادفع على Payhip</h3>
+              <p data-i18n="step2Body">يفتح زر الشراء صفحة المنتج على Payhip لإتمام الدفع بأمان.</p>
+            </li>
+            <li class="card step">
+              <span class="step-num">3</span>
+              <h3 data-i18n="step3Title">حمّل فوراً</h3>
+              <p data-i18n="step3Body">يصلك رابط التحميل على بريدك مباشرة بعد تأكيد الدفع.</p>
+            </li>
+          </ol>
+        </div>
+      </section>
+
+      <!-- ============ FAQ ============ -->
+      <section class="section section-alt" id="faq">
+        <div class="wrap wrap-narrow">
+          <header class="section-head">
+            <p class="eyebrow" data-i18n="faqEyebrow">أسئلة متكررة</p>
+            <h2 data-i18n="faqTitle">قبل أن تشتري</h2>
+          </header>
+
+          <div class="faq-list">
+            <details class="faq-item">
+              <summary><span data-i18n="faq1Q">كيف أستلم المنتج بعد الدفع؟</span></summary>
+              <p data-i18n="faq1A">
+                فور تأكيد الدفع تصلك رسالة على البريد الإلكتروني الذي أدخلته، تحتوي على روابط
+                تحميل الملفات. تأكد من مراجعة مجلد «البريد غير المرغوب» إن لم تجدها.
+              </p>
+            </details>
+            <details class="faq-item">
+              <summary><span data-i18n="faq2Q">ما طرق الدفع المتاحة؟</span></summary>
+              <p data-i18n="faq2A">
+                الدفع يتم عبر منصة Payhip، وتدعم البطاقات البنكية و PayPal. تظهر لك الطرق
+                المتاحة في صفحة الدفع حسب بلدك.
+              </p>
+            </details>
+            <details class="faq-item">
+              <summary><span data-i18n="faq3Q">هل يمكنني استخدام المنتج تجارياً؟</span></summary>
+              <p data-i18n="faq3A">
+                يختلف ذلك من منتج لآخر. رخصة الاستخدام مذكورة داخل صفحة كل منتج وداخل الملفات
+                المرفقة، فراجعها قبل الشراء.
+              </p>
+            </details>
+            <details class="faq-item">
+              <summary><span data-i18n="faq4Q">هل هناك استرجاع للمبلغ؟</span></summary>
+              <p data-i18n="faq4A">
+                المنتجات رقمية وتُسلَّم فوراً، لذلك لا يمكن إرجاعها بعد التحميل. إن واجهتك مشكلة
+                تقنية في الملف راسلنا وسنساعدك أو نستبدل الملف.
+              </p>
+            </details>
+            <details class="faq-item">
+              <summary><span data-i18n="faq5Q">هل أحتاج حساباً لأشتري؟</span></summary>
+              <p data-i18n="faq5A">
+                لا. يكفي بريدك الإلكتروني لإتمام الطلب واستلام روابط التحميل.
+              </p>
+            </details>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============ CTA ============ -->
+      <section class="cta-band" id="contact">
+        <div class="wrap cta-inner">
+          <div>
+            <h2 data-i18n="ctaTitle">جاهز تبدأ؟</h2>
+            <p data-i18n="ctaBody">كل المنتجات متاحة الآن على متجرنا، بتحميل فوري بعد الدفع.</p>
+          </div>
+          <div class="cta-actions">
+            <a class="btn btn-primary" data-store-link href="#" data-i18n="visitStore">زيارة المتجر</a>
+            <a class="btn btn-ghost" data-contact-link href="#" data-i18n="contactUs">راسلنا</a>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="site-footer">
+      <div class="wrap footer-inner">
+        <div class="footer-brand">
+          <a class="brand" href="#top">
+            <span class="brand-mark" aria-hidden="true">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6">
+                <path
+                  d="M12 2.6l2.7 5.9 6.4.8-4.7 4.4 1.2 6.4L12 17l-5.6 3.1 1.2-6.4L2.9 9.3l6.4-.8z"
+                  stroke-linejoin="round"
+                />
+              </svg>
+            </span>
+            <span class="brand-text"><strong data-i18n="brand">متجر الباشا</strong></span>
+          </a>
+          <p class="footer-note" data-i18n="footerNote">
+            منتجات رقمية جاهزة للتحميل — مدعومة بمنصة Payhip للدفع والتسليم.
+          </p>
+        </div>
+
+        <nav class="footer-links" data-i18n-aria-label="footerNav" aria-label="روابط الموقع">
+          <h3 data-i18n="footerSite">الموقع</h3>
+          <a href="#products" data-i18n="navProducts">المنتجات</a>
+          <a href="#features" data-i18n="navFeatures">لماذا نحن</a>
+          <a href="#how" data-i18n="navHow">كيف يعمل</a>
+          <a href="#faq" data-i18n="navFaq">الأسئلة الشائعة</a>
+        </nav>
+
+        <div class="footer-links">
+          <h3 data-i18n="footerContact">تواصل</h3>
+          <div class="social-row" id="social-row"></div>
+        </div>
+      </div>
+
+      <div class="wrap footer-bottom">
+        <p data-i18n="copy">© 2026 متجر الباشا. جميع الحقوق محفوظة.</p>
+        <p class="powered" data-i18n="powered">الدفع والتسليم عبر Payhip</p>
+      </div>
+    </footer>
+
+    <!-- نافذة تفاصيل المنتج -->
+    <dialog class="product-dialog" id="product-dialog" aria-labelledby="dialog-title">
+      <button
+        class="icon-btn dialog-close"
+        type="button"
+        data-action="close-dialog"
+        data-i18n-aria-label="close"
+        aria-label="إغلاق"
+      >
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" aria-hidden="true">
+          <path d="M6 6l12 12M18 6L6 18" stroke-linecap="round" />
+        </svg>
+      </button>
+      <div class="dialog-body">
+        <div class="dialog-media" id="dialog-media"></div>
+        <p class="badge" id="dialog-category"></p>
+        <h2 id="dialog-title"></h2>
+        <p class="dialog-desc" id="dialog-desc"></p>
+        <ul class="dialog-includes" id="dialog-includes" role="list"></ul>
+        <div class="dialog-foot">
+          <span class="price" id="dialog-price"></span>
+          <a class="btn btn-primary" id="dialog-buy" href="#" target="_blank" rel="noopener">
+            <span data-i18n="buyNow">شراء الآن</span>
+          </a>
+        </div>
+      </div>
+    </dialog>
+
+    <script src="assets/js/config.js"></script>
+    <script src="assets/js/i18n.js"></script>
+    <script src="assets/js/products.js"></script>
+    <script src="assets/js/app.js"></script>
+  </body>
+</html>
