@@ -1,0 +1,32 @@
+# مهارات Claude في هذا المستودع
+
+## ui-ux-pro-max
+
+مهارة ذكاء تصميم UI/UX: قاعدة بيانات محلية قابلة للبحث (أنماط، لوحات ألوان، اقترانات خطوط،
+إرشادات UX، مخططات بيانية، وإرشادات خاصة بكل تقنية).
+
+- **المصدر:** https://github.com/nextlevelbuilder/ui-ux-pro-max-skill
+- **الإصدار:** 2.13.0
+- **الرخصة:** MIT (© NextLevelBuilder)
+- **المسار الأصلي:** `.claude/skills/ui-ux-pro-max/` في مستودع المصدر (نُسخت كما هي)
+
+### الاستخدام
+
+سكربت البحث يحتاج Python 3 فقط (المكتبة القياسية، بدون أي اتصال بالشبكة):
+
+```bash
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py --domain style "طلب البحث"
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py --domain color --max-results 3 "business app"
+python3 .claude/skills/ui-ux-pro-max/scripts/search.py --stack react "form validation"
+```
+
+النطاقات المتاحة: `style`, `color`, `chart`, `landing`, `product`, `ux`, `typography`,
+`icons`, `gsap`, `react`, `web`, `google-fonts`.
+
+### التحديث
+
+انسخ مجلد `.claude/skills/ui-ux-pro-max/` من أحدث إصدار في مستودع المصدر، أو استخدم:
+
+```bash
+npx ui-ux-pro-max-cli init --ai claude
+```
