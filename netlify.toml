@@ -1,0 +1,21 @@
+# إعداد Netlify لموقع متجر الباشا (albasha-market).
+# يعمل مع المستودعات الخاصة على الخطة المجانية، بخلاف GitHub Pages.
+# في Netlify: Add new site ← Import an existing project ← اختر هذا المستودع،
+# ولا تحتج لضبط شيء يدوياً — الإعدادات أدناه تُقرأ تلقائياً.
+#
+# تطبيق «حرفة برو» في جذر المستودع لا يُنشر من هنا؛ يُنشر مجلد albasha-market وحده.
+
+[build]
+  publish = "albasha-market"
+  # الموقع ملفات ثابتة بلا خطوة بناء.
+  command = ""
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "/index.html"
+  [headers.values]
+    Cache-Control = "public, max-age=0, must-revalidate"

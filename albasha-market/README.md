@@ -119,8 +119,17 @@ firebase deploy --only hosting:market
 > ‏GitHub Pages على مستودع **خاص** يتطلّب خطة GitHub Pro أو أعلى. على الخطة المجانية
 > لا تعمل إلا على المستودعات العامة.
 
-**Netlify / Cloudflare Pages** — يعملان مع المستودعات الخاصة على الخطة المجانية:
-اربط المستودع، اجعل مجلد النشر `albasha-market` بلا أمر بناء.
+**Netlify** — يعمل مع المستودعات الخاصة على الخطة المجانية. ملف `netlify.toml` في جذر
+المستودع جاهز، فلا تحتاج ضبط شيء يدوياً:
+
+> Add new site ← Import an existing project ← اختر المستودع ← Deploy
+
+**Cloudflare Pages** — بديل مكافئ (لا يقرأ `netlify.toml`، فاضبط الحقلين يدوياً):
+
+| الحقل | القيمة |
+| --- | --- |
+| Build command | *(اتركه فارغاً)* |
+| Build output directory | `albasha-market` |
 
 ---
 
