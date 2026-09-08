@@ -111,8 +111,16 @@ firebase target:apply hosting market <اسم-الموقع-في-فايربيس>
 firebase deploy --only hosting:market
 ```
 
-**GitHub Pages / Netlify / Cloudflare Pages** — اجعل مجلد النشر `albasha-market`
-بدون أمر بناء.
+**GitHub Pages** — سير العمل `.github/workflows/deploy-pages.yml` جاهز: يرفع محتوى
+`albasha-market/` وحده (تطبيق حرفة برو لا يُنشر منه)، ويفعّل Pages تلقائياً في أول
+تشغيل ناجح عبر `enablement: true`. يعمل عند الدفع إلى الفرع الافتراضي، أو يدوياً من
+تبويب **Actions**. العنوان الناتج: `https://main-najm.github.io/Main-najm/`.
+
+> ‏GitHub Pages على مستودع **خاص** يتطلّب خطة GitHub Pro أو أعلى. على الخطة المجانية
+> لا تعمل إلا على المستودعات العامة.
+
+**Netlify / Cloudflare Pages** — يعملان مع المستودعات الخاصة على الخطة المجانية:
+اربط المستودع، اجعل مجلد النشر `albasha-market` بلا أمر بناء.
 
 ---
 
