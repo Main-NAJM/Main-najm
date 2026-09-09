@@ -4,9 +4,14 @@
   "version": "1.0.0",
   "type": "module",
   "description": "حرفة برو - تطبيق إدارة أعمال الحرفيين والتجار",
+  "workspaces": [
+    "albacha-app"
+  ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node site/copy-to-dist.mjs",
+    "build": "tsc -b && vite build && node site/copy-to-dist.mjs && npm run build:app",
+    "build:app": "APP_BASE_PATH=/app/ npm run build -w albacha-app && node albacha-app/copy-to-dist.mjs",
+    "app": "npm run dev -w albacha-app",
     "preview": "vite preview",
     "site": "node site/serve.mjs",
     "firebase:setup": "node scripts/firebase-setup.mjs",

@@ -1,6 +1,6 @@
 /* عامل الخدمة لتطبيق حرفة برو — تخزين مؤقّت يسمح بالعمل دون إنترنت. */
 
-const VERSION = 'herfah-pro-v3';
+const VERSION = 'herfah-pro-v4';
 const APP_SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -54,7 +54,7 @@ self.addEventListener('message', (event) => {
 
 // مواقع أخرى منشورة على نفس النطاق خارج التطبيق (مثل الموقع التعريفي على /albacha):
 // يتجاهلها عامل الخدمة تماماً حتى لا تحلّ صفحاتها محلّ قوقعة التطبيق في الذاكرة.
-const EXTERNAL_PATHS = [`${BASE}albacha`];
+const EXTERNAL_PATHS = [`${BASE}albacha`, `${BASE}app`];
 
 const isSameOrigin = (url) => new URL(url).origin === self.location.origin;
 const isOutsideApp = (url) => {
