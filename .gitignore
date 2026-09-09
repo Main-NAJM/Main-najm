@@ -35,7 +35,8 @@ Thumbs.db
 # Firebase
 .firebase/
 firebase-debug.log
-.firebaserc
+# ملاحظة: .firebaserc مرفوع عمداً — لا يحوي إلا معرّف المشروع وليس سرّاً،
+# ووجوده يجعل أوامر النشر تعمل بلا ‎--project‎ على أي جهاز.
 
 # Google Services (e.g. APIs or Firebase)
 google-services.json

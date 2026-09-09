@@ -27,8 +27,8 @@
 - **React 18 + TypeScript + Vite** — المسار الاقتصادي: قاعدة شيفرة واحدة للويب والموبايل.
 - **PWA** — ملف `manifest.webmanifest` وعامل خدمة (`public/sw.js`) للعمل دون إنترنت والتثبيت
   على الشاشة الرئيسية.
-- **Firebase** — المصادقة (Auth) وقاعدة البيانات (Firestore) مع تخزين محلي دائم للمزامنة بعد
-  انقطاع الاتصال.
+- **Firebase** — المصادقة (Auth) بثلاث طرق: البريد وكلمة المرور، وحساب Google، ورقم الهاتف
+  برمز تحقّق؛ وقاعدة البيانات (Firestore) مع تخزين محلي دائم للمزامنة بعد انقطاع الاتصال.
 - **بدون مكتبات واجهة خارجية** — تنسيق RTL مكتوب يدوياً، يدعم الوضع الليلي تلقائياً.
 
 ---
@@ -86,31 +86,50 @@ npm run deploy -- --project <اسم-مشروعك-على-Firebase>
 
 ## ربط Firebase
 
-1. أنشئ مشروعاً على [console.firebase.google.com](https://console.firebase.google.com).
-2. من **Project settings → Your apps** أضف تطبيق ويب واحصل على إعدادات SDK.
-3. انسخ `.env.example` إلى `.env.local` واملأ القيم:
+المشروع المستعمل مضبوط في `.firebaserc`: **`albacha-metals`**.
 
-   ```bash
-   cp .env.example .env.local
-   ```
+### ١. تسجيل تطبيق الويب وكتابة المفاتيح — بأمر واحد
 
-   ```env
-   VITE_FIREBASE_API_KEY=...
-   VITE_FIREBASE_AUTH_DOMAIN=....firebaseapp.com
-   VITE_FIREBASE_PROJECT_ID=...
-   VITE_FIREBASE_STORAGE_BUCKET=....appspot.com
-   VITE_FIREBASE_MESSAGING_SENDER_ID=...
-   VITE_FIREBASE_APP_ID=...
-   ```
+```bash
+npx firebase-tools@13 login   # مرّة واحدة على الجهاز
+npm run firebase:setup
+```
 
-4. فعّل **Authentication → Sign-in method → Email/Password**.
-5. أنشئ قاعدة **Firestore Database**، ثم انشر قواعد الأمان الموجودة في `firestore.rules`:
+السكربت يقرأ المشروع من `.firebaserc`، ويبحث عن تطبيق ويب في المشروع فيُنشئ واحداً إن لم
+يوجد، ثم يجلب إعدادات SDK ويكتبها في `.env.local`. لاستبدال ملف موجود: `npm run firebase:setup -- --force`،
+ولمشروع آخر: `npm run firebase:setup -- --project <id>`.
 
-   ```bash
-   npx firebase-tools deploy --only firestore:rules
-   ```
+<details>
+<summary>الطريقة اليدوية بدل السكربت</summary>
 
-بمجرّد وجود القيم في `.env.local` تظهر شاشة تسجيل الدخول وتبدأ المزامنة بين الأجهزة.
+من **Project settings → Your apps → Web** أضف تطبيقاً، ثم انسخ `.env.example` إلى
+`.env.local` واملأ `VITE_FIREBASE_*` من إعدادات SDK.
+
+</details>
+
+### ٢. تفعيل طرق الدخول (من الكونسول، مرّة واحدة)
+
+**Authentication → Sign-in method** ← فعّل الثلاثة:
+
+| الطريقة | ما تحتاجه |
+| --- | --- |
+| **Email/Password** | التفعيل فقط |
+| **Google** | التفعيل + اختيار بريد دعم المشروع |
+| **Phone** | التفعيل + خطة **Blaze** (الرسائل مدفوعة). للتجربة بلا رسائل: أضف رقماً تجريبياً ورمزه من **Phone numbers for testing** |
+
+ثم من **Authentication → Settings → Authorized domains** أضف النطاق الذي ستفتح منه
+التطبيق (`localhost` مضاف تلقائياً، و`albacha-metals.web.app` يُضاف عند النشر).
+
+### ٣. قاعدة البيانات
+
+أنشئ **Firestore Database** ثم انشر قواعد الأمان:
+
+```bash
+npx firebase-tools@13 deploy --only firestore:rules
+```
+
+بمجرّد وجود القيم في `.env.local` تظهر شاشة تسجيل الدخول بطرقها الثلاث وتبدأ المزامنة بين
+الأجهزة. كل مستخدم يرى بياناته وحده — القواعد تمنع أي وصول متبادل.
 
 > ملف `.env.local` مستبعد من Git، فلا تُرفع مفاتيحك إلى المستودع.
 

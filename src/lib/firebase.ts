@@ -66,6 +66,22 @@ export const authErrorMessage = (code: string): string => {
     'auth/too-many-requests': 'محاولات كثيرة، انتظر قليلاً ثم أعد المحاولة.',
     'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
     'auth/operation-not-allowed': 'طريقة الدخول هذه غير مفعّلة في مشروع Firebase.',
+    // الدخول بحساب Google
+    'auth/popup-closed-by-user': 'أُغلقت نافذة Google قبل إتمام الدخول.',
+    'auth/cancelled-popup-request': 'أُلغيت محاولة الدخول السابقة.',
+    'auth/popup-blocked': 'منع المتصفّح نافذة Google، اسمح بالنوافذ المنبثقة وأعد المحاولة.',
+    'auth/account-exists-with-different-credential':
+      'هذا البريد مسجّل بطريقة دخول أخرى، ادخل بها أولاً.',
+    'auth/unauthorized-domain': 'هذا النطاق غير مصرّح به في إعدادات Firebase Authentication.',
+    // الدخول برقم الهاتف
+    'auth/invalid-phone-number': 'رقم الهاتف غير صحيح، اكتبه بصيغة +213XXXXXXXXX.',
+    'auth/missing-phone-number': 'أدخل رقم الهاتف.',
+    'auth/invalid-verification-code': 'رمز التحقّق غير صحيح.',
+    'auth/code-expired': 'انتهت صلاحية الرمز، اطلب رمزاً جديداً.',
+    'auth/missing-verification-code': 'أدخل رمز التحقّق المرسل إليك.',
+    'auth/captcha-check-failed': 'فشل التحقّق من reCAPTCHA، أعد المحاولة.',
+    'auth/quota-exceeded': 'تجاوزت حصّة الرسائل اليومية، حاول لاحقاً.',
+    'auth/billing-not-enabled': 'الدخول بالهاتف يحتاج تفعيل الفوترة في مشروع Firebase.',
   };
   return messages[code] ?? 'حدث خطأ غير متوقّع، أعد المحاولة.';
 };

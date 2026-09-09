@@ -214,6 +214,11 @@ export default function Settings() {
               البريد <strong>{user.email}</strong>
             </span>
           ) : null}
+          {user?.phoneNumber ? (
+            <span>
+              الهاتف <strong dir="ltr">{user.phoneNumber}</strong>
+            </span>
+          ) : null}
           <span>
             التخزين <strong>{storeKind === 'local' ? 'محلي' : 'Firebase'}</strong>
           </span>
