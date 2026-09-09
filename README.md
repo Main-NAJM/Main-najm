@@ -54,6 +54,20 @@ npm run lint      # فحص الأنواع بـ TypeScript
 
 ---
 
+## الموقع التعريفي (مؤسسة الباشة للمعادن)
+
+مجلد `site/` يحوي موقعاً تعريفياً من صفحة واحدة، مستقلاً عن تطبيق حرفة برو. لتشغيله محلياً:
+
+```bash
+npm run site        # ثم افتح http://localhost:8080
+npm run site -- 3000  # منفذ مخصّص
+```
+
+يطبع الأمر أيضاً رابط الشبكة المحلية (`http://192.168.x.x:8080`) لفتح الموقع من الهاتف على
+نفس شبكة الواي‑فاي. التفاصيل في [`site/README.md`](site/README.md).
+
+---
+
 ## ربط Firebase
 
 1. أنشئ مشروعاً على [console.firebase.google.com](https://console.firebase.google.com).
