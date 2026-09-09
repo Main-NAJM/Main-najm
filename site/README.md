@@ -94,7 +94,7 @@ python3 site/icons/generate-icons.py
 3. **من الكونسول:** ⚙ ← **Project settings** ← تبويب **General** ← حقل **Project ID**.
 
 وإن لم يكن لديك مشروع بعد: [console.firebase.google.com](https://console.firebase.google.com)
-← **Add project** ← اسم مثل `albacha-metals` ← Continue ← يمكن إيقاف Analytics ←
+← **Add project** ← اكتب اسماً مثل «مؤسسة الباشة» ← Continue ← يمكن إيقاف Analytics ←
 **Create project**.
 
 ### الطريقة الأولى: من جهازك بأمر واحد
@@ -105,10 +105,8 @@ npx firebase-tools@13 use --add   # تختار المشروع فيُكتب .fire
 npm run deploy
 ```
 
-بعد `use --add` لا تحتاج تمرير المشروع في كل مرة. الملف `.firebaserc` مُدرج في `.gitignore`
-فيبقى على جهازك ولا يُرفع إلى GitHub — وهذا لا يؤثّر على النشر التلقائي لأن سير العمل يمرّر
-المشروع من السرّ `FIREBASE_PROJECT_ID`. إن أردت مشاركته بين أجهزتك احذف سطر `.firebaserc`
-من `.gitignore` ثم أضفه إلى المستودع (معرّف المشروع ليس سرّاً).
+الملف `.firebaserc` مرفوع في المستودع أصلاً ويحوي المشروع `albacha-metals-fecd8`، فلا تحتاج
+`use --add` ولا تمرير المشروع في كل مرة — إلا إن أردت النشر على مشروع آخر.
 
 وإن فضّلت بلا `.firebaserc`:
 

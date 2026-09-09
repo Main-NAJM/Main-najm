@@ -103,7 +103,7 @@ npm run deploy -- --project <اسم-مشروعك-على-Firebase>
 
 ## ربط Firebase
 
-المشروع المستعمل مضبوط في `.firebaserc`: **`albacha-metals`**.
+المشروع المستعمل مضبوط في `.firebaserc`: **`albacha-metals-fecd8`**.
 
 ### ١. تسجيل تطبيق الويب وكتابة المفاتيح — بأمر واحد
 
@@ -135,7 +135,7 @@ npm run firebase:setup
 | **Phone** | التفعيل + خطة **Blaze** (الرسائل مدفوعة). للتجربة بلا رسائل: أضف رقماً تجريبياً ورمزه من **Phone numbers for testing** |
 
 ثم من **Authentication → Settings → Authorized domains** أضف النطاق الذي ستفتح منه
-التطبيق (`localhost` مضاف تلقائياً، و`albacha-metals.web.app` يُضاف عند النشر).
+التطبيق (`localhost` مضاف تلقائياً، و`albacha-metals-fecd8.web.app` يُضاف عند النشر).
 
 ### ٣. قاعدة البيانات
 

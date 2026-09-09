@@ -80,14 +80,14 @@ users/{uid}/albachaPhotos/{id}           ← صور الأعمال (وثيقة �
 يُنشر مع بقية المشروع على مسار `/app`:
 
 ```bash
-npm run deploy -- --project albacha-metals     # من جذر المستودع
+npm run deploy -- --project albacha-metals-fecd8     # من جذر المستودع
 ```
 
 | العنوان | المحتوى |
 | --- | --- |
-| `https://albacha-metals.web.app/` | تطبيق حرفة برو |
-| `https://albacha-metals.web.app/albacha` | الموقع التعريفي |
-| `https://albacha-metals.web.app/app` | **هذا التطبيق** |
+| `https://albacha-metals-fecd8.web.app/` | تطبيق حرفة برو |
+| `https://albacha-metals-fecd8.web.app/albacha` | الموقع التعريفي |
+| `https://albacha-metals-fecd8.web.app/app` | **هذا التطبيق** |
 
 `npm run build` في الجذر يبني الثلاثة وينسخها إلى `dist`. بعد النشر افتح `/app` من هاتفك
 وثبّته: قائمة ⋮ ← «تثبيت التطبيق» في أندرويد، أو المشاركة ← «إضافة إلى الشاشة الرئيسية»
