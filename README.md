@@ -150,6 +150,9 @@ npx firebase-tools@13 deploy --only firestore:rules
 
 > ملف `.env.local` مستبعد من Git، فلا تُرفع مفاتيحك إلى المستودع.
 
+المشروع مصمَّم ليبقى داخل الخطة المجانية (Spark). تفاصيل الحصص وما يستهلكه التطبيق منها ومتى
+تلزم الترقية في [`docs/reference/FREE_TIERS.md`](docs/reference/FREE_TIERS.md).
+
 ### بنية البيانات في Firestore
 
 ```
