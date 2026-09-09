@@ -14,8 +14,9 @@ const SITE_DIR = fileURLToPath(new URL('.', import.meta.url));
 const DIST_DIR = fileURLToPath(new URL('../dist', import.meta.url));
 const DEST_DIR = 'albacha';
 
-// ملفات التشغيل والتوثيق لا تُنشر.
-const EXCLUDED = new Set(['.mjs', '.md']);
+// ملفات التشغيل والتوثيق والتوليد لا تُنشر — في المجلد وفي مجلداته الفرعية.
+const EXCLUDED = new Set(['.mjs', '.md', '.py']);
+const isExcluded = (path) => EXCLUDED.has(extname(path).toLowerCase());
 
 const target = DEST_DIR ? join(DIST_DIR, DEST_DIR) : DIST_DIR;
 
@@ -32,8 +33,11 @@ const entries = await readdir(SITE_DIR, { withFileTypes: true });
 const copied = [];
 
 for (const entry of entries) {
-  if (entry.isFile() && EXCLUDED.has(extname(entry.name).toLowerCase())) continue;
-  await cp(join(SITE_DIR, entry.name), join(target, entry.name), { recursive: true });
+  if (entry.isFile() && isExcluded(entry.name)) continue;
+  await cp(join(SITE_DIR, entry.name), join(target, entry.name), {
+    recursive: true,
+    filter: (src) => !isExcluded(src),
+  });
   copied.push(entry.name);
 }
 

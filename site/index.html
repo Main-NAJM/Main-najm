@@ -5,6 +5,14 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>مؤسسة الباشة للمعادن | ألمنيوم وحديد — تيمياوين، برج باجي مختار</title>
 <meta name="description" content="مؤسسة الباشة للمعادن — تصنيع وتركيب أبواب ونوافذ الألمنيوم والحديد. من التصميم على الورق إلى التركيب في مكانه. تيمياوين، ولاية برج باجي مختار.">
+<meta name="theme-color" content="#EDEAE2">
+<!-- تثبيت الموقع كتطبيق على الهاتف والحاسوب (PWA) -->
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="الباشة للمعادن">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
@@ -545,6 +553,13 @@
     links.style.borderBottom = '1px solid var(--line)';
     links.style.gap = '18px';
   });
+
+  // تسجيل عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
 </script>
 
 </body>
