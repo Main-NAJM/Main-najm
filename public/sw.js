@@ -1,6 +1,6 @@
 /* عامل الخدمة لتطبيق حرفة برو — تخزين مؤقّت يسمح بالعمل دون إنترنت. */
 
-const VERSION = 'herfah-pro-v4';
+const VERSION = 'herfah-pro-v5';
 const APP_SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
@@ -9,13 +9,14 @@ const RUNTIME = `${VERSION}-runtime`;
 const BASE = new URL('./', self.location).pathname;
 const INDEX = `${BASE}index.html`;
 
+// أيقونة 192 وحدها هي المخزَّنة مسبقاً: يستعملها المتصفّح في التبويب وفي شاشة iOS.
+// أيقونتا 512 (العادية والقابلة للقصّ) لا يحتاجهما إلا المتصفّح لحظة تثبيت التطبيق وهو
+// متّصل، فيجلبهما حينها ولا داعي لتحميلهما مع أوّل زيارة — وهما أثقل ملفّين في الموقع.
 const PRECACHE = [
   BASE,
   INDEX,
   `${BASE}manifest.webmanifest`,
-  `${BASE}icons/icon.svg`,
   `${BASE}icons/icon-192.png`,
-  `${BASE}icons/icon-512.png`,
 ];
 
 self.addEventListener('install', (event) => {
