@@ -30,19 +30,39 @@ jobs:
           node-version: 20
           cache: npm
 
-      - name: التحقّق من وجود المفاتيح المطلوبة
+      # معرّف المشروع ليس سرّاً: يُؤخذ من السرّ أو من متغيّر المستودع، وإلا من .firebaserc.
+      - name: تحديد مشروع Firebase
+        id: project
         env:
-          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+          SECRET_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
+          VAR_PROJECT: ${{ vars.FIREBASE_PROJECT_ID }}
         run: |
-          missing=""
-          [ -z "$SA" ] && missing="$missing FIREBASE_SERVICE_ACCOUNT"
-          [ -z "$PROJECT" ] && missing="$missing FIREBASE_PROJECT_ID"
-          if [ -n "$missing" ]; then
-            echo "::error::أسرار مفقودة:$missing — أضفها من Settings ← Secrets and variables ← Actions"
+          project="$SECRET_PROJECT"
+          [ -z "$project" ] && project="$VAR_PROJECT"
+          if [ -z "$project" ] && [ -f .firebaserc ]; then
+            project="$(python3 -c "import json;print(json.load(open('.firebaserc'))['projects']['default'])" 2>/dev/null || true)"
+          fi
+          if [ -z "$project" ]; then
+            echo "::error::تعذّر تحديد المشروع — أضف .firebaserc أو السرّ FIREBASE_PROJECT_ID"
             exit 1
           fi
-          echo "المفاتيح المطلوبة موجودة."
+          echo "المشروع: $project"
+          echo "id=$project" >> "$GITHUB_OUTPUT"
+
+      - name: التحقّق من مفتاح حساب الخدمة
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+          # أسماء الأسرار المتاحة فقط — لا قيمها — للتشخيص عند غياب المفتاح.
+          ALL_SECRETS: ${{ toJSON(secrets) }}
+        run: |
+          if [ -n "$SA" ]; then
+            echo "مفتاح حساب الخدمة موجود."
+            exit 0
+          fi
+          echo "الأسرار المرئية لهذا التشغيل (الأسماء فقط):"
+          printf '%s' "$ALL_SECRETS" | python3 -c "import json,sys;[print(' -',k) for k in sorted(json.load(sys.stdin))]"
+          echo "::error::السرّ FIREBASE_SERVICE_ACCOUNT غير مرئي لسير العمل. تأكّد أنه في تبويب Actions (لا Dependabot ولا Codespaces)، وأنه Repository secret لا Environment secret، وفي مستودع Main-NAJM/Main-najm نفسه."
+          exit 1
 
       - name: تثبيت الاعتماديات
         run: npm ci
@@ -64,7 +84,7 @@ jobs:
       - name: النشر على Firebase
         env:
           FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          FIREBASE_PROJECT_ID: ${{ secrets.FIREBASE_PROJECT_ID }}
+          FIREBASE_PROJECT_ID: ${{ steps.project.outputs.id }}
         run: |
           # يُكتب المفتاح إلى ملف مؤقّت خارج مساحة العمل ولا يُطبع أبداً.
           key="$(mktemp)"
