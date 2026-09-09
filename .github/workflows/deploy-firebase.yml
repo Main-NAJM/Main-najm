@@ -70,15 +70,21 @@ jobs:
       - name: فحص الأنواع
         run: npm run lint
 
-      - name: بناء نسخة الإنتاج
+      # مفاتيح الويب ليست أسراراً (تُشحن داخل الشيفرة على أي حال)، فتُجلب من المشروع
+      # نفسه بمفتاح حساب الخدمة بدل أن يضيفها المستخدم يدوياً ستة أسرار.
+      - name: جلب مفاتيح تطبيق الويب وكتابة .env.local
         env:
-          # استضافة Firebase تخدم التطبيق من الجذر، فلا يُضبط BASE_PATH.
-          VITE_FIREBASE_API_KEY: ${{ secrets.VITE_FIREBASE_API_KEY }}
-          VITE_FIREBASE_AUTH_DOMAIN: ${{ secrets.VITE_FIREBASE_AUTH_DOMAIN }}
-          VITE_FIREBASE_PROJECT_ID: ${{ secrets.VITE_FIREBASE_PROJECT_ID }}
-          VITE_FIREBASE_STORAGE_BUCKET: ${{ secrets.VITE_FIREBASE_STORAGE_BUCKET }}
-          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ secrets.VITE_FIREBASE_MESSAGING_SENDER_ID }}
-          VITE_FIREBASE_APP_ID: ${{ secrets.VITE_FIREBASE_APP_ID }}
+          FIREBASE_SERVICE_ACCOUNT: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          key="$(mktemp)"
+          printf '%s' "$FIREBASE_SERVICE_ACCOUNT" > "$key"
+          trap 'rm -f "$key"' EXIT
+          export GOOGLE_APPLICATION_CREDENTIALS="$key"
+          node scripts/firebase-setup.mjs --force
+
+      - name: بناء نسخة الإنتاج
+        # استضافة Firebase تخدم التطبيق من الجذر، فلا يُضبط BASE_PATH.
+        # المفاتيح تأتي من .env.local الذي كتبته الخطوة السابقة.
         run: npm run build
 
       - name: النشر على Firebase

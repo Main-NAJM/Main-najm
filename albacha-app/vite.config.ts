@@ -7,6 +7,9 @@ const base = process.env.APP_BASE_PATH || '/';
 
 export default defineConfig({
   base,
+  // ملفات البيئة في جذر المستودع: npm run firebase:setup يكتب .env.local هناك،
+  // فيتشاركها التطبيقان بدل نسختين من نفس المفاتيح.
+  envDir: fileURLToPath(new URL('..', import.meta.url)),
   plugins: [react()],
   resolve: {
     alias: {
