@@ -38,6 +38,43 @@ npm run site -- 3000
 
 للإيقاف: `Ctrl + C`.
 
+## النشر على Firebase Hosting
+
+الموقع يُنشر مع تطبيق حرفة برو في نفس المشروع، على المسار `/albacha`:
+
+| العنوان | المحتوى |
+| --- | --- |
+| `https://<اسم-المشروع>.web.app/` | تطبيق حرفة برو |
+| `https://<اسم-المشروع>.web.app/albacha` | موقع مؤسسة الباشة للمعادن |
+
+`npm run build` ينسخ محتوى هذا المجلد تلقائياً إلى `dist/albacha` عبر `copy-to-dist.mjs`،
+و`firebase.json` يحوي إعادة توجيه `/albacha` ← `/albacha/index.html` قبل إعادة توجيه التطبيق.
+
+### الطريقة الأولى: من جهازك بأمر واحد
+
+```bash
+npm run deploy -- --project <اسم-مشروعك-على-Firebase>
+```
+
+في أول مرة فقط: `npx firebase-tools@13 login`. الأمر يبني التطبيق والموقع ثم ينشرهما معاً.
+
+### الطريقة الثانية: تلقائياً عبر GitHub Actions
+
+سير العمل `.github/workflows/deploy-firebase.yml` جاهز، ويحتاج إضافة سرّين من
+**Settings ← Secrets and variables ← Actions**:
+
+| السرّ | القيمة |
+| --- | --- |
+| `FIREBASE_PROJECT_ID` | معرّف مشروعك على Firebase |
+| `FIREBASE_SERVICE_ACCOUNT` | محتوى مفتاح حساب الخدمة (JSON) من Project settings ← Service accounts |
+
+بعدها يتم النشر عند كل دمج في `main`، أو يدوياً من تبويب **Actions ← نشر على Firebase Hosting**.
+
+### لجعل الموقع في جذر النطاق بدل `/albacha`
+
+في `site/copy-to-dist.mjs` اجعل `DEST_DIR = ''`، واحذف إعادة توجيه `/albacha` من
+`firebase.json`. عندها يحلّ الموقع التعريفي محلّ تطبيق حرفة برو في الصفحة الرئيسية.
+
 ## ملاحظات
 
 - الخطوط (El Messiri و IBM Plex Sans Arabic) تُحمَّل من Google Fonts، فبدون إنترنت يعمل
