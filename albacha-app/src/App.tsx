@@ -8,6 +8,9 @@ import Dashboard from '@/pages/Dashboard';
 import Customers from '@/pages/Customers';
 import Orders from '@/pages/Orders';
 import Receivables from '@/pages/Receivables';
+import Materials from '@/pages/Materials';
+import Reports from '@/pages/Reports';
+import More from '@/pages/More';
 import Settings from '@/pages/Settings';
 import Print from '@/pages/Print';
 
@@ -25,6 +28,9 @@ function Gate() {
           <Route path="customers" element={<Customers />} />
           <Route path="orders" element={<Orders />} />
           <Route path="receivables" element={<Receivables />} />
+          <Route path="materials" element={<Materials />} />
+          <Route path="reports" element={<Reports />} />
+          <Route path="more" element={<More />} />
           <Route path="settings" element={<Settings />} />
           <Route path="print/:orderId" element={<Print />} />
           <Route path="*" element={<Navigate to="/" replace />} />

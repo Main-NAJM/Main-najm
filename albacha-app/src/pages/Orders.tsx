@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { itemTotal, itemsTotal, orderRemaining, orderTotal, paidTotal } from '@/lib/calc';
@@ -24,14 +24,15 @@ import {
   TextArea,
   TextInput,
 } from '@/components/ui';
-import type { Material, Order, OrderItem, OrderStatus, PricingUnit } from '@/lib/types';
+import type { MaterialKind, Order, OrderItem, OrderStatus, Photo, PricingUnit } from '@/lib/types';
+import { compressImage } from '@/lib/photo';
 
 const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = (
   ['quote', 'confirmed', 'ready', 'installed', 'cancelled'] as OrderStatus[]
 ).map((value) => ({ value, label: STATUS_LABEL[value] }));
 
-const MATERIAL_OPTIONS: { value: Material; label: string }[] = (
-  ['aluminium', 'iron', 'mixed'] as Material[]
+const MATERIAL_OPTIONS: { value: MaterialKind; label: string }[] = (
+  ['aluminium', 'iron', 'mixed'] as MaterialKind[]
 ).map((value) => ({ value, label: MATERIAL_LABEL[value] }));
 
 const UNIT_OPTIONS: { value: PricingUnit; label: string }[] = (
@@ -64,6 +65,7 @@ const emptyOrder = (): Order => ({
   items: [emptyItem()],
   laborFee: 0,
   discount: 0,
+  cost: 0,
   payments: [],
   dueDate: '',
   note: '',
@@ -79,7 +81,8 @@ const toNumber = (value: string): number => {
 };
 
 export default function Orders() {
-  const { orders, customers, profile, loading, saveOrder, deleteOrder } = useData();
+  const { orders, customers, profile, loading, saveOrder, deleteOrder, loadPhotos, savePhoto, deletePhoto } =
+    useData();
   const [filter, setFilter] = useState<OrderStatus | 'all'>('all');
   const [search, setSearch] = useState('');
   const [editing, setEditing] = useState<Order | null>(null);
@@ -88,6 +91,10 @@ export default function Orders() {
   const [payNote, setPayNote] = useState('');
   const [removing, setRemoving] = useState<Order | null>(null);
   const [formError, setFormError] = useState<string | null>(null);
+  const [gallery, setGallery] = useState<Order | null>(null);
+  const [photos, setPhotos] = useState<Photo[]>([]);
+  const [photoBusy, setPhotoBusy] = useState(false);
+  const [photoError, setPhotoError] = useState<string | null>(null);
 
   const visible = useMemo(() => {
     const term = search.trim();
@@ -161,6 +168,49 @@ export default function Orders() {
     setPaying(null);
     setPayAmount('');
     setPayNote('');
+  };
+
+  // صور الطلب تُقرأ عند فتح المعرض فقط لأنها ثقيلة.
+  useEffect(() => {
+    if (!gallery) {
+      setPhotos([]);
+      return;
+    }
+    let active = true;
+    setPhotoError(null);
+    void loadPhotos(gallery.id).then((list) => {
+      if (active) setPhotos(list);
+    });
+    return () => {
+      active = false;
+    };
+  }, [gallery, loadPhotos]);
+
+  const addPhoto = async (file: File) => {
+    if (!gallery) return;
+    setPhotoBusy(true);
+    setPhotoError(null);
+    try {
+      const dataUrl = await compressImage(file);
+      const photo: Photo = {
+        id: newId(),
+        orderId: gallery.id,
+        dataUrl,
+        caption: '',
+        createdAt: Date.now(),
+      };
+      await savePhoto(photo);
+      setPhotos((list) => [photo, ...list]);
+    } catch (error) {
+      setPhotoError(error instanceof Error ? error.message : 'تعذّرت إضافة الصورة.');
+    } finally {
+      setPhotoBusy(false);
+    }
+  };
+
+  const removePhoto = async (photo: Photo) => {
+    setPhotos((list) => list.filter((entry) => entry.id !== photo.id));
+    await deletePhoto(photo);
   };
 
   if (loading) return <Spinner />;
@@ -259,6 +309,13 @@ export default function Orders() {
                     }}
                   >
                     تسجيل دفعة
+                  </button>
+                  <button
+                    type="button"
+                    className="btn btn--ghost btn--sm"
+                    onClick={() => setGallery(order)}
+                  >
+                    الصور
                   </button>
                   <Link className="btn btn--ghost btn--sm" to={`/print/${order.id}`}>
                     {order.status === 'quote' ? 'طباعة العرض' : 'طباعة الفاتورة'}
@@ -460,6 +517,14 @@ export default function Orders() {
               />
             </div>
 
+            <TextInput
+              label="تكلفة المواد والتنفيذ"
+              inputMode="numeric"
+              value={numberValue(editing.cost ?? 0)}
+              onChange={(value) => patch({ cost: toNumber(value) })}
+              hint="تُستعمل لحساب الربح في التقرير الشهري، ولا تظهر للزبون."
+            />
+
             <TextArea
               label="ملاحظات"
               value={editing.note}
@@ -553,6 +618,64 @@ export default function Orders() {
                 </div>
               </>
             ) : null}
+          </>
+        ) : null}
+      </Modal>
+
+      {/* ----------------------------- الصور ------------------------------ */}
+      <Modal
+        open={Boolean(gallery)}
+        title={`صور: ${gallery?.title || 'الطلب'}`}
+        onClose={() => setGallery(null)}
+        footer={
+          <button type="button" className="btn btn--ghost" onClick={() => setGallery(null)}>
+            إغلاق
+          </button>
+        }
+      >
+        {gallery ? (
+          <>
+            <p className="small muted">
+              صور القياسات قبل التنفيذ والعمل بعد التركيب. تُصغَّر الصورة تلقائياً قبل الحفظ.
+            </p>
+            {photoError ? <div className="notice notice--danger mt-8">{photoError}</div> : null}
+
+            <label className="btn btn--block mt-8" style={{ cursor: 'pointer' }}>
+              {photoBusy ? 'جارٍ الحفظ…' : 'إضافة صورة'}
+              <input
+                type="file"
+                accept="image/*"
+                hidden
+                disabled={photoBusy}
+                onChange={(event) => {
+                  const file = event.target.files?.[0];
+                  if (file) void addPhoto(file);
+                  event.target.value = '';
+                }}
+              />
+            </label>
+
+            {photos.length === 0 ? (
+              <p className="small muted mt-8">لا صور لهذا الطلب بعد.</p>
+            ) : (
+              <div className="gallery mt-8">
+                {photos.map((photo) => (
+                  <figure key={photo.id} className="gallery__item">
+                    <img src={photo.dataUrl} alt={photo.caption || 'صورة العمل'} loading="lazy" />
+                    <button
+                      type="button"
+                      className="gallery__remove"
+                      aria-label="حذف الصورة"
+                      onClick={() => {
+                        void removePhoto(photo);
+                      }}
+                    >
+                      ✕
+                    </button>
+                  </figure>
+                ))}
+              </div>
+            )}
           </>
         ) : null}
       </Modal>

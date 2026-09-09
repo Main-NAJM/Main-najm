@@ -32,7 +32,7 @@ export interface OrderItem {
   unitPrice: number;
 }
 
-export type Material = 'aluminium' | 'iron' | 'mixed';
+export type MaterialKind = 'aluminium' | 'iron' | 'mixed';
 
 export type OrderStatus = 'quote' | 'confirmed' | 'ready' | 'installed' | 'cancelled';
 
@@ -50,18 +50,55 @@ export interface Order {
   customerName: string;
   customerPhone: string;
   title: string;
-  material: Material;
+  material: MaterialKind;
   status: OrderStatus;
   items: OrderItem[];
   /** أجرة التركيب والنقل. */
   laborFee: number;
   discount: number;
+  /** تكلفة المواد والتنفيذ — تُستعمل لحساب الربح في التقرير الشهري. */
+  cost?: number;
   payments: Payment[];
   /** تاريخ التسليم المتّفق عليه (YYYY-MM-DD). */
   dueDate: string;
   note: string;
   createdAt: number;
   updatedAt: number;
+}
+
+export type MaterialUnit = 'meter' | 'kg' | 'piece' | 'sheet' | 'bar';
+
+/** حركة على المخزون: استلام (+) أو صرف (−). */
+export interface StockMovement {
+  id: string;
+  delta: number;
+  date: string;
+  note: string;
+}
+
+export interface Material {
+  id: string;
+  name: string;
+  unit: MaterialUnit;
+  quantity: number;
+  /** حدّ التنبيه: تحته يظهر التنبيه بإعادة الشراء. */
+  minQuantity: number;
+  unitCost: number;
+  supplier: string;
+  note: string;
+  /** آخر الحركات، الأحدث أولاً. */
+  movements: StockMovement[];
+  createdAt: number;
+  updatedAt: number;
+}
+
+/** صورة عمل مرفقة بطلب — مضغوطة ومخزّنة كـ data URL. */
+export interface Photo {
+  id: string;
+  orderId: string;
+  dataUrl: string;
+  caption: string;
+  createdAt: number;
 }
 
 export interface WorkshopProfile {
@@ -78,5 +115,7 @@ export interface Backup {
   exportedAt: number;
   customers: Customer[];
   orders: Order[];
+  /** أُضيفت بعد الإصدار الأول، فقد تغيب في النسخ القديمة. */
+  materials?: Material[];
   profile: WorkshopProfile;
 }

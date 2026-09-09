@@ -11,11 +11,12 @@ import { useAuth } from './AuthContext';
 import { localStore } from '@/data/localStore';
 import { firestoreStore } from '@/data/firestoreStore';
 import { DEFAULT_PROFILE, type Store } from '@/data/store';
-import type { Backup, Customer, Order, WorkshopProfile } from '@/lib/types';
+import type { Backup, Customer, Material, Order, Photo, WorkshopProfile } from '@/lib/types';
 
 interface DataContextValue {
   customers: Customer[];
   orders: Order[];
+  materials: Material[];
   profile: WorkshopProfile;
   loading: boolean;
   error: string | null;
@@ -24,6 +25,11 @@ interface DataContextValue {
   deleteCustomer: (id: string) => Promise<void>;
   saveOrder: (order: Order) => Promise<void>;
   deleteOrder: (id: string) => Promise<void>;
+  saveMaterial: (material: Material) => Promise<void>;
+  deleteMaterial: (id: string) => Promise<void>;
+  loadPhotos: (orderId: string) => Promise<Photo[]>;
+  savePhoto: (photo: Photo) => Promise<void>;
+  deletePhoto: (photo: Photo) => Promise<void>;
   saveProfile: (profile: WorkshopProfile) => Promise<void>;
   exportBackup: () => Backup;
   importBackup: (backup: Backup) => Promise<void>;
@@ -43,6 +49,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [orders, setOrders] = useState<Order[]>([]);
+  const [materials, setMaterials] = useState<Material[]>([]);
   const [profile, setProfile] = useState<WorkshopProfile>(DEFAULT_PROFILE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -51,6 +58,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (!uid) {
       setCustomers([]);
       setOrders([]);
+      setMaterials([]);
       setProfile(DEFAULT_PROFILE);
       setLoading(false);
       return;
@@ -61,6 +69,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       const snapshot = await store.load(uid);
       setCustomers(sortByCreated(snapshot.customers));
       setOrders(sortByCreated(snapshot.orders));
+      setMaterials(snapshot.materials.slice().sort((a, b) => a.name.localeCompare(b.name, 'ar')));
       setProfile(snapshot.profile);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'تعذّر تحميل البيانات.');
@@ -122,6 +131,49 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [store, uid],
   );
 
+  const saveMaterial = useCallback(
+    async (material: Material) => {
+      if (!uid) return;
+      await store.saveMaterial(uid, material);
+      setMaterials((list) => {
+        const index = list.findIndex((entry) => entry.id === material.id);
+        const next = index < 0 ? [...list, material] : list.map((e, i) => (i === index ? material : e));
+        return next.sort((a, b) => a.name.localeCompare(b.name, 'ar'));
+      });
+    },
+    [store, uid],
+  );
+
+  const deleteMaterial = useCallback(
+    async (id: string) => {
+      if (!uid) return;
+      setMaterials((list) => list.filter((entry) => entry.id !== id));
+      await store.deleteMaterial(uid, id);
+    },
+    [store, uid],
+  );
+
+  const loadPhotos = useCallback(
+    async (orderId: string) => (uid ? store.loadPhotos(uid, orderId) : []),
+    [store, uid],
+  );
+
+  const savePhoto = useCallback(
+    async (photo: Photo) => {
+      if (!uid) return;
+      await store.savePhoto(uid, photo);
+    },
+    [store, uid],
+  );
+
+  const deletePhoto = useCallback(
+    async (photo: Photo) => {
+      if (!uid) return;
+      await store.deletePhoto(uid, photo);
+    },
+    [store, uid],
+  );
+
   const saveProfile = useCallback(
     async (next: WorkshopProfile) => {
       if (!uid) return;
@@ -137,9 +189,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
       exportedAt: Date.now(),
       customers,
       orders,
+      materials,
       profile,
     }),
-    [customers, orders, profile],
+    [customers, orders, materials, profile],
   );
 
   const importBackup = useCallback(
@@ -148,6 +201,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       await store.restore(uid, backup);
       setCustomers(sortByCreated(backup.customers));
       setOrders(sortByCreated(backup.orders));
+      setMaterials(backup.materials ?? []);
       setProfile(backup.profile);
     },
     [store, uid],
@@ -157,6 +211,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     () => ({
       customers,
       orders,
+      materials,
       profile,
       loading,
       error,
@@ -165,6 +220,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       deleteCustomer,
       saveOrder,
       deleteOrder,
+      saveMaterial,
+      deleteMaterial,
+      loadPhotos,
+      savePhoto,
+      deletePhoto,
       saveProfile,
       exportBackup,
       importBackup,
@@ -173,6 +233,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [
       customers,
       orders,
+      materials,
       profile,
       loading,
       error,
@@ -181,6 +242,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
       deleteCustomer,
       saveOrder,
       deleteOrder,
+      saveMaterial,
+      deleteMaterial,
+      loadPhotos,
+      savePhoto,
+      deletePhoto,
       saveProfile,
       exportBackup,
       importBackup,

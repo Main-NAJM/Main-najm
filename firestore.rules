@@ -20,7 +20,9 @@ service cloud.firestore {
             'debts',
             // تطبيق مؤسسة الباشة (مجموعات مستقلّة حتى لا تختلط البيانات)
             'albachaCustomers',
-            'albachaOrders'
+            'albachaOrders',
+            'albachaMaterials',
+            'albachaPhotos'
           ];
       }
     }

@@ -40,12 +40,13 @@ const NAV = [
     ),
   },
   {
-    to: '/settings',
-    label: 'الإعدادات',
+    to: '/more',
+    label: 'المزيد',
     icon: (
       <>
-        <circle cx="12" cy="12" r="3" />
-        <path d="M12 3v2.2M12 18.8V21M3 12h2.2M18.8 12H21M5.6 5.6l1.6 1.6M16.8 16.8l1.6 1.6M18.4 5.6l-1.6 1.6M7.2 16.8l-1.6 1.6" />
+        <circle cx="5" cy="12" r="1.4" />
+        <circle cx="12" cy="12" r="1.4" />
+        <circle cx="19" cy="12" r="1.4" />
       </>
     ),
   },

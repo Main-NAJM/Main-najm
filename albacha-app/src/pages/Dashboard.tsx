@@ -6,7 +6,7 @@ import { STATUS_LABEL, STATUS_TONE, formatDate, money } from '@/lib/format';
 import { Badge, EmptyState, SectionTitle, Spinner, StatCard } from '@/components/ui';
 
 export default function Dashboard() {
-  const { customers, orders, profile, loading, error } = useData();
+  const { customers, orders, materials, profile, loading, error } = useData();
 
   const stats = useMemo(() => {
     const active = orders.filter(isActiveOrder);
@@ -18,6 +18,14 @@ export default function Dashboard() {
     );
     return { quotes, overdue, outstanding, inProgress };
   }, [orders]);
+
+  const lowStock = useMemo(
+    () =>
+      materials.filter(
+        (material) => material.minQuantity > 0 && material.quantity <= material.minQuantity,
+      ),
+    [materials],
+  );
 
   const latest = orders.slice(0, 5);
 
@@ -55,6 +63,14 @@ export default function Dashboard() {
           إضافة زبون
         </Link>
       </div>
+
+      {lowStock.length ? (
+        <div className="notice notice--warn">
+          {lowStock.length} مادة تحت حدّ التنبيه: {lowStock.slice(0, 3).map((m) => m.name).join('، ')}
+          {lowStock.length > 3 ? '…' : ''} —{' '}
+          <Link to="/materials">راجع المخزون</Link>
+        </div>
+      ) : null}
 
       {stats.overdue.length ? (
         <div className="card">

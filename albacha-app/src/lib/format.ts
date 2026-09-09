@@ -1,4 +1,4 @@
-import type { Material, OrderStatus, PricingUnit } from './types';
+import type { MaterialKind, OrderStatus, PricingUnit } from './types';
 
 export const APP_NAME = 'مؤسسة الباشة للمعادن';
 export const APP_SHORT = 'الباشة';
@@ -40,7 +40,7 @@ export const STATUS_TONE: Record<OrderStatus, string> = {
   cancelled: 'muted',
 };
 
-export const MATERIAL_LABEL: Record<Material, string> = {
+export const MATERIAL_LABEL: Record<MaterialKind, string> = {
   aluminium: 'ألمنيوم',
   iron: 'حديد',
   mixed: 'ألمنيوم وحديد',
