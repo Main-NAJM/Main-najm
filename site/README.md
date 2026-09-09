@@ -84,13 +84,39 @@ python3 site/icons/generate-icons.py
 `npm run build` ينسخ محتوى هذا المجلد تلقائياً إلى `dist/albacha` عبر `copy-to-dist.mjs`،
 و`firebase.json` يحوي إعادة توجيه `/albacha` ← `/albacha/index.html` قبل إعادة توجيه التطبيق.
 
+### أين أجد Project ID؟
+
+ثلاث طرق، أسهلها الأولى:
+
+1. **من شريط العنوان:** افتح مشروعك في الكونسول وانظر الرابط —
+   `console.firebase.google.com/project/`**`<Project-ID>`**`/overview`.
+2. **من الطرفية:** `npx firebase-tools@13 login` ثم `npx firebase-tools@13 projects:list`.
+3. **من الكونسول:** ⚙ ← **Project settings** ← تبويب **General** ← حقل **Project ID**.
+
+وإن لم يكن لديك مشروع بعد: [console.firebase.google.com](https://console.firebase.google.com)
+← **Add project** ← اسم مثل `albacha-metals` ← Continue ← يمكن إيقاف Analytics ←
+**Create project**.
+
 ### الطريقة الأولى: من جهازك بأمر واحد
 
 ```bash
-npm run deploy -- --project <اسم-مشروعك-على-Firebase>
+npx firebase-tools@13 login   # أول مرة فقط
+npx firebase-tools@13 use --add   # تختار المشروع فيُكتب .firebaserc تلقائياً
+npm run deploy
 ```
 
-في أول مرة فقط: `npx firebase-tools@13 login`. الأمر يبني التطبيق والموقع ثم ينشرهما معاً.
+بعد `use --add` لا تحتاج تمرير المشروع في كل مرة. الملف `.firebaserc` مُدرج في `.gitignore`
+فيبقى على جهازك ولا يُرفع إلى GitHub — وهذا لا يؤثّر على النشر التلقائي لأن سير العمل يمرّر
+المشروع من السرّ `FIREBASE_PROJECT_ID`. إن أردت مشاركته بين أجهزتك احذف سطر `.firebaserc`
+من `.gitignore` ثم أضفه إلى المستودع (معرّف المشروع ليس سرّاً).
+
+وإن فضّلت بلا `.firebaserc`:
+
+```bash
+npm run deploy -- --project <Project-ID>
+```
+
+الأمر يبني التطبيق والموقع ثم ينشرهما معاً.
 
 ### الطريقة الثانية: تلقائياً عبر GitHub Actions
 
