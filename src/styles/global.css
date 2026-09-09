@@ -950,6 +950,10 @@ a {
   margin-bottom: 16px;
 }
 
+.auth__tabs--three {
+  grid-template-columns: repeat(3, 1fr);
+}
+
 .auth__tab {
   border: none;
   background: transparent;
@@ -1000,6 +1004,24 @@ a {
   font-size: 13px;
   cursor: pointer;
   padding: 4px;
+}
+
+.auth__google {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 9px;
+}
+
+.auth__google svg {
+  width: 18px;
+  height: 18px;
+  flex: none;
+}
+
+/* عنصر reCAPTCHA غير المرئي: لا يشغل مساحة، وشارة Google تظهر عائمة من عندها. */
+#recaptcha-container:empty {
+  display: none;
 }
 
 /* =============================== عناصر مساعدة =============================== */
