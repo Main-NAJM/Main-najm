@@ -16,6 +16,7 @@
     "site": "node site/serve.mjs",
     "firebase:setup": "node scripts/firebase-setup.mjs",
     "deploy": "npm run build && npx --yes firebase-tools@13 deploy --only hosting",
+    "deploy:all": "bash scripts/deploy.sh",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
     "lint": "tsc -b"
   },
