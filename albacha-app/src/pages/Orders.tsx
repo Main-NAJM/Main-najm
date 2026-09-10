@@ -26,6 +26,7 @@ import {
 } from '@/components/ui';
 import type { MaterialKind, Order, OrderItem, OrderStatus, Photo, PricingUnit } from '@/lib/types';
 import { compressImage } from '@/lib/photo';
+import { orderWhatsAppLink } from '@/lib/whatsapp';
 
 const STATUS_OPTIONS: { value: OrderStatus; label: string }[] = (
   ['quote', 'confirmed', 'ready', 'installed', 'cancelled'] as OrderStatus[]
@@ -310,6 +311,20 @@ export default function Orders() {
                   >
                     تسجيل دفعة
                   </button>
+                  {orderWhatsAppLink(order, profile) ? (
+                    <a
+                      className="btn btn--ghost btn--sm"
+                      href={orderWhatsAppLink(order, profile) as string}
+                      target="_blank"
+                      rel="noopener"
+                    >
+                      {order.status === 'quote'
+                        ? 'إرسال العرض بواتساب'
+                        : order.status === 'ready'
+                          ? 'إشعار «جاهز» بواتساب'
+                          : 'إرسال الحساب بواتساب'}
+                    </a>
+                  ) : null}
                   <button
                     type="button"
                     className="btn btn--ghost btn--sm"

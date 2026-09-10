@@ -5,8 +5,9 @@
  * فيمكن تجربته وإدخال بيانات حقيقية قبل ربط المشروع.
  */
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
+import { connectAuthEmulator, getAuth, type Auth } from 'firebase/auth';
 import {
+  connectFirestoreEmulator,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
@@ -35,13 +36,24 @@ let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
 
+/** أثناء التطوير والاختبار: VITE_USE_EMULATORS=1 يوجّه التطبيق إلى محاكيات Firebase. */
+const useEmulators = env.VITE_USE_EMULATORS === '1';
+
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig as Required<typeof firebaseConfig>);
   authInstance = getAuth(app);
   // ذاكرة دائمة: التطبيق يعمل دون إنترنت ويزامن عند عودة الاتصال.
-  dbInstance = initializeFirestore(app, {
-    localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
-  });
+  // المحاكي لا يعمل مع الذاكرة الدائمة في تبويبات متعدّدة، فتُستثنى.
+  dbInstance = useEmulators
+    ? initializeFirestore(app, {})
+    : initializeFirestore(app, {
+        localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
+      });
+
+  if (useEmulators) {
+    connectAuthEmulator(authInstance, 'http://127.0.0.1:9099', { disableWarnings: true });
+    connectFirestoreEmulator(dbInstance, '127.0.0.1', 8085);
+  }
 }
 
 export const firebaseApp = app;

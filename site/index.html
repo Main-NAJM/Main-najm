@@ -224,6 +224,16 @@
   .gallery-slot:hover{border-color:var(--steel-light);}
   .gallery-slot svg{width:34px; height:34px; opacity:0.55;}
   .gallery-slot span{font-size:0.82rem;}
+  .gallery-photo{
+    position:relative; border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; background:var(--bg-alt); aspect-ratio:4/3;
+  }
+  .gallery-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .gallery-photo figcaption{
+    position:absolute; inset-inline:0; bottom:0; padding:8px 10px;
+    background:linear-gradient(transparent, rgba(30,27,23,0.78));
+    color:#fff; font-size:0.82rem;
+  }
 
   /* ---------- Why us ---------- */
   .why .wrap{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
@@ -448,9 +458,9 @@
     <div class="sec-head">
       <div class="kicker">معرض أعمالنا</div>
       <h2>نماذج من التصنيع والتركيب</h2>
-      <p>سيتم إضافة صور حقيقية من أعمالنا في هذا القسم قريبًا.</p>
+      <p id="gallery-note">سيتم إضافة صور حقيقية من أعمالنا في هذا القسم قريبًا.</p>
     </div>
-    <div class="gallery-grid">
+    <div class="gallery-grid" id="gallery-grid">
       <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ١</span></div>
       <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٢</span></div>
       <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٣</span></div>
@@ -559,6 +569,75 @@
     window.addEventListener('load', () => {
       navigator.serviceWorker.register('./sw.js').catch(() => {});
     });
+  }
+</script>
+
+<!-- ---------- محتوى يديره صاحب المؤسسة من التطبيق ---------- -->
+<script type="module">
+  // الإعدادات تُحقن وقت النشر من .env.local عبر site/copy-to-dist.mjs.
+  // بدونها (تشغيل محلي مثلاً) تبقى الصفحة كما هي بمحتواها المكتوب.
+
+  // نقطة تطبيق واحدة: تُستدعى بعد الجلب، وتُستدعى مباشرة في الاختبارات.
+  window.__albachaApplySite = (site, photos) => {
+    if (site && site.whatsapp) {
+      const digits = String(site.whatsapp).replace(/\D/g, '');
+      const number = digits.startsWith('00') ? digits.slice(2)
+        : digits.startsWith('213') ? digits
+        : digits.startsWith('0') ? '213' + digits.slice(1)
+        : '213' + digits;
+      document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+        link.href = link.href.replace(/wa\.me\/\d+/, 'wa.me/' + number);
+      });
+    }
+
+    if (site && site.galleryNote) {
+      const note = document.getElementById('gallery-note');
+      if (note) note.textContent = site.galleryNote;
+    }
+
+    const grid = document.getElementById('gallery-grid');
+    const list = (photos || []).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    if (grid && list.length) {
+      grid.innerHTML = '';
+      for (const photo of list) {
+        const figure = document.createElement('figure');
+        figure.className = 'gallery-photo';
+        const img = document.createElement('img');
+        img.src = photo.dataUrl;
+        img.alt = photo.caption || 'من أعمال مؤسسة الباشة للمعادن';
+        img.loading = 'lazy';
+        figure.appendChild(img);
+        if (photo.caption) {
+          const caption = document.createElement('figcaption');
+          caption.textContent = photo.caption;
+          figure.appendChild(caption);
+        }
+        grid.appendChild(figure);
+      }
+    }
+  };
+
+  const config = window.__ALBACHA_FIREBASE__;
+  if (config && config.apiKey && config.projectId) {
+    try {
+      const [{ initializeApp }, { getFirestore, collection, doc, getDoc, getDocs }] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js'),
+      ]);
+
+      const db = getFirestore(initializeApp(config));
+      const [settings, gallery] = await Promise.all([
+        getDoc(doc(db, 'siteConfig', 'main')).catch(() => null),
+        getDocs(collection(db, 'siteGallery')).catch(() => null),
+      ]);
+
+      window.__albachaApplySite(
+        settings && settings.exists() ? settings.data() : null,
+        gallery ? gallery.docs.map((entry) => entry.data()) : [],
+      );
+    } catch {
+      /* تعذّر الجلب (انقطاع مثلاً) — تبقى الصفحة بمحتواها المكتوب */
+    }
   }
 </script>
 

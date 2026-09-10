@@ -101,6 +101,25 @@ export interface Photo {
   createdAt: number;
 }
 
+/** صورة معروضة للعموم في معرض الموقع التعريفي. */
+export interface SitePhoto {
+  id: string;
+  dataUrl: string;
+  caption: string;
+  createdAt: number;
+}
+
+/** إعدادات الموقع التعريفي العامّة — يقرأها الزوّار، ويكتبها المالك وحده. */
+export interface SiteConfig {
+  /** معرّف الحساب المالك؛ يُثبَّت عند أول مطالبة ولا يتغيّر بعدها. */
+  ownerUid: string;
+  /** رقم واتساب الظاهر في الموقع. فارغ يعني إبقاء الرقم المكتوب في الصفحة. */
+  whatsapp: string;
+  /** نصّ يظهر أعلى معرض الأعمال. */
+  galleryNote: string;
+  updatedAt: number;
+}
+
 export interface WorkshopProfile {
   name: string;
   phone: string;
