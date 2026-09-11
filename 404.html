@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>جارٍ التحويل…</title>
+<script>
+(function () {
+  var BASE = "/Main-najm/";
+  var loc = window.location;
+  var path = loc.pathname;
+  var rest = path.indexOf(BASE) === 0 ? path.slice(BASE.length) : path.replace(/^\//, '');
+
+  var statics = ["albacha/"];
+  for (var i = 0; i < statics.length; i++) {
+    var dir = statics[i];
+    var name = dir.slice(0, -1);
+    if (rest === name || rest.indexOf(dir) === 0) {
+      loc.replace(BASE + dir);
+      return;
+    }
+  }
+
+  var app = '';
+  var apps = ["app/"];
+  for (var j = 0; j < apps.length; j++) {
+    var a = apps[j];
+    var an = a.slice(0, -1);
+    if (rest === an || rest.indexOf(a) === 0) {
+      app = a;
+      rest = rest.slice(an.length).replace(/^\//, '');
+      break;
+    }
+  }
+
+  var target = BASE + app + '?p=/' + rest;
+  if (loc.search) target += '&q=' + encodeURIComponent(loc.search.slice(1));
+  loc.replace(target + loc.hash);
+})();
+</script>
+</head>
+<body></body>
+</html>

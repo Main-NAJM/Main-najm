@@ -1,0 +1,33 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+    <meta name="theme-color" content="#0f766e" />
+    <meta name="description" content="حرفة برو — تطبيق إدارة الطلبيات والمواعيد والحسابات والديون للحرفيين والتجار" />
+    <link rel="manifest" href="/Main-najm/manifest.webmanifest" />
+    <link rel="icon" type="image/png" href="/Main-najm/icons/icon-192.png" />
+    <link rel="apple-touch-icon" href="/Main-najm/icons/icon-192.png" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+    <meta name="apple-mobile-web-app-title" content="حرفة برو" />
+    <title>حرفة برو</title>
+    <script type="module" crossorigin src="/Main-najm/assets/index-Bptj_WH0.js"></script>
+    <link rel="modulepreload" crossorigin href="/Main-najm/assets/react-B2hhXPGZ.js">
+    <link rel="modulepreload" crossorigin href="/Main-najm/assets/firebase-DDDI9la6.js">
+    <link rel="stylesheet" crossorigin href="/Main-najm/assets/index-UNoseyfG.css">
+  <script>
+(function () {
+  var params = new URLSearchParams(window.location.search);
+  var p = params.get('p');
+  if (p === null) return;
+  var q = params.get('q');
+  var path = window.location.pathname.replace(/\/$/, '') + p;
+  window.history.replaceState(null, '', path + (q ? '?' + q : '') + window.location.hash);
+})();
+</script>
+</head>
+  <body>
+    <div id="root"></div>
+  </body>
+</html>

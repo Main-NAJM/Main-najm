@@ -1,0 +1,645 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>مؤسسة الباشة للمعادن | ألمنيوم وحديد — تيمياوين، برج باجي مختار</title>
+<meta name="description" content="مؤسسة الباشة للمعادن — تصنيع وتركيب أبواب ونوافذ الألمنيوم والحديد. من التصميم على الورق إلى التركيب في مكانه. تيمياوين، ولاية برج باجي مختار.">
+<meta name="theme-color" content="#EDEAE2">
+<!-- تثبيت الموقع كتطبيق على الهاتف والحاسوب (PWA) -->
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="الباشة للمعادن">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=El+Messiri:wght@400;500;600;700&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #EDEAE2;
+    --bg-alt: #E3DDCF;
+    --panel: #F4F2EC;
+    --ink: #1E1B17;
+    --ink-soft: #55504A;
+    --ink-faint: #8A8478;
+    --accent: #96703C;
+    --accent-deep: #6B4A26;
+    --steel: #74797B;
+    --steel-light: #C9CDC9;
+    --line: #D2CBB9;
+    --radius: 3px;
+    --wrap: 1180px;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--bg);
+    color:var(--ink);
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-weight:400;
+    line-height:1.75;
+    font-size:16px;
+    overflow-x:hidden;
+  }
+  h1,h2,h3,.display{
+    font-family:'El Messiri', 'IBM Plex Sans Arabic', sans-serif;
+    color:var(--ink);
+    font-weight:600;
+    line-height:1.25;
+  }
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:0 28px;}
+  ul{list-style:none;}
+
+  /* ---------- Header ---------- */
+  header{
+    position:sticky; top:0; z-index:100;
+    background:rgba(237,234,226,0.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .nav-inner{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 28px; max-width:var(--wrap); margin:0 auto;
+  }
+  .logo{
+    font-family:'El Messiri', sans-serif;
+    font-size:1.35rem;
+    font-weight:700;
+    display:flex; flex-direction:column; line-height:1.15;
+  }
+  .logo span{
+    font-family:'IBM Plex Sans Arabic', sans-serif;
+    font-size:0.68rem;
+    font-weight:400;
+    color:var(--ink-soft);
+    letter-spacing:0.02em;
+    margin-top:3px;
+  }
+  nav.links{display:flex; gap:34px;}
+  nav.links a{
+    font-size:0.95rem; color:var(--ink-soft);
+    position:relative; padding:4px 0;
+    transition:color .25s ease;
+  }
+  nav.links a:hover{color:var(--accent-deep);}
+  nav.links a::after{
+    content:""; position:absolute; right:0; bottom:0; width:0; height:1px;
+    background:var(--accent); transition:width .25s ease;
+  }
+  nav.links a:hover::after{width:100%;}
+  .nav-cta{
+    display:flex; align-items:center; gap:8px;
+    background:var(--ink); color:var(--panel);
+    padding:10px 20px; border-radius:var(--radius);
+    font-size:0.9rem; transition:background .25s ease;
+  }
+  .nav-cta:hover{background:var(--accent-deep);}
+  .burger{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none;}
+  .burger span{width:24px; height:2px; background:var(--ink);}
+
+  /* ---------- Hero ---------- */
+  .hero{
+    padding:96px 0 80px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero .wrap{
+    display:grid; grid-template-columns:1.1fr 0.9fr; gap:56px; align-items:center;
+  }
+  .kicker{
+    color:var(--accent-deep); font-size:0.95rem; margin-bottom:18px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .kicker::before{content:""; width:26px; height:1px; background:var(--accent);}
+  .hero h1{
+    font-size:clamp(2.1rem, 4vw, 3.1rem);
+    max-width:12ch;
+    margin-bottom:22px;
+  }
+  .hero p.lead{
+    color:var(--ink-soft); font-size:1.08rem; max-width:46ch; margin-bottom:34px;
+  }
+  .btn-row{display:flex; gap:16px; flex-wrap:wrap;}
+  .btn{
+    display:inline-flex; align-items:center; gap:10px;
+    padding:14px 26px; border-radius:var(--radius);
+    font-size:0.95rem; transition:all .25s ease; border:1px solid transparent;
+  }
+  .btn-primary{background:var(--accent); color:#FBF9F4;}
+  .btn-primary:hover{background:var(--accent-deep);}
+  .btn-outline{border-color:var(--ink); color:var(--ink);}
+  .btn-outline:hover{background:var(--ink); color:var(--panel);}
+
+  .hero-art{
+    position:relative; aspect-ratio:1/1.05;
+    border:1px solid var(--line);
+    background:var(--panel);
+    display:flex; align-items:center; justify-content:center;
+  }
+  .hero-art svg{width:74%; height:74%;}
+
+  /* ---------- Section basics ---------- */
+  section{padding:88px 0;}
+  .sec-head{margin-bottom:52px; max-width:640px;}
+  .sec-head h2{font-size:clamp(1.6rem,2.6vw,2.1rem);}
+  .sec-head p{color:var(--ink-soft); margin-top:14px; font-size:1rem;}
+  .divider{border:none; border-top:1px solid var(--line);}
+
+  /* ---------- About ---------- */
+  .about{background:var(--bg-alt);}
+  .about .wrap{display:grid; grid-template-columns:0.85fr 1.15fr; gap:60px; align-items:start;}
+  .about-stats{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line); margin-top:32px;}
+  .about-stats div{background:var(--bg-alt); padding:22px 20px;}
+  .about-stats strong{font-family:'El Messiri',sans-serif; font-size:1.7rem; display:block; color:var(--accent-deep);}
+  .about-stats span{font-size:0.85rem; color:var(--ink-soft);}
+  .about p{color:var(--ink-soft); margin-bottom:16px; max-width:56ch;}
+
+  /* ---------- Products ---------- */
+  .materials-grid{
+    display:grid; grid-template-columns:repeat(2,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+  }
+  .material-block{background:var(--panel); padding:40px;}
+  .material-head{display:flex; align-items:center; gap:16px; margin-bottom:24px;}
+  .material-icon{width:46px; height:46px; color:var(--accent); flex-shrink:0;}
+  .material-icon svg{width:100%; height:100%;}
+  .material-head h3{font-size:1.3rem;}
+  .material-head span{display:block; font-size:0.85rem; color:var(--ink-faint); margin-top:2px;}
+  .material-list{margin-bottom:22px;}
+  .material-list li{
+    display:flex; align-items:center; gap:12px;
+    padding:13px 0; border-bottom:1px solid var(--line);
+    font-size:0.96rem; color:var(--ink-soft);
+  }
+  .material-list li:last-child{border-bottom:none;}
+  .material-list li svg{width:16px; height:16px; color:var(--accent); flex-shrink:0;}
+  .material-note{
+    font-size:0.86rem; color:var(--ink-faint); margin-bottom:22px; padding-right:2px;
+  }
+  .product-photo{
+    aspect-ratio:16/9; border:1px dashed var(--steel-light);
+    background:var(--bg); display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:10px; color:var(--ink-faint); text-align:center; padding:16px;
+  }
+  .product-photo svg{width:30px; height:30px; opacity:0.65;}
+  .product-photo span{font-size:0.8rem;}
+
+  /* ---------- Process ---------- */
+  .process{background:var(--ink); color:var(--bg);}
+  .process .sec-head h2, .process .sec-head p{color:var(--bg);}
+  .process .sec-head p{color:#B9B2A5;}
+  .steps{
+    display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+    position:relative;
+  }
+  .steps::before{
+    content:""; position:absolute; top:20px; right:12%; left:12%; height:1px;
+    background:linear-gradient(to left, transparent, #6b6559, transparent);
+  }
+  .step{padding:0 20px; position:relative;}
+  .step-num{
+    width:40px; height:40px; border-radius:50%; border:1px solid var(--accent);
+    display:flex; align-items:center; justify-content:center;
+    font-family:'El Messiri',sans-serif; color:var(--accent);
+    margin-bottom:22px; background:var(--ink); position:relative; z-index:2;
+  }
+  .step h3{color:var(--bg); font-size:1.05rem; margin-bottom:10px;}
+  .step p{color:#B9B2A5; font-size:0.9rem;}
+
+  /* ---------- Gallery ---------- */
+  .gallery-grid{
+    display:grid; grid-template-columns:repeat(3,1fr); gap:1px;
+    background:var(--line); border:1px solid var(--line);
+  }
+  .gallery-slot{
+    aspect-ratio:4/3; background:var(--panel);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:12px; color:var(--ink-faint); border:1px dashed transparent;
+    transition:border-color .2s ease;
+  }
+  .gallery-slot:hover{border-color:var(--steel-light);}
+  .gallery-slot svg{width:34px; height:34px; opacity:0.55;}
+  .gallery-slot span{font-size:0.82rem;}
+  .gallery-photo{
+    position:relative; border:1px solid var(--line); border-radius:var(--radius);
+    overflow:hidden; background:var(--bg-alt); aspect-ratio:4/3;
+  }
+  .gallery-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .gallery-photo figcaption{
+    position:absolute; inset-inline:0; bottom:0; padding:8px 10px;
+    background:linear-gradient(transparent, rgba(30,27,23,0.78));
+    color:#fff; font-size:0.82rem;
+  }
+
+  /* ---------- Why us ---------- */
+  .why .wrap{display:grid; grid-template-columns:repeat(3,1fr); gap:1px; background:var(--line); border:1px solid var(--line);}
+  .why-item{background:var(--bg); padding:34px; }
+  .why-item .num{font-family:'El Messiri',sans-serif; color:var(--steel); font-size:0.9rem; margin-bottom:14px; display:block;}
+  .why-item h3{font-size:1.05rem; margin-bottom:10px;}
+  .why-item p{color:var(--ink-soft); font-size:0.92rem;}
+
+  /* ---------- Contact ---------- */
+  .contact{background:var(--bg-alt);}
+  .contact .wrap{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
+  .contact-col{background:var(--bg-alt); padding:48px;}
+  .contact-col.dark{background:var(--ink); color:var(--bg);}
+  .contact-col.dark h2{color:var(--bg);}
+  .contact-col.dark p{color:#B9B2A5;}
+  .info-row{display:flex; gap:16px; margin-bottom:26px; align-items:flex-start;}
+  .info-row svg{width:22px; height:22px; flex-shrink:0; color:var(--accent); margin-top:3px;}
+  .info-row .dark svg{color:var(--accent);}
+  .info-row h4{font-size:0.95rem; margin-bottom:4px;}
+  .info-row p{font-size:0.9rem; color:var(--ink-soft); margin:0;}
+  .contact-col.dark .info-row p{color:#B9B2A5;}
+  .contact-col.dark .info-row h4{color:var(--bg);}
+  .wa-block{
+    margin-top:10px; padding:26px; border:1px solid #4c463d; border-radius:var(--radius);
+  }
+  .wa-block p{color:#B9B2A5; font-size:0.9rem; margin-bottom:18px;}
+
+  /* ---------- Footer ---------- */
+  footer{padding:36px 0; border-top:1px solid var(--line);}
+  footer .wrap{display:flex; justify-content:space-between; align-items:center; flex-wrap:wrap; gap:14px;}
+  footer p{font-size:0.82rem; color:var(--ink-faint);}
+
+  /* ---------- Floating WhatsApp ---------- */
+  .wa-float{
+    position:fixed; bottom:26px; left:26px; z-index:200;
+    width:56px; height:56px; border-radius:50%;
+    background:var(--accent); color:#fff;
+    display:flex; align-items:center; justify-content:center;
+    box-shadow:0 6px 18px rgba(30,27,23,0.25);
+    transition:transform .2s ease, background .2s ease;
+  }
+  .wa-float:hover{transform:scale(1.06); background:var(--accent-deep);}
+  .wa-float svg{width:26px; height:26px;}
+
+  /* ---------- Responsive ---------- */
+  @media (max-width:900px){
+    nav.links{display:none;}
+    .burger{display:flex;}
+    .hero .wrap{grid-template-columns:1fr;}
+    .hero-art{order:-1; max-width:320px; margin:0 auto;}
+    .about .wrap{grid-template-columns:1fr;}
+    .materials-grid{grid-template-columns:1fr;}
+    .steps{grid-template-columns:1fr 1fr; row-gap:40px;}
+    .steps::before{display:none;}
+    .gallery-grid{grid-template-columns:1fr 1fr;}
+    .why .wrap{grid-template-columns:1fr;}
+    .contact .wrap{grid-template-columns:1fr;}
+  }
+  @media (max-width:520px){
+    .steps{grid-template-columns:1fr;}
+    .gallery-grid{grid-template-columns:1fr;}
+    .about-stats{grid-template-columns:1fr;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nav-inner">
+    <div class="logo">مؤسسة الباشة<span>للمعادن — ألمنيوم وحديد</span></div>
+    <nav class="links">
+      <a href="#about">من نحن</a>
+      <a href="#products">منتجاتنا</a>
+      <a href="#process">مراحل العمل</a>
+      <a href="#gallery">أعمالنا</a>
+      <a href="#contact">اتصل بنا</a>
+    </nav>
+    <a class="nav-cta" href="https://wa.me/213673232932" target="_blank" rel="noopener">
+      تواصل واتساب
+    </a>
+    <button class="burger" aria-label="القائمة"><span></span><span></span><span></span></button>
+  </div>
+</header>
+
+<!-- ---------- Hero ---------- -->
+<section class="hero">
+  <div class="wrap">
+    <div>
+      <div class="kicker">نخدم تيمياوين وبرج باجي مختار</div>
+      <h1>من الخط على الورق إلى الباب المركّب في مكانه</h1>
+      <p class="lead">مؤسسة الباشة للمعادن تُصمّم وتُصنّع وتُركّب أبواب ونوافذ الألمنيوم والحديد، بمتابعة كاملة لكل تفصيلة من أول قياس حتى التسليم النهائي، في تيمياوين وبرج باجي مختار.</p>
+      <div class="btn-row">
+        <a class="btn btn-primary" href="https://wa.me/213673232932" target="_blank" rel="noopener">اطلب عرض سعر عبر واتساب</a>
+        <a class="btn btn-outline" href="#products">تصفح منتجاتنا</a>
+      </div>
+    </div>
+    <div class="hero-art">
+      <svg viewBox="0 0 200 220" fill="none" stroke="var(--accent)" stroke-width="1.4">
+        <rect x="20" y="14" width="160" height="192" stroke="var(--ink)" stroke-width="1.6"/>
+        <line x1="20" y1="88" x2="180" y2="88"/>
+        <line x1="20" y1="150" x2="180" y2="150"/>
+        <line x1="76" y1="14" x2="76" y2="206"/>
+        <line x1="132" y1="14" x2="132" y2="206"/>
+        <circle cx="164" cy="180" r="3.2" fill="var(--accent)" stroke="none"/>
+      </svg>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- About ---------- -->
+<section class="about" id="about">
+  <div class="wrap">
+    <div>
+      <div class="kicker">من نحن</div>
+      <h2>حرفة معدنية، بمعايير هندسية</h2>
+      <div class="about-stats">
+        <div><strong>٢</strong><span>مادتان: ألمنيوم وحديد</span></div>
+        <div><strong>٣</strong><span>مراحل عمل: تصميم، تصنيع، تركيب</span></div>
+      </div>
+    </div>
+    <div>
+      <p>مؤسسة الباشة للمعادن مختصة في تصنيع وتركيب أبواب ونوافذ الألمنيوم والحديد، ونخدم مدينتي تيمياوين وبرج باجي مختار وضواحيهما. نتابع كل طلب بدءًا من القياس الدقيق في الموقع، مرورًا بالتصميم والتصنيع في الورشة، وصولًا إلى التركيب النهائي وضبط كل تفصيلة قبل التسليم.</p>
+      <p>نعمل على المقاسات الخاصة وحسب طلب الزبون، مع خيارات في الأشكال والألوان والتشطيبات لكل من الألمنيوم والحديد، بما يلائم واجهة المنزل أو المحل أو المشروع.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Products ---------- -->
+<section id="products">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">منتجاتنا</div>
+      <h2>أبواب ونوافذ لكل مساحة ومناخ</h2>
+      <p>تصنيع حسب المقاس المطلوب من الألمنيوم أو الحديد، مع إمكانية الدمج بين المادتين حسب طبيعة المكان.</p>
+    </div>
+
+    <div class="materials-grid">
+      <div class="material-block">
+        <div class="material-head">
+          <div class="material-icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="8" y="6" width="32" height="36"/><line x1="24" y1="6" x2="24" y2="42"/><line x1="8" y1="18" x2="40" y2="18"/><line x1="8" y1="30" x2="40" y2="30"/></svg>
+          </div>
+          <div>
+            <h3>الألمنيوم</h3>
+            <span>خفيف، مقاوم للصدأ، بتشطيبات متعددة</span>
+          </div>
+        </div>
+        <ul class="material-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> نوافذ الألمنيوم بمختلف المقاسات</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> أبواب الألمنيوم للمداخل والشرفات</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> مطابخ ألمنيوم عصرية</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> وأعمال ألمنيوم أخرى حسب الطلب</li>
+        </ul>
+        <div class="product-photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg>
+          <span>مكان مخصص لصور أعمال الألمنيوم</span>
+        </div>
+      </div>
+
+      <div class="material-block">
+        <div class="material-head">
+          <div class="material-icon">
+            <svg viewBox="0 0 48 48" fill="none" stroke="currentColor" stroke-width="1.6"><rect x="8" y="8" width="32" height="32"/><line x1="14" y1="8" x2="14" y2="40"/><line x1="20" y1="8" x2="20" y2="40"/><line x1="26" y1="8" x2="26" y2="40"/><line x1="32" y1="8" x2="32" y2="40"/></svg>
+          </div>
+          <div>
+            <h3>الحديد</h3>
+            <span>متين، بتصاميم حسب الطلب</span>
+          </div>
+        </div>
+        <ul class="material-list">
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> أبواب الحديد وبوابات المداخل</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> نوافذ وشبابيك حماية من الحديد</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> درج ودرابزين حديدي</li>
+          <li><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12l5 5L20 6"/></svg> أعمال حديد أخرى حسب الطلب</li>
+        </ul>
+        <div class="material-note">نصنع أيضًا أي طلب خاص بمقاسات وتصاميم حديدية غير مذكورة أعلاه — تواصل معنا لمناقشة التفاصيل.</div>
+        <div class="product-photo">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg>
+          <span>مكان مخصص لصور أعمال الحديد</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Process ---------- -->
+<section class="process" id="process">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker" style="color:var(--accent);">مراحل العمل</div>
+      <h2>من الفكرة إلى التركيب في أربع خطوات</h2>
+      <p>نتابع معكم كل مرحلة، بدون أي فجوة بين ما تم الاتفاق عليه وما يُنفَّذ فعليًا.</p>
+    </div>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">١</div>
+        <h3>المعاينة والقياس</h3>
+        <p>زيارة الموقع، أخذ المقاسات الدقيقة، ومناقشة المادة والتصميم المناسب.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">٢</div>
+        <h3>التصميم والاتفاق</h3>
+        <p>رسم التصميم النهائي وتحديد السعر والمواصفات قبل بدء التصنيع.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">٣</div>
+        <h3>التصنيع في الورشة</h3>
+        <p>قص وتشكيل الألمنيوم أو الحديد وتجميع القطعة بدقة حسب المقاس.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">٤</div>
+        <h3>التركيب والتسليم</h3>
+        <p>تركيب المنتج في مكانه، وضبط الحركة والإغلاق، ثم التسليم النهائي.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Gallery ---------- -->
+<section id="gallery">
+  <div class="wrap">
+    <div class="sec-head">
+      <div class="kicker">معرض أعمالنا</div>
+      <h2>نماذج من التصنيع والتركيب</h2>
+      <p id="gallery-note">سيتم إضافة صور حقيقية من أعمالنا في هذا القسم قريبًا.</p>
+    </div>
+    <div class="gallery-grid" id="gallery-grid">
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ١</span></div>
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٢</span></div>
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٣</span></div>
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٤</span></div>
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٥</span></div>
+      <div class="gallery-slot"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.4"><rect x="3" y="6" width="18" height="13" rx="1"/><circle cx="9" cy="11" r="2"/><path d="M3 16l5-4 4 3 4-5 5 6"/></svg><span>صورة عمل ٦</span></div>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Why us ---------- -->
+<section class="why">
+  <div class="wrap">
+    <div class="why-item">
+      <span class="num">٠١</span>
+      <h3>خبرة في المادتين</h3>
+      <p>نعمل بالألمنيوم والحديد معًا، ما يتيح اختيار المادة الأنسب لكل مشروع.</p>
+    </div>
+    <div class="why-item">
+      <span class="num">٠٢</span>
+      <h3>مقاسات دقيقة</h3>
+      <p>قياس ميداني قبل التصنيع لتفادي أي فرق في المقاس عند التركيب.</p>
+    </div>
+    <div class="why-item">
+      <span class="num">٠٣</span>
+      <h3>متابعة محلية</h3>
+      <p>خدمة ميدانية في تيمياوين وبرج باجي مختار، من المعاينة إلى ما بعد التركيب.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ---------- Contact ---------- -->
+<section class="contact" id="contact">
+  <div class="wrap">
+    <div class="contact-col">
+      <div class="kicker">اتصل بنا</div>
+      <h2 style="margin-bottom:28px;">جاهزون لاستقبال طلبك</h2>
+
+      <div class="info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+        <div>
+          <h4>الموقع</h4>
+          <p style="margin-bottom:10px;"><strong style="color:var(--ink);">تيمياوين:</strong> أمام المتوسطة، بجانب الجمارك الجزائرية</p>
+          <p><strong style="color:var(--ink);">برج باجي مختار:</strong> حي أول نوفمبر، عند لابلاسيطة</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L14 13l5 2v4a2 2 0 0 1-2 2c-8 0-15-7-15-15a2 2 0 0 1 2-2z"/></svg>
+        <div>
+          <h4>الهاتف / واتساب</h4>
+          <p dir="ltr" style="text-align:right;">+213 673 232 932</p>
+        </div>
+      </div>
+      <div class="info-row">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3.5 2"/></svg>
+        <div>
+          <h4>أوقات الاستقبال</h4>
+          <p>يوميًا، حسب التنسيق المسبق عبر واتساب</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="contact-col dark">
+      <h2>راسلنا مباشرة عبر واتساب</h2>
+      <p>أرسل لنا مقاسات مشروعك أو استفسارك، وسنرد عليك بأقرب وقت.</p>
+      <div class="wa-block">
+        <p>أرسل رسالة مباشرة وسنتابع طلبك خطوة بخطوة، من التصميم حتى التركيب.</p>
+        <a class="btn btn-primary" href="https://wa.me/213673232932?text=مرحباً، أرغب في الاستفسار عن خدمات مؤسسة الباشة للمعادن" target="_blank" rel="noopener">
+          فتح محادثة واتساب
+        </a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <p>© مؤسسة الباشة للمعادن — تيمياوين، برج باجي مختار، الجزائر</p>
+    <p>أبواب ونوافذ الألمنيوم والحديد — تصنيع وتركيب</p>
+  </div>
+</footer>
+
+<a class="wa-float" href="https://wa.me/213673232932" target="_blank" rel="noopener" aria-label="تواصل عبر واتساب">
+  <svg viewBox="0 0 32 32" fill="currentColor"><path d="M16.001 2.667c-7.364 0-13.333 5.97-13.333 13.333 0 2.353.616 4.56 1.694 6.475L2.667 29.333l7.03-1.845a13.26 13.26 0 0 0 6.304 1.605h.006c7.363 0 13.332-5.97 13.332-13.333 0-3.562-1.387-6.911-3.905-9.428a13.245 13.245 0 0 0-9.433-3.665zm0 24.4h-.005a11.06 11.06 0 0 1-5.634-1.543l-.404-.24-4.173 1.095 1.115-4.068-.264-.418a11.05 11.05 0 0 1-1.694-5.893c0-6.114 4.977-11.09 11.096-11.09 2.964 0 5.751 1.155 7.845 3.252a11.02 11.02 0 0 1 3.245 7.848c-.001 6.114-4.977 11.058-11.127 11.058zm6.086-8.293c-.334-.167-1.97-.972-2.275-1.083-.305-.111-.527-.167-.75.167s-.86 1.083-1.055 1.305c-.194.222-.389.25-.723.083-.334-.167-1.408-.519-2.681-1.652-.991-.884-1.661-1.977-1.855-2.31-.194-.334-.021-.514.146-.68.15-.15.334-.389.5-.583.167-.194.222-.334.334-.556.111-.222.055-.417-.028-.583-.083-.167-.75-1.806-1.028-2.472-.271-.65-.546-.562-.75-.573-.194-.01-.417-.012-.639-.012-.222 0-.583.083-.889.417-.305.334-1.166 1.14-1.166 2.778 0 1.639 1.194 3.222 1.361 3.445.167.222 2.352 3.591 5.696 5.036.796.344 1.417.549 1.901.702.799.254 1.526.218 2.101.132.641-.096 1.97-.805 2.248-1.583.278-.778.278-1.444.194-1.583-.083-.14-.305-.222-.639-.389z"/></svg>
+</a>
+
+<script>
+  const burger = document.querySelector('.burger');
+  const links = document.querySelector('nav.links');
+  burger.addEventListener('click', () => {
+    const open = links.style.display === 'flex';
+    links.style.display = open ? 'none' : 'flex';
+    links.style.flexDirection = 'column';
+    links.style.position = 'absolute';
+    links.style.top = '68px';
+    links.style.right = '0';
+    links.style.left = '0';
+    links.style.background = 'var(--bg)';
+    links.style.padding = '20px 28px';
+    links.style.borderBottom = '1px solid var(--line)';
+    links.style.gap = '18px';
+  });
+
+  // تسجيل عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+</script>
+
+<!-- ---------- محتوى يديره صاحب المؤسسة من التطبيق ---------- -->
+<script type="module">
+  // الإعدادات تُحقن وقت النشر من .env.local عبر site/copy-to-dist.mjs.
+  // بدونها (تشغيل محلي مثلاً) تبقى الصفحة كما هي بمحتواها المكتوب.
+
+  // نقطة تطبيق واحدة: تُستدعى بعد الجلب، وتُستدعى مباشرة في الاختبارات.
+  window.__albachaApplySite = (site, photos) => {
+    if (site && site.whatsapp) {
+      const digits = String(site.whatsapp).replace(/\D/g, '');
+      const number = digits.startsWith('00') ? digits.slice(2)
+        : digits.startsWith('213') ? digits
+        : digits.startsWith('0') ? '213' + digits.slice(1)
+        : '213' + digits;
+      document.querySelectorAll('a[href*="wa.me/"]').forEach((link) => {
+        link.href = link.href.replace(/wa\.me\/\d+/, 'wa.me/' + number);
+      });
+    }
+
+    if (site && site.galleryNote) {
+      const note = document.getElementById('gallery-note');
+      if (note) note.textContent = site.galleryNote;
+    }
+
+    const grid = document.getElementById('gallery-grid');
+    const list = (photos || []).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+    if (grid && list.length) {
+      grid.innerHTML = '';
+      for (const photo of list) {
+        const figure = document.createElement('figure');
+        figure.className = 'gallery-photo';
+        const img = document.createElement('img');
+        img.src = photo.dataUrl;
+        img.alt = photo.caption || 'من أعمال مؤسسة الباشة للمعادن';
+        img.loading = 'lazy';
+        figure.appendChild(img);
+        if (photo.caption) {
+          const caption = document.createElement('figcaption');
+          caption.textContent = photo.caption;
+          figure.appendChild(caption);
+        }
+        grid.appendChild(figure);
+      }
+    }
+  };
+
+  const config = window.__ALBACHA_FIREBASE__;
+  if (config && config.apiKey && config.projectId) {
+    try {
+      const [{ initializeApp }, { getFirestore, collection, doc, getDoc, getDocs }] = await Promise.all([
+        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js'),
+        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js'),
+      ]);
+
+      const db = getFirestore(initializeApp(config));
+      const [settings, gallery] = await Promise.all([
+        getDoc(doc(db, 'siteConfig', 'main')).catch(() => null),
+        getDocs(collection(db, 'siteGallery')).catch(() => null),
+      ]);
+
+      window.__albachaApplySite(
+        settings && settings.exists() ? settings.data() : null,
+        gallery ? gallery.docs.map((entry) => entry.data()) : [],
+      );
+    } catch {
+      /* تعذّر الجلب (انقطاع مثلاً) — تبقى الصفحة بمحتواها المكتوب */
+    }
+  }
+</script>
+
+</body>
+</html>
