@@ -260,6 +260,12 @@ export default function Orders() {
         <div className="list">
           {visible.map((order) => {
             const remaining = orderRemaining(order);
+            // رقم الزبون قد يُضاف أو يُصحَّح بعد إنشاء الطلب، فيُقرأ من بطاقته
+            // الحالية وتبقى نسخة الطلب احتياطاً للزبائن المحذوفين.
+            const phone =
+              customers.find((entry) => entry.id === order.customerId)?.phone ||
+              order.customerPhone;
+            const waLink = orderWhatsAppLink({ ...order, customerPhone: phone }, profile);
             return (
               <div key={order.id} className="card">
                 <div className="card__head">
@@ -311,10 +317,10 @@ export default function Orders() {
                   >
                     تسجيل دفعة
                   </button>
-                  {orderWhatsAppLink(order, profile) ? (
+                  {waLink ? (
                     <a
                       className="btn btn--ghost btn--sm"
-                      href={orderWhatsAppLink(order, profile) as string}
+                      href={waLink}
                       target="_blank"
                       rel="noopener"
                     >
@@ -324,7 +330,12 @@ export default function Orders() {
                           ? 'إشعار «جاهز» بواتساب'
                           : 'إرسال الحساب بواتساب'}
                     </a>
-                  ) : null}
+                  ) : (
+                    // بلا رقم لا يوجد واتساب: يُقال ذلك صراحةً بدل اختفاء الزرّ بلا سبب.
+                    <Link className="btn btn--ghost btn--sm" to="/customers">
+                      أضف رقم الزبون لواتساب
+                    </Link>
+                  )}
                   <button
                     type="button"
                     className="btn btn--ghost btn--sm"
