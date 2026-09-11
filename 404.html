@@ -32,6 +32,12 @@
     }
   }
 
+  // ما لا يخصّ تطبيقاً يعود إلى الموقع التعريفي في الجذر.
+  if (!app) {
+    loc.replace(BASE);
+    return;
+  }
+
   var target = BASE + app + '?p=/' + rest;
   if (loc.search) target += '&q=' + encodeURIComponent(loc.search.slice(1));
   loc.replace(target + loc.hash);

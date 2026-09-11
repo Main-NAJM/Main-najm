@@ -1,16 +1,16 @@
 {
-  "name": "حرفة برو",
-  "short_name": "حرفة برو",
-  "description": "إدارة الطلبيات والمواعيد والتكاليف والديون للحرفيين والتجار",
+  "name": "مؤسسة الباشة للمعادن",
+  "short_name": "الباشة للمعادن",
+  "description": "تصنيع وتركيب أبواب ونوافذ الألمنيوم والحديد — تيمياوين، ولاية برج باجي مختار.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
   "scope": "./",
+  "id": "albacha-metals",
   "display": "standalone",
-  "orientation": "portrait",
-  "background_color": "#f6f7f9",
-  "theme_color": "#0f766e",
-  "categories": ["business", "productivity", "finance"],
+  "background_color": "#EDEAE2",
+  "theme_color": "#EDEAE2",
+  "categories": ["business"],
   "icons": [
     {
       "src": "./icons/icon-192.png",
@@ -33,19 +33,12 @@
   ],
   "shortcuts": [
     {
-      "name": "طلبية جديدة",
-      "short_name": "طلبية",
-      "url": "./orders?new=1"
+      "name": "منتجاتنا",
+      "url": "./#products"
     },
     {
-      "name": "حاسبة التكلفة",
-      "short_name": "الحاسبة",
-      "url": "./calculator"
-    },
-    {
-      "name": "سجل الديون",
-      "short_name": "الديون",
-      "url": "./debts"
+      "name": "اتصل بنا",
+      "url": "./#contact"
     }
   ]
 }

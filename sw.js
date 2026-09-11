@@ -1,33 +1,31 @@
-/* عامل الخدمة لتطبيق حرفة برو — تخزين مؤقّت يسمح بالعمل دون إنترنت. */
+/* عامل الخدمة لتطبيق مؤسسة الباشة للمعادن — يجعل الموقع يعمل دون إنترنت بعد أول زيارة. */
 
-const VERSION = 'herfah-pro-v4';
-const APP_SHELL = `${VERSION}-shell`;
-const RUNTIME = `${VERSION}-runtime`;
+const VERSION = 'albacha-v2';
+const CACHE = `${VERSION}-assets`;
 
-// مسار التطبيق مشتقّ من موقع هذا الملف، فيعمل على الجذر وعلى مسار فرعي
-// مثل GitHub Pages (‎/<اسم-المستودع>/‎) دون تعديل.
+// نطاق العمل مشتقّ من موقع هذا الملف، فيعمل في الجذر وعلى مسار فرعي مثل ‎/albacha/‎.
 const BASE = new URL('./', self.location).pathname;
 const INDEX = `${BASE}index.html`;
+
+// التطبيق له عامل خدمة خاصّ به تحت ‎/app/‎، فلا يعترض هذا الموقعُ طلباتِه.
+const EXTERNAL_PATHS = [`${BASE}app`];
 
 const PRECACHE = [
   BASE,
   INDEX,
   `${BASE}manifest.webmanifest`,
-  `${BASE}icons/icon.svg`,
   `${BASE}icons/icon-192.png`,
   `${BASE}icons/icon-512.png`,
+  `${BASE}icons/icon-maskable-512.png`,
+  `${BASE}icons/apple-touch-icon.png`,
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches
-      .open(APP_SHELL)
-      // addAll تفشل كلّها إذا فشل ملف واحد، لذا نخزّن كل ملف على حدة.
-      .then((cache) =>
-        Promise.all(
-          PRECACHE.map((url) => cache.add(url).catch(() => undefined)),
-        ),
-      )
+      .open(CACHE)
+      // addAll تفشل كلّها إذا فشل ملف واحد، لذا يُخزّن كل ملف على حدة.
+      .then((cache) => Promise.all(PRECACHE.map((url) => cache.add(url).catch(() => undefined))))
       .then(() => self.skipWaiting())
       .catch(() => undefined),
   );
@@ -38,9 +36,10 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((keys) =>
+        // يُنظَّف معها ما خلّفه «حرفة برو» حين كان يشغل هذا النطاق.
         Promise.all(
           keys
-            .filter((key) => key !== APP_SHELL && key !== RUNTIME)
+            .filter((key) => (key.startsWith('albacha-') && key !== CACHE) || key.startsWith('herfah-pro-'))
             .map((key) => caches.delete(key)),
         ),
       )
@@ -48,49 +47,53 @@ self.addEventListener('activate', (event) => {
   );
 });
 
-self.addEventListener('message', (event) => {
-  if (event.data && event.data.type === 'SKIP_WAITING') self.skipWaiting();
-});
-
-// مواقع أخرى منشورة على نفس النطاق خارج التطبيق (مثل الموقع التعريفي على /albacha):
-// يتجاهلها عامل الخدمة تماماً حتى لا تحلّ صفحاتها محلّ قوقعة التطبيق في الذاكرة.
-const EXTERNAL_PATHS = [`${BASE}albacha`, `${BASE}app`];
-
-const isSameOrigin = (url) => new URL(url).origin === self.location.origin;
-const isOutsideApp = (url) => {
-  const { pathname } = new URL(url);
-  return EXTERNAL_PATHS.some((path) => pathname === path || pathname.startsWith(`${path}/`));
-};
-
 self.addEventListener('fetch', (event) => {
   const { request } = event;
-
   if (request.method !== 'GET') return;
-  // طلبات Firebase وغيرها تمرّ مباشرة إلى الشبكة (لها آلية عملها دون اتصال).
-  if (!isSameOrigin(request.url)) return;
-  // صفحات خارج التطبيق يتولّاها المتصفّح مباشرة دون تخزين.
-  if (isOutsideApp(request.url)) return;
 
-  // التنقّل: الشبكة أولاً مع رجوع إلى نسخة index.html المخزّنة.
+  const url = new URL(request.url);
+  const sameOrigin = url.origin === self.location.origin;
+
+  // خطوط Google: من الذاكرة أولاً حتى تظهر بخطوطها الصحيحة دون إنترنت.
+  if (!sameOrigin) {
+    if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+      event.respondWith(
+        caches.match(request).then(
+          (cached) =>
+            cached ||
+            fetch(request)
+              .then((response) => {
+                const copy = response.clone();
+                caches.open(CACHE).then((cache) => cache.put(request, copy));
+                return response;
+              })
+              .catch(() => cached || Response.error()),
+        ),
+      );
+    }
+    return;
+  }
+
+  // ملفات خارج نطاق هذا الموقع لا تخصّه — ومنها التطبيق تحت ‎/app/‎.
+  if (!url.pathname.startsWith(BASE)) return;
+  if (EXTERNAL_PATHS.some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`)))
+    return;
+
+  // التنقّل: الشبكة أولاً ليصل أي تحديث، مع رجوع إلى الصفحة المخزّنة دون إنترنت.
   if (request.mode === 'navigate') {
     event.respondWith(
       fetch(request)
         .then((response) => {
           const copy = response.clone();
-          caches.open(APP_SHELL).then((cache) => cache.put(INDEX, copy));
+          caches.open(CACHE).then((cache) => cache.put(INDEX, copy));
           return response;
         })
-        .catch(() =>
-          caches
-            .match(INDEX)
-            .then((cached) => cached || caches.match(BASE))
-            .then((cached) => cached || Response.error()),
-        ),
+        .catch(() => caches.match(INDEX).then((cached) => cached || caches.match(BASE)).then((cached) => cached || Response.error())),
     );
     return;
   }
 
-  // الملفات الثابتة: من الذاكرة أولاً ثم الشبكة.
+  // بقيّة الملفات: من الذاكرة أولاً ثم الشبكة.
   event.respondWith(
     caches.match(request).then((cached) => {
       if (cached) return cached;
@@ -98,11 +101,11 @@ self.addEventListener('fetch', (event) => {
         .then((response) => {
           if (response && response.status === 200 && response.type === 'basic') {
             const copy = response.clone();
-            caches.open(RUNTIME).then((cache) => cache.put(request, copy));
+            caches.open(CACHE).then((cache) => cache.put(request, copy));
           }
           return response;
         })
-        .catch(() => cached || Response.error());
+        .catch(() => Response.error());
     }),
   );
 });
