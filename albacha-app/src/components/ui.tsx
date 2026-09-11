@@ -1,4 +1,4 @@
-import { useEffect, useId, type ChangeEvent, type ReactNode } from 'react';
+import { useEffect, useId, useState, type ChangeEvent, type ReactNode } from 'react';
 
 interface FieldProps {
   label: string;
@@ -55,6 +55,81 @@ export function TextInput({
           disabled={disabled}
           autoFocus={autoFocus}
           onChange={(event: ChangeEvent<HTMLInputElement>) => onChange(event.target.value)}
+        />
+      )}
+    </Field>
+  );
+}
+
+/**
+ * يوحّد ما يكتبه المستخدم فعلاً على الهاتف: الأرقام العربية (٠١٢٣) والفارسية،
+ * والفاصلة العشرية بأشكالها الثلاثة (، ٫ ,)، ويطرح ما سواها.
+ * لوحة مفاتيح عربية تكتب «١٢٠٠» وNumber لا يفهمها — فتضيع كل ضغطة بلا هذا.
+ */
+export const normalizeNumeric = (raw: string): string =>
+  raw
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+    .replace(/[،٫,]/g, '.')
+    .replace(/[^\d.]/g, '');
+
+/** رقم من نصّ المستخدم: يقبل الأرقام العربية والفواصل، والفراغ يساوي صفراً. */
+export const parseNumeric = (raw: string): number => {
+  const parsed = Number(normalizeNumeric(raw));
+  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
+};
+
+interface NumberInputProps {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  /** يسمح بالفاصلة العشرية — للمقاسات والكميات دون الأسعار الصحيحة. */
+  decimals?: boolean;
+  placeholder?: string;
+  hint?: string;
+  autoFocus?: boolean;
+}
+
+/**
+ * حقل رقمي يكتب فيه المستخدم بحرّية.
+ *
+ * الحقل المربوط مباشرةً برقم لا يُكتب فيه: ما إن تُطبع «1.» حتى يحوّلها Number
+ * إلى 1 فتختفي الفاصلة، و«0» تصير صفراً فيُمسح، والأرقام العربية تصير NaN فتضيع
+ * كل ضغطة. لذا يُحتفظ هنا بنصّ المستخدم كما كتبه أثناء الكتابة، ولا يُشتقّ من
+ * الرقم إلا بعد مغادرة الحقل.
+ */
+export function NumberInput({
+  label,
+  value,
+  onChange,
+  decimals = false,
+  placeholder,
+  hint,
+  autoFocus,
+}: NumberInputProps) {
+  const [draft, setDraft] = useState<string | null>(null);
+
+  return (
+    <Field label={label} hint={hint}>
+      {(id) => (
+        <input
+          id={id}
+          className="input"
+          type="text"
+          inputMode={decimals ? 'decimal' : 'numeric'}
+          value={draft ?? (value === 0 ? '' : String(value))}
+          placeholder={placeholder}
+          autoFocus={autoFocus}
+          onChange={(event: ChangeEvent<HTMLInputElement>) => {
+            let text = normalizeNumeric(event.target.value);
+            if (!decimals) text = text.replace(/\./g, '');
+            // فاصلة عشرية واحدة: ما بعدها يلتحق بالكسر.
+            const parts = text.split('.');
+            if (parts.length > 2) text = `${parts.shift()}.${parts.join('')}`;
+            setDraft(text);
+            onChange(parseNumeric(text));
+          }}
+          onBlur={() => setDraft(null)}
         />
       )}
     </Field>

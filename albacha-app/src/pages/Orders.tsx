@@ -18,11 +18,13 @@ import {
   ConfirmDialog,
   EmptyState,
   Modal,
+  NumberInput,
   SectionTitle,
   Select,
   Spinner,
   TextArea,
   TextInput,
+  parseNumeric,
 } from '@/components/ui';
 import type { MaterialKind, Order, OrderItem, OrderStatus, Photo, PricingUnit } from '@/lib/types';
 import { compressImage } from '@/lib/photo';
@@ -73,13 +75,6 @@ const emptyOrder = (): Order => ({
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
-
-/** حقل رقمي يقبل الفراغ أثناء الكتابة ولا يجبر المستخدم على مسح الصفر. */
-const numberValue = (value: number): string => (value === 0 ? '' : String(value));
-const toNumber = (value: string): number => {
-  const parsed = Number(value.replace(',', '.'));
-  return Number.isFinite(parsed) && parsed >= 0 ? parsed : 0;
-};
 
 export default function Orders() {
   const { orders, customers, profile, loading, saveOrder, deleteOrder, loadPhotos, savePhoto, deletePhoto } =
@@ -156,7 +151,7 @@ export default function Orders() {
 
   const addPayment = async () => {
     if (!paying) return;
-    const amount = toNumber(payAmount);
+    const amount = parseNumeric(payAmount);
     if (amount <= 0) return;
     await saveOrder({
       ...paying,
@@ -473,39 +468,36 @@ export default function Orders() {
 
                   {item.unit === 'm2' ? (
                     <div className="row--3 row">
-                      <TextInput
+                      <NumberInput
                         label="العرض (م)"
-                        inputMode="decimal"
-                        value={numberValue(item.width)}
-                        onChange={(value) => patchItem(item.id, { width: toNumber(value) })}
+                        value={item.width}
+                        onChange={(value) => patchItem(item.id, { width: value })}
+                        decimals
                       />
-                      <TextInput
+                      <NumberInput
                         label="الارتفاع (م)"
-                        inputMode="decimal"
-                        value={numberValue(item.height)}
-                        onChange={(value) => patchItem(item.id, { height: toNumber(value) })}
+                        value={item.height}
+                        onChange={(value) => patchItem(item.id, { height: value })}
+                        decimals
                       />
-                      <TextInput
+                      <NumberInput
                         label="العدد"
-                        inputMode="numeric"
-                        value={numberValue(item.qty)}
-                        onChange={(value) => patchItem(item.id, { qty: toNumber(value) })}
+                        value={item.qty}
+                        onChange={(value) => patchItem(item.id, { qty: value })}
                       />
                     </div>
                   ) : (
-                    <TextInput
+                    <NumberInput
                       label="العدد"
-                      inputMode="numeric"
-                      value={numberValue(item.qty)}
-                      onChange={(value) => patchItem(item.id, { qty: toNumber(value) })}
+                      value={item.qty}
+                      onChange={(value) => patchItem(item.id, { qty: value })}
                     />
                   )}
 
-                  <TextInput
+                  <NumberInput
                     label={item.unit === 'm2' ? 'سعر المتر المربّع' : 'سعر القطعة'}
-                    inputMode="numeric"
-                    value={numberValue(item.unitPrice)}
-                    onChange={(value) => patchItem(item.id, { unitPrice: toNumber(value) })}
+                    value={item.unitPrice}
+                    onChange={(value) => patchItem(item.id, { unitPrice: value })}
                     hint={
                       item.unit === 'm2' && item.width && item.height
                         ? `المساحة ${decimal(item.width * item.height * item.qty)} م²`
@@ -529,25 +521,22 @@ export default function Orders() {
             </div>
 
             <div className="row mt-8">
-              <TextInput
+              <NumberInput
                 label="أجرة التركيب والنقل"
-                inputMode="numeric"
-                value={numberValue(editing.laborFee)}
-                onChange={(value) => patch({ laborFee: toNumber(value) })}
+                value={editing.laborFee}
+                onChange={(value) => patch({ laborFee: value })}
               />
-              <TextInput
+              <NumberInput
                 label="الخصم"
-                inputMode="numeric"
-                value={numberValue(editing.discount)}
-                onChange={(value) => patch({ discount: toNumber(value) })}
+                value={editing.discount}
+                onChange={(value) => patch({ discount: value })}
               />
             </div>
 
-            <TextInput
+            <NumberInput
               label="تكلفة المواد والتنفيذ"
-              inputMode="numeric"
-              value={numberValue(editing.cost ?? 0)}
-              onChange={(value) => patch({ cost: toNumber(value) })}
+              value={editing.cost ?? 0}
+              onChange={(value) => patch({ cost: value })}
               hint="تُستعمل لحساب الربح في التقرير الشهري، ولا تظهر للزبون."
             />
 
