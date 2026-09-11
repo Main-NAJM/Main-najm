@@ -144,6 +144,8 @@ export interface AppUser {
   uid: string;
   email: string | null;
   displayName: string | null;
+  /** يُملأ عند الدخول برقم الهاتف. */
+  phoneNumber: string | null;
   isAnonymous: boolean;
   /** true عندما يعمل التطبيق محلياً بدون Firebase. */
   isLocal: boolean;

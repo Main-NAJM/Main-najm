@@ -12,13 +12,51 @@ service cloud.firestore {
         allow read, write: if request.auth != null
           && request.auth.uid == userId
           && collectionName in [
+            // تطبيق حرفة برو
             'orders',
             'appointments',
             'calculations',
             'marketPrices',
-            'debts'
+            'debts',
+            // تطبيق مؤسسة الباشة (مجموعات مستقلّة حتى لا تختلط البيانات)
+            'albachaCustomers',
+            'albachaOrders',
+            'albachaMaterials',
+            'albachaPhotos'
           ];
       }
+    }
+
+    // ---------------------------------------------------------------
+    // الموقع التعريفي: يقرأه كل الزوّار بلا حساب، ويكتبه المالك وحده.
+    // المالك = ownerUid في siteConfig/main، ويُثبَّت عند أول إنشاء للوثيقة
+    // من حساب مسجَّل (أول من يفتح لوحة الموقع في التطبيق يملكها).
+    // ---------------------------------------------------------------
+    function siteOwner() {
+      return get(/databases/$(database)/documents/siteConfig/main).data.ownerUid;
+    }
+    function siteClaimed() {
+      return exists(/databases/$(database)/documents/siteConfig/main);
+    }
+    function isSiteOwner() {
+      return request.auth != null && siteClaimed() && request.auth.uid == siteOwner();
+    }
+
+    match /siteConfig/{docId} {
+      allow read: if true;
+      // أول مطالبة: وثيقة main فقط، من حساب مسجَّل، وبمعرّفه هو، ومرّة واحدة.
+      allow create: if request.auth != null
+        && docId == 'main'
+        && !siteClaimed()
+        && request.resource.data.ownerUid == request.auth.uid;
+      // التعديل لا يغيّر المالك.
+      allow update: if isSiteOwner() && request.resource.data.ownerUid == siteOwner();
+      allow delete: if false;
+    }
+
+    match /siteGallery/{photoId} {
+      allow read: if true;
+      allow write: if isSiteOwner();
     }
 
     // منع الوصول إلى أي مسار آخر.

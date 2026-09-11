@@ -27,8 +27,8 @@
 - **React 18 + TypeScript + Vite** — المسار الاقتصادي: قاعدة شيفرة واحدة للويب والموبايل.
 - **PWA** — ملف `manifest.webmanifest` وعامل خدمة (`public/sw.js`) للعمل دون إنترنت والتثبيت
   على الشاشة الرئيسية.
-- **Firebase** — المصادقة (Auth) وقاعدة البيانات (Firestore) مع تخزين محلي دائم للمزامنة بعد
-  انقطاع الاتصال.
+- **Firebase** — المصادقة (Auth) بثلاث طرق: البريد وكلمة المرور، وحساب Google، ورقم الهاتف
+  برمز تحقّق؛ وقاعدة البيانات (Firestore) مع تخزين محلي دائم للمزامنة بعد انقطاع الاتصال.
 - **بدون مكتبات واجهة خارجية** — تنسيق RTL مكتوب يدوياً، يدعم الوضع الليلي تلقائياً.
 
 ---
@@ -54,33 +54,99 @@ npm run lint      # فحص الأنواع بـ TypeScript
 
 ---
 
+## تطبيق مؤسسة الباشة (إدارة الزبائن والطلبات)
+
+مجلد `albacha-app/` تطبيق مستقلّ لإدارة زبائن المؤسسة وطلباتهم: عروض الأسعار بالقياسات،
+الدفعات والمستحقّات، صور الأعمال، مخزون المواد بحدّ تنبيه، وتقرير شهري بالأرباح، وطباعة
+الفواتير. يشترك مع حرفة برو في مشروع Firebase نفسه لكن ببيانات
+منفصلة تماماً.
+
+```bash
+npm run app         # تشغيله محلياً على http://localhost:5180
+npm run build:app   # بناؤه وحده إلى dist/app
+```
+
+التفاصيل في [`albacha-app/README.md`](albacha-app/README.md).
+
+---
+
+## الموقع التعريفي (مؤسسة الباشة للمعادن)
+
+مجلد `site/` يحوي موقعاً تعريفياً من صفحة واحدة، مستقلاً عن تطبيق حرفة برو. لتشغيله محلياً:
+
+```bash
+npm run site        # ثم افتح http://localhost:8080
+npm run site -- 3000  # منفذ مخصّص
+```
+
+يطبع الأمر أيضاً رابط الشبكة المحلية (`http://192.168.x.x:8080`) لفتح الموقع من الهاتف على
+نفس شبكة الواي‑فاي.
+
+وعلى الإنترنت يُنشر الموقع مع التطبيق في نفس مشروع Firebase على المسار `/albacha`:
+
+```bash
+npm run deploy -- --project <اسم-مشروعك-على-Firebase>
+```
+
+| العنوان | المحتوى |
+| --- | --- |
+| `https://<اسم-المشروع>.web.app/` | تطبيق حرفة برو |
+| `https://<اسم-المشروع>.web.app/albacha` | موقع مؤسسة الباشة للمعادن |
+| `https://<اسم-المشروع>.web.app/app` | تطبيق إدارة زبائن الباشة |
+
+الموقع مُهيّأ أيضاً كتطبيق ويب تقدّمي (PWA) بأيقونته الخاصة، فيمكن تثبيته على الشاشة
+الرئيسية والعمل به دون إنترنت بعد النشر على https.
+
+التفاصيل والتثبيت كتطبيق والنشر التلقائي عبر GitHub Actions في [`site/README.md`](site/README.md).
+
+---
+
 ## ربط Firebase
 
-1. أنشئ مشروعاً على [console.firebase.google.com](https://console.firebase.google.com).
-2. من **Project settings → Your apps** أضف تطبيق ويب واحصل على إعدادات SDK.
-3. انسخ `.env.example` إلى `.env.local` واملأ القيم:
+المشروع المستعمل مضبوط في `.firebaserc`: **`albacha-metals-fecd8`**.
 
-   ```bash
-   cp .env.example .env.local
-   ```
+### ١. تسجيل تطبيق الويب وكتابة المفاتيح — بأمر واحد
 
-   ```env
-   VITE_FIREBASE_API_KEY=...
-   VITE_FIREBASE_AUTH_DOMAIN=....firebaseapp.com
-   VITE_FIREBASE_PROJECT_ID=...
-   VITE_FIREBASE_STORAGE_BUCKET=....appspot.com
-   VITE_FIREBASE_MESSAGING_SENDER_ID=...
-   VITE_FIREBASE_APP_ID=...
-   ```
+```bash
+npx firebase-tools@13 login   # مرّة واحدة على الجهاز
+npm run firebase:setup
+```
 
-4. فعّل **Authentication → Sign-in method → Email/Password**.
-5. أنشئ قاعدة **Firestore Database**، ثم انشر قواعد الأمان الموجودة في `firestore.rules`:
+السكربت يقرأ المشروع من `.firebaserc`، ويبحث عن تطبيق ويب في المشروع فيُنشئ واحداً إن لم
+يوجد، ثم يجلب إعدادات SDK ويكتبها في `.env.local`. لاستبدال ملف موجود: `npm run firebase:setup -- --force`،
+ولمشروع آخر: `npm run firebase:setup -- --project <id>`.
 
-   ```bash
-   npx firebase-tools deploy --only firestore:rules
-   ```
+<details>
+<summary>الطريقة اليدوية بدل السكربت</summary>
 
-بمجرّد وجود القيم في `.env.local` تظهر شاشة تسجيل الدخول وتبدأ المزامنة بين الأجهزة.
+من **Project settings → Your apps → Web** أضف تطبيقاً، ثم انسخ `.env.example` إلى
+`.env.local` واملأ `VITE_FIREBASE_*` من إعدادات SDK.
+
+</details>
+
+### ٢. تفعيل طرق الدخول (من الكونسول، مرّة واحدة)
+
+**Authentication → Sign-in method** ← فعّل الثلاثة:
+
+| الطريقة | ما تحتاجه |
+| --- | --- |
+| **Email/Password** | التفعيل فقط |
+| **Google** | التفعيل + اختيار بريد دعم المشروع |
+| **Phone** | التفعيل + خطة **Blaze** (الرسائل مدفوعة). للتجربة بلا رسائل: أضف رقماً تجريبياً ورمزه من **Phone numbers for testing** |
+
+ثم من **Authentication → Settings → Authorized domains** أضف النطاق الذي ستفتح منه
+التطبيق (`localhost` مضاف تلقائياً، و`albacha-metals-fecd8.web.app` يُضاف عند النشر).
+
+### ٣. قاعدة البيانات
+
+أنشئ **Firestore Database** ثم انشر قواعد الأمان:
+
+```bash
+npx firebase-tools@13 deploy --only firestore:rules
+```
+
+بمجرّد وجود القيم في `.env.local` تظهر شاشة تسجيل الدخول بطرقها الثلاث وتبدأ المزامنة بين
+الأجهزة. كل مستخدم يرى بياناته وحده — القواعد تمنع أي وصول متبادل.
 
 > ملف `.env.local` مستبعد من Git، فلا تُرفع مفاتيحك إلى المستودع.
 
@@ -114,6 +180,9 @@ New repository secret**:
 | `FIREBASE_PROJECT_ID` | كونسول Firebase → Project settings → General → حقل **Project ID** |
 | `FIREBASE_SERVICE_ACCOUNT` | كونسول Firebase → Project settings → **Service accounts** → **Generate new private key** → افتح الملف المنزَّل والصق محتواه كاملاً |
 
+> إن ظهرت رسالة **«لا يُسمح بإنشاء مفاتيح على حساب الخدمة هذا»** فالسبب سياسة إدارية في
+> Google Cloud تمنع مفاتيح حسابات الخدمة. استعمل حينها الطريقة التالية — لا تحتاج مفتاحاً.
+
 بعدها يعمل النشر تلقائياً عند أول دفعة إلى `main`، أو يدوياً من تبويب **Actions** عبر
 **Run workflow**. الرابط الناتج شكله:
 
@@ -127,6 +196,56 @@ https://<project-id>.web.app
 
 > سير العمل يتوقّف برسالة واضحة إن كان أحد السرّين ناقصاً، بدل أن يفشل في منتصف النشر.
 > ومفتاح حساب الخدمة يُكتب إلى ملف مؤقّت ولا يُطبع في السجلّات إطلاقاً.
+
+### GitHub Pages — بلا مفتاح ولا سرّ، ولا حاجة إلى حاسوب
+
+سير العمل `.github/workflows/deploy-pages.yml` يبني الثلاثة وينشرها على GitHub Pages
+عند كل دفعة. لا يحتاج مفتاح حساب خدمة، فيصلح حين تمنعه سياسة Google Cloud.
+
+**الإعداد لمرة واحدة، من المتصفّح:**
+
+1. **Settings → General → Danger Zone → Change repository visibility → Public.**
+   Pages من مستودع خاص يحتاج خطة مدفوعة. صفحة الموقع منشورة للعموم في الحالتين؛
+   ما يتغيّر هو أن الشيفرة تصير مقروءة أيضاً. لا أسرار فيها: `.env.local` غير مرفوع،
+   ومفاتيح الويب عامّة بطبيعتها.
+2. **Settings → Pages → Source → GitHub Actions.**
+
+بعدها تُنشر النسخة تلقائياً عند كل تعديل، على:
+
+| العنوان | المحتوى |
+| --- | --- |
+| `https://main-najm.github.io/Main-najm/` | حرفة برو |
+| `https://main-najm.github.io/Main-najm/albacha/` | الموقع التعريفي |
+| `https://main-najm.github.io/Main-najm/app/` | تطبيق مؤسسة الباشة |
+
+**ما تبقّى في كونسول Firebase** (تبقى قاعدة البيانات والمصادقة على Firebase كما هي):
+
+- **Authentication → Settings → Authorized domains** ← أضف `main-najm.github.io`،
+  وإلا رفض تسجيل الدخول.
+- **Firestore → Rules** ← الصق محتوى `firestore.rules` واضغط **Publish**. Pages لا
+  ينشر القواعد، بخلاف نشر Firebase.
+
+> **تفاصيل تقنية.** مسار النشر يأتي من `actions/configure-pages`، فيُمرَّر إلى Vite في
+> `BASE_PATH`/`APP_BASE_PATH`، وكل المسارات في الشيفرة مشتقّة من `import.meta.env.BASE_URL`
+> فتتبعه تلقائياً. ولأن Pages لا تعرف إعادة التوجيه، يولّد `scripts/pages-404.mjs` صفحة
+> `404.html` تلتقط المسارات الداخلية وتعيدها إلى التطبيق الصحيح مع مسارها الأصلي.
+
+### بلا مفتاح حساب خدمة — بأمر واحد (يصلح من الهاتف)
+
+تمنع سياسة **Disable service account key creation** إنشاء مفاتيح الخدمة في كثير من مشاريع
+Google Cloud، فيتعذّر ملء السرّ أعلاه. لا حاجة إليه أصلاً: هذا الأمر ينشر كل شيء بتسجيل
+دخول عادي بالمتصفّح.
+
+```bash
+bash scripts/deploy.sh        # أو: npm run deploy:all
+```
+
+يسجّل الدخول إن لزم (برابط ورمز، بلا `localhost`)، ثم يثبّت الحزم، ويكتب `.env.local`
+بمفاتيح الويب، ويبني الموقع والتطبيقين، وينشر الاستضافة وقواعد أمان Firestore معاً.
+
+**من هاتف بلا حاسوب:** افتح المستودع على GitHub ← **Code** ← تبويب **Codespaces** ←
+**Create codespace on main**. تُفتح طرفية Linux كاملة داخل المتصفّح، نفّذ فيها الأمر أعلاه.
+الرابط الذي يطبعه `login` افتحه في تبويب آخر، والصق الرمز في الطرفية.
 
 ### Firebase Hosting — يدوياً من جهازك
 

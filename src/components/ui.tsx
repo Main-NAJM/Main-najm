@@ -37,6 +37,7 @@ interface TextInputProps {
   required?: boolean;
   autoFocus?: boolean;
   inputMode?: 'text' | 'tel' | 'numeric' | 'decimal' | 'email';
+  disabled?: boolean;
 }
 
 export function TextInput({
@@ -49,6 +50,7 @@ export function TextInput({
   required,
   autoFocus,
   inputMode,
+  disabled,
 }: TextInputProps) {
   return (
     <Field label={label} hint={hint}>
@@ -62,6 +64,7 @@ export function TextInput({
           required={required}
           autoFocus={autoFocus}
           inputMode={inputMode}
+          disabled={disabled}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.value);
           }}
