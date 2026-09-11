@@ -1,5 +1,5 @@
 /** تخزين على الجهاز — يُستعمل في وضع «بدون حساب» وعند غياب إعدادات Firebase. */
-import type { Customer, Material, Order, Photo, WorkshopProfile } from '@/lib/types';
+import type { Backup, Customer, Material, Order, Photo, WorkshopProfile } from '@/lib/types';
 import { newId } from '@/lib/format';
 import { DEFAULT_PROFILE, type Snapshot, type Store } from './store';
 
@@ -38,6 +38,41 @@ export const getLocalUid = (): string => {
   const uid = `local-${newId()}`;
   write(UID_KEY, uid);
   return uid;
+};
+
+/** معرّف الجهاز إن وُجد، بلا إنشاء واحد جديد — للاطّلاع لا للاستعمال. */
+const peekLocalUid = (): string | null => {
+  const existing = read<string | null>(UID_KEY, null);
+  return typeof existing === 'string' && existing ? existing : null;
+};
+
+/**
+ * بيانات أُدخلت على هذا الجهاز قبل ربط الحساب، أو null إن لم يكن فيه شيء.
+ *
+ * من استعمل التطبيق قبل تفعيل Firebase حُفظت بياناته تحت هوية جهاز، فلمّا صار
+ * الدخول بحساب بقيت محفوظة لكن خارج ما يقرأه التطبيق. هذه هي نافذتها.
+ */
+export const readDeviceBackup = (): Backup | null => {
+  const uid = peekLocalUid();
+  if (!uid) return null;
+  const customers = read<Customer[]>(key(uid, 'customers'), []);
+  const orders = read<Order[]>(key(uid, 'orders'), []);
+  const materials = read<Material[]>(key(uid, 'materials'), []);
+  if (!customers.length && !orders.length && !materials.length) return null;
+  return {
+    version: 1,
+    exportedAt: Date.now(),
+    customers,
+    orders,
+    materials,
+    profile: { ...DEFAULT_PROFILE, ...read<Partial<WorkshopProfile>>(key(uid, 'profile'), {}) },
+  };
+};
+
+/** صور طلب محفوظة على الجهاز، لتُنقل مع بياناته. */
+export const readDevicePhotos = (orderId: string): Photo[] => {
+  const uid = peekLocalUid();
+  return uid ? read<Photo[]>(photosKey(uid, orderId), []) : [];
 };
 
 const upsert = <T extends { id: string }>(list: T[], item: T): T[] => {

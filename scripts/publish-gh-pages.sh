@@ -19,6 +19,9 @@ REPO_NAME="$(basename "$(git rev-parse --show-toplevel)")"
 BASE="/${REPO_NAME}/"
 MESSAGE="${1:-تحديث النسخة المنشورة}"
 
+# مفاتيح الويب من firebase.web.json إن لم يكن ‎.env.local‎ موجوداً (جلسة جديدة مثلاً).
+node scripts/web-config.mjs
+
 echo "▸ البناء على المسار ${BASE}"
 rm -rf dist albacha-app/dist
 BASE_PATH="$BASE" APP_BASE_PATH="${BASE}app/" npm run build
