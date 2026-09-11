@@ -35,6 +35,10 @@ jobs:
       - name: تهيئة Pages
         id: pages
         uses: actions/configure-pages@v5
+        with:
+          # يفعّل Pages على المستودع ويضبط مصدره على GitHub Actions إن لم يكن مفعّلاً،
+          # فلا حاجة إلى ضبطه يدوياً من Settings.
+          enablement: true
 
       - name: حساب مسار النشر
         run: |
