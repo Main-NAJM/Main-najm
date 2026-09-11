@@ -61,7 +61,6 @@ cat <<EOF
 
 ✅ نُشر. يستغرق Pages دقيقة أو دقيقتين ثم:
 
-   https://main-najm.github.io${BASE}          حرفة برو
-   https://main-najm.github.io${BASE}albacha/  الموقع التعريفي
-   https://main-najm.github.io${BASE}app/      تطبيق مؤسسة الباشة
+   https://main-najm.github.io${BASE}      الموقع التعريفي
+   https://main-najm.github.io${BASE}app/  تطبيق مؤسسة الباشة
 EOF
