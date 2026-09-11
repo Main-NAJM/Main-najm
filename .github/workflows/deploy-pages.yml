@@ -2,6 +2,8 @@ name: النشر على GitHub Pages
 
 # نشر بلا مفتاح حساب خدمة وبلا أي سرّ في المستودع: يبني Pages من الشيفرة مباشرة.
 # مفيد حين تمنع سياسة Google Cloud إنشاء مفاتيح الخدمة التي يحتاجها نشر Firebase.
+#
+# يتطلّب ضبطاً واحداً في المستودع: Settings ← Pages ← Source ← GitHub Actions.
 
 on:
   push:
@@ -15,43 +17,24 @@ permissions:
   pages: write
   id-token: write
 
-# نشرة واحدة في كل مرة، وتُلغى السابقة إن وصلت دفعة أحدث.
+# نشرة واحدة في كل مرة، مع ترك الجارية تكتمل.
 concurrency:
-  group: github-pages
-  cancel-in-progress: true
+  group: pages
+  cancel-in-progress: false
 
 jobs:
   build:
     name: البناء
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - name: جلب الشيفرة
+        uses: actions/checkout@v4
 
-      - uses: actions/setup-node@v4
+      - name: تهيئة Node.js
+        uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: 20
           cache: npm
-
-      - name: تهيئة Pages
-        id: pages
-        uses: actions/configure-pages@v5
-        with:
-          # يفعّل Pages على المستودع ويضبط مصدره على GitHub Actions إن لم يكن مفعّلاً،
-          # فلا حاجة إلى ضبطه يدوياً من Settings.
-          enablement: true
-
-      - name: حساب مسار النشر
-        run: |
-          base="${{ steps.pages.outputs.base_path }}"
-          # base_path يأتي فارغاً على النطاق المخصّص، وبلا شرطة أخيرة عادةً.
-          case "$base" in
-            ''|'/') base='/' ;;
-            */) ;;
-            *) base="$base/" ;;
-          esac
-          echo "BASE_PATH=$base"        >> "$GITHUB_ENV"
-          echo "APP_BASE_PATH=${base}app/" >> "$GITHUB_ENV"
-          echo "مسار النشر: $base"
 
       - name: تثبيت الحزم
         run: npm ci
@@ -68,13 +51,20 @@ jobs:
           VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
         run: node scripts/web-config.mjs --force
 
-      - name: البناء
+      - name: بناء نسخة الإنتاج
+        env:
+          # Pages يخدم المشروع من مسار فرعي باسم المستودع.
+          BASE_PATH: /${{ github.event.repository.name }}/
+          APP_BASE_PATH: /${{ github.event.repository.name }}/app/
         run: npm run build
 
-      - name: تهيئة الملفات لـ Pages
+      - name: تهيئة مخرجات النشر
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
         run: node scripts/pages-404.mjs
 
-      - uses: actions/upload-pages-artifact@v3
+      - name: تجهيز حزمة Pages
+        uses: actions/upload-pages-artifact@v3
         with:
           path: dist
 
@@ -86,14 +76,6 @@ jobs:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
     steps:
-      - id: deployment
+      - name: النشر على GitHub Pages
+        id: deployment
         uses: actions/deploy-pages@v4
-
-      - name: الروابط
-        run: |
-          url="${{ steps.deployment.outputs.page_url }}"
-          echo "### تمّ النشر" >> "$GITHUB_STEP_SUMMARY"
-          echo "" >> "$GITHUB_STEP_SUMMARY"
-          echo "- ${url} — حرفة برو" >> "$GITHUB_STEP_SUMMARY"
-          echo "- ${url}albacha/ — الموقع التعريفي" >> "$GITHUB_STEP_SUMMARY"
-          echo "- ${url}app/ — تطبيق مؤسسة الباشة" >> "$GITHUB_STEP_SUMMARY"

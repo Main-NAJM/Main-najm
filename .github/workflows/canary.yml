@@ -1,0 +1,13 @@
+name: فحص تشغيل Actions
+
+# ملف تشخيصي مؤقّت: يثبت أن Actions يقلع على هذا المستودع، لتمييز خطأ في ملف
+# سير عمل آخر عن منع على مستوى المستودع أو المنظّمة. يُحذف بعد التشخيص.
+
+on:
+  workflow_dispatch:
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    steps:
+      - run: echo ok
