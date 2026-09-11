@@ -1,11 +1,14 @@
 /* عامل الخدمة لتطبيق مؤسسة الباشة للمعادن — يجعل الموقع يعمل دون إنترنت بعد أول زيارة. */
 
-const VERSION = 'albacha-v1';
+const VERSION = 'albacha-v2';
 const CACHE = `${VERSION}-assets`;
 
 // نطاق العمل مشتقّ من موقع هذا الملف، فيعمل في الجذر وعلى مسار فرعي مثل ‎/albacha/‎.
 const BASE = new URL('./', self.location).pathname;
 const INDEX = `${BASE}index.html`;
+
+// التطبيق له عامل خدمة خاصّ به تحت ‎/app/‎، فلا يعترض هذا الموقعُ طلباتِه.
+const EXTERNAL_PATHS = [`${BASE}app`];
 
 const PRECACHE = [
   BASE,
@@ -33,7 +36,12 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((key) => key.startsWith('albacha-') && key !== CACHE).map((key) => caches.delete(key))),
+        // يُنظَّف معها ما خلّفه «حرفة برو» حين كان يشغل هذا النطاق.
+        Promise.all(
+          keys
+            .filter((key) => (key.startsWith('albacha-') && key !== CACHE) || key.startsWith('herfah-pro-'))
+            .map((key) => caches.delete(key)),
+        ),
       )
       .then(() => self.clients.claim()),
   );
@@ -66,8 +74,10 @@ self.addEventListener('fetch', (event) => {
     return;
   }
 
-  // ملفات خارج نطاق هذا الموقع (مثل تطبيق حرفة برو في الجذر) لا تخصّه.
+  // ملفات خارج نطاق هذا الموقع لا تخصّه — ومنها التطبيق تحت ‎/app/‎.
   if (!url.pathname.startsWith(BASE)) return;
+  if (EXTERNAL_PATHS.some((path) => url.pathname === path || url.pathname.startsWith(`${path}/`)))
+    return;
 
   // التنقّل: الشبكة أولاً ليصل أي تحديث، مع رجوع إلى الصفحة المخزّنة دون إنترنت.
   if (request.mode === 'navigate') {

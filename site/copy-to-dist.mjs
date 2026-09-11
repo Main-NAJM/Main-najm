@@ -1,10 +1,11 @@
 // ينسخ الموقع التعريفي إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
 //
-// المصدر: site/            (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
-// الهدف:  dist/albacha/    ← يصبح الرابط https://<project>.web.app/albacha
+// المصدر: site/     (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
+// الهدف:  dist/      ← الموقع هو الصفحة الرئيسية للنطاق
 //
-// لنشر الموقع في جذر النطاق بدلاً من مسار فرعي، غيّر DEST_DIR إلى '' (سلسلة فارغة)
-// واحذف قسم hosting.rewrites الخاص بـ /albacha من firebase.json.
+// كان تحت ‎/albacha‎ حين كان الجذر لتطبيق «حرفة برو». وقد رُفع ذاك من النشر،
+// فصار الموقع في الجذر ليَقصُر الرابط الذي يُرسَل للزبائن، ويبقى ‎/albacha/‎
+// صفحة تحويل حتى لا تنكسر الروابط المُرسَلة من قبل.
 
 import { cp, mkdir, readdir, readFile, writeFile } from 'node:fs/promises';
 import { extname, join } from 'node:path';
@@ -12,20 +13,13 @@ import { fileURLToPath } from 'node:url';
 
 const SITE_DIR = fileURLToPath(new URL('.', import.meta.url));
 const DIST_DIR = fileURLToPath(new URL('../dist', import.meta.url));
-const DEST_DIR = 'albacha';
+const DEST_DIR = '';
 
 // ملفات التشغيل والتوثيق والتوليد لا تُنشر — في المجلد وفي مجلداته الفرعية.
 const EXCLUDED = new Set(['.mjs', '.md', '.py']);
 const isExcluded = (path) => EXCLUDED.has(extname(path).toLowerCase());
 
 const target = DEST_DIR ? join(DIST_DIR, DEST_DIR) : DIST_DIR;
-
-try {
-  await readdir(DIST_DIR);
-} catch {
-  console.error('مجلد dist غير موجود — شغّل npm run build أولاً.');
-  process.exit(1);
-}
 
 await mkdir(target, { recursive: true });
 
@@ -89,4 +83,23 @@ if (!copied.includes('index.html')) {
   process.exit(1);
 }
 
-console.log(`نُسخ الموقع التعريفي إلى dist/${DEST_DIR || ''} (${copied.join('، ')})`);
+// الرابط القديم ‎/albacha/‎ قد يكون بيد زبائن، فيُحوَّل بدل أن يعطي 404.
+const legacy = join(DIST_DIR, 'albacha');
+await mkdir(legacy, { recursive: true });
+await writeFile(
+  join(legacy, 'index.html'),
+  `<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<title>مؤسسة الباشة للمعادن</title>
+<link rel="canonical" href="../">
+<meta http-equiv="refresh" content="0; url=../">
+</head>
+<body><p>انتقل الموقع إلى <a href="../">هنا</a>.</p></body>
+</html>
+`,
+  'utf8',
+);
+
+console.log(`نُسخ الموقع التعريفي إلى dist/${DEST_DIR || '(الجذر)'} (${copied.join('، ')})`);

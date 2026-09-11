@@ -19,8 +19,8 @@ const DIST = fileURLToPath(new URL('../dist/', import.meta.url));
 const BASE = (process.env.BASE_PATH || '/').replace(/\/*$/, '/');
 
 /** التطبيقات ذات التوجيه من طرف العميل، ومسار كلٍّ منها تحت BASE. */
-const SPA_DIRS = ['', 'app/'];
-/** الموقع التعريفي صفحة ثابتة: أي مسار تحته يعود إلى صفحته وحدها. */
+const SPA_DIRS = ['app/'];
+/** مسارات ثابتة: أي شيء تحتها يعود إلى صفحتها. الجذر موقع تعريفي لا تطبيق. */
 const STATIC_DIRS = ['albacha/'];
 
 const fallback = `<!doctype html>
@@ -46,7 +46,7 @@ const fallback = `<!doctype html>
   }
 
   var app = '';
-  var apps = ${JSON.stringify(SPA_DIRS.filter(Boolean))};
+  var apps = ${JSON.stringify(SPA_DIRS)};
   for (var j = 0; j < apps.length; j++) {
     var a = apps[j];
     var an = a.slice(0, -1);
@@ -55,6 +55,12 @@ const fallback = `<!doctype html>
       rest = rest.slice(an.length).replace(/^\\//, '');
       break;
     }
+  }
+
+  // ما لا يخصّ تطبيقاً يعود إلى الموقع التعريفي في الجذر.
+  if (!app) {
+    loc.replace(BASE);
+    return;
   }
 
   var target = BASE + app + '?p=/' + rest;
