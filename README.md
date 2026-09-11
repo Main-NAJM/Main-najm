@@ -197,6 +197,39 @@ https://<project-id>.web.app
 > سير العمل يتوقّف برسالة واضحة إن كان أحد السرّين ناقصاً، بدل أن يفشل في منتصف النشر.
 > ومفتاح حساب الخدمة يُكتب إلى ملف مؤقّت ولا يُطبع في السجلّات إطلاقاً.
 
+### GitHub Pages — بلا مفتاح ولا سرّ، ولا حاجة إلى حاسوب
+
+سير العمل `.github/workflows/deploy-pages.yml` يبني الثلاثة وينشرها على GitHub Pages
+عند كل دفعة. لا يحتاج مفتاح حساب خدمة، فيصلح حين تمنعه سياسة Google Cloud.
+
+**الإعداد لمرة واحدة، من المتصفّح:**
+
+1. **Settings → General → Danger Zone → Change repository visibility → Public.**
+   Pages من مستودع خاص يحتاج خطة مدفوعة. صفحة الموقع منشورة للعموم في الحالتين؛
+   ما يتغيّر هو أن الشيفرة تصير مقروءة أيضاً. لا أسرار فيها: `.env.local` غير مرفوع،
+   ومفاتيح الويب عامّة بطبيعتها.
+2. **Settings → Pages → Source → GitHub Actions.**
+
+بعدها تُنشر النسخة تلقائياً عند كل تعديل، على:
+
+| العنوان | المحتوى |
+| --- | --- |
+| `https://main-najm.github.io/Main-najm/` | حرفة برو |
+| `https://main-najm.github.io/Main-najm/albacha/` | الموقع التعريفي |
+| `https://main-najm.github.io/Main-najm/app/` | تطبيق مؤسسة الباشة |
+
+**ما تبقّى في كونسول Firebase** (تبقى قاعدة البيانات والمصادقة على Firebase كما هي):
+
+- **Authentication → Settings → Authorized domains** ← أضف `main-najm.github.io`،
+  وإلا رفض تسجيل الدخول.
+- **Firestore → Rules** ← الصق محتوى `firestore.rules` واضغط **Publish**. Pages لا
+  ينشر القواعد، بخلاف نشر Firebase.
+
+> **تفاصيل تقنية.** مسار النشر يأتي من `actions/configure-pages`، فيُمرَّر إلى Vite في
+> `BASE_PATH`/`APP_BASE_PATH`، وكل المسارات في الشيفرة مشتقّة من `import.meta.env.BASE_URL`
+> فتتبعه تلقائياً. ولأن Pages لا تعرف إعادة التوجيه، يولّد `scripts/pages-404.mjs` صفحة
+> `404.html` تلتقط المسارات الداخلية وتعيدها إلى التطبيق الصحيح مع مسارها الأصلي.
+
 ### بلا مفتاح حساب خدمة — بأمر واحد (يصلح من الهاتف)
 
 تمنع سياسة **Disable service account key creation** إنشاء مفاتيح الخدمة في كثير من مشاريع

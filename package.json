@@ -10,7 +10,7 @@
   "scripts": {
     "dev": "vite",
     "build": "tsc -b && vite build && node site/copy-to-dist.mjs && npm run build:app",
-    "build:app": "npm run build -w albacha-app -- --base=/app/ && node albacha-app/copy-to-dist.mjs",
+    "build:app": "npm run build -w albacha-app && node albacha-app/copy-to-dist.mjs",
     "app": "npm run dev -w albacha-app",
     "preview": "vite preview",
     "site": "node site/serve.mjs",
