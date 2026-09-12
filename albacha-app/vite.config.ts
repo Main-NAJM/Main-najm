@@ -3,10 +3,9 @@ import react from '@vitejs/plugin-react';
 import { fileURLToPath, URL } from 'node:url';
 
 // يُنشر التطبيق على مسار ‎/app/‎ من نطاق الاستضافة، ويبقى ‎/‎ أثناء التطوير المحلي.
-const base = process.env.APP_BASE_PATH || '/';
-
-export default defineConfig({
-  base,
+// وعلى GitHub Pages يسبقه اسم المستودع، فيمرّره سير العمل في APP_BASE_PATH.
+export default defineConfig(({ command }) => ({
+  base: process.env.APP_BASE_PATH || (command === 'build' ? '/app/' : '/'),
   // ملفات البيئة في جذر المستودع: npm run firebase:setup يكتب .env.local هناك،
   // فيتشاركها التطبيقان بدل نسختين من نفس المفاتيح.
   envDir: fileURLToPath(new URL('..', import.meta.url)),
@@ -31,4 +30,4 @@ export default defineConfig({
       },
     },
   },
-});
+}));

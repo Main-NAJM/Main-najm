@@ -51,9 +51,20 @@ export const UNIT_LABEL: Record<PricingUnit, string> = {
   piece: 'بالقطعة',
 };
 
+/**
+ * يحوّل الأرقام العربية (٠١٢٣) والفارسية إلى لاتينية.
+ *
+ * لوحة المفاتيح العربية على الهاتف تكتب «٠٦٧٣»، وJavaScript لا يعدّها أرقاماً:
+ * ‎\d‎ لا يطابقها وNumber لا يقرأها. فبلا هذا التحويل يضيع كل ما يُكتب بها.
+ */
+export const latinDigits = (raw: string): string =>
+  raw
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+
 /** رقم جزائري بصيغة دولية لروابط واتساب: 0673… ← 213673… */
 export const waNumber = (phone: string): string => {
-  const digits = phone.replace(/\D/g, '');
+  const digits = latinDigits(phone).replace(/\D/g, '');
   if (!digits) return '';
   if (digits.startsWith('00')) return digits.slice(2);
   if (digits.startsWith('213')) return digits;

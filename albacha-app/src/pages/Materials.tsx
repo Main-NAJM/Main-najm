@@ -5,12 +5,14 @@ import {
   ConfirmDialog,
   EmptyState,
   Modal,
+  NumberInput,
   SectionTitle,
   Select,
   Spinner,
   StatCard,
   TextArea,
   TextInput,
+  parseNumeric,
 } from '@/components/ui';
 import type { Material, MaterialUnit } from '@/lib/types';
 
@@ -40,12 +42,6 @@ const emptyMaterial = (): Material => ({
   createdAt: Date.now(),
   updatedAt: Date.now(),
 });
-
-const numberValue = (value: number): string => (value === 0 ? '' : String(value));
-const toNumber = (value: string): number => {
-  const parsed = Number(value.replace(',', '.'));
-  return Number.isFinite(parsed) ? parsed : 0;
-};
 
 const isLow = (material: Material): boolean =>
   material.minQuantity > 0 && material.quantity <= material.minQuantity;
@@ -81,7 +77,7 @@ export default function Materials() {
 
   const applyMovement = async () => {
     if (!moving) return;
-    const amount = Math.abs(toNumber(moveAmount));
+    const amount = Math.abs(parseNumeric(moveAmount));
     if (amount <= 0) return;
     const delta = moveKind === 'in' ? amount : -amount;
     await saveMaterial({
@@ -241,26 +237,25 @@ export default function Materials() {
                 onChange={(value) => setEditing({ ...editing, unit: value })}
                 options={UNIT_OPTIONS}
               />
-              <TextInput
+              <NumberInput
                 label="الكمية المتوفّرة"
-                inputMode="decimal"
-                value={numberValue(editing.quantity)}
-                onChange={(value) => setEditing({ ...editing, quantity: toNumber(value) })}
+                value={editing.quantity}
+                onChange={(value) => setEditing({ ...editing, quantity: value })}
+                decimals
               />
             </div>
             <div className="row">
-              <TextInput
+              <NumberInput
                 label="حدّ التنبيه"
-                inputMode="decimal"
-                value={numberValue(editing.minQuantity)}
-                onChange={(value) => setEditing({ ...editing, minQuantity: toNumber(value) })}
+                value={editing.minQuantity}
+                onChange={(value) => setEditing({ ...editing, minQuantity: value })}
+                decimals
                 hint="تحته يظهر تنبيه الشراء"
               />
-              <TextInput
+              <NumberInput
                 label="سعر الوحدة"
-                inputMode="numeric"
-                value={numberValue(editing.unitCost)}
-                onChange={(value) => setEditing({ ...editing, unitCost: toNumber(value) })}
+                value={editing.unitCost}
+                onChange={(value) => setEditing({ ...editing, unitCost: value })}
               />
             </div>
             <TextInput

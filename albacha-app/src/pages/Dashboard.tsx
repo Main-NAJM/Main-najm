@@ -1,4 +1,4 @@
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
 import { Link } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { isActiveOrder, isOverdue, orderRemaining, orderTotal } from '@/lib/calc';
@@ -6,7 +6,19 @@ import { STATUS_LABEL, STATUS_TONE, formatDate, money } from '@/lib/format';
 import { Badge, EmptyState, SectionTitle, Spinner, StatCard } from '@/components/ui';
 
 export default function Dashboard() {
-  const { customers, orders, materials, profile, loading, error } = useData();
+  const {
+    customers,
+    orders,
+    materials,
+    profile,
+    loading,
+    error,
+    deviceBackup,
+    adoptDeviceData,
+    dismissDeviceData,
+  } = useData();
+  const [adopting, setAdopting] = useState(false);
+  const [adoptError, setAdoptError] = useState<string | null>(null);
 
   const stats = useMemo(() => {
     const active = orders.filter(isActiveOrder);
@@ -34,6 +46,50 @@ export default function Dashboard() {
   return (
     <>
       {error ? <div className="notice notice--danger">{error}</div> : null}
+
+      {deviceBackup ? (
+        <div className="notice notice--info">
+          <p>
+            على هذا الجهاز بيانات أدخلتَها قبل ربط الحساب:{' '}
+            <strong>{deviceBackup.customers.length} زبون</strong> و{' '}
+            <strong>{deviceBackup.orders.length} طلب</strong>
+            {deviceBackup.materials?.length ? ` و${deviceBackup.materials.length} مادة` : ''}. حسابك
+            فارغ — هل ننقلها إليه لتُزامَن مع بقيّة أجهزتك؟
+          </p>
+          {adoptError ? <p className="notice notice--danger">{adoptError}</p> : null}
+          <div className="card__actions">
+            <button
+              type="button"
+              className="btn btn--primary btn--sm"
+              disabled={adopting}
+              onClick={async () => {
+                setAdoptError(null);
+                setAdopting(true);
+                try {
+                  await adoptDeviceData();
+                } catch (err) {
+                  setAdoptError(err instanceof Error ? err.message : 'تعذّر نقل البيانات.');
+                } finally {
+                  setAdopting(false);
+                }
+              }}
+            >
+              {adopting ? 'جارٍ النقل…' : 'انقلها إلى حسابي'}
+            </button>
+            <button
+              type="button"
+              className="btn btn--ghost btn--sm"
+              disabled={adopting}
+              onClick={dismissDeviceData}
+            >
+              لاحقاً
+            </button>
+          </div>
+          <p className="field__hint">
+            «لاحقاً» لا يحذف شيئاً — تبقى على الجهاز ويعود السؤال عند فتح التطبيق مجدّداً.
+          </p>
+        </div>
+      ) : null}
 
       <div className="stats">
         <StatCard label="الزبائن" value={String(customers.length)} />

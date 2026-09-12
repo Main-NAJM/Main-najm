@@ -8,7 +8,7 @@ import {
   type ReactNode,
 } from 'react';
 import { useAuth } from './AuthContext';
-import { localStore } from '@/data/localStore';
+import { localStore, readDeviceBackup, readDevicePhotos } from '@/data/localStore';
 import { firestoreStore } from '@/data/firestoreStore';
 import { DEFAULT_PROFILE, type Store } from '@/data/store';
 import type { Backup, Customer, Material, Order, Photo, WorkshopProfile } from '@/lib/types';
@@ -34,6 +34,10 @@ interface DataContextValue {
   exportBackup: () => Backup;
   importBackup: (backup: Backup) => Promise<void>;
   reload: () => Promise<void>;
+  /** بيانات أُدخلت على الجهاز قبل الدخول بحساب، تنتظر قرار صاحبها. */
+  deviceBackup: Backup | null;
+  adoptDeviceData: () => Promise<void>;
+  dismissDeviceData: () => void;
 }
 
 const DataContext = createContext<DataContextValue | null>(null);
@@ -53,6 +57,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const [profile, setProfile] = useState<WorkshopProfile>(DEFAULT_PROFILE);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [deviceBackup, setDeviceBackup] = useState<Backup | null>(null);
 
   const load = useCallback(async () => {
     if (!uid) {
@@ -71,6 +76,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setOrders(sortByCreated(snapshot.orders));
       setMaterials(snapshot.materials.slice().sort((a, b) => a.name.localeCompare(b.name, 'ar')));
       setProfile(snapshot.profile);
+      // حساب فارغ وعلى الجهاز بيانات سابقة: تُعرض على صاحبها بدل أن تضيع منه.
+      const empty =
+        !snapshot.customers.length && !snapshot.orders.length && !snapshot.materials.length;
+      setDeviceBackup(!isLocal && empty ? readDeviceBackup() : null);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'تعذّر تحميل البيانات.');
     } finally {
@@ -207,6 +216,25 @@ export function DataProvider({ children }: { children: ReactNode }) {
     [store, uid],
   );
 
+  /** نقل بيانات الجهاز إلى الحساب، ومعها صور الطلبات. */
+  const adoptDeviceData = useCallback(async () => {
+    if (!uid || !deviceBackup) return;
+    await store.restore(uid, deviceBackup);
+    for (const order of deviceBackup.orders) {
+      for (const photo of readDevicePhotos(order.id)) {
+        await store.savePhoto(uid, photo);
+      }
+    }
+    setCustomers(sortByCreated(deviceBackup.customers));
+    setOrders(sortByCreated(deviceBackup.orders));
+    setMaterials(deviceBackup.materials ?? []);
+    setProfile(deviceBackup.profile);
+    setDeviceBackup(null);
+  }, [store, uid, deviceBackup]);
+
+  // لا تُحذف بيانات الجهاز بالتجاهل — تبقى مكانها ويعود العرض عند الدخول مجدّداً.
+  const dismissDeviceData = useCallback(() => setDeviceBackup(null), []);
+
   const value = useMemo<DataContextValue>(
     () => ({
       customers,
@@ -229,6 +257,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       exportBackup,
       importBackup,
       reload: load,
+      deviceBackup,
+      adoptDeviceData,
+      dismissDeviceData,
     }),
     [
       customers,
@@ -251,6 +282,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
       exportBackup,
       importBackup,
       load,
+      deviceBackup,
+      adoptDeviceData,
+      dismissDeviceData,
     ],
   );
 

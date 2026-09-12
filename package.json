@@ -9,13 +9,16 @@
   ],
   "scripts": {
     "dev": "vite",
-    "build": "tsc -b && vite build && node site/copy-to-dist.mjs && npm run build:app",
-    "build:app": "npm run build -w albacha-app -- --base=/app/ && node albacha-app/copy-to-dist.mjs",
+    "build": "npm run clean && node site/copy-to-dist.mjs && npm run build:app",
+    "build:herfah": "tsc -b && vite build",
+    "clean": "node -e \"require('node:fs').rmSync('dist',{recursive:true,force:true})\"",
+    "build:app": "npm run build -w albacha-app && node albacha-app/copy-to-dist.mjs",
     "app": "npm run dev -w albacha-app",
     "preview": "vite preview",
     "site": "node site/serve.mjs",
     "firebase:setup": "node scripts/firebase-setup.mjs",
     "deploy": "npm run build && npx --yes firebase-tools@13 deploy --only hosting",
+    "deploy:all": "bash scripts/deploy.sh",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
     "lint": "tsc -b"
   },

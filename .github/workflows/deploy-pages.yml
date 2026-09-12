@@ -1,0 +1,81 @@
+name: النشر على GitHub Pages
+
+# نشر بلا مفتاح حساب خدمة وبلا أي سرّ في المستودع: يبني Pages من الشيفرة مباشرة.
+# مفيد حين تمنع سياسة Google Cloud إنشاء مفاتيح الخدمة التي يحتاجها نشر Firebase.
+#
+# يتطلّب ضبطاً واحداً في المستودع: Settings ← Pages ← Source ← GitHub Actions.
+
+on:
+  push:
+    branches:
+      - main
+      - claude/herfah-pro-app-le726o
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# نشرة واحدة في كل مرة، مع ترك الجارية تكتمل.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    name: البناء
+    runs-on: ubuntu-latest
+    steps:
+      - name: جلب الشيفرة
+        uses: actions/checkout@v4
+
+      - name: تهيئة Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: تثبيت الحزم
+        run: npm ci
+
+      - name: مفاتيح الويب
+        # من firebase.web.json المرفوع، أو من متغيّرات المستودع إن فُضّلت.
+        # بلا مفاتيح يُبنى كل شيء ويعمل التطبيق في وضع الجهاز.
+        env:
+          VITE_FIREBASE_API_KEY: ${{ vars.VITE_FIREBASE_API_KEY }}
+          VITE_FIREBASE_AUTH_DOMAIN: ${{ vars.VITE_FIREBASE_AUTH_DOMAIN }}
+          VITE_FIREBASE_PROJECT_ID: ${{ vars.VITE_FIREBASE_PROJECT_ID }}
+          VITE_FIREBASE_STORAGE_BUCKET: ${{ vars.VITE_FIREBASE_STORAGE_BUCKET }}
+          VITE_FIREBASE_MESSAGING_SENDER_ID: ${{ vars.VITE_FIREBASE_MESSAGING_SENDER_ID }}
+          VITE_FIREBASE_APP_ID: ${{ vars.VITE_FIREBASE_APP_ID }}
+        run: node scripts/web-config.mjs --force
+
+      - name: بناء نسخة الإنتاج
+        env:
+          # Pages يخدم المشروع من مسار فرعي باسم المستودع.
+          BASE_PATH: /${{ github.event.repository.name }}/
+          APP_BASE_PATH: /${{ github.event.repository.name }}/app/
+        run: npm run build
+
+      - name: تهيئة مخرجات النشر
+        env:
+          BASE_PATH: /${{ github.event.repository.name }}/
+        run: node scripts/pages-404.mjs
+
+      - name: تجهيز حزمة Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    name: النشر
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: النشر على GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4

@@ -180,6 +180,9 @@ New repository secret**:
 | `FIREBASE_PROJECT_ID` | كونسول Firebase → Project settings → General → حقل **Project ID** |
 | `FIREBASE_SERVICE_ACCOUNT` | كونسول Firebase → Project settings → **Service accounts** → **Generate new private key** → افتح الملف المنزَّل والصق محتواه كاملاً |
 
+> إن ظهرت رسالة **«لا يُسمح بإنشاء مفاتيح على حساب الخدمة هذا»** فالسبب سياسة إدارية في
+> Google Cloud تمنع مفاتيح حسابات الخدمة. استعمل حينها الطريقة التالية — لا تحتاج مفتاحاً.
+
 بعدها يعمل النشر تلقائياً عند أول دفعة إلى `main`، أو يدوياً من تبويب **Actions** عبر
 **Run workflow**. الرابط الناتج شكله:
 
@@ -193,6 +196,56 @@ https://<project-id>.web.app
 
 > سير العمل يتوقّف برسالة واضحة إن كان أحد السرّين ناقصاً، بدل أن يفشل في منتصف النشر.
 > ومفتاح حساب الخدمة يُكتب إلى ملف مؤقّت ولا يُطبع في السجلّات إطلاقاً.
+
+### GitHub Pages — بلا مفتاح ولا سرّ، ولا حاجة إلى حاسوب
+
+سير العمل `.github/workflows/deploy-pages.yml` يبني الثلاثة وينشرها على GitHub Pages
+عند كل دفعة. لا يحتاج مفتاح حساب خدمة، فيصلح حين تمنعه سياسة Google Cloud.
+
+**الإعداد لمرة واحدة، من المتصفّح:**
+
+1. **Settings → General → Danger Zone → Change repository visibility → Public.**
+   Pages من مستودع خاص يحتاج خطة مدفوعة. صفحة الموقع منشورة للعموم في الحالتين؛
+   ما يتغيّر هو أن الشيفرة تصير مقروءة أيضاً. لا أسرار فيها: `.env.local` غير مرفوع،
+   ومفاتيح الويب عامّة بطبيعتها.
+2. **Settings → Pages → Source → GitHub Actions.**
+
+بعدها تُنشر النسخة تلقائياً عند كل تعديل، على:
+
+| العنوان | المحتوى |
+| --- | --- |
+| `https://main-najm.github.io/Main-najm/` | حرفة برو |
+| `https://main-najm.github.io/Main-najm/albacha/` | الموقع التعريفي |
+| `https://main-najm.github.io/Main-najm/app/` | تطبيق مؤسسة الباشة |
+
+**ما تبقّى في كونسول Firebase** (تبقى قاعدة البيانات والمصادقة على Firebase كما هي):
+
+- **Authentication → Settings → Authorized domains** ← أضف `main-najm.github.io`،
+  وإلا رفض تسجيل الدخول.
+- **Firestore → Rules** ← الصق محتوى `firestore.rules` واضغط **Publish**. Pages لا
+  ينشر القواعد، بخلاف نشر Firebase.
+
+> **تفاصيل تقنية.** مسار النشر يأتي من `actions/configure-pages`، فيُمرَّر إلى Vite في
+> `BASE_PATH`/`APP_BASE_PATH`، وكل المسارات في الشيفرة مشتقّة من `import.meta.env.BASE_URL`
+> فتتبعه تلقائياً. ولأن Pages لا تعرف إعادة التوجيه، يولّد `scripts/pages-404.mjs` صفحة
+> `404.html` تلتقط المسارات الداخلية وتعيدها إلى التطبيق الصحيح مع مسارها الأصلي.
+
+### بلا مفتاح حساب خدمة — بأمر واحد (يصلح من الهاتف)
+
+تمنع سياسة **Disable service account key creation** إنشاء مفاتيح الخدمة في كثير من مشاريع
+Google Cloud، فيتعذّر ملء السرّ أعلاه. لا حاجة إليه أصلاً: هذا الأمر ينشر كل شيء بتسجيل
+دخول عادي بالمتصفّح.
+
+```bash
+bash scripts/deploy.sh        # أو: npm run deploy:all
+```
+
+يسجّل الدخول إن لزم (برابط ورمز، بلا `localhost`)، ثم يثبّت الحزم، ويكتب `.env.local`
+بمفاتيح الويب، ويبني الموقع والتطبيقين، وينشر الاستضافة وقواعد أمان Firestore معاً.
+
+**من هاتف بلا حاسوب:** افتح المستودع على GitHub ← **Code** ← تبويب **Codespaces** ←
+**Create codespace on main**. تُفتح طرفية Linux كاملة داخل المتصفّح، نفّذ فيها الأمر أعلاه.
+الرابط الذي يطبعه `login` افتحه في تبويب آخر، والصق الرمز في الطرفية.
 
 ### Firebase Hosting — يدوياً من جهازك
 
