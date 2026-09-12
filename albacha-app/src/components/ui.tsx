@@ -1,4 +1,5 @@
 import { useEffect, useId, useState, type ChangeEvent, type ReactNode } from 'react';
+import { latinDigits } from '@/lib/format';
 
 interface FieldProps {
   label: string;
@@ -67,9 +68,7 @@ export function TextInput({
  * لوحة مفاتيح عربية تكتب «١٢٠٠» وNumber لا يفهمها — فتضيع كل ضغطة بلا هذا.
  */
 export const normalizeNumeric = (raw: string): string =>
-  raw
-    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
-    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0))
+  latinDigits(raw)
     .replace(/[،٫,]/g, '.')
     .replace(/[^\d.]/g, '');
 
