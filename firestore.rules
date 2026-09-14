@@ -18,6 +18,7 @@ service cloud.firestore {
             'calculations',
             'marketPrices',
             'debts',
+            'products',
             // تطبيق مؤسسة الباشة (مجموعات مستقلّة حتى لا تختلط البيانات)
             'albachaCustomers',
             'albachaOrders',

@@ -88,3 +88,10 @@ export const PlusIcon = (props: IconProps) => (
     <path d="M12 5v14M5 12h14" />
   </svg>
 );
+
+export const ProductIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M12 3.2 20 7.4v9.2L12 20.8 4 16.6V7.4Z" />
+    <path d="M4 7.4 12 11.6l8-4.2M12 11.6v9.2" />
+  </svg>
+);

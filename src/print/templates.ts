@@ -1,9 +1,14 @@
 /** قوالب المستندات المطبوعة: فاتورة، كشف حساب، سجل ديون، سجل تسعير. */
-import { debtTotals, orderTotals } from '@/lib/calc';
-import { orderStatusLabel } from '@/lib/constants';
+import {
+  debtTotals,
+  orderTotals,
+  type ProductDimensions,
+  type ProductPriceResult,
+} from '@/lib/calc';
+import { basisLabel, craftLabel, orderStatusLabel } from '@/lib/constants';
 import { formatDate, formatMoney, formatNumber, todayIso } from '@/lib/format';
 import { shortRef } from '@/lib/id';
-import type { Calculation, Debt, Order, Profile } from '@/lib/types';
+import type { Calculation, Debt, Order, Profile, ProductTemplate } from '@/lib/types';
 import { escapeHtml } from './print';
 
 const head = (profile: Profile, title: string, ref: string): string => `
@@ -386,4 +391,89 @@ export const buildCalculationsReport = (
       </table>
     </div>
     ${foot(profile, 'سجل تسعير داخلي')}`;
+};
+
+/* ----------------------------------------------------------- عرض سعر منتج */
+
+export const buildProductQuote = (
+  product: ProductTemplate,
+  dims: ProductDimensions,
+  result: ProductPriceResult,
+  profile: Profile,
+): string => {
+  const dimText = [
+    dims.widthCm ? `العرض ${formatNumber(dims.widthCm)} سم` : '',
+    dims.heightCm ? `الارتفاع ${formatNumber(dims.heightCm)} سم` : '',
+    dims.depthCm ? `العمق ${formatNumber(dims.depthCm)} سم` : '',
+  ]
+    .filter(Boolean)
+    .join(' × ');
+
+  return `
+    ${head(profile, 'عرض سعر', shortRef(product.id))}
+    <div class="block">
+      <p class="block__title">${escapeHtml(product.name)}</p>
+      <div class="kv">
+        <div><span>الحرفة:</span><span>${escapeHtml(craftLabel(product.craft))}</span></div>
+        <div><span>التسعير:</span><span>${escapeHtml(basisLabel(product.basis))}</span></div>
+        ${dimText ? `<div><span>المقاس:</span><span>${escapeHtml(dimText)}</span></div>` : ''}
+        ${
+          product.basis === 'unit'
+            ? ''
+            : `<div><span>المقدار:</span><span>${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} للقطعة</span></div>`
+        }
+        <div><span>الكمية:</span><span>${escapeHtml(formatNumber(result.quantity))} قطعة</span></div>
+      </div>
+    </div>
+    <div class="block">
+      <p class="block__title">تفصيل السعر</p>
+      <table>
+        <thead>
+          <tr>
+            <th>البند</th>
+            <th class="num" style="width:140px">للقطعة الواحدة</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>${
+              product.basis === 'unit'
+                ? 'قيمة المادة'
+                : `قيمة المادة (${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} × ${money(product.unitPrice, profile)})`
+            }</td>
+            <td class="num">${money(result.materialCost, profile)}</td>
+          </tr>
+          ${
+            result.wasteCost > 0
+              ? `<tr><td>الهالك (${escapeHtml(formatNumber(product.wastePct))}٪)</td><td class="num">${money(result.wasteCost, profile)}</td></tr>`
+              : ''
+          }
+          ${
+            result.fittings > 0
+              ? `<tr><td>إكسسوارات</td><td class="num">${money(result.fittings, profile)}</td></tr>`
+              : ''
+          }
+          ${
+            result.labor > 0
+              ? `<tr><td>أجرة العمل</td><td class="num">${money(result.labor, profile)}</td></tr>`
+              : ''
+          }
+        </tbody>
+      </table>
+      <table class="totals">
+        <tbody>
+          <tr><td>تكلفة القطعة</td><td>${money(result.unitCost, profile)}</td></tr>
+          <tr><td>الربح (${escapeHtml(formatNumber(product.marginPct))}٪)</td><td>${money(result.unitProfit, profile)}</td></tr>
+          <tr><td>سعر القطعة</td><td>${money(result.unitTotal, profile)}</td></tr>
+          <tr class="grand"><td>الإجمالي (${escapeHtml(formatNumber(result.quantity))} قطعة)</td><td>${money(result.total, profile)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+    ${
+      product.notes
+        ? `<div class="block"><p class="block__title">ملاحظات</p><div class="note">${escapeHtml(product.notes)}</div></div>`
+        : ''
+    }
+    <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
+    ${foot(profile, 'عرض سعر — صالح حسب أسعار المواد وقت إصداره')}`;
 };

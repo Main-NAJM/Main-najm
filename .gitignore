@@ -43,3 +43,4 @@ google-services.json
 
 # TypeScript build info
 *.tsbuildinfo
+.artifact-build/

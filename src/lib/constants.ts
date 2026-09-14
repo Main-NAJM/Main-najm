@@ -1,4 +1,4 @@
-import type { Craft, MaterialKind, OrderStatus, UserType } from './types';
+import type { Craft, MaterialKind, OrderStatus, PricingBasis, UserType } from './types';
 
 export const APP_NAME = 'حرفة برو';
 
@@ -60,3 +60,64 @@ export const userTypeLabel = (type: UserType): string =>
 
 export const materialKindLabel = (kind: MaterialKind): string =>
   MATERIAL_KINDS.find((m) => m.value === kind)?.label ?? kind;
+
+/* ------------------------------------------------- أسس تسعير المنتجات */
+
+export const PRICING_BASES: {
+  value: PricingBasis;
+  label: string;
+  unit: string;
+  /** المقاسات التي يحتاجها هذا الأساس فعلاً. */
+  needs: ('width' | 'height' | 'depth')[];
+  hint: string;
+}[] = [
+  {
+    value: 'area',
+    label: 'بالمتر المربّع',
+    unit: 'م²',
+    needs: ['width', 'height'],
+    hint: 'العرض × الارتفاع — أبواب، نوافذ، خزائن، ستائر',
+  },
+  {
+    value: 'length',
+    label: 'بالمتر الطولي',
+    unit: 'م.ط',
+    needs: ['width'],
+    hint: 'العرض وحده — دربزين، إفريز، حواف',
+  },
+  {
+    value: 'volume',
+    label: 'بالمتر المكعّب',
+    unit: 'م³',
+    needs: ['width', 'height', 'depth'],
+    hint: 'العرض × الارتفاع × العمق — كتل ومقاطع خشبية',
+  },
+  {
+    value: 'weight',
+    label: 'بالوزن (كغ)',
+    unit: 'كغ',
+    needs: ['width', 'height', 'depth'],
+    hint: 'يُحسب الحجم ثم يُضرب في كثافة المادة — حديد بالوزن',
+  },
+  {
+    value: 'unit',
+    label: 'بالقطعة',
+    unit: 'قطعة',
+    needs: [],
+    hint: 'سعر ثابت لا يتبع المقاس',
+  },
+];
+
+export const basisLabel = (basis: PricingBasis): string =>
+  PRICING_BASES.find((b) => b.value === basis)?.label ?? basis;
+
+export const basisNeeds = (basis: PricingBasis): ('width' | 'height' | 'depth')[] =>
+  PRICING_BASES.find((b) => b.value === basis)?.needs ?? [];
+
+/** كثافات تقريبية (كغ/م³) تُقترح عند اختيار التسعير بالوزن. */
+export const DENSITY_HINTS: { label: string; value: number }[] = [
+  { label: 'حديد', value: 7850 },
+  { label: 'ألمنيوم', value: 2700 },
+  { label: 'خشب صلب', value: 700 },
+  { label: 'خشب MDF', value: 750 },
+];

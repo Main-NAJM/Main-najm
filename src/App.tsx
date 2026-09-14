@@ -10,6 +10,7 @@ const Dashboard = lazy(() => import('@/pages/Dashboard'));
 const Orders = lazy(() => import('@/pages/Orders'));
 const Schedule = lazy(() => import('@/pages/Schedule'));
 const Calculator = lazy(() => import('@/pages/Calculator'));
+const ProductPricing = lazy(() => import('@/pages/ProductPricing'));
 const MarketPrices = lazy(() => import('@/pages/MarketPrices'));
 const Debts = lazy(() => import('@/pages/Debts'));
 const Print = lazy(() => import('@/pages/Print'));
@@ -37,6 +38,7 @@ export default function App() {
             <Route path="/orders" element={<Orders />} />
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/calculator" element={<Calculator />} />
+            <Route path="/products" element={<ProductPricing />} />
             <Route path="/prices" element={<MarketPrices />} />
             <Route path="/debts" element={<Debts />} />
             <Route path="/print" element={<Print />} />
