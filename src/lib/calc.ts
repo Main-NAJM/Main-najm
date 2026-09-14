@@ -1,6 +1,12 @@
 /** حسابات الطلبيات والديون وحاسبة التكلفة. */
 import { round2 } from './format';
-import type { Calculation, Debt, Order } from './types';
+import type {
+  Calculation,
+  Debt,
+  Order,
+  PricingBasis,
+  ProductTemplate,
+} from './types';
 
 export interface OrderTotals {
   itemsTotal: number;
@@ -97,4 +103,105 @@ export const priceChangePct = (
 ): number | null => {
   if (previous === null || previous === undefined || previous <= 0) return null;
   return round2(((price - previous) / previous) * 100);
+};
+
+/* ------------------------------------------------- تسعير المنتج بالمقاسات */
+
+export interface ProductDimensions {
+  /** بالسنتيمتر — أقرب إلى ما يقيسه الحرفي على الأرض. */
+  widthCm: number;
+  heightCm: number;
+  depthCm: number;
+  quantity: number;
+}
+
+export type ProductPricingInput = Pick<
+  ProductTemplate,
+  'basis' | 'unitPrice' | 'density' | 'wastePct' | 'fittings' | 'labor' | 'marginPct'
+>;
+
+export interface ProductPriceResult {
+  /** المقدار المحسوب من المقاسات بوحدة أساس التسعير، للقطعة الواحدة. */
+  measure: number;
+  measureUnit: string;
+  /** قيمة المادة قبل الهالك، للقطعة الواحدة. */
+  materialCost: number;
+  wasteCost: number;
+  fittings: number;
+  labor: number;
+  /** تكلفة القطعة الواحدة بعد الهالك والإضافات. */
+  unitCost: number;
+  unitProfit: number;
+  /** سعر القطعة الواحدة بعد الربح. */
+  unitTotal: number;
+  quantity: number;
+  /** الإجمالي لكل الكمية. */
+  total: number;
+  totalCost: number;
+  totalProfit: number;
+}
+
+const BASIS_UNITS: Record<PricingBasis, string> = {
+  area: 'م²',
+  length: 'م.ط',
+  volume: 'م³',
+  weight: 'كغ',
+  unit: 'قطعة',
+};
+
+export const basisUnit = (basis: PricingBasis): string => BASIS_UNITS[basis] ?? '';
+
+/** يحوّل المقاسات إلى مقدار بوحدة أساس التسعير (للقطعة الواحدة). */
+export const measureFor = (
+  basis: PricingBasis,
+  dims: ProductDimensions,
+  density = 0,
+): number => {
+  const w = Math.max(0, dims.widthCm || 0) / 100;
+  const h = Math.max(0, dims.heightCm || 0) / 100;
+  const d = Math.max(0, dims.depthCm || 0) / 100;
+  switch (basis) {
+    case 'area':
+      return w * h;
+    case 'length':
+      return w;
+    case 'volume':
+      return w * h * d;
+    case 'weight':
+      return w * h * d * Math.max(0, density || 0);
+    case 'unit':
+    default:
+      return 1;
+  }
+};
+
+export const computeProductPrice = (
+  product: ProductPricingInput,
+  dims: ProductDimensions,
+): ProductPriceResult => {
+  const measure = measureFor(product.basis, dims, product.density);
+  const materialCost = measure * (product.unitPrice || 0);
+  const wasteCost = materialCost * ((product.wastePct || 0) / 100);
+  const fittings = product.fittings || 0;
+  const labor = product.labor || 0;
+  const unitCost = materialCost + wasteCost + fittings + labor;
+  const unitProfit = unitCost * ((product.marginPct || 0) / 100);
+  const unitTotal = unitCost + unitProfit;
+  const quantity = Math.max(0, dims.quantity || 0);
+
+  return {
+    measure: round2(measure),
+    measureUnit: basisUnit(product.basis),
+    materialCost: round2(materialCost),
+    wasteCost: round2(wasteCost),
+    fittings: round2(fittings),
+    labor: round2(labor),
+    unitCost: round2(unitCost),
+    unitProfit: round2(unitProfit),
+    unitTotal: round2(unitTotal),
+    quantity,
+    total: round2(unitTotal * quantity),
+    totalCost: round2(unitCost * quantity),
+    totalProfit: round2(unitProfit * quantity),
+  };
 };

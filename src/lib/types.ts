@@ -8,6 +8,16 @@ export type OrderStatus = 'in_progress' | 'pending' | 'completed';
 
 export type MaterialKind = 'wood' | 'iron' | 'fabric' | 'other';
 
+/**
+ * أساس تسعير المنتج: ما الذي يُضرب فيه سعر الوحدة.
+ * area  — المتر المربّع (عرض × ارتفاع): أبواب، نوافذ، خزائن، ستائر.
+ * length — المتر الطولي (العرض وحده): دربزين، إفريز، حواف.
+ * volume — المتر المكعّب (عرض × ارتفاع × عمق): كتل خشبية.
+ * weight — الكيلوغرام (يُحسب من الحجم × كثافة المادة): حديد بالوزن.
+ * unit  — القطعة: تسعير ثابت لا يتبع المقاس.
+ */
+export type PricingBasis = 'area' | 'length' | 'volume' | 'weight' | 'unit';
+
 /** حقول مشتركة لكل السجلات المخزّنة. */
 export interface BaseRecord {
   id: string;
@@ -110,6 +120,30 @@ export interface Debt extends BaseRecord {
   notes: string;
 }
 
+/** قالب منتج: نوعه وأساس تسعيره وسعر وحدته، تُشتقّ منه الأسعار بالمقاسات. */
+export interface ProductTemplate extends BaseRecord {
+  name: string;
+  craft: Craft;
+  basis: PricingBasis;
+  /** سعر الوحدة الواحدة من أساس التسعير (المتر المربّع مثلاً). */
+  unitPrice: number;
+  /** كثافة المادة كغ/م³ — تُستعمل مع أساس الوزن فقط. */
+  density: number;
+  /** نسبة الهالك من قيمة المادة. */
+  wastePct: number;
+  /** إضافات ثابتة لكل قطعة: إكسسوارات، أقفال، تركيب. */
+  fittings: number;
+  /** أجرة عمل ثابتة لكل قطعة. */
+  labor: number;
+  /** نسبة الربح المطلوبة فوق التكلفة. */
+  marginPct: number;
+  /** أبعاد افتراضية تُملأ عند اختيار المنتج (سم). */
+  defaultWidth: number;
+  defaultHeight: number;
+  defaultDepth: number;
+  notes: string;
+}
+
 export interface Profile {
   businessName: string;
   ownerName: string;
@@ -127,6 +161,7 @@ export interface Profile {
 
 export type CollectionName =
   | 'orders'
+  | 'products'
   | 'appointments'
   | 'calculations'
   | 'marketPrices'
@@ -134,6 +169,7 @@ export type CollectionName =
 
 export interface CollectionMap {
   orders: Order;
+  products: ProductTemplate;
   appointments: Appointment;
   calculations: Calculation;
   marketPrices: MarketPrice;

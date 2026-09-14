@@ -12,6 +12,7 @@ import {
   OrdersIcon,
   PriceIcon,
   PrintIcon,
+  ProductIcon,
   SettingsIcon,
 } from './icons';
 
@@ -23,6 +24,7 @@ const primaryLinks = [
 ];
 
 const moreLinks = [
+  { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
   { to: '/calculator', label: 'حاسبة التكلفة', Icon: CalculatorIcon },
   { to: '/prices', label: 'أسعار السوق', Icon: PriceIcon },
   { to: '/print', label: 'الطباعة', Icon: PrintIcon },
@@ -35,6 +37,7 @@ const pageTitles: Record<string, string> = {
   '/schedule': 'تنظيم الوقت',
   '/debts': 'سجل الديون',
   '/calculator': 'حاسبة التكلفة والربح',
+  '/products': 'حاسبة سعر المنتج',
   '/prices': 'مؤشرات أسعار السوق',
   '/print': 'الطباعة والتقارير',
   '/settings': 'الإعدادات',
