@@ -38,7 +38,7 @@ import {
   type RegisterInput,
 } from '@/data/accounts';
 import { normalizePhone } from '@/lib/phone';
-import type { AppUser, Craft, UserType } from '@/lib/types';
+import type { AppUser, Craft, PricingBasis, UserType } from '@/lib/types';
 
 const LOCAL_MODE_KEY = 'herfah-pro:v1:local-mode';
 
@@ -57,7 +57,14 @@ interface AuthContextValue {
   /** دخول بحساب مسجّل على الجهاز. */
   signInLocal: (ident: string, password: string) => Promise<void>;
   /** تحديث اسم الحساب ومهنته حين تتغيّر من الإعدادات. */
-  updateLocalAccount: (patch: { displayName?: string; userType?: UserType; craft?: Craft }) => void;
+  updateLocalAccount: (patch: {
+    displayName?: string;
+    userType?: UserType;
+    craft?: Craft;
+    customCraft?: string;
+    customMaterial?: string;
+    customBasis?: PricingBasis;
+  }) => void;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -105,6 +112,9 @@ const accountUser = (account: LocalAccount): AppUser => ({
   isGuest: false,
   userType: account.userType,
   craft: account.craft,
+  customCraft: account.customCraft,
+  customMaterial: account.customMaterial,
+  customBasis: account.customBasis,
 });
 
 /** المستخدم المحلي عند الإقلاع: صاحب الجلسة المحفوظة، أو لا أحد. */

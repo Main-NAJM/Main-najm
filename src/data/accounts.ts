@@ -10,7 +10,7 @@
  */
 import { newId } from '@/lib/id';
 import { normalizeEmail, normalizePhone } from '@/lib/phone';
-import type { Craft, UserType } from '@/lib/types';
+import type { Craft, PricingBasis, UserType } from '@/lib/types';
 
 const KEY_PREFIX = 'herfah-pro:v1';
 const ACCOUNTS_KEY = `${KEY_PREFIX}:accounts`;
@@ -28,6 +28,10 @@ export interface LocalAccount {
   displayName: string;
   userType: UserType;
   craft: Craft;
+  /** ما كتبه صاحب الحساب حين اختار «مهنة أخرى». */
+  customCraft: string;
+  customMaterial: string;
+  customBasis: PricingBasis;
   /** ملح وتلبيدة كلمة المرور بترميز base64. */
   salt: string;
   hash: string;
@@ -171,6 +175,9 @@ export interface RegisterInput {
   password: string;
   userType: UserType;
   craft: Craft;
+  customCraft?: string;
+  customMaterial?: string;
+  customBasis?: PricingBasis;
 }
 
 /**
@@ -203,6 +210,9 @@ export const registerAccount = async (input: RegisterInput): Promise<LocalAccoun
     displayName: input.name.trim(),
     userType: input.userType,
     craft: input.craft,
+    customCraft: input.customCraft?.trim() ?? '',
+    customMaterial: input.customMaterial?.trim() ?? '',
+    customBasis: input.customBasis ?? 'unit',
     salt: toBase64(salt),
     hash,
     createdAt: now,
@@ -247,7 +257,12 @@ export const signInAccount = async (
 /** تحديث بيانات الحساب (الاسم والمهنة) حين تتغيّر من الإعدادات. */
 export const patchAccount = (
   uid: string,
-  patch: Partial<Pick<LocalAccount, 'displayName' | 'userType' | 'craft'>>,
+  patch: Partial<
+    Pick<
+      LocalAccount,
+      'displayName' | 'userType' | 'craft' | 'customCraft' | 'customMaterial' | 'customBasis'
+    >
+  >,
 ): LocalAccount | null => {
   const accounts = readAccounts();
   const index = accounts.findIndex((account) => account.uid === uid);

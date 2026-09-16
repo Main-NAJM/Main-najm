@@ -2,11 +2,31 @@
 
 export type UserType = 'craftsman' | 'merchant';
 
-export type Craft = 'carpenter' | 'blacksmith' | 'tailor' | 'other';
+/**
+ * المهنة. 'other' ليست حرفة بعينها بل بابٌ مفتوح: يكتب صاحبها اسم مهنته ومادّته
+ * وطريقة تسعيره في ‎Profile.customCraft/customMaterial/customBasis‎، فيعمل التطبيق
+ * بها كما يعمل بالحرف المعروفة.
+ */
+export type Craft =
+  | 'carpenter'
+  | 'blacksmith'
+  | 'aluminium'
+  | 'mechanic'
+  | 'builder'
+  | 'tailor'
+  | 'other';
 
 export type OrderStatus = 'in_progress' | 'pending' | 'completed';
 
-export type MaterialKind = 'wood' | 'iron' | 'fabric' | 'other';
+export type MaterialKind =
+  | 'wood'
+  | 'iron'
+  | 'aluminium'
+  | 'glass'
+  | 'fabric'
+  | 'building'
+  | 'parts'
+  | 'other';
 
 /**
  * أساس تسعير المنتج: ما الذي يُضرب فيه سعر الوحدة.
@@ -151,6 +171,12 @@ export interface Profile {
   address: string;
   userType: UserType;
   craft: Craft;
+  /** اسم المهنة كما كتبه صاحبها — يُستعمل متى كانت craft === 'other'. */
+  customCraft: string;
+  /** اسم المادة الأساسية (جلد، رخام، بلاستيك…) — يسمّي صنف «مواد أخرى». */
+  customMaterial: string;
+  /** طريقة التسعير المعتادة في هذه المهنة — أساس القالب الأوّل. */
+  customBasis: PricingBasis;
   currency: string;
   /** أجرة الساعة الافتراضية في الحاسبة. */
   defaultLaborRate: number;
@@ -188,6 +214,9 @@ export interface AppUser {
   /** المهنة المسجّلة وقت إنشاء الحساب — يبني عليها التطبيق محتواه الأوّل. */
   userType?: UserType;
   craft?: Craft;
+  customCraft?: string;
+  customMaterial?: string;
+  customBasis?: PricingBasis;
   /** true لجلسة «بدون حساب» على هذا الجهاز. */
   isGuest?: boolean;
 }

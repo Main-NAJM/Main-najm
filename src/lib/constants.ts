@@ -1,17 +1,10 @@
-import type { Craft, MaterialKind, OrderStatus, PricingBasis, UserType } from './types';
+import type { MaterialKind, OrderStatus, PricingBasis, UserType } from './types';
 
 export const APP_NAME = 'حرفة برو';
 
 export const USER_TYPES: { value: UserType; label: string }[] = [
   { value: 'craftsman', label: 'حرفي' },
   { value: 'merchant', label: 'تاجر' },
-];
-
-export const CRAFTS: { value: Craft; label: string; material: MaterialKind }[] = [
-  { value: 'carpenter', label: 'نجّار', material: 'wood' },
-  { value: 'blacksmith', label: 'حدّاد', material: 'iron' },
-  { value: 'tailor', label: 'خيّاط', material: 'fabric' },
-  { value: 'other', label: 'حرفة أخرى', material: 'other' },
 ];
 
 export const ORDER_STATUSES: { value: OrderStatus; label: string; tone: string }[] = [
@@ -23,7 +16,11 @@ export const ORDER_STATUSES: { value: OrderStatus; label: string; tone: string }
 export const MATERIAL_KINDS: { value: MaterialKind; label: string; unit: string }[] = [
   { value: 'wood', label: 'خشب', unit: 'متر مكعّب' },
   { value: 'iron', label: 'حديد', unit: 'طن' },
+  { value: 'aluminium', label: 'ألمنيوم', unit: 'متر' },
+  { value: 'glass', label: 'زجاج', unit: 'متر مربّع' },
   { value: 'fabric', label: 'قماش', unit: 'متر' },
+  { value: 'building', label: 'مواد بناء', unit: 'وحدة' },
+  { value: 'parts', label: 'قطع غيار', unit: 'قطعة' },
   { value: 'other', label: 'مواد أخرى', unit: 'وحدة' },
 ];
 
@@ -52,14 +49,18 @@ export const orderStatusLabel = (status: OrderStatus): string =>
 export const orderStatusTone = (status: OrderStatus): string =>
   ORDER_STATUSES.find((s) => s.value === status)?.tone ?? 'muted';
 
-export const craftLabel = (craft: Craft): string =>
-  CRAFTS.find((c) => c.value === craft)?.label ?? craft;
-
 export const userTypeLabel = (type: UserType): string =>
   USER_TYPES.find((t) => t.value === type)?.label ?? type;
 
-export const materialKindLabel = (kind: MaterialKind): string =>
-  MATERIAL_KINDS.find((m) => m.value === kind)?.label ?? kind;
+/**
+ * اسم صنف المادة. صنف «مواد أخرى» يحمل الاسم الذي كتبه صاحب الحساب لمادّته
+ * (جلد، رخام، بلاستيك…) متى كتبه، فتُعرض صفحاته بلغته لا بكلمة عامّة.
+ */
+export const materialKindLabel = (kind: MaterialKind, custom?: string): string => {
+  const typed = custom?.trim();
+  if (kind === 'other' && typed) return typed;
+  return MATERIAL_KINDS.find((m) => m.value === kind)?.label ?? kind;
+};
 
 /* ------------------------------------------------- أسس تسعير المنتجات */
 
@@ -120,4 +121,6 @@ export const DENSITY_HINTS: { label: string; value: number }[] = [
   { label: 'ألمنيوم', value: 2700 },
   { label: 'خشب صلب', value: 700 },
   { label: 'خشب MDF', value: 750 },
+  { label: 'زجاج', value: 2500 },
+  { label: 'خرسانة', value: 2400 },
 ];

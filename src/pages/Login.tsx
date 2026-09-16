@@ -1,10 +1,10 @@
 import { useMemo, useState, type FormEvent } from 'react';
 import { useAuth } from '@/context/AuthContext';
-import { APP_NAME } from '@/lib/constants';
+import { APP_NAME, PRICING_BASES } from '@/lib/constants';
 import { formatPhone } from '@/lib/phone';
 import { TRADE_CHOICES, tradeChoice } from '@/lib/trades';
-import { TextInput } from '@/components/ui';
-import type { Craft, UserType } from '@/lib/types';
+import { Select, TextInput } from '@/components/ui';
+import type { Craft, PricingBasis, UserType } from '@/lib/types';
 
 /** معرّف عنصر reCAPTCHA غير المرئي الذي يشترطه الدخول برقم الهاتف. */
 const RECAPTCHA_ID = 'recaptcha-container';
@@ -227,6 +227,9 @@ interface SignUpValues {
   password: string;
   userType: UserType;
   craft: Craft;
+  customCraft: string;
+  customMaterial: string;
+  customBasis: PricingBasis;
 }
 
 function SignUpFlow({
@@ -243,9 +246,16 @@ function SignUpFlow({
   const [confirm, setConfirm] = useState('');
   const [userType, setUserType] = useState<UserType>('craftsman');
   const [craft, setCraft] = useState<Craft>('carpenter');
+  const [customCraft, setCustomCraft] = useState('');
+  const [customMaterial, setCustomMaterial] = useState('');
+  const [customBasis, setCustomBasis] = useState<PricingBasis>('unit');
   const [stepError, setStepError] = useState<string | null>(null);
 
-  const chosen = useMemo(() => tradeChoice(userType, craft), [userType, craft]);
+  const isCustom = craft === 'other';
+  const chosen = useMemo(
+    () => tradeChoice({ userType, craft, customCraft, customMaterial, customBasis }),
+    [userType, craft, customCraft, customMaterial, customBasis],
+  );
 
   const next = (event: FormEvent) => {
     event.preventDefault();
@@ -271,7 +281,21 @@ function SignUpFlow({
 
   const finish = (event: FormEvent) => {
     event.preventDefault();
-    void onSubmit({ name, ident, password, userType, craft });
+    if (craft === 'other' && !customCraft.trim()) {
+      setStepError('اكتب اسم مهنتك، أو اختر واحدة من المهن أعلاه.');
+      return;
+    }
+    setStepError(null);
+    void onSubmit({
+      name,
+      ident,
+      password,
+      userType,
+      craft,
+      customCraft,
+      customMaterial,
+      customBasis,
+    });
   };
 
   return (
@@ -343,14 +367,16 @@ function SignUpFlow({
 
           <div className="trade-grid">
             {TRADE_CHOICES.map((choice) => {
-              // نفس أيقونة المادة للحرفي والتاجر: الأربع متمايزة، والعنوان يوضّح الباقي.
+              // نفس أيقونة المادة للحرفي والتاجر: كلّها متمايزة، والعنوان يوضّح الباقي.
               const Icon = choice.Icon;
               const active = craft === choice.craft;
               return (
                 <button
                   key={choice.craft}
                   type="button"
-                  className={`trade-card${active ? ' is-active' : ''}`}
+                  className={`trade-card${active ? ' is-active' : ''}${
+                    choice.isCustom ? ' trade-card--add' : ''
+                  }`}
                   aria-pressed={active}
                   onClick={() => {
                     setCraft(choice.craft);
@@ -364,6 +390,39 @@ function SignUpFlow({
               );
             })}
           </div>
+
+          {isCustom ? (
+            <div className="trade-custom">
+              <p className="trade-custom__head">
+                اكتب مهنتك كما تسمّيها أنت، فيبني التطبيق كل شيء عليها.
+              </p>
+              <TextInput
+                label={userType === 'merchant' ? 'بماذا تتاجر؟' : 'ما اسم مهنتك؟'}
+                value={customCraft}
+                onChange={setCustomCraft}
+                placeholder={userType === 'merchant' ? 'مثال: تاجر جلود' : 'مثال: صانع أحذية'}
+              />
+              <TextInput
+                label="المادة الأساسية (اختياري)"
+                value={customMaterial}
+                onChange={setCustomMaterial}
+                placeholder="مثال: جلد"
+                hint="تصير صنفاً باسمها في مؤشّر الأسعار"
+              />
+              {userType === 'merchant' ? null : (
+                <Select
+                  label="كيف تُسعّر عادةً؟"
+                  value={customBasis}
+                  options={PRICING_BASES.map((basis) => ({
+                    value: basis.value,
+                    label: basis.label,
+                  }))}
+                  onChange={setCustomBasis}
+                  hint={PRICING_BASES.find((b) => b.value === customBasis)?.hint}
+                />
+              )}
+            </div>
+          ) : null}
 
           <div className="trade-preview">
             <span className="trade-preview__head">سيفتح التطبيق على</span>

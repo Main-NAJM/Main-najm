@@ -80,7 +80,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <div>
             <div className="app-header__title">{title}</div>
             <div className="app-header__sub">
-              {profile.businessName || APP_NAME} · {tradeLabel(profile.userType, profile.craft)}
+              {profile.businessName || APP_NAME} · {tradeLabel(profile)}
             </div>
           </div>
           <div className="app-header__actions">

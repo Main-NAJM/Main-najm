@@ -153,7 +153,10 @@ export default function MarketPrices() {
 
   const chips: { value: Filter; label: string }[] = [
     { value: 'all', label: 'الكل' },
-    ...MATERIAL_KINDS.map((kind) => ({ value: kind.value as Filter, label: kind.label })),
+    ...MATERIAL_KINDS.map((kind) => ({
+      value: kind.value as Filter,
+      label: materialKindLabel(kind.value, profile.customMaterial),
+    })),
   ];
 
   return (
@@ -194,7 +197,7 @@ export default function MarketPrices() {
         grouped.map(([kind, prices]) => (
           <section key={kind}>
             <div className="section-title">
-              <h2>{materialKindLabel(kind)}</h2>
+              <h2>{materialKindLabel(kind, profile.customMaterial)}</h2>
               <span className="small muted">{prices.length} مادة</span>
             </div>
             <div className="list">
@@ -313,7 +316,10 @@ export default function MarketPrices() {
         <Select
           label="نوع المادة"
           value={draft.kind}
-          options={MATERIAL_KINDS.map((m) => ({ value: m.value, label: m.label }))}
+          options={MATERIAL_KINDS.map((m) => ({
+            value: m.value,
+            label: materialKindLabel(m.value, profile.customMaterial),
+          }))}
           onChange={(value) => {
             patch({
               kind: value,

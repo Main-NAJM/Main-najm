@@ -125,9 +125,26 @@ export const TailorIcon = (props: IconProps) => (
   </svg>
 );
 
-/** حرفة أخرى: مفتاح ربط. */
-export const CraftIcon = (props: IconProps) => (
+/** ألمنيوم وزجاج: إطار نافذة بمصراعين. */
+export const AluminiumIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <rect x="3.5" y="4" width="17" height="16" rx="1.6" />
+    <path d="M12 4v16M3.5 12h17" />
+    <path d="M9 8.2v-.01M15 15.8v-.01" />
+  </svg>
+);
+
+/** ميكانيكي: مفتاح ربط. */
+export const MechanicIcon = (props: IconProps) => (
   <svg {...base(props)}>
     <path d="M15.5 3.5a5 5 0 0 0-5.9 6.6L3.5 16.2a2 2 0 1 0 2.8 2.8l6.1-6.1a5 5 0 0 0 6.6-5.9l-2.8 2.8-2.6-.6-.6-2.6Z" />
+  </svg>
+);
+
+/** بنّاء: جدار آجر. */
+export const BuilderIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M3.5 6.5h17v11h-17z" />
+    <path d="M3.5 10.2h17M3.5 13.8h17M9 6.5v3.7M15 6.5v3.7M6 10.2v3.6M12 10.2v3.6M18 10.2v3.6M9 13.8v3.7M15 13.8v3.7" />
   </svg>
 );

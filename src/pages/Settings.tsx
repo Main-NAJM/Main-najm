@@ -14,9 +14,9 @@ import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { changePassword } from '@/data/accounts';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
 import { TRADE_CHOICES, tradeLabel } from '@/lib/trades';
-import { APP_NAME, CURRENCIES, USER_TYPES } from '@/lib/constants';
+import { APP_NAME, CURRENCIES, PRICING_BASES, USER_TYPES } from '@/lib/constants';
 import { formatDateTime, toNumber } from '@/lib/format';
-import type { Craft, Profile, UserType } from '@/lib/types';
+import type { Craft, PricingBasis, Profile, UserType } from '@/lib/types';
 
 export default function Settings() {
   const { profile, saveProfile, storeKind, seedDemoData, orders, debts } = useData();
@@ -48,12 +48,17 @@ export default function Settings() {
         ownerName: draft.ownerName.trim(),
         phone: draft.phone.trim(),
         address: draft.address.trim(),
+        customCraft: draft.customCraft.trim(),
+        customMaterial: draft.customMaterial.trim(),
       });
       // الحساب على الجهاز يحمل نسخته من الاسم والمهنة (تُعرض في شاشة الدخول).
       updateLocalAccount({
         displayName: businessName,
         userType: draft.userType,
         craft: draft.craft,
+        customCraft: draft.customCraft.trim(),
+        customMaterial: draft.customMaterial.trim(),
+        customBasis: draft.customBasis,
       });
       notify('حُفظت الإعدادات.');
     } catch (error) {
@@ -170,6 +175,41 @@ export default function Settings() {
               }}
             />
           </div>
+          {draft.craft === 'other' ? (
+            <>
+              <TextInput
+                label={draft.userType === 'merchant' ? 'بماذا تتاجر؟' : 'اسم مهنتك'}
+                value={draft.customCraft}
+                onChange={(value) => {
+                  patch({ customCraft: value });
+                }}
+                placeholder={draft.userType === 'merchant' ? 'تاجر جلود' : 'صانع أحذية'}
+                hint="يظهر في رأس الصفحات وفي عروض الأسعار المطبوعة"
+              />
+              <div className="grid-2">
+                <TextInput
+                  label="المادة الأساسية"
+                  value={draft.customMaterial}
+                  onChange={(value) => {
+                    patch({ customMaterial: value });
+                  }}
+                  placeholder="جلد"
+                  hint="اسم صنفك في مؤشّر الأسعار"
+                />
+                <Select
+                  label="طريقة التسعير المعتادة"
+                  value={draft.customBasis}
+                  options={PRICING_BASES.map((basis) => ({
+                    value: basis.value,
+                    label: basis.label,
+                  }))}
+                  onChange={(value) => {
+                    patch({ customBasis: value as PricingBasis });
+                  }}
+                />
+              </div>
+            </>
+          ) : null}
           <Select
             label="العملة"
             value={draft.currency}
@@ -255,7 +295,7 @@ export default function Settings() {
             </span>
           ) : null}
           <span>
-            المهنة <strong>{tradeLabel(profile.userType, profile.craft)}</strong>
+            المهنة <strong>{tradeLabel(profile)}</strong>
           </span>
           <span>
             التخزين <strong>{storeKind === 'local' ? 'على الجهاز' : 'Firebase'}</strong>

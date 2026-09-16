@@ -22,6 +22,7 @@ import {
   seedAppointments,
   seedCalculations,
   seedDebts,
+  seedCustomProduct,
   seedMarketPrices,
   seedOrders,
   seedProducts,
@@ -108,11 +109,21 @@ export function DataProvider({ children }: { children: ReactNode }) {
     if (isLocalInitialized(uid)) return;
     const craft = user.craft;
     const userType = user.userType ?? 'craftsman';
+    const customCraft = user.customCraft ?? '';
+    const customMaterial = user.customMaterial ?? '';
+    const customBasis = user.customBasis ?? 'unit';
     markLocalInitialized(uid);
     // حساب ورث بيانات مستخدم محلي سابق يحتفظ بها وبملف عمله كما هما.
     if (!hasLocalData(uid)) {
-      seedLocalCollection(uid, 'products', seedProducts(craft));
-      seedLocalCollection(uid, 'marketPrices', seedMarketPrices(craft));
+      // المهنة المكتوبة لا قوالب جاهزة لها، فتُزرع لها بداية باسمها وبأساس تسعيرها.
+      const products =
+        craft === 'other'
+          ? userType === 'merchant'
+            ? []
+            : seedCustomProduct(customCraft, customBasis, defaultProfile({ craft }).defaultMarginPct)
+          : seedProducts(craft);
+      seedLocalCollection(uid, 'products', products);
+      seedLocalCollection(uid, 'marketPrices', seedMarketPrices(craft, customMaterial));
     }
     const existing = readLocalProfile(uid);
     void localStore.saveProfile(uid, {
@@ -121,11 +132,17 @@ export function DataProvider({ children }: { children: ReactNode }) {
         phone: user.phoneNumber ?? '',
         userType,
         craft,
+        customCraft,
+        customMaterial,
+        customBasis,
       }),
       // ما سبق أن ضبطه صاحبه يبقى، والمهنة تُحدَّث لما اختاره الآن.
       ...(existing ?? {}),
       userType,
       craft,
+      customCraft,
+      customMaterial,
+      customBasis,
     });
   }, [
     uid,
@@ -133,6 +150,9 @@ export function DataProvider({ children }: { children: ReactNode }) {
     user?.isGuest,
     user?.craft,
     user?.userType,
+    user?.customCraft,
+    user?.customMaterial,
+    user?.customBasis,
     user?.displayName,
     user?.phoneNumber,
   ]);

@@ -1529,6 +1529,39 @@ a.stat:active {
   color: var(--gold);
 }
 
+/*
+ * بطاقة «مهنة أخرى»: حدّ متقطّع وعلامة زائد — تُقرأ دعوةً للكتابة لا خياراً جاهزاً.
+ * وتمتدّ على العرض كلّه، فتُكمل الصفوف الزوجية فوقها بدل أن تترك فجوة.
+ */
+.trade-card--add {
+  grid-column: 1 / -1;
+  flex-direction: row;
+  gap: 9px;
+  min-height: 56px;
+  border-style: dashed;
+  background: transparent;
+}
+
+.trade-card--add.is-active {
+  border-style: solid;
+}
+
+/* حقول المهنة المكتوبة، تحت الشبكة مباشرة وموصولة بها بصرياً. */
+.trade-custom {
+  margin-top: 10px;
+  padding: 13px 14px 2px;
+  background: var(--gold-tint);
+  border: 1.5px solid var(--gold-line);
+  border-radius: var(--r);
+}
+
+.trade-custom__head {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--ink-2);
+  margin-bottom: 10px;
+}
+
 .trade-preview {
   margin-top: 16px;
   background: var(--bar);

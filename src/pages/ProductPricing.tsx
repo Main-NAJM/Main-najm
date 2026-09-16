@@ -13,14 +13,8 @@ import {
   TextInput,
 } from '@/components/ui';
 import { basisUnit, computeProductPrice, type ProductDimensions } from '@/lib/calc';
-import {
-  CRAFTS,
-  DENSITY_HINTS,
-  PRICING_BASES,
-  basisLabel,
-  basisNeeds,
-  craftLabel,
-} from '@/lib/constants';
+import { DENSITY_HINTS, PRICING_BASES, basisLabel, basisNeeds } from '@/lib/constants';
+import { TRADE_CHOICES, craftName } from '@/lib/trades';
 import { formatMoney, formatNumber, percent, toNumber } from '@/lib/format';
 import type { NewRecord } from '@/data/store';
 import type { Craft, PricingBasis, ProductTemplate } from '@/lib/types';
@@ -90,6 +84,16 @@ export default function ProductPricing() {
   const result = selected ? computeProductPrice(selected, dims) : null;
   const needs = selected ? basisNeeds(selected.basis) : [];
   const money = (value: number) => formatMoney(value, profile.currency);
+
+  // قالب المهنة المكتوبة يحمل اسمها، فلا تُكرَّر الكلمة مرّتين في السطر نفسه.
+  const craftOf = (product: { name: string; craft: Craft }) => {
+    const label = craftName(product.craft, profile.customCraft);
+    return label === product.name ? '' : label;
+  };
+  const productLabel = (product: { name: string; craft: Craft }) => {
+    const label = craftOf(product);
+    return label ? `${product.name} — ${label}` : product.name;
+  };
 
   /* ------------------------------------------------------- إدارة القوالب */
 
@@ -227,6 +231,7 @@ export default function ProductPricing() {
           draft={draft}
           saving={saving}
           currency={profile.currency}
+          customCraft={profile.customCraft}
           onPatch={patch}
           onClose={() => {
             setFormOpen(false);
@@ -247,7 +252,7 @@ export default function ProductPricing() {
           value={selectedId}
           options={ordered.map((p) => ({
             value: p.id,
-            label: `${p.name} — ${craftLabel(p.craft)}`,
+            label: productLabel(p),
           }))}
           onChange={setSelectedId}
           hint={selected ? `يُسعَّر ${basisLabel(selected.basis)}` : undefined}
@@ -412,7 +417,8 @@ export default function ProductPricing() {
               <div>
                 <h3 className="card__title">{product.name}</h3>
                 <p className="card__sub">
-                  {craftLabel(product.craft)} · {basisLabel(product.basis)}
+                  {craftOf(product) ? `${craftOf(product)} · ` : ''}
+                  {basisLabel(product.basis)}
                 </p>
               </div>
               {product.id === selectedId ? <Badge tone="ok">مختار</Badge> : null}
@@ -477,6 +483,7 @@ export default function ProductPricing() {
         draft={draft}
         saving={saving}
         currency={profile.currency}
+        customCraft={profile.customCraft}
         onPatch={patch}
         onClose={() => {
           setFormOpen(false);
@@ -509,6 +516,7 @@ function ProductForm({
   draft,
   saving,
   currency,
+  customCraft,
   onPatch,
   onClose,
   onSave,
@@ -518,6 +526,8 @@ function ProductForm({
   draft: NewRecord<ProductTemplate>;
   saving: boolean;
   currency: string;
+  /** اسم المهنة المكتوبة، ليظهر في قائمة الحرف بدل «مهنة أخرى». */
+  customCraft: string;
   onPatch: (value: Partial<NewRecord<ProductTemplate>>) => void;
   onClose: () => void;
   onSave: () => void;
@@ -556,7 +566,10 @@ function ProductForm({
         <Select
           label="الحرفة"
           value={draft.craft}
-          options={CRAFTS.map((c) => ({ value: c.value, label: c.label }))}
+          options={TRADE_CHOICES.map((choice) => ({
+            value: choice.craft,
+            label: craftName(choice.craft, customCraft),
+          }))}
           onChange={(v) => {
             onPatch({ craft: v as Craft });
           }}
