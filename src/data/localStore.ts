@@ -122,6 +122,10 @@ export const localStore: Store = {
   },
 };
 
+/** قراءة فورية لملف العمل — تُستعمل لمعرفة هل للحساب ملف محفوظ أصلاً. */
+export const readLocalProfile = (uid: string): Profile | null =>
+  readRaw<Profile | null>(dataKey(uid, 'profile'), null);
+
 /** يحذف كل بيانات مستخدم محلي (يُستخدم في الإعدادات). */
 export const clearLocalData = (uid: string): void => {
   [...COLLECTIONS, 'profile' as const].forEach((name) => {
@@ -170,6 +174,28 @@ export const getLocalUid = (): string => {
 /** هل يوجد أي سجل محفوظ لهذا المستخدم؟ يُستخدم لتقرير زرع بيانات تجريبية. */
 export const hasLocalData = (uid: string): boolean =>
   COLLECTIONS.some((name) => readRaw<unknown[]>(dataKey(uid, name), []).length > 0);
+
+/**
+ * علامة «جُهّز هذا الحساب مرّة». لا يكفي فحص وجود بيانات: حساب حرفة «أخرى»
+ * يبدأ فارغاً عمداً، فلولا هذه العلامة لأُعيد تجهيزه في كل فتح وطُمس ما عدّله.
+ */
+const initKey = (uid: string) => dataKey(uid, 'initialized');
+
+export const isLocalInitialized = (uid: string): boolean => {
+  try {
+    return window.localStorage.getItem(initKey(uid)) === '1';
+  } catch {
+    return false;
+  }
+};
+
+export const markLocalInitialized = (uid: string): void => {
+  try {
+    window.localStorage.setItem(initKey(uid), '1');
+  } catch {
+    /* التخزين ممنوع: يُعاد التجهيز في الزيارة القادمة وهو مقبول */
+  }
+};
 
 /** كتابة مجموعة سجلات دفعة واحدة (تُستخدم عند زرع البيانات التجريبية). */
 export const seedLocalCollection = <K extends CollectionName>(

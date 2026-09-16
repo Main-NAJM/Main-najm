@@ -1,29 +1,53 @@
-/** بيانات تجريبية تُزرع مرّة واحدة عند أول دخول في الوضع المحلي. */
+/**
+ * محتوى البداية.
+ *
+ * نوعان مختلفان عمداً:
+ * - محتوى مرجعي (قوالب التسعير ومؤشّر الأسعار) يُزرع لكل حساب جديد حسب مهنته،
+ *   لأنه أرقام يعدّلها صاحب الورشة لا بيانات زبائن.
+ * - بيانات تجريبية كاملة (طلبيات ومواعيد وديون) لا تُزرع تلقائياً لحساب حقيقي —
+ *   فزبائن وهميون وديون وهمية في تطبيق عمل خطر — بل بطلب صريح من الإعدادات.
+ */
 import { addDays, todayIso } from '@/lib/format';
 import { newId } from '@/lib/id';
+import { tradeFor } from '@/lib/trades';
 import type { NewRecord } from './store';
 import type {
   Appointment,
   Calculation,
+  Craft,
   Debt,
   MarketPrice,
   Order,
   Profile,
   ProductTemplate,
+  UserType,
 } from '@/lib/types';
 
-export const defaultProfile = (): Profile => ({
-  businessName: 'ورشتي',
-  ownerName: '',
-  phone: '',
-  address: '',
-  userType: 'craftsman',
-  craft: 'carpenter',
-  currency: 'د.ع',
-  defaultLaborRate: 5000,
-  defaultMarginPct: 25,
-  updatedAt: Date.now(),
-});
+export interface ProfileSeed {
+  businessName?: string;
+  phone?: string;
+  userType?: UserType;
+  craft?: Craft;
+}
+
+/** ملف العمل الافتراضي، مبنيّ على ما سجّله صاحبه عند إنشاء الحساب. */
+export const defaultProfile = (seed: ProfileSeed = {}): Profile => {
+  const craft = seed.craft ?? 'carpenter';
+  const userType = seed.userType ?? 'craftsman';
+  const trade = tradeFor(craft);
+  return {
+    businessName: seed.businessName?.trim() || 'ورشتي',
+    ownerName: seed.businessName?.trim() ?? '',
+    phone: seed.phone ?? '',
+    address: '',
+    userType,
+    craft,
+    currency: 'د.ع',
+    defaultLaborRate: userType === 'merchant' ? 0 : trade.defaultLaborRate,
+    defaultMarginPct: userType === 'merchant' ? 15 : trade.defaultMarginPct,
+    updatedAt: Date.now(),
+  };
+};
 
 export const seedOrders = (): NewRecord<Order>[] => [
   {
@@ -118,7 +142,7 @@ export const seedCalculations = (): NewRecord<Calculation>[] => [
   },
 ];
 
-export const seedMarketPrices = (): NewRecord<MarketPrice>[] => [
+const ALL_MARKET_PRICES = (): NewRecord<MarketPrice>[] => [
   {
     kind: 'wood',
     name: 'لوح MDF ١٨ ملم',
@@ -200,8 +224,19 @@ export const seedDebts = (): NewRecord<Debt>[] => [
   },
 ];
 
+/**
+ * مؤشّر الأسعار: أسطر صنف المادة الذي يخصّ المهنة، وكلّها إن لم تُحدَّد مهنة.
+ * حرفة «أخرى» لا مادة لها، فتبدأ الصفحة فارغة.
+ */
+export const seedMarketPrices = (craft?: Craft): NewRecord<MarketPrice>[] => {
+  const rows = ALL_MARKET_PRICES();
+  if (!craft) return rows;
+  const material = tradeFor(craft).material;
+  return material === 'other' ? [] : rows.filter((row) => row.kind === material);
+};
+
 /** قوالب منتجات شائعة لكل حرفة — نقطة انطلاق يعدّلها صاحب الورشة. */
-export const seedProducts = (): NewRecord<ProductTemplate>[] => [
+const ALL_PRODUCTS = (): NewRecord<ProductTemplate>[] => [
   {
     name: 'باب خشب داخلي',
     craft: 'carpenter',
@@ -293,3 +328,9 @@ export const seedProducts = (): NewRecord<ProductTemplate>[] => [
     notes: 'تسعير بالقطعة لا بالمقاس.',
   },
 ];
+
+/** قوالب المهنة المختارة، وكلّها إن لم تُحدَّد مهنة. */
+export const seedProducts = (craft?: Craft): NewRecord<ProductTemplate>[] => {
+  const rows = ALL_PRODUCTS();
+  return craft ? rows.filter((row) => row.craft === craft) : rows;
+};

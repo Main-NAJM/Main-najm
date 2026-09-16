@@ -2,22 +2,32 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
-import { ConfirmDialog, NumberInput, SectionTitle, Select, TextInput } from '@/components/ui';
+import {
+  ConfirmDialog,
+  Modal,
+  NumberInput,
+  SectionTitle,
+  Select,
+  TextInput,
+} from '@/components/ui';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
+import { changePassword } from '@/data/accounts';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
-import { APP_NAME, CRAFTS, CURRENCIES, USER_TYPES } from '@/lib/constants';
+import { TRADE_CHOICES, tradeLabel } from '@/lib/trades';
+import { APP_NAME, CURRENCIES, USER_TYPES } from '@/lib/constants';
 import { formatDateTime, toNumber } from '@/lib/format';
 import type { Craft, Profile, UserType } from '@/lib/types';
 
 export default function Settings() {
   const { profile, saveProfile, storeKind, seedDemoData, orders, debts } = useData();
-  const { user, signOut, firebaseAvailable } = useAuth();
+  const { user, signOut, firebaseAvailable, updateLocalAccount } = useAuth();
   const { notify, notifyError } = useToast();
   const { canInstall, installed, install } = usePwaInstall();
 
   const [draft, setDraft] = useState<Profile>(profile);
   const [saving, setSaving] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -31,12 +41,19 @@ export default function Settings() {
   const save = async () => {
     setSaving(true);
     try {
+      const businessName = draft.businessName.trim() || 'ورشتي';
       await saveProfile({
         ...draft,
-        businessName: draft.businessName.trim() || 'ورشتي',
+        businessName,
         ownerName: draft.ownerName.trim(),
         phone: draft.phone.trim(),
         address: draft.address.trim(),
+      });
+      // الحساب على الجهاز يحمل نسخته من الاسم والمهنة (تُعرض في شاشة الدخول).
+      updateLocalAccount({
+        displayName: businessName,
+        userType: draft.userType,
+        craft: draft.craft,
       });
       notify('حُفظت الإعدادات.');
     } catch (error) {
@@ -141,9 +158,13 @@ export default function Settings() {
               }}
             />
             <Select
-              label="الحرفة"
+              label={draft.userType === 'merchant' ? 'مجال التجارة' : 'الحرفة'}
+              hint="يقرّر أسعار المواد المقترحة والقوالب التي يبدأ بها التسعير"
               value={draft.craft}
-              options={CRAFTS.map((c) => ({ value: c.value, label: c.label }))}
+              options={TRADE_CHOICES.map((choice) => ({
+                value: choice.craft,
+                label: draft.userType === 'merchant' ? choice.merchantLabel : choice.craftLabel,
+              }))}
               onChange={(value) => {
                 patch({ craft: value as Craft });
               }}
@@ -196,11 +217,20 @@ export default function Settings() {
         <SectionTitle>الحساب والمزامنة</SectionTitle>
         {storeKind === 'local' ? (
           <div className="notice notice--warn">
-            التطبيق يعمل الآن في <strong>الوضع المحلي</strong>: كل البيانات محفوظة داخل هذا
-            المتصفّح فقط ولا تتزامن بين الأجهزة.
+            {user?.isGuest ? (
+              <>
+                تعمل الآن <strong>بدون حساب</strong>. البيانات محفوظة في هذا المتصفّح وحده. أنشئ
+                حساباً لتفصل بياناتك عن غيرك على نفس الجهاز وتحميها بكلمة مرور.
+              </>
+            ) : (
+              <>
+                حسابك محفوظ على <strong>هذا الجهاز</strong> فقط: البيانات لا تتزامن بين الأجهزة،
+                وحذف بيانات المتصفّح يمحوها.
+              </>
+            )}
             {firebaseAvailable
-              ? ' سجّل الدخول بحساب لمزامنة بياناتك.'
-              : ' أضف إعدادات Firebase في ملف .env.local لتفعيل المزامنة (التفاصيل في README).'}
+              ? ' للمزامنة بين الأجهزة استعمل حساباً سحابياً من شاشة الدخول.'
+              : ' خذ نسخة احتياطية من الأسفل بين حين وآخر.'}
           </div>
         ) : (
           <div className="notice notice--info">
@@ -219,20 +249,37 @@ export default function Settings() {
               الهاتف <strong dir="ltr">{user.phoneNumber}</strong>
             </span>
           ) : null}
+          {user?.displayName ? (
+            <span>
+              الحساب <strong>{user.displayName}</strong>
+            </span>
+          ) : null}
           <span>
-            التخزين <strong>{storeKind === 'local' ? 'محلي' : 'Firebase'}</strong>
+            المهنة <strong>{tradeLabel(profile.userType, profile.craft)}</strong>
+          </span>
+          <span>
+            التخزين <strong>{storeKind === 'local' ? 'على الجهاز' : 'Firebase'}</strong>
           </span>
         </div>
         <div className="card__actions">
-          {firebaseAvailable ? (
+          <button
+            type="button"
+            className="btn btn--ghost btn--sm"
+            onClick={() => {
+              void signOut();
+            }}
+          >
+            {user?.isGuest ? 'إنشاء حساب أو تسجيل دخول' : 'تسجيل الخروج'}
+          </button>
+          {user?.isLocal && !user.isGuest ? (
             <button
               type="button"
-              className="btn btn--ghost btn--sm"
+              className="btn btn--soft btn--sm"
               onClick={() => {
-                void signOut();
+                setChangingPassword(true);
               }}
             >
-              {user?.isLocal ? 'الانتقال لتسجيل الدخول' : 'تسجيل الخروج'}
+              تغيير كلمة المرور
             </button>
           ) : null}
           {canInstall ? (
@@ -317,6 +364,99 @@ export default function Settings() {
         }}
         onConfirm={doClear}
       />
+
+      {user && changingPassword ? (
+        <PasswordDialog
+          uid={user.uid}
+          onClose={() => {
+            setChangingPassword(false);
+          }}
+          onDone={() => {
+            setChangingPassword(false);
+            notify('غُيّرت كلمة المرور.');
+          }}
+        />
+      ) : null}
     </>
+  );
+}
+
+/** تغيير كلمة مرور حساب الجهاز — يتطلّب كلمة المرور الحالية. */
+function PasswordDialog({
+  uid,
+  onClose,
+  onDone,
+}: {
+  uid: string;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    if (next !== confirm) {
+      setError('كلمتا المرور الجديدتان غير متطابقتين.');
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    try {
+      await changePassword(uid, current, next);
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'تعذّر تغيير كلمة المرور.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Modal
+      open
+      title="تغيير كلمة المرور"
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className="btn btn--ghost" onClick={onClose}>
+            إلغاء
+          </button>
+          <button
+            type="button"
+            className="btn"
+            disabled={busy}
+            onClick={() => {
+              void submit();
+            }}
+          >
+            {busy ? 'جارٍ…' : 'حفظ'}
+          </button>
+        </>
+      }
+    >
+      {error ? <div className="auth__error">{error}</div> : null}
+      <TextInput
+        label="كلمة المرور الحالية"
+        type="password"
+        value={current}
+        onChange={setCurrent}
+      />
+      <TextInput
+        label="كلمة المرور الجديدة"
+        type="password"
+        value={next}
+        onChange={setNext}
+        hint="٤ خانات على الأقل"
+      />
+      <TextInput
+        label="تأكيد كلمة المرور الجديدة"
+        type="password"
+        value={confirm}
+        onChange={setConfirm}
+      />
+    </Modal>
   );
 }

@@ -2,7 +2,8 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { APP_NAME, craftLabel, userTypeLabel } from '@/lib/constants';
+import { APP_NAME } from '@/lib/constants';
+import { tradeLabel } from '@/lib/trades';
 import {
   CalculatorIcon,
   CalendarIcon,
@@ -79,8 +80,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <div>
             <div className="app-header__title">{title}</div>
             <div className="app-header__sub">
-              {profile.businessName || APP_NAME} · {userTypeLabel(profile.userType)}
-              {profile.userType === 'craftsman' ? ` · ${craftLabel(profile.craft)}` : ''}
+              {profile.businessName || APP_NAME} · {tradeLabel(profile.userType, profile.craft)}
             </div>
           </div>
           <div className="app-header__actions">

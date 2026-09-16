@@ -1348,6 +1348,230 @@ a.stat:active {
   background: var(--surface-3);
 }
 
+/* حسابات هذا الجهاز: اختصار للنقر بدل كتابة الرقم كاملاً. */
+.auth__accounts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 7px;
+  margin-bottom: 14px;
+}
+
+.auth__account {
+  flex: 1 1 auto;
+  min-width: 132px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  text-align: start;
+  background: var(--surface-2);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  padding: 9px 11px;
+  transition:
+    border-color var(--fast) var(--ease),
+    background var(--fast) var(--ease);
+}
+
+.auth__account.is-active {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+}
+
+.auth__account-name {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink);
+}
+
+.auth__account-ident {
+  font-size: 12px;
+  color: var(--ink-3);
+  /* الرقم لاتيني فيُكتب يساراً‑يميناً، لكنه يبقى محاذياً لليمين كبقية البطاقة. */
+  direction: ltr;
+  text-align: right;
+}
+
+/* حقل لاتيني (هاتف أو بريد) داخل نموذج عربي: ترتيب صحيح ومحاذاة لليمين. */
+.input--ltr {
+  direction: ltr;
+  text-align: right;
+}
+
+/* خطوات إنشاء الحساب */
+.auth__steps {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  list-style: none;
+  margin: 0 0 18px;
+  padding: 0;
+  counter-reset: step;
+}
+
+.auth__steps li {
+  counter-increment: step;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--ink-3);
+  padding-top: 8px;
+  border-top: 3px solid var(--line);
+}
+
+.auth__steps li::before {
+  content: counter(step) '. ';
+}
+
+/* المنجَزة: خطّ ذهبي باهت. الجارية: ذهبي كامل ونصّ داكن. */
+.auth__steps li.is-done {
+  color: var(--ink-2);
+  border-top-color: var(--gold-line);
+}
+
+.auth__steps li.is-active {
+  color: var(--ink);
+  border-top-color: var(--gold);
+}
+
+.auth__foot {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 14px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+}
+
+.auth__note {
+  text-align: center;
+  color: var(--ink-3);
+  font-size: 12px;
+  line-height: 1.6;
+  margin-top: 10px;
+}
+
+/* ------------------------------------------------------ اختيار المهنة */
+
+.trade-switch {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 3px;
+  background: var(--surface-3);
+  border-radius: var(--r-sm);
+  padding: 3px;
+}
+
+.trade-switch__btn {
+  border: none;
+  background: transparent;
+  border-radius: calc(var(--r-sm) - 3px);
+  padding: 9px 6px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ink-2);
+  transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
+}
+
+.trade-switch__btn.is-active {
+  background: var(--bar);
+  color: var(--on-bar);
+  box-shadow: var(--sh-1);
+}
+
+.trade-q {
+  font-size: 13.5px;
+  font-weight: 600;
+  color: var(--ink-2);
+  margin: 16px 0 9px;
+}
+
+.trade-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 9px;
+}
+
+.trade-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  min-height: 84px;
+  padding: 12px 8px;
+  background: var(--surface-2);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r);
+  color: var(--ink-2);
+  transition:
+    border-color var(--fast) var(--ease),
+    background var(--fast) var(--ease),
+    color var(--fast) var(--ease);
+}
+
+.trade-card__icon {
+  color: var(--ink-3);
+  transition: color var(--fast) var(--ease);
+}
+
+.trade-card__label {
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.trade-card.is-active {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+  color: var(--ink);
+}
+
+.trade-card.is-active .trade-card__icon {
+  color: var(--gold);
+}
+
+.trade-preview {
+  margin-top: 16px;
+  background: var(--bar);
+  color: var(--on-bar);
+  border-radius: var(--r);
+  padding: 13px 15px;
+}
+
+.trade-preview__head {
+  display: block;
+  font-size: 11.5px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  color: var(--on-bar-2);
+  margin-bottom: 7px;
+}
+
+.trade-preview ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 6px;
+}
+
+.trade-preview li {
+  position: relative;
+  padding-inline-start: 15px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.trade-preview li::before {
+  content: '';
+  position: absolute;
+  inset-inline-start: 0;
+  top: 8px;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--gold-bright);
+}
+
 /* -------------------------------------------------------------- عناصر مساعدة */
 
 .notice {

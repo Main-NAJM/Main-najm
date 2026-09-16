@@ -9,7 +9,14 @@ import {
 } from 'react';
 import { useAuth } from './AuthContext';
 import { firestoreStore } from '@/data/firestoreStore';
-import { hasLocalData, localStore, seedLocalCollection } from '@/data/localStore';
+import {
+  hasLocalData,
+  isLocalInitialized,
+  localStore,
+  markLocalInitialized,
+  readLocalProfile,
+  seedLocalCollection,
+} from '@/data/localStore';
 import {
   defaultProfile,
   seedAppointments,
@@ -76,7 +83,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
   const store: Store = user?.isLocal ? localStore : firestoreStore;
 
   const [collections, setCollections] = useState(emptyState);
-  const [profile, setProfile] = useState<Profile>(defaultProfile);
+  const [profile, setProfile] = useState<Profile>(() => defaultProfile());
   const [profileLoaded, setProfileLoaded] = useState(false);
   const [loadedCount, setLoadedCount] = useState(0);
   const [error, setError] = useState<string | null>(null);
@@ -90,6 +97,45 @@ export function DataProvider({ children }: { children: ReactNode }) {
     seedLocalCollection(uid, 'products', seedProducts());
     seedLocalCollection(uid, 'debts', seedDebts());
   }, [uid, user?.isLocal]);
+
+  /**
+   * أوّل فتح لحساب جديد: يُكتب ملف العمل من بيانات التسجيل، ويُزرع المحتوى
+   * المرجعي الذي يخصّ مهنته (قوالب التسعير وأسعار مادته). لا تُزرع طلبيات ولا
+   * ديون تجريبية لحساب حقيقي — البيانات الوهمية في تطبيق عمل مضلّلة.
+   */
+  useEffect(() => {
+    if (!uid || !user?.isLocal || user.isGuest || !user.craft) return;
+    if (isLocalInitialized(uid)) return;
+    const craft = user.craft;
+    const userType = user.userType ?? 'craftsman';
+    markLocalInitialized(uid);
+    // حساب ورث بيانات مستخدم محلي سابق يحتفظ بها وبملف عمله كما هما.
+    if (!hasLocalData(uid)) {
+      seedLocalCollection(uid, 'products', seedProducts(craft));
+      seedLocalCollection(uid, 'marketPrices', seedMarketPrices(craft));
+    }
+    const existing = readLocalProfile(uid);
+    void localStore.saveProfile(uid, {
+      ...defaultProfile({
+        businessName: user.displayName ?? '',
+        phone: user.phoneNumber ?? '',
+        userType,
+        craft,
+      }),
+      // ما سبق أن ضبطه صاحبه يبقى، والمهنة تُحدَّث لما اختاره الآن.
+      ...(existing ?? {}),
+      userType,
+      craft,
+    });
+  }, [
+    uid,
+    user?.isLocal,
+    user?.isGuest,
+    user?.craft,
+    user?.userType,
+    user?.displayName,
+    user?.phoneNumber,
+  ]);
 
   useEffect(() => {
     if (!uid) {

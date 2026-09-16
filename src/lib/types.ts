@@ -185,4 +185,9 @@ export interface AppUser {
   isAnonymous: boolean;
   /** true عندما يعمل التطبيق محلياً بدون Firebase. */
   isLocal: boolean;
+  /** المهنة المسجّلة وقت إنشاء الحساب — يبني عليها التطبيق محتواه الأوّل. */
+  userType?: UserType;
+  craft?: Craft;
+  /** true لجلسة «بدون حساب» على هذا الجهاز. */
+  isGuest?: boolean;
 }

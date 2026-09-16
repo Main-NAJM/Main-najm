@@ -38,6 +38,8 @@ interface TextInputProps {
   autoFocus?: boolean;
   inputMode?: 'text' | 'tel' | 'numeric' | 'decimal' | 'email';
   disabled?: boolean;
+  /** 'ltr' لمحتوى لاتيني (هاتف، بريد) داخل واجهة عربية، مع إبقائه محاذياً لليمين. */
+  dir?: 'ltr';
 }
 
 export function TextInput({
@@ -51,13 +53,14 @@ export function TextInput({
   autoFocus,
   inputMode,
   disabled,
+  dir,
 }: TextInputProps) {
   return (
     <Field label={label} hint={hint}>
       {(id) => (
         <input
           id={id}
-          className="input"
+          className={`input${dir === 'ltr' ? ' input--ltr' : ''}`}
           type={type}
           value={value}
           placeholder={placeholder}
@@ -65,6 +68,7 @@ export function TextInput({
           autoFocus={autoFocus}
           inputMode={inputMode}
           disabled={disabled}
+          dir={dir}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.value);
           }}
