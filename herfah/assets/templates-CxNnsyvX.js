@@ -1,4 +1,4 @@
-import{d as u,o as b}from"./calc-DxODjOmF.js";import{w as c,K as $,z as x,y,g as h,o as v,i as w,t as _}from"./index-CWC_ehFc.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
+import{d as u,o as b}from"./calc-C_k8rtor.js";import{w as c,K as $,z as x,y,g as h,o as v,i as w,t as _}from"./index-D-qyLD-i.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
   @page { size: A4; margin: 14mm 12mm; }
   * { box-sizing: border-box; }
   body {
@@ -312,12 +312,12 @@ import{d as u,o as b}from"./calc-DxODjOmF.js";import{w as c,K as $,z as x,y,g as
         <tbody>${n}</tbody>
       </table>
     </div>
-    ${m(s,"سجل تسعير داخلي")}`},L=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${c(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${c(s.heightCm)} سم`:"",s.depthCm?`العمق ${c(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
+    ${m(s,"سجل تسعير داخلي")}`},S=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${c(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${c(s.heightCm)} سم`:"",s.depthCm?`العمق ${c(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
     ${r(a,"عرض سعر",$(t.id))}
     <div class="block">
       <p class="block__title">${d(t.name)}</p>
       <div class="kv">
-        <div><span>الحرفة:</span><span>${d(x(t.craft))}</span></div>
+        <div><span>الحرفة:</span><span>${d(x(t.craft,a.customCraft))}</span></div>
         <div><span>التسعير:</span><span>${d(y(t.basis))}</span></div>
         ${o?`<div><span>المقاس:</span><span>${d(o)}</span></div>`:""}
         ${t.basis==="unit"?"":`<div><span>المقدار:</span><span>${d(c(n.measure))} ${d(n.measureUnit)} للقطعة</span></div>`}
@@ -354,4 +354,4 @@ import{d as u,o as b}from"./calc-DxODjOmF.js";import{w as c,K as $,z as x,y,g as
     </div>
     ${t.notes?`<div class="block"><p class="block__title">ملاحظات</p><div class="note">${d(t.notes)}</div></div>`:""}
     <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
-    ${m(a,"عرض سعر — صالح حسب أسعار المواد وقت إصداره")}`};export{R as a,D as b,L as c,N as d,T as e,z as f,q as g,j as h,P as p};
+    ${m(a,"عرض سعر — صالح حسب أسعار المواد وقت إصداره")}`};export{R as a,D as b,S as c,N as d,T as e,z as f,q as g,j as h,P as p};
