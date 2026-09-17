@@ -16,6 +16,7 @@ import type {
   Calculation,
   Craft,
   Debt,
+  InventoryItem,
   MarketPrice,
   Order,
   PricingBasis,
@@ -284,6 +285,40 @@ const ALL_MARKET_PRICES = (): NewRecord<MarketPrice>[] => [
     previousPrice: 5200,
     source: 'موزّع قطع الغيار',
     priceDate: todayIso(),
+  },
+];
+
+/** سلع تجريبية للمخزون — للتجربة فقط، لا تُزرع لحساب حقيقي. */
+export const seedInventory = (): NewRecord<InventoryItem>[] => [
+  {
+    name: 'لوح MDF ١٨ ملم',
+    unit: 'لوح',
+    qty: 12,
+    lowAt: 5,
+    costPrice: 35000,
+    salePrice: 42000,
+    supplier: 'سوق المواد الإنشائية',
+    notes: '',
+  },
+  {
+    name: 'مفصّلات أبواب',
+    unit: 'علبة',
+    qty: 3,
+    lowAt: 4,
+    costPrice: 8000,
+    salePrice: 11000,
+    supplier: 'محل الخردوات',
+    notes: 'العلبة ١٠ مفصّلات.',
+  },
+  {
+    name: 'ورق صنفرة',
+    unit: 'لفّة',
+    qty: 0,
+    lowAt: 2,
+    costPrice: 4500,
+    salePrice: 0,
+    supplier: '',
+    notes: 'نفد — يُطلب مع الطلبية القادمة.',
   },
 ];
 

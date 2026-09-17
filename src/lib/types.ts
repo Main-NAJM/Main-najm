@@ -140,6 +140,26 @@ export interface Debt extends BaseRecord {
   notes: string;
 }
 
+/**
+ * سلعة في المخزون: كميّتها الحالية وحدّ التنبيه الذي إذا نزلت إليه أو دونه
+ * عُدّت منخفضة. تختلف عن ProductTemplate: ذاك قالب تسعير لا رصيد له.
+ */
+export interface InventoryItem extends BaseRecord {
+  name: string;
+  /** وحدة العدّ: قطعة، متر، كيس، لتر… */
+  unit: string;
+  /** الكمية الحالية — تُزاد بالإدخال وتُنقص بالإخراج. */
+  qty: number;
+  /** حدّ التنبيه: qty <= lowAt يعني «مخزون منخفض». */
+  lowAt: number;
+  /** سعر شراء الوحدة — منه تُحسب قيمة المخزون. */
+  costPrice: number;
+  /** سعر بيع الوحدة، اختياري. */
+  salePrice: number;
+  supplier: string;
+  notes: string;
+}
+
 /** قالب منتج: نوعه وأساس تسعيره وسعر وحدته، تُشتقّ منه الأسعار بالمقاسات. */
 export interface ProductTemplate extends BaseRecord {
   name: string;
@@ -188,6 +208,7 @@ export interface Profile {
 export type CollectionName =
   | 'orders'
   | 'products'
+  | 'inventory'
   | 'appointments'
   | 'calculations'
   | 'marketPrices'
@@ -196,6 +217,7 @@ export type CollectionName =
 export interface CollectionMap {
   orders: Order;
   products: ProductTemplate;
+  inventory: InventoryItem;
   appointments: Appointment;
   calculations: Calculation;
   marketPrices: MarketPrice;

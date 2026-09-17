@@ -23,6 +23,7 @@ import {
   seedCalculations,
   seedDebts,
   seedCustomProduct,
+  seedInventory,
   seedMarketPrices,
   seedOrders,
   seedProducts,
@@ -34,6 +35,7 @@ import type {
   CollectionMap,
   CollectionName,
   Debt,
+  InventoryItem,
   MarketPrice,
   Order,
   Profile,
@@ -49,6 +51,7 @@ interface DataContextValue {
   calculations: Calculation[];
   marketPrices: MarketPrice[];
   products: ProductTemplate[];
+  inventory: InventoryItem[];
   debts: Debt[];
   profile: Profile;
   profileLoaded: boolean;
@@ -75,6 +78,7 @@ const emptyState = {
   calculations: [] as Calculation[],
   marketPrices: [] as MarketPrice[],
   products: [] as ProductTemplate[],
+  inventory: [] as InventoryItem[],
   debts: [] as Debt[],
 };
 
@@ -96,6 +100,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
     seedLocalCollection(uid, 'calculations', seedCalculations());
     seedLocalCollection(uid, 'marketPrices', seedMarketPrices());
     seedLocalCollection(uid, 'products', seedProducts());
+    seedLocalCollection(uid, 'inventory', seedInventory());
     seedLocalCollection(uid, 'debts', seedDebts());
   }, [uid, user?.isLocal]);
 
@@ -189,6 +194,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
       'marketPrices',
       'debts',
       'products',
+      'inventory',
     ];
 
     const unsubscribes = names.map((name) =>
@@ -255,7 +261,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
 
   const value = useMemo<DataContextValue>(
     () => ({
-      ready: loadedCount >= 6,
+      ready: loadedCount >= 7,
       error,
       storeKind: store.kind,
       ...collections,

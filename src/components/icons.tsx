@@ -96,6 +96,15 @@ export const ProductIcon = (props: IconProps) => (
   </svg>
 );
 
+/** المخزون: صناديق مرصوصة. */
+export const StockIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <rect x="3.5" y="12.5" width="7.5" height="7" rx="1" />
+    <rect x="13" y="12.5" width="7.5" height="7" rx="1" />
+    <rect x="8.2" y="4.5" width="7.5" height="7" rx="1" />
+  </svg>
+);
+
 /* ------------------------------------------------------------ أيقونات المهن */
 
 /** نجّار: منشار يد — نصل بأسنان ومقبض. */
