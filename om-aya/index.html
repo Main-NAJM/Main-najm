@@ -61,6 +61,8 @@
   button{font:inherit; color:inherit; background:none; border:none; cursor:pointer;}
   svg{flex:none;}
   :focus-visible{outline:3px solid var(--violet); outline-offset:3px; border-radius:6px;}
+  /* عناصر كثيرة هنا display:flex أو grid، وهما يتغلّبان على hidden — هذا السطر يحسمها */
+  [hidden]{display:none !important;}
   .wrap{max-width:var(--wrap); margin:0 auto; padding-inline:clamp(16px, 4vw, 40px);}
   .sr-only{
     position:absolute; width:1px; height:1px; overflow:hidden;
@@ -297,7 +299,19 @@
     transition:color .25s var(--ease), border-color .25s var(--ease);
   }
   .card-social a:hover{color:var(--fuchsia-deep); border-bottom-color:var(--fuchsia);}
-  .empty{grid-column:1 / -1; text-align:center; color:var(--plum-3); padding:var(--s-5) var(--s-2);}
+  .empty{
+    grid-column:1 / -1; text-align:center; color:var(--plum-3);
+    padding:clamp(40px, 7vw, 76px) var(--s-3);
+    background:var(--panel); border:1.5px dashed var(--line); border-radius:var(--r-lg);
+  }
+  .empty-mark{
+    display:grid; place-items:center; width:78px; height:78px; margin:0 auto var(--s-3);
+    border-radius:var(--r-pill); background:var(--grad-hot); color:#fff;
+    box-shadow:0 10px 28px rgba(236,72,153,.28);
+  }
+  .empty h3{font-size:1.25rem; color:var(--plum); margin-bottom:8px;}
+  .empty p{max-width:42ch; margin:0 auto;}
+  .empty-cta{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:var(--s-3);}
 
   /* قسم اكسسوارات الهواتف — هويّته الفيروزية تميّزه عن قسم التجميل */
   .phones{--card-glow:rgba(99,102,241,.3);}
@@ -501,7 +515,7 @@
           <a class="btn btn-ghost-light" href="#phones">اكسسوارات الهواتف</a>
         </div>
         <div class="hero-stats">
-          <div class="stat"><b id="stat-count">—</b><span>منتج مختار</span></div>
+          <div class="stat" id="stat-products" hidden><b id="stat-count">—</b><span>منتج مختار</span></div>
           <div class="stat"><b>58</b><span>ولاية نوصل إليها</span></div>
           <div class="stat"><b>0 دج</b><span>مقدّماً — الدفع عند الاستلام</span></div>
         </div>
@@ -509,7 +523,7 @@
 
       <div class="collage rise" aria-hidden="true">
         <div class="collage-orb" id="collage-orb"></div>
-        <div class="collage-card">
+        <div class="collage-card" id="collage-card" hidden>
           <span class="tile" id="collage-tile"></span>
           <span>
             <small>الأكثر طلباً</small>
@@ -710,27 +724,17 @@
      badge    : شارة نصّية مثل 'جديد' (اختياري).
      tiktok / instagram : رابط فيديو المنتج على المنصّة (اختياري).            */
   const PRODUCTS = [
-    { id:'matte-lip',   name:'أحمر شفاه مطفي طويل الثبات', category:'شفاه',      price:1600, was:2100, badge:'',      glyph:'lipstick', image:'', tiktok:'', instagram:'' },
-    { id:'gel-polish',  name:'طلاء أظافر جل لامع',          category:'أظافر',     price:900,  was:0,    badge:'',      glyph:'polish',   image:'', tiktok:'', instagram:'' },
-    { id:'face-cream',  name:'كريم مرطّب للوجه',            category:'بشرة',      price:2800, was:0,    badge:'جديد',  glyph:'cream',    image:'', tiktok:'', instagram:'' },
-    { id:'eye-palette', name:'باليت ظلال العيون',           category:'عيون',      price:3200, was:3900, badge:'',      glyph:'eye',      image:'', tiktok:'', instagram:'' },
-    { id:'gold-hoops',  name:'أقراط ذهبية دائرية',          category:'مجوهرات',   price:1800, was:0,    badge:'',      glyph:'gem',      image:'', tiktok:'', instagram:'' },
-    { id:'kohl',        name:'كحل عيون أسود ناعم',          category:'عيون',      price:750,  was:0,    badge:'',      glyph:'lipstick', image:'', tiktok:'', instagram:'' },
-    { id:'brush-set',   name:'طقم فرش مكياج — 6 قطع',       category:'أدوات',     price:2400, was:3000, badge:'',      glyph:'brush',    image:'', tiktok:'', instagram:'' },
-    { id:'serum',       name:'سيروم فيتامين C',              category:'بشرة',      price:3500, was:0,    badge:'جديد',  glyph:'cream',    image:'', tiktok:'', instagram:'' },
+    // ↓ احذفي الشرطتين المائلتين من أول السطر التالي، واملأيه ببيانات منتجكِ الأول.
+    //   ثم انسخيه لكل منتج جديد، واحرصي أن يكون id مختلفاً في كل مرّة.
+    // { id:'',  name:'',  category:'',  price:0,  was:0,  badge:'',  glyph:'lipstick',  image:'',  tiktok:'',  instagram:'' },
   ];
 
   /* --- اكسسوارات الهواتف الذكية -----------------------------------------
      نفس الحقول تماماً. الفئة تظهر فوق اسم المنتج، ولها هويّة لونية فيروزية. */
   const PHONE = [
-    { id:'phone-case',  name:'غطاء هاتف سيليكون',            category:'أغطية',     price:1200, was:1600, badge:'',      glyph:'phone',     image:'', tiktok:'', instagram:'' },
-    { id:'ring-holder', name:'حامل حلقي لاصق للهاتف',        category:'حوامل',     price:600,  was:0,    badge:'',      glyph:'ring',      image:'', tiktok:'', instagram:'' },
-    { id:'earbuds',     name:'سمّاعات لاسلكية بعلبة شحن',    category:'صوتيات',    price:4500, was:5400, badge:'الأكثر طلباً', glyph:'earbuds', image:'', tiktok:'', instagram:'' },
-    { id:'powerbank',   name:'شاحن متنقّل 10000 مللي أمبير', category:'شواحن',     price:3800, was:0,    badge:'',      glyph:'powerbank', image:'', tiktok:'', instagram:'' },
-    { id:'car-mount',   name:'حامل هاتف للسيارة',            category:'حوامل',     price:1500, was:0,    badge:'جديد',  glyph:'carmount',  image:'', tiktok:'', instagram:'' },
-    { id:'phone-strap', name:'خيط تعليق للهاتف',             category:'أغطية',     price:800,  was:0,    badge:'',      glyph:'strap',     image:'', tiktok:'', instagram:'' },
-    { id:'fast-cable',  name:'كابل شحن سريع مجدول',          category:'شواحن',     price:700,  was:1000, badge:'',      glyph:'cable',     image:'', tiktok:'', instagram:'' },
-    { id:'selfie-ring', name:'حلقة إضاءة للتصوير',           category:'تصوير',     price:2600, was:0,    badge:'',      glyph:'ringlight', image:'', tiktok:'', instagram:'' },
+    // ↓ نفس الطريقة تماماً، والرسوم المتاحة هنا: phone / ring / earbuds / powerbank
+    //   / carmount / strap / cable / ringlight
+    // { id:'',  name:'',  category:'',  price:0,  was:0,  badge:'',  glyph:'phone',  image:'',  tiktok:'',  instagram:'' },
   ];
 
   /* --- الفيديوهات --------------------------------------------------------
@@ -921,8 +925,10 @@
   let activeCategory = 'الكل';
 
   function renderFilters() {
-    const cats = ['الكل', ...new Set(PRODUCTS.map((p) => p.category))];
-    $('#filters').innerHTML = cats.map((c) =>
+    const cats = [...new Set(PRODUCTS.map((p) => p.category))];
+    // زرّ «الكل» وحده بلا فئات لا يصفّي شيئاً، فيُخفى شريط التصفية كلّه حتى تُضاف منتجات.
+    $('#filters').hidden = cats.length < 2;
+    $('#filters').innerHTML = ['الكل', ...cats].map((c) =>
       `<button class="filter" data-cat="${esc(c)}" aria-pressed="${c === activeCategory}">${esc(c)}</button>`).join('');
   }
 
@@ -979,27 +985,57 @@
 
     $('#grid').innerHTML = shown.length
       ? shown.map(productCard).join('')
-      : '<p class="empty">لا منتجات في هذه الفئة بعد.</p>';
+      : PRODUCTS.length
+        ? '<p class="empty">لا منتجات في هذه الفئة بعد.</p>'
+        : emptyState('مجموعة التجميل قيد التحضير', 'نختار المنتجات ونجرّبها قبل عرضها. تابعينا ليصلكِ الجديد أوّلاً، أو راسلينا عمّا تبحثين عنه.');
 
+    // عدّاد بلا منتجات لا يقول شيئاً
+    $('#count-label').hidden = !PRODUCTS.length;
     $('#count-label').textContent = `${num(shown.length)} من ${num(PRODUCTS.length)}`;
   }
 
   function renderPhones() {
     $('#phones-grid').innerHTML = PHONE.length
       ? PHONE.map(productCard).join('')
-      : '<p class="empty">لا اكسسوارات معروضة بعد.</p>';
+      : emptyState('الاكسسوارات قيد التحضير', 'أغطية وحوامل وسمّاعات وشواحن — قريباً. راسلينا وأخبرينا بموديل هاتفكِ وما تحتاجين.');
+  }
+
+  // حالة الفراغ: لا شبكة خالية ولا سطر جافّ، بل دعوة للتواصل ما دام الطلب عبر واتساب
+  function emptyState(title, text) {
+    const ask = phoneReady
+      ? `<a class="btn btn-hot" href="${esc(wa(`السلام عليكم، متى تتوفّر منتجات ${STORE.brand}؟`))}" target="_blank" rel="noopener">${solid('whatsapp', 17)} راسلينا على واتساب</a>`
+      : '';
+    const follow = STORE.instagram || STORE.tiktok;
+    const followBtn = follow
+      ? `<a class="btn btn-ghost" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
+      : '';
+
+    return `
+      <div class="empty">
+        <span class="empty-mark">${line('spark', 46, 1.3)}</span>
+        <h3>${esc(title)}</h3>
+        <p>${esc(text)}</p>
+        ${ask || followBtn ? `<div class="empty-cta">${ask}${followBtn}</div>` : ''}
+      </div>`;
   }
 
   /* ---------- لوحة الواجهة ---------- */
 
   function renderCollage() {
+    $('#seal-core').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${LINE.spark}</svg>`;
+
     const star = ALL.find((p) => p.was > p.price) || ALL[0];
+
+    // بلا منتجات: تبقى الكرة برمزها العام، وتُخفى بطاقة «الأكثر طلباً» وعدّاد المنتجات
+    // بدل أن تظهرا فارغتين.
+    $('#collage-orb').innerHTML = line(star ? star.glyph || 'spark' : 'spark', 240, 1);
+    $('#collage-card').hidden = !star;
+    $('#stat-products').hidden = !star;
     if (!star) return;
-    $('#collage-orb').innerHTML = line(star.glyph || 'spark', 240, 1);
+
     $('#collage-tile').innerHTML = line(star.glyph || 'spark', 28, 1.6);
     $('#collage-name').textContent = star.name;
     $('#collage-price').textContent = price(star.price);
-    $('#seal-core').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${LINE.spark}</svg>`;
     $('#stat-count').textContent = num(ALL.length);
   }
 
@@ -1167,16 +1203,22 @@
   // لا يُنبّه إلا على ما يكسر المتجر فعلاً. الفيديو الناقص له تمهيده الخاص.
   function renderSetup() {
     const missing = [
-      !phoneReady && 'رقم الواتساب',
-      !STORE.instagram && 'رابط انستقرام',
-      !STORE.tiktok && 'رابط تيك توك',
+      !phoneReady && ['رقم الواتساب', 'STORE'],
+      !STORE.instagram && ['رابط انستقرام', 'STORE'],
+      !STORE.tiktok && ['رابط تيك توك', 'STORE'],
+      !PRODUCTS.length && ['منتجات التجميل', 'PRODUCTS'],
+      !PHONE.length && ['اكسسوارات الهواتف', 'PHONE'],
     ].filter(Boolean);
 
     if (!missing.length) return;
 
+    const where = [...new Set(missing.map((m) => m[1]))]
+      .map((name) => `<code>${name}</code>`).join(' و');
+
     $('#setup-text').innerHTML =
-      `لم تُضبط بعد: ${esc(missing.join('، '))}. عدّليها في <code>STORE</code> ` +
-      'أعلى سكربت هذا الملف — يختفي هذا التنبيه تلقائياً بعد ضبطها.';
+      `لم تُملأ بعد: ${esc(missing.map((m) => m[0]).join('، '))}. أضيفيها في ${where} ` +
+      'أعلى سكربت هذا الملف — يختفي هذا التنبيه تلقائياً بعد ملئها. ' +
+      '<strong>هذا السطر لا يراه إلا من يفتح الصفحة قبل الملء</strong>، ويزول وحده بعده.';
     $('#setup').hidden = false;
   }
 
