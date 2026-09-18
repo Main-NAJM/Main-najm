@@ -2,6 +2,9 @@
 export const registerServiceWorker = (): void => {
   if (!('serviceWorker' in navigator)) return;
   if (import.meta.env.DEV) return;
+  // داخل غلاف أندرويد الأصول كلّها في ملف التطبيق، فلا عامل خدمة معها ولا حاجة
+  // إليه. يضع البناءُ هذه العلامة (scripts/build-apk.sh) فيُترك التسجيل بهدوء.
+  if (document.documentElement.dataset.bundled === '1') return;
 
   window.addEventListener('load', () => {
     const base = import.meta.env.BASE_URL;
