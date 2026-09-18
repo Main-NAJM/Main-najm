@@ -417,6 +417,68 @@
   .sum b{font-size:1.35rem; font-weight:700; color:var(--fuchsia-deep);}
   .note{font-size:.78rem; color:var(--plum-3); text-align:center; margin-top:12px; line-height:1.6;}
 
+  /* ---------- لوحة الإدارة ---------- */
+  .admin-link{
+    color:rgba(255,255,255,.45); font-size:.78rem; text-decoration:underline;
+    text-underline-offset:3px; margin-inline-start:10px; padding:11px 8px;
+  }
+  .admin-link:hover{color:var(--cyan);}
+  .admin{
+    position:fixed; inset-block:0; inset-inline-start:0; z-index:95;
+    width:min(480px, 100%); display:flex; flex-direction:column;
+    background:var(--cream); box-shadow:0 0 70px rgba(26,5,18,.35);
+    transform:translateX(100%); transition:transform .36s var(--ease);
+  }
+  .admin.open{transform:translateX(0);}
+  .admin-head{display:flex; align-items:center; gap:12px; padding:18px 22px; background:var(--grad-cool); color:var(--plum);}
+  .admin-head h2{font-size:1.1rem;}
+  .admin-who{font-size:.76rem; opacity:.75; margin-inline-start:auto; direction:ltr;}
+  .admin-head .ico{color:var(--plum);}
+  .admin-head .ico:hover{background:rgba(255,255,255,.3); color:var(--plum);}
+  .admin-body{flex:1; overflow-y:auto; padding:20px 22px 28px;}
+  .admin-note{font-size:.86rem; color:var(--plum-3); margin-bottom:16px;}
+  .admin-error{
+    font-size:.84rem; color:#9F1239; background:#FFE4E6;
+    border-radius:var(--r-sm); padding:10px 12px; margin-top:12px;
+  }
+  .admin-form{display:grid; gap:12px; margin-bottom:26px;}
+  .admin-form h3{font-size:1rem;}
+  .admin-form label{display:grid; gap:5px; font-size:.84rem; font-weight:500; color:var(--plum-2);}
+  .admin-form small{font-weight:300; color:var(--plum-3); font-size:.78rem;}
+  .admin-form input, .admin-form select{
+    font:inherit; font-size:.92rem; font-weight:400; color:var(--plum);
+    padding:11px 13px; border:1.5px solid var(--line); border-radius:var(--r-sm);
+    background:var(--panel); width:100%; min-height:44px;
+  }
+  .admin-form input:focus, .admin-form select:focus{border-color:var(--violet); outline:none;}
+  .admin-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .admin-actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .admin-actions .btn{flex:1;}
+  .admin-list h3{font-size:1rem; margin-bottom:12px;}
+  .admin-list h3 span{font-weight:400; color:var(--plum-3); font-size:.84rem;}
+  .admin-item{
+    display:flex; align-items:center; gap:12px; padding:12px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .admin-item:last-child{border-bottom:none;}
+  .admin-item .tile{
+    width:44px; height:44px; border-radius:var(--r-sm); flex:none; overflow:hidden;
+    display:grid; place-items:center; color:#fff; background:var(--card-grad, var(--grad-hot));
+  }
+  .admin-item .tile img{width:100%; height:100%; object-fit:cover;}
+  .admin-item .info{flex:1; min-width:0;}
+  .admin-item strong{display:block; font-size:.9rem; font-weight:500; line-height:1.5;}
+  .admin-item small{color:var(--plum-3); font-size:.78rem;}
+  .admin-item .row-actions{display:flex; gap:6px;}
+  .admin-item button{
+    width:38px; height:38px; border-radius:var(--r-sm); display:grid; place-items:center;
+    border:1.5px solid var(--line); color:var(--plum-2); background:var(--panel);
+    transition:all .2s var(--ease);
+  }
+  .admin-item button:hover{border-color:var(--violet); color:var(--violet-deep);}
+  .admin-item button.danger:hover{border-color:#E11D48; color:#E11D48; background:#FFF1F2;}
+  .admin-empty{color:var(--plum-3); font-size:.88rem; padding:18px 0;}
+
   /* ---------- إشعار ---------- */
   .toast{position:fixed; inset-inline:0; bottom:28px; z-index:100; display:flex; justify-content:center;
     pointer-events:none; opacity:0; transform:translateY(14px);
@@ -658,7 +720,10 @@
     </div>
     <div class="foot-base">
       <span>&copy; <span id="year"></span> أم آية — جميع الحقوق محفوظة</span>
-      <span id="foot-handle-2" dir="ltr"></span>
+      <span>
+        <span id="foot-handle-2" dir="ltr"></span>
+        <button class="admin-link" id="admin-open">لوحة الإدارة</button>
+      </span>
     </div>
   </div>
 </footer>
@@ -685,6 +750,92 @@
 </aside>
 
 <div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+<!-- لوحة الإدارة: لا تظهر إلا بالضغط على «لوحة الإدارة» في التذييل، ولا تكتب
+     شيئاً إلا بعد دخول صاحبة المتجر. وقواعد قاعدة البيانات هي الحارس الحقيقي:
+     حتى لو فُتحت اللوحة، تُرفض كل كتابة من غير الحساب المصرّح له. -->
+<div class="veil" id="admin-veil" hidden></div>
+<aside class="admin" id="admin" role="dialog" aria-modal="true" aria-labelledby="admin-title" hidden>
+  <div class="admin-head">
+    <h2 id="admin-title">لوحة الإدارة</h2>
+    <span class="admin-who" id="admin-who"></span>
+    <button class="ico" id="admin-close" aria-label="إغلاق اللوحة">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+
+  <div class="admin-body" id="admin-body">
+    <p class="admin-note" id="admin-status">جارٍ الاتصال…</p>
+
+    <form class="admin-form" id="admin-login" hidden>
+      <h3>الدخول</h3>
+      <label>البريد الإلكتروني
+        <input type="email" id="admin-email" autocomplete="username" required>
+      </label>
+      <label>كلمة المرور
+        <input type="password" id="admin-pass" autocomplete="current-password" required>
+      </label>
+      <button class="btn btn-hot btn-wide" type="submit">دخول</button>
+      <p class="admin-error" id="admin-login-error" hidden></p>
+    </form>
+
+    <div id="admin-manage" hidden>
+      <form class="admin-form" id="admin-form">
+        <h3 id="admin-form-title">منتج جديد</h3>
+        <label>القسم
+          <select id="f-section">
+            <option value="beauty">مجموعة التجميل</option>
+            <option value="phone">اكسسوارات الهواتف</option>
+          </select>
+        </label>
+        <label>اسم المنتج
+          <input type="text" id="f-name" required maxlength="80">
+        </label>
+        <label>الفئة <small>مثل: شفاه، عيون، أغطية</small>
+          <input type="text" id="f-category" required maxlength="40" list="f-cats">
+          <datalist id="f-cats"></datalist>
+        </label>
+        <div class="admin-row">
+          <label>السعر (د.ج)
+            <input type="number" id="f-price" required min="0" step="1" inputmode="numeric">
+          </label>
+          <label>قبل التخفيض <small>اختياري</small>
+            <input type="number" id="f-was" min="0" step="1" inputmode="numeric">
+          </label>
+        </div>
+        <label>الرسم <small>يظهر إن لم تكن هناك صورة</small>
+          <select id="f-glyph"></select>
+        </label>
+        <label>رابط الصورة <small>اختياري</small>
+          <input type="url" id="f-image" placeholder="https://…">
+        </label>
+        <label>شارة <small>اختياري — مثل: جديد</small>
+          <input type="text" id="f-badge" maxlength="20">
+        </label>
+        <div class="admin-row">
+          <label>رابط فيديو تيك توك <small>اختياري</small>
+            <input type="url" id="f-tiktok" placeholder="https://…">
+          </label>
+          <label>رابط فيديو انستقرام <small>اختياري</small>
+            <input type="url" id="f-instagram" placeholder="https://…">
+          </label>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-hot" type="submit" id="f-save">حفظ المنتج</button>
+          <button class="btn btn-ghost" type="button" id="f-reset" hidden>إلغاء التعديل</button>
+        </div>
+        <p class="admin-error" id="admin-form-error" hidden></p>
+      </form>
+
+      <div class="admin-list">
+        <h3>المنتجات <span id="admin-count"></span></h3>
+        <div id="admin-items"></div>
+      </div>
+
+      <button class="btn btn-ghost btn-wide" id="admin-signout">خروج</button>
+    </div>
+  </div>
+</aside>
 
 <noscript>
   <div class="wrap" style="padding:48px 20px; text-align:center;">
@@ -842,9 +993,17 @@
   const phoneReady = /^\d{8,15}$/.test(STORE.phone);
   const wa = (text) => `https://wa.me/${STORE.phone}?text=${encodeURIComponent(text)}`;
 
-  const ALL = [...PRODUCTS, ...PHONE];
-  const byId = (id) => ALL.find((p) => p.id === id);
+  // مصدر المنتجات: قاعدة البيانات متى اتّصلت، وإلا القائمتان المحلّيتان أعلاه.
+  // كل ما دون هذا السطر يقرأ عبر هذه الدوال لا عبر المصفوفتين مباشرة.
+  let LIVE = null;
+  const beauty = () => (LIVE ? LIVE.filter((p) => p.section !== 'phone') : PRODUCTS);
+  const phones = () => (LIVE ? LIVE.filter((p) => p.section === 'phone') : PHONE);
+  const all = () => [...beauty(), ...phones()];
+  const byId = (id) => all().find((p) => p.id === id);
   const $ = (sel) => document.querySelector(sel);
+
+  // حالة الاتصال بقاعدة البيانات: idle قبل المحاولة، ready بعد أول قراءة، error عند الفشل.
+  const DB = { state: 'idle', detail: '', signedIn: false };
 
   /* ---------- الشريط المتحرّك ---------- */
 
@@ -925,7 +1084,7 @@
   let activeCategory = 'الكل';
 
   function renderFilters() {
-    const cats = [...new Set(PRODUCTS.map((p) => p.category))];
+    const cats = [...new Set(beauty().map((p) => p.category))];
     // زرّ «الكل» وحده بلا فئات لا يصفّي شيئاً، فيُخفى شريط التصفية كلّه حتى تُضاف منتجات.
     $('#filters').hidden = cats.length < 2;
     $('#filters').innerHTML = ['الكل', ...cats].map((c) =>
@@ -979,24 +1138,26 @@
   }
 
   function renderGrid() {
+    const list = beauty();
     const shown = activeCategory === 'الكل'
-      ? PRODUCTS
-      : PRODUCTS.filter((p) => p.category === activeCategory);
+      ? list
+      : list.filter((p) => p.category === activeCategory);
 
     $('#grid').innerHTML = shown.length
       ? shown.map(productCard).join('')
-      : PRODUCTS.length
+      : list.length
         ? '<p class="empty">لا منتجات في هذه الفئة بعد.</p>'
         : emptyState('مجموعة التجميل قيد التحضير', 'نختار المنتجات ونجرّبها قبل عرضها. تابعينا ليصلكِ الجديد أوّلاً، أو راسلينا عمّا تبحثين عنه.');
 
     // عدّاد بلا منتجات لا يقول شيئاً
-    $('#count-label').hidden = !PRODUCTS.length;
-    $('#count-label').textContent = `${num(shown.length)} من ${num(PRODUCTS.length)}`;
+    $('#count-label').hidden = !list.length;
+    $('#count-label').textContent = `${num(shown.length)} من ${num(list.length)}`;
   }
 
   function renderPhones() {
-    $('#phones-grid').innerHTML = PHONE.length
-      ? PHONE.map(productCard).join('')
+    const list = phones();
+    $('#phones-grid').innerHTML = list.length
+      ? list.map(productCard).join('')
       : emptyState('الاكسسوارات قيد التحضير', 'أغطية وحوامل وسمّاعات وشواحن — قريباً. راسلينا وأخبرينا بموديل هاتفكِ وما تحتاجين.');
   }
 
@@ -1024,7 +1185,8 @@
   function renderCollage() {
     $('#seal-core').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${LINE.spark}</svg>`;
 
-    const star = ALL.find((p) => p.was > p.price) || ALL[0];
+    const items = all();
+    const star = items.find((p) => p.was > p.price) || items[0];
 
     // بلا منتجات: تبقى الكرة برمزها العام، وتُخفى بطاقة «الأكثر طلباً» وعدّاد المنتجات
     // بدل أن تظهرا فارغتين.
@@ -1036,7 +1198,7 @@
     $('#collage-tile').innerHTML = line(star.glyph || 'spark', 28, 1.6);
     $('#collage-name').textContent = star.name;
     $('#collage-price').textContent = price(star.price);
-    $('#stat-count').textContent = num(ALL.length);
+    $('#stat-count').textContent = num(items.length);
   }
 
   /* ---------- الفيديوهات ---------- */
@@ -1201,24 +1363,33 @@
   /* ---------- تنبيه الإعداد ---------- */
 
   // لا يُنبّه إلا على ما يكسر المتجر فعلاً. الفيديو الناقص له تمهيده الخاص.
+  // ونصّه يتبع حالة الاتصال: لا معنى لإرسالها إلى الملفّ وقاعدة البيانات موصولة.
   function renderSetup() {
-    const missing = [
-      !phoneReady && ['رقم الواتساب', 'STORE'],
-      !STORE.instagram && ['رابط انستقرام', 'STORE'],
-      !STORE.tiktok && ['رابط تيك توك', 'STORE'],
-      !PRODUCTS.length && ['منتجات التجميل', 'PRODUCTS'],
-      !PHONE.length && ['اكسسوارات الهواتف', 'PHONE'],
+    const contact = [
+      !phoneReady && 'رقم الواتساب',
+      !STORE.instagram && 'رابط انستقرام',
+      !STORE.tiktok && 'رابط تيك توك',
     ].filter(Boolean);
 
-    if (!missing.length) return;
+    const parts = [];
+    if (contact.length) {
+      parts.push(`لم تُضبط بعد: ${esc(contact.join('، '))} — في <code>STORE</code> أعلى سكربت هذا الملف.`);
+    }
+    if (!all().length) {
+      parts.push(DB.state === 'ready'
+        ? 'لا منتجات بعد — افتحي <strong>لوحة الإدارة</strong> من أسفل الصفحة وأضيفي أول منتج.'
+        : DB.state === 'error'
+          ? `تعذّر الوصول إلى قاعدة بيانات المنتجات${DB.detail ? ` (${esc(DB.detail)})` : ''}.`
+          : 'لم تُربط قاعدة بيانات المنتجات بعد — املأي <code>firebase-config.js</code> بجانب هذا الملف.');
+    }
 
-    const where = [...new Set(missing.map((m) => m[1]))]
-      .map((name) => `<code>${name}</code>`).join(' و');
+    if (!parts.length) {
+      $('#setup').hidden = true;
+      return;
+    }
 
-    $('#setup-text').innerHTML =
-      `لم تُملأ بعد: ${esc(missing.map((m) => m[0]).join('، '))}. أضيفيها في ${where} ` +
-      'أعلى سكربت هذا الملف — يختفي هذا التنبيه تلقائياً بعد ملئها. ' +
-      '<strong>هذا السطر لا يراه إلا من يفتح الصفحة قبل الملء</strong>، ويزول وحده بعده.';
+    $('#setup-text').innerHTML = `${parts.join(' ')} ` +
+      '<strong>هذا السطر يراه أي زائر</strong>، ويزول وحده بعد المعالجة.';
     $('#setup').hidden = false;
   }
 
@@ -1241,19 +1412,65 @@
     items.forEach((el) => io.observe(el));
   }
 
+  /* ---------- إعادة الرسم عند تغيّر المنتجات ---------- */
+
+  // كل ما يعتمد على المنتجات في مكان واحد، لتستدعيه طبقة قاعدة البيانات عند كل تحديث.
+  function renderCatalogue() {
+    // فئة كانت مختارة ثم حُذف آخر منتج فيها تترك الشبكة فارغة بلا سبب ظاهر.
+    if (activeCategory !== 'الكل' && !beauty().some((p) => p.category === activeCategory)) {
+      activeCategory = 'الكل';
+    }
+    renderFilters();
+    renderGrid();
+    renderPhones();
+    renderCollage();
+    renderSetup();
+    // منتج حُذف من المتجر يسقط من السلة المحفوظة كذلك.
+    cart = loadCart();
+    renderCart();
+  }
+
+  // الرسوم التي تُعرض في قائمة «الرسم» داخل لوحة الإدارة، بأسمائها العربية.
+  const PRODUCT_GLYPHS = [
+    ['lipstick', 'أحمر شفاه'], ['polish', 'طلاء أظافر'], ['cream', 'كريم أو سيروم'],
+    ['eye', 'عيون'], ['gem', 'مجوهرات'], ['brush', 'فرش وأدوات'],
+    ['phone', 'غطاء هاتف'], ['ring', 'حامل حلقي'], ['earbuds', 'سمّاعات'],
+    ['powerbank', 'شاحن متنقّل'], ['carmount', 'حامل سيارة'], ['strap', 'خيط تعليق'],
+    ['cable', 'كابل شحن'], ['ringlight', 'حلقة إضاءة'], ['spark', 'عام'],
+  ];
+
+  // الواجهة التي تتعامل معها وحدة قاعدة البيانات أسفل الصفحة.
+  window.OmAya = {
+    setProducts(list) {
+      LIVE = Array.isArray(list) ? list : null;
+      renderCatalogue();
+    },
+    setState(state, detail = '') {
+      DB.state = state;
+      DB.detail = detail;
+      renderSetup();
+    },
+    setSignedIn(yes) {
+      DB.signedIn = !!yes;
+    },
+    get products() { return LIVE || []; },
+    get categories() { return [...new Set(all().map((p) => p.category))].filter(Boolean); },
+    glyphs: PRODUCT_GLYPHS,
+    glyph: (name, size = 24) => line(name || 'spark', size, 1.5),
+    gradient: (category) => gradFor(category)[0],
+    money: price,
+    toast,
+  };
+
   /* ---------- التشغيل ---------- */
 
   renderTicker();
   renderChannels();
   renderAssurances();
-  renderFilters();
-  renderGrid();
-  renderPhones();
-  renderCollage();
   renderReels();
-  renderSetup();
   cart = loadCart();
-  renderCart();
+  renderCatalogue();
+  // مرّة واحدة: عناصر الظهور التدريجي ثابتة في الصفحة، ولا يعيد رسمُ الشبكات إنشاءها.
   observeRise();
   $('#year').textContent = new Date().getFullYear();
 
@@ -1297,6 +1514,330 @@
   document.addEventListener('keydown', (event) => {
     if (event.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
   });
+</script>
+
+<!-- إعدادات المشروع. ملف منفصل ليملأه سكربت الإعداد وخطوة النشر تلقائياً. -->
+<script src="./firebase-config.js"></script>
+
+<!-- ======================================================================
+     قاعدة بيانات المنتجات ولوحة الإدارة.
+     وحدة مستقلّة عمداً: إن تعذّر تحميلها أو لم تُضبط الإعدادات يبقى المتجر
+     يعمل بما في index.html من منتجات، ولا تنكسر الصفحة.
+     ====================================================================== -->
+<script type="module">
+  const UI = window.OmAya;
+  const cfg = window.OM_AYA_FIREBASE || {};
+  const $ = (sel) => document.querySelector(sel);
+
+  const SHOP = 'omAya';                 // مسار المتجر: shop/omAya/products
+  const SDK = 'https://www.gstatic.com/firebasejs/11.1.0';
+
+  const el = {
+    veil: $('#admin-veil'), panel: $('#admin'), open: $('#admin-open'), close: $('#admin-close'),
+    status: $('#admin-status'), login: $('#admin-login'), manage: $('#admin-manage'),
+    who: $('#admin-who'), loginError: $('#admin-login-error'), formError: $('#admin-form-error'),
+    form: $('#admin-form'), formTitle: $('#admin-form-title'), reset: $('#f-reset'),
+    items: $('#admin-items'), count: $('#admin-count'), signout: $('#admin-signout'),
+    cats: $('#f-cats'), glyph: $('#f-glyph'),
+  };
+
+  /* ---------- الدرج ---------- */
+
+  let lastFocused = null;
+  const openPanel = () => {
+    lastFocused = document.activeElement;
+    el.veil.hidden = el.panel.hidden = false;
+    requestAnimationFrame(() => {
+      el.veil.classList.add('open');
+      el.panel.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+    el.close.focus();
+  };
+  const closePanel = () => {
+    el.veil.classList.remove('open');
+    el.panel.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!el.panel.classList.contains('open')) el.veil.hidden = el.panel.hidden = true;
+    }, 360);
+    if (lastFocused) lastFocused.focus();
+  };
+
+  el.open.addEventListener('click', openPanel);
+  el.close.addEventListener('click', closePanel);
+  el.veil.addEventListener('click', closePanel);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && el.panel.classList.contains('open')) closePanel();
+  });
+
+  // قائمة الرسوم تُبنى من نفس القائمة التي يستعملها المتجر، فلا تفترقان.
+  el.glyph.innerHTML = UI.glyphs
+    .map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+
+  /* ---------- بلا إعدادات: يُقال ذلك صراحةً ولا يُترك نموذج لا يحفظ ---------- */
+
+  const ready = ['apiKey', 'authDomain', 'projectId', 'appId']
+    .every((k) => typeof cfg[k] === 'string' && cfg[k].trim());
+
+  if (!ready) {
+    UI.setState('unconfigured');
+    el.status.innerHTML =
+      'قاعدة البيانات غير مربوطة بعد، فلا يمكن حفظ المنتجات. املأي القيم الستّ في ' +
+      '<code>firebase-config.js</code> بجانب هذا الملف — مصدرها مكتوب داخله.';
+  }
+
+  // كل ما يلي يحتاج إعدادات صحيحة. بدونها تبقى اللوحة تُفتح وتشرح ما ينقص،
+  // ويبقى المتجر يعرض ما في index.html من منتجات.
+  if (ready) {
+    /* ---------- الاتصال ---------- */
+
+    const [{ initializeApp }, authMod, dbMod] = await Promise.all([
+      import(`${SDK}/firebase-app.js`),
+      import(`${SDK}/firebase-auth.js`),
+      import(`${SDK}/firebase-firestore.js`),
+    ]).catch((err) => {
+      UI.setState('error', 'تعذّر تحميل مكتبة Firebase');
+      el.status.textContent = 'تعذّر تحميل مكتبة Firebase. تحقّقي من الاتصال بالإنترنت.';
+      throw err;
+    });
+
+    const {
+      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+    } = authMod;
+    const {
+      getFirestore, collection, doc, onSnapshot, query, orderBy,
+      setDoc, deleteDoc, serverTimestamp,
+    } = dbMod;
+
+    const app = initializeApp(cfg);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const productsRef = collection(db, 'shop', SHOP, 'products');
+
+    /* ---------- قراءة المنتجات (للزبونات وللإدارة معاً) ---------- */
+
+    let items = [];
+
+    onSnapshot(query(productsRef, orderBy('sort', 'asc')), (snap) => {
+      items = snap.docs.map((d) => {
+        const v = d.data() || {};
+        return {
+          id: d.id,
+          section: v.section === 'phone' ? 'phone' : 'beauty',
+          name: String(v.name || ''),
+          category: String(v.category || ''),
+          price: Number(v.price) || 0,
+          was: Number(v.was) || 0,
+          badge: String(v.badge || ''),
+          glyph: String(v.glyph || 'spark'),
+          image: String(v.image || ''),
+          tiktok: String(v.tiktok || ''),
+          instagram: String(v.instagram || ''),
+          sort: Number(v.sort) || 0,
+        };
+      });
+      UI.setProducts(items);
+      UI.setState('ready');
+      renderAdminList();
+    }, (err) => {
+      // الفشل هنا لا يُفرغ المتجر: يبقى ما في index.html معروضاً.
+      UI.setState('error', err.code || err.message);
+      el.status.textContent = `تعذّرت قراءة المنتجات: ${err.code || err.message}`;
+    });
+
+    /* ---------- الدخول ---------- */
+
+    const AUTH_ERRORS = {
+      'auth/invalid-email': 'صيغة البريد غير صحيحة.',
+      'auth/user-not-found': 'لا يوجد حساب بهذا البريد.',
+      'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+      'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
+      'auth/too-many-requests': 'محاولات كثيرة — انتظري قليلاً ثم أعيدي المحاولة.',
+      'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
+      'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase.',
+      'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل. راجعي قواعد الأمان.',
+    };
+    const say = (err) => AUTH_ERRORS[err.code] || err.message || 'حدث خطأ غير متوقّع.';
+
+    const showError = (node, message) => {
+      node.textContent = message;
+      node.hidden = !message;
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      UI.setSignedIn(!!user);
+      el.login.hidden = !!user;
+      el.manage.hidden = !user;
+      el.who.textContent = user ? user.email || '' : '';
+      el.status.textContent = user
+        ? 'أضيفي منتجاتك — كل حفظ يظهر للزبونات فوراً.'
+        : 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.';
+      showError(el.loginError, '');
+      if (user) renderAdminList();
+    });
+
+    el.login.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError(el.loginError, '');
+      const btn = el.login.querySelector('button[type="submit"]');
+      btn.disabled = true;
+      try {
+        await signInWithEmailAndPassword(auth, $('#admin-email').value.trim(), $('#admin-pass').value);
+        $('#admin-pass').value = '';
+      } catch (err) {
+        showError(el.loginError, say(err));
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    el.signout.addEventListener('click', () => signOut(auth));
+
+    /* ---------- إضافة وتعديل ---------- */
+
+    let editingId = null;
+
+    const fields = {
+      section: $('#f-section'), name: $('#f-name'), category: $('#f-category'),
+      price: $('#f-price'), was: $('#f-was'), glyph: el.glyph, image: $('#f-image'),
+      badge: $('#f-badge'), tiktok: $('#f-tiktok'), instagram: $('#f-instagram'),
+    };
+
+    function fillForm(p) {
+      editingId = p ? p.id : null;
+      fields.section.value = p ? p.section : 'beauty';
+      fields.name.value = p ? p.name : '';
+      fields.category.value = p ? p.category : '';
+      fields.price.value = p ? p.price : '';
+      fields.was.value = p && p.was ? p.was : '';
+      fields.glyph.value = p ? p.glyph : 'lipstick';
+      fields.image.value = p ? p.image : '';
+      fields.badge.value = p ? p.badge : '';
+      fields.tiktok.value = p ? p.tiktok : '';
+      fields.instagram.value = p ? p.instagram : '';
+      el.formTitle.textContent = p ? `تعديل: ${p.name}` : 'منتج جديد';
+      el.reset.hidden = !p;
+      showError(el.formError, '');
+    }
+
+    el.reset.addEventListener('click', () => fillForm(null));
+
+    el.form.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      showError(el.formError, '');
+
+      const price = Number(fields.price.value);
+      const was = Number(fields.was.value) || 0;
+      if (!Number.isFinite(price) || price < 0) {
+        showError(el.formError, 'السعر يجب أن يكون رقماً.');
+        return;
+      }
+      // «قبل التخفيض» أصغر من السعر يعطي شارة خصم بالسالب، فيُرفض قبل الحفظ.
+      if (was && was <= price) {
+        showError(el.formError, 'سعر ما قبل التخفيض يجب أن يكون أكبر من السعر الحالي.');
+        return;
+      }
+
+      const data = {
+        section: fields.section.value === 'phone' ? 'phone' : 'beauty',
+        name: fields.name.value.trim(),
+        category: fields.category.value.trim(),
+        price, was,
+        glyph: fields.glyph.value,
+        image: fields.image.value.trim(),
+        badge: fields.badge.value.trim(),
+        tiktok: fields.tiktok.value.trim(),
+        instagram: fields.instagram.value.trim(),
+        sort: editingId
+          ? (items.find((p) => p.id === editingId)?.sort ?? Date.now())
+          : Date.now(),
+        updatedAt: serverTimestamp(),
+      };
+
+      const btn = $('#f-save');
+      btn.disabled = true;
+      try {
+        // معرّف من الوقت: فريد، ويجعل الترتيب الافتراضي زمنياً.
+        const id = editingId || `p${Date.now().toString(36)}`;
+        await setDoc(doc(productsRef, id), data, { merge: true });
+        UI.toast(editingId ? 'حُفظ التعديل' : 'أُضيف المنتج');
+        fillForm(null);
+      } catch (err) {
+        showError(el.formError, say(err));
+      } finally {
+        btn.disabled = false;
+      }
+    });
+
+    /* ---------- قائمة المنتجات داخل اللوحة ---------- */
+
+    function renderAdminList() {
+      if (!el.items) return;
+
+      el.cats.innerHTML = UI.categories.map((c) => `<option value="${c}"></option>`).join('');
+      el.count.textContent = items.length ? `(${items.length})` : '';
+
+      if (!items.length) {
+        el.items.innerHTML = '<p class="admin-empty">لا منتجات بعد. املأي النموذج أعلاه واضغطي «حفظ المنتج».</p>';
+        return;
+      }
+
+      el.items.innerHTML = items.map((p) => `
+        <div class="admin-item" data-id="${p.id}">
+          <span class="tile" style="--card-grad:${UI.gradient(p.category)};">${
+            p.image ? `<img src="${p.image}" alt="" loading="lazy">` : UI.glyph(p.glyph, 22)
+          }</span>
+          <span class="info">
+            <strong></strong>
+            <small></small>
+          </span>
+          <span class="row-actions">
+            <button type="button" data-edit="${p.id}" aria-label="تعديل">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1Z"/><path d="M14.5 6.5l3 3"/></svg>
+            </button>
+            <button type="button" class="danger" data-del="${p.id}" aria-label="حذف">
+              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+            </button>
+          </span>
+        </div>`).join('');
+
+      // الاسم والفئة يُكتبان نصّاً لا HTML، فلا يُفسَّر ما تكتبه صاحبة المتجر كوسوم.
+      items.forEach((p) => {
+        const row = el.items.querySelector(`[data-id="${CSS.escape(p.id)}"]`);
+        if (!row) return;
+        row.querySelector('strong').textContent = p.name;
+        row.querySelector('small').textContent =
+          `${p.section === 'phone' ? 'هواتف' : 'تجميل'} · ${p.category} · ${UI.money(p.price)}`;
+      });
+    }
+
+    el.items.addEventListener('click', async (e) => {
+      const edit = e.target.closest('[data-edit]');
+      if (edit) {
+        const p = items.find((x) => x.id === edit.dataset.edit);
+        if (p) {
+          fillForm(p);
+          el.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+        return;
+      }
+
+      const del = e.target.closest('[data-del]');
+      if (!del) return;
+      const p = items.find((x) => x.id === del.dataset.del);
+      if (!p || !confirm(`حذف «${p.name}» نهائياً؟`)) return;
+      try {
+        await deleteDoc(doc(productsRef, p.id));
+        if (editingId === p.id) fillForm(null);
+        UI.toast('حُذف المنتج');
+      } catch (err) {
+        showError(el.formError, say(err));
+      }
+    });
+
+    fillForm(null);
+  }
 </script>
 </body>
 </html>

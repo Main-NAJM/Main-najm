@@ -130,8 +130,25 @@ const lines = [
 ];
 writeFileSync(ENV_FILE, lines.join('\n'), 'utf8');
 
+// 4) متجر أم آية ملفّ ثابت لا يمرّ على Vite، فلا يقرأ متغيّرات البيئة.
+//    تُكتب له نفس المفاتيح في ملفّ سكربت يقرأه المتصفّح مباشرة.
+const SHOP_CONFIG = `${ROOT}om-aya/firebase-config.js`;
+writeFileSync(SHOP_CONFIG, `// مولَّد بأمر: npm run firebase:setup — لا تُعدّله يدوياً.
+// مفاتيح الويب ليست أسراراً: تُشحن مع الصفحة إلى كل متصفّح، والحماية في
+// firestore.rules لا في إخفائها.
+window.OM_AYA_FIREBASE = {
+  apiKey: ${JSON.stringify(config.apiKey)},
+  authDomain: ${JSON.stringify(config.authDomain)},
+  projectId: ${JSON.stringify(config.projectId)},
+  storageBucket: ${JSON.stringify(config.storageBucket ?? '')},
+  messagingSenderId: ${JSON.stringify(config.messagingSenderId ?? '')},
+  appId: ${JSON.stringify(config.appId)},
+};
+`, 'utf8');
+
 console.log(`
 ✔ كُتب ملف .env.local
+✔ كُتب ملف om-aya/firebase-config.js
 
 بقيت خطوة واحدة في الكونسول (مرّة واحدة) — تفعيل طرق الدخول:
   https://console.firebase.google.com/project/${projectId}/authentication/providers
