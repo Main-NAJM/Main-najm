@@ -1,4 +1,4 @@
-// ينسخ متجر الجمال إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
+// ينسخ متجر أم آية إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
 //
 // المصدر: beauty/          (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
 // الهدف:  dist/beauty/     ← يصبح الرابط https://<project>.web.app/beauty
@@ -46,4 +46,4 @@ if (!copied.includes('index.html')) {
   process.exit(1);
 }
 
-console.log(`نُسخ متجر الجمال إلى dist/${DEST_DIR || ''} (${copied.join('، ')})`);
+console.log(`نُسخ متجر أم آية إلى dist/${DEST_DIR || ''} (${copied.join('، ')})`);

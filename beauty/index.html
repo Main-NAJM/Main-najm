@@ -3,456 +3,429 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>متجر الجمال | أدوات تجميل واكسسوارات نسائية</title>
-<meta name="description" content="متجر الجمال — أدوات تجميل واكسسوارات نسائية مختارة بعناية. توصيل لكل الولايات، الدفع عند الاستلام، والطلب مباشرة عبر واتساب.">
-<meta name="theme-color" content="#1A1614">
-<meta property="og:title" content="متجر الجمال | أدوات تجميل واكسسوارات نسائية">
-<meta property="og:description" content="مختارة بعناية، لا بالصدفة. توصيل لكل الولايات والدفع عند الاستلام.">
+<title>أم آية | أدوات تجميل واكسسوارات الهواتف</title>
+<meta name="description" content="أم آية — أدوات تجميل واكسسوارات نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، الدفع عند الاستلام، والطلب مباشرة عبر واتساب.">
+<meta name="theme-color" content="#1A0512">
+<meta property="og:title" content="أم آية | أدوات تجميل واكسسوارات الهواتف">
+<meta property="og:description" content="جمالك واكسسوارات هاتفك في مكان واحد. توصيل لكل الولايات والدفع عند الاستلام.">
 <meta property="og:type" content="website">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Reem+Kufi:wght@400;500;600;700&family=Tajawal:wght@200;300;400;500;700;800&family=Playfair+Display:ital,wght@0,500;0,600;1,500&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
 <style>
   :root{
-    /* الألوان — عظمي دافئ وحبر داكن ولمسة ذهبية ووردية مهدّأة */
-    --bone:#FAF8F5;
-    --sand:#F2ECE6;
-    --blush:#F7E9EB;
-    --ink:#1A1614;
-    --ink-2:#4A423E;
-    --ink-3:#6E635D;
-    --gold:#A16207;
-    --gold-soft:#C79A3C;
-    --rose:#B8788A;
-    --rose-ink:#8E5568;
-    --line:#E5DBD2;
-    --line-soft:#F0E8E1;
-    --wa:#128C4A;
+    /* ألوان مشبعة: فوشي وبنفسجي وفيروزي على خلفية وردية فاتحة أو برقوقية داكنة */
+    --fuchsia:#EC4899;
+    --fuchsia-deep:#BE185D;
+    --violet:#8B5CF6;
+    --violet-deep:#6D28D9;
+    --cyan:#22D3EE;
+    --cyan-deep:#0E7490;
+    --coral:#FB7185;
+    --gold:#F59E0B;
+
+    --plum:#2E0A1E;          /* الحبر — برقوقي شديد القتامة */
+    --plum-2:#5B2B44;
+    --plum-3:#8A6076;
+    --night:#1A0512;         /* خلفية الأقسام الداكنة */
+    --cream:#FFF5FA;
+    --cream-2:#FCE8F1;
     --panel:#FFFFFF;
+    --line:#F9D4E5;
+    --wa:#128C4A;
 
-    /* المسافات — واسعة، على نمط المجلّات */
+    --grad-hot:linear-gradient(115deg, #EC4899 0%, #A855F7 55%, #8B5CF6 100%);
+    --grad-cool:linear-gradient(115deg, #22D3EE 0%, #6366F1 100%);
+    --grad-night:linear-gradient(150deg, #1A0512 0%, #3B0D37 48%, #1E1150 100%);
+
     --s-1:8px; --s-2:16px; --s-3:24px; --s-4:40px; --s-5:64px; --s-6:96px;
-
-    --r-lg:24px; --r-md:14px; --r-sm:10px; --r-pill:999px;
+    --r-lg:26px; --r-md:16px; --r-sm:12px; --r-pill:999px;
     --wrap:1240px;
-    --shadow:0 2px 20px rgba(26,22,20,.05);
-    --shadow-lift:0 18px 44px rgba(26,22,20,.13);
+    --shadow:0 4px 24px rgba(46,10,30,.07);
+    --glow-hot:0 14px 38px rgba(236,72,153,.36);
+    --glow-cool:0 14px 38px rgba(99,102,241,.34);
     --ease:cubic-bezier(.22,.8,.3,1);
   }
 
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
   body{
-    background:var(--bone); color:var(--ink);
-    font-family:'Tajawal', system-ui, sans-serif;
-    font-size:16px; font-weight:400; line-height:1.8;
+    background:var(--cream); color:var(--plum);
+    font-family:'Readex Pro', system-ui, sans-serif;
+    font-size:16px; font-weight:300; line-height:1.85;
     overflow-x:hidden;
   }
-  h1,h2,h3{font-family:'Reem Kufi', 'Tajawal', sans-serif; font-weight:600; line-height:1.35; letter-spacing:-.01em;}
+  h1,h2,h3{font-weight:700; line-height:1.3; letter-spacing:-.02em;}
   a{color:inherit; text-decoration:none;}
   img{max-width:100%; display:block;}
   button{font:inherit; color:inherit; background:none; border:none; cursor:pointer;}
   svg{flex:none;}
-  ul{list-style:none;}
-  :focus-visible{outline:2px solid var(--ink); outline-offset:3px; border-radius:4px;}
+  :focus-visible{outline:3px solid var(--violet); outline-offset:3px; border-radius:6px;}
   .wrap{max-width:var(--wrap); margin:0 auto; padding-inline:clamp(16px, 4vw, 40px);}
   .sr-only{
     position:absolute; width:1px; height:1px; overflow:hidden;
     clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
   }
 
-  /* العناوين الصغيرة اللاتينية — حرف متباعد يعطي طابع المجلّات */
+  /* نصّ بتدرّج لوني — للكلمات المفتاحية وحدها */
+  /* كلمة مضيئة بلون صريح لا بتدرّج مقصوص على النصّ (background-clip:text):
+     مساحة رسم ذاك التدرّج هي مربّع الخطّ، وهمزة «أ» وأسنان «ظ» تتجاوزه فتُقَصّ
+     رؤوسها. اللون الصريح مع الهالة يعطي البريق نفسه ولا يقصّ حرفاً. */
+  .glow-text{color:#F5B8FF; text-shadow:0 0 38px rgba(240,171,252,.55), 0 0 12px rgba(240,171,252,.35);}
   .kicker{
-    font-family:'Playfair Display', serif; font-style:italic;
-    font-size:.82rem; letter-spacing:.14em; text-transform:uppercase;
-    color:var(--gold); display:inline-block; margin-bottom:var(--s-2);
+    display:inline-block; font-size:.74rem; font-weight:600;
+    letter-spacing:.24em; text-transform:uppercase;
+    color:var(--fuchsia-deep); margin-bottom:var(--s-2);
   }
-  .kicker-ar{
-    font-family:'Tajawal', sans-serif; font-style:normal; font-weight:500;
-    letter-spacing:.18em; font-size:.76rem; color:var(--ink-3);
-  }
+  .kicker-light{color:var(--cyan);}
 
   /* ---------- الشريط المتحرّك ---------- */
-  .ticker{
-    background:var(--ink); color:var(--bone);
-    overflow:hidden; font-size:.82rem; letter-spacing:.06em;
-  }
-  .ticker-track{
-    display:flex; width:max-content;
-    animation:slide 34s linear infinite;
-  }
+  .ticker{background:var(--grad-hot); color:#fff; overflow:hidden; font-size:.82rem; font-weight:500;}
+  .ticker-track{display:flex; width:max-content; animation:slide 32s linear infinite;}
   .ticker-group{display:flex; flex:none;}
-  .ticker span{
-    padding:9px var(--s-3); white-space:nowrap;
-    display:inline-flex; align-items:center; gap:var(--s-2);
-  }
-  .ticker span::after{content:'✦'; color:var(--gold-soft); font-size:.7rem;}
-  /* الحركة نحو اليسار تناسب قراءة النص العربي من اليمين */
+  .ticker span{padding:10px var(--s-3); white-space:nowrap; display:inline-flex; align-items:center; gap:var(--s-2);}
+  .ticker span::after{content:'✦'; font-size:.7rem; opacity:.75;}
   @keyframes slide{from{transform:translateX(0);} to{transform:translateX(50%);}}
 
   /* ---------- الترويسة ---------- */
   header{position:sticky; top:0; z-index:60;}
   .nav{
-    background:rgba(250,248,245,.82);
-    backdrop-filter:blur(14px) saturate(1.3);
-    border-bottom:1px solid transparent;
-    transition:border-color .3s var(--ease), background .3s var(--ease);
+    background:rgba(26,5,18,.72); backdrop-filter:blur(16px) saturate(1.4);
+    border-bottom:1px solid rgba(255,255,255,.08); color:#fff;
+    transition:background .3s var(--ease);
   }
-  .nav.stuck{border-bottom-color:var(--line); background:rgba(250,248,245,.95);}
+  .nav.stuck{background:rgba(26,5,18,.93);}
   .nav-inner{
     display:flex; align-items:center; gap:var(--s-3);
-    min-height:74px; max-width:var(--wrap); margin:0 auto;
+    min-height:70px; max-width:var(--wrap); margin:0 auto;
     padding-inline:clamp(16px, 4vw, 40px);
   }
-  .brand{display:flex; align-items:baseline; gap:10px; white-space:nowrap;}
-  .brand b{font-family:'Reem Kufi', sans-serif; font-size:1.3rem; font-weight:600; letter-spacing:-.02em;}
-  .brand i{
-    font-family:'Playfair Display', serif; font-style:italic;
-    font-size:.8rem; color:var(--ink-3); letter-spacing:.06em;
+  .brand{display:flex; align-items:center; gap:10px; white-space:nowrap;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:var(--r-pill); flex:none;
+    background:var(--grad-hot); display:grid; place-items:center;
+    font-size:.95rem; font-weight:700; color:#fff; box-shadow:var(--glow-hot);
   }
-  .links{display:flex; gap:var(--s-3); margin-inline-start:var(--s-4); font-size:.94rem; font-weight:500;}
-  .links a{position:relative; padding-block:6px; color:var(--ink-2);}
+  .brand b{font-size:1.22rem; font-weight:700; letter-spacing:-.02em;}
+  .brand i{font-style:normal; font-size:.74rem; font-weight:300; color:rgba(255,255,255,.62); letter-spacing:.06em;}
+  .links{display:flex; gap:var(--s-3); margin-inline-start:var(--s-4); font-size:.92rem; font-weight:400;}
+  .links a{position:relative; padding-block:6px; color:rgba(255,255,255,.82);}
   .links a::after{
-    content:''; position:absolute; inset-inline:0; bottom:0; height:1.5px;
-    background:var(--ink); transform:scaleX(0); transform-origin:inline-end;
+    content:''; position:absolute; inset-inline:0; bottom:0; height:2px; border-radius:2px;
+    background:var(--grad-hot); transform:scaleX(0); transform-origin:inline-end;
     transition:transform .3s var(--ease);
   }
-  .links a:hover{color:var(--ink);}
+  .links a:hover{color:#fff;}
   .links a:hover::after{transform:scaleX(1); transform-origin:inline-start;}
-  .nav-actions{display:flex; align-items:center; gap:6px; margin-inline-start:auto;}
+  .nav-actions{display:flex; align-items:center; gap:4px; margin-inline-start:auto;}
   .ico{
     display:inline-flex; align-items:center; justify-content:center;
-    width:44px; height:44px; border-radius:var(--r-pill); color:var(--ink-2);
-    transition:background .25s var(--ease), color .25s var(--ease);
+    width:44px; height:44px; border-radius:var(--r-pill); color:rgba(255,255,255,.88);
+    transition:background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
   }
-  .ico:hover{background:var(--sand); color:var(--ink);}
+  .ico:hover{background:rgba(255,255,255,.14); color:#fff; transform:translateY(-2px);}
   .cart-toggle{position:relative;}
   .cart-dot{
-    position:absolute; top:5px; inset-inline-start:5px;
-    min-width:19px; height:19px; padding-inline:5px; border-radius:var(--r-pill);
-    background:var(--ink); color:var(--bone);
-    font-size:.7rem; font-weight:700; line-height:19px; text-align:center;
+    position:absolute; top:3px; inset-inline-start:3px;
+    min-width:20px; height:20px; padding-inline:5px; border-radius:var(--r-pill);
+    background:var(--grad-hot); color:#fff;
+    font-size:.7rem; font-weight:700; line-height:20px; text-align:center;
+    box-shadow:0 2px 10px rgba(236,72,153,.6);
   }
   .cart-dot[hidden]{display:none;}
 
   /* ---------- تنبيه الإعداد ---------- */
-  .setup{background:#FFF7E3; border-bottom:1px solid #EFDFB4; color:#6B5412; font-size:.88rem;}
+  .setup{background:#FFF3D6; border-bottom:1px solid #F0DCA6; color:#6B5412; font-size:.86rem;}
   .setup .wrap{display:flex; gap:10px; align-items:flex-start; padding-block:12px;}
-  .setup code{font-family:ui-monospace, monospace; background:rgba(0,0,0,.06); padding:1px 5px; border-radius:4px;}
+  .setup code{font-family:ui-monospace, monospace; background:rgba(0,0,0,.07); padding:1px 5px; border-radius:4px;}
 
   /* ---------- الواجهة ---------- */
-  .hero{padding-block:clamp(48px, 7vw, 96px) clamp(40px, 6vw, 80px); overflow:hidden;}
-  .hero-grid{
-    display:grid; gap:clamp(32px, 5vw, 72px); align-items:center;
-    grid-template-columns:1.05fr .95fr;
+  .hero{
+    position:relative; overflow:hidden; color:#fff;
+    background:var(--grad-night);
+    padding-block:clamp(56px, 8vw, 104px) clamp(64px, 9vw, 116px);
   }
-  .hero h1{
-    font-size:clamp(2.3rem, 6.4vw, 4.4rem); line-height:1.18;
-    letter-spacing:-.025em; margin-bottom:var(--s-3);
+  /* كرات ملوّنة ضبابية تعطي العمق واللمعان خلف النصّ */
+  .blob{position:absolute; border-radius:50%; filter:blur(64px); opacity:.55; pointer-events:none;}
+  .blob-1{width:46vw; height:46vw; max-width:520px; max-height:520px; background:#EC4899; top:-14%; inset-inline-end:-8%; animation:float 15s ease-in-out infinite;}
+  .blob-2{width:38vw; height:38vw; max-width:430px; max-height:430px; background:#6366F1; bottom:-20%; inset-inline-start:-6%; animation:float 19s ease-in-out infinite reverse;}
+  .blob-3{width:26vw; height:26vw; max-width:300px; max-height:300px; background:#22D3EE; top:34%; inset-inline-start:34%; opacity:.34; animation:float 23s ease-in-out infinite;}
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1);}
+    50%{transform:translate3d(0,-26px,0) scale(1.09);}
   }
-  .hero h1 em{
-    font-style:normal; color:var(--gold);
-    /* خطّ رفيع تحت الكلمة المفتاحية بدل التظليل الصارخ */
-    background:linear-gradient(transparent 76%, rgba(199,154,60,.32) 0);
-  }
-  .hero p{font-size:clamp(1rem, 1.6vw, 1.14rem); color:var(--ink-2); font-weight:300; max-width:48ch;}
+  .hero-grid{position:relative; display:grid; gap:clamp(36px, 5vw, 72px); align-items:center; grid-template-columns:1.08fr .92fr;}
+  .hero h1{font-size:clamp(2.4rem, 6.6vw, 4.5rem); line-height:1.16; margin-bottom:var(--s-3);}
+  .hero p{font-size:clamp(1rem, 1.7vw, 1.16rem); color:rgba(255,255,255,.78); max-width:46ch;}
   .hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:var(--s-4);}
+  .hero-stats{display:flex; gap:var(--s-4); margin-top:var(--s-5); flex-wrap:wrap;}
+  .stat b{display:block; font-size:1.5rem; font-weight:700; line-height:1.2;}
+  .stat span{font-size:.82rem; color:rgba(255,255,255,.6);}
 
-  /* اللوحة البصرية — تركيب من طبقات بدل صورة واحدة */
-  .collage{position:relative; aspect-ratio:1 / 1; max-width:520px; margin-inline:auto; width:100%;}
-  .collage-panel{
-    position:absolute; inset:6% 0 0 6%;
-    border-radius:var(--r-lg) var(--r-lg) 180px 180px;
-    background:linear-gradient(155deg, var(--blush) 0%, var(--sand) 58%, #EADFD3 100%);
-    display:flex; align-items:center; justify-content:center; overflow:hidden;
+  /* لوحة الواجهة */
+  .collage{position:relative; aspect-ratio:1 / 1; max-width:470px; width:100%; margin-inline:auto;}
+  .collage-orb{
+    position:absolute; inset:8% 4% 6% 8%; border-radius:46% 54% 52% 48% / 50% 46% 54% 50%;
+    background:var(--grad-hot); display:grid; place-items:center;
+    box-shadow:0 30px 80px rgba(236,72,153,.42);
+    animation:morph 16s ease-in-out infinite;
   }
-  .collage-panel svg{width:58%; height:58%; color:var(--rose-ink); opacity:.22;}
+  @keyframes morph{
+    0%,100%{border-radius:46% 54% 52% 48% / 50% 46% 54% 50%;}
+    50%{border-radius:56% 44% 42% 58% / 44% 56% 44% 56%;}
+  }
+  .collage-orb svg{width:52%; height:52%; color:#fff; opacity:.9;}
   .collage-card{
-    position:absolute; bottom:4%; inset-inline-end:0;
-    width:min(232px, 62%); padding:16px;
-    background:var(--panel); border-radius:var(--r-md);
-    box-shadow:var(--shadow-lift);
+    position:absolute; bottom:2%; inset-inline-end:-2%;
+    width:min(236px, 66%); padding:14px;
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.26);
+    backdrop-filter:blur(16px); border-radius:var(--r-md);
     display:flex; align-items:center; gap:12px;
+    box-shadow:0 18px 40px rgba(26,5,18,.4);
   }
   .collage-card .tile{
-    width:52px; height:52px; border-radius:var(--r-sm); flex:none;
-    background:linear-gradient(150deg, var(--blush), var(--sand));
-    display:flex; align-items:center; justify-content:center; color:var(--rose-ink);
+    width:50px; height:50px; border-radius:var(--r-sm); flex:none;
+    background:rgba(255,255,255,.2); display:grid; place-items:center; color:#fff;
   }
-  .collage-card small{display:block; color:var(--ink-3); font-size:.76rem; line-height:1.5;}
-  .collage-card strong{display:block; font-size:.94rem; font-weight:500;}
-  .collage-card b{color:var(--gold); font-size:.95rem;}
-  .seal{
-    position:absolute; top:0; inset-inline-start:2%;
-    width:clamp(84px, 20%, 116px); aspect-ratio:1;
-    animation:spin 22s linear infinite;
-  }
-  .seal text{
-    font-family:'Playfair Display', serif; font-size:8.8px;
-    fill:var(--ink-2); text-transform:uppercase;
-    /* SVG لا يقرأ الخاصيّة dir، فلولا هذا السطر ورث النصّ اتجاه الصفحة (rtl)
-       وانطلق عكس المسار فخرج عن حدوده ولم يُرسم أصلاً. */
-    direction:ltr; unicode-bidi:isolate;
-  }
-  .seal-core{
-    position:absolute; inset:0; display:flex; align-items:center; justify-content:center;
-    color:var(--gold);
-  }
+  .collage-card small{display:block; font-size:.72rem; color:rgba(255,255,255,.66);}
+  .collage-card strong{display:block; font-size:.9rem; font-weight:500; line-height:1.5;}
+  .collage-card b{font-size:.95rem; font-weight:700; color:#FBCFE8;}
+  .seal{position:absolute; top:-2%; inset-inline-start:-2%; width:clamp(86px, 22%, 120px); aspect-ratio:1; animation:spin 24s linear infinite;}
+  .seal text{font-size:9px; font-weight:600; letter-spacing:.04em; fill:rgba(255,255,255,.85); text-transform:uppercase;
+    direction:ltr; unicode-bidi:isolate;}
+  .seal-core{position:absolute; inset:0; display:grid; place-items:center; color:#fff;}
   @keyframes spin{to{transform:rotate(-360deg);}}
 
   /* ---------- شريط الضمانات ---------- */
-  .assure{border-block:1px solid var(--line); background:var(--sand);}
-  .assure-grid{
-    display:grid; grid-template-columns:repeat(4, 1fr);
-    max-width:var(--wrap); margin:0 auto;
-  }
-  .assure-item{
-    display:flex; align-items:center; gap:12px;
-    padding:22px clamp(12px, 2.2vw, 28px);
-    border-inline-start:1px solid var(--line);
-  }
+  .assure{background:var(--panel); border-bottom:1px solid var(--line);}
+  .assure-grid{display:grid; grid-template-columns:repeat(4, 1fr); max-width:var(--wrap); margin:0 auto;}
+  .assure-item{display:flex; align-items:center; gap:12px; padding:22px clamp(12px, 2.2vw, 28px); border-inline-start:1px solid var(--line);}
   .assure-item:first-child{border-inline-start:none;}
-  .assure-item svg{color:var(--gold); flex:none;}
-  .assure-item b{display:block; font-size:.92rem; font-weight:500; line-height:1.5;}
-  .assure-item small{color:var(--ink-3); font-size:.8rem; line-height:1.4;}
+  .assure-item .bubble{
+    width:44px; height:44px; border-radius:var(--r-pill); flex:none;
+    display:grid; place-items:center; color:#fff; background:var(--grad-hot);
+  }
+  .assure-item:nth-child(2) .bubble{background:var(--grad-cool);}
+  .assure-item:nth-child(3) .bubble{background:linear-gradient(115deg,#F59E0B,#EC4899);}
+  .assure-item:nth-child(4) .bubble{background:linear-gradient(115deg,#22D3EE,#8B5CF6);}
+  .assure-item b{display:block; font-size:.92rem; font-weight:600; line-height:1.5;}
+  .assure-item small{color:var(--plum-3); font-size:.78rem; line-height:1.4;}
 
   /* ---------- الأزرار ---------- */
   .btn{
     display:inline-flex; align-items:center; justify-content:center; gap:9px;
-    min-height:46px; padding:12px 24px; border-radius:var(--r-pill);
-    font-size:.94rem; font-weight:500; text-align:center;
-    transition:background .25s var(--ease), color .25s var(--ease),
-               border-color .25s var(--ease), transform .2s var(--ease), box-shadow .25s var(--ease);
+    min-height:48px; padding:13px 26px; border-radius:var(--r-pill);
+    font-size:.94rem; font-weight:600; text-align:center;
+    transition:transform .22s var(--ease), box-shadow .28s var(--ease),
+               background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), filter .25s var(--ease);
   }
-  .btn:hover{transform:translateY(-2px);}
-  .btn:active{transform:translateY(0);}
-  .btn[disabled]{opacity:.42; cursor:not-allowed; transform:none; box-shadow:none;}
-  .btn-ink{background:var(--ink); color:var(--bone);}
-  .btn-ink:hover{background:#000; box-shadow:0 10px 24px rgba(26,22,20,.24);}
-  .btn-line{border:1px solid var(--ink); color:var(--ink);}
-  .btn-line:hover{background:var(--ink); color:var(--bone);}
-  .btn-soft{background:var(--sand); color:var(--ink); border:1px solid var(--line);}
-  .btn-soft:hover{background:var(--ink); color:var(--bone); border-color:var(--ink);}
+  .btn:hover{transform:translateY(-3px);}
+  .btn:active{transform:translateY(-1px);}
+  .btn[disabled]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; filter:grayscale(.3);}
+  /* التدرّج الفاتح مع حبر داكن: تباين عالٍ ولون صارخ في آن واحد */
+  .btn-hot{background:var(--grad-hot); color:var(--plum); box-shadow:0 8px 24px rgba(236,72,153,.34);}
+  .btn-hot:hover{box-shadow:var(--glow-hot); filter:saturate(1.15);}
+  .btn-cool{background:var(--grad-cool); color:var(--plum); box-shadow:0 8px 24px rgba(99,102,241,.3);}
+  .btn-cool:hover{box-shadow:var(--glow-cool); filter:saturate(1.15);}
+  .btn-ghost-light{border:1.5px solid rgba(255,255,255,.45); color:#fff;}
+  .btn-ghost-light:hover{background:#fff; color:var(--plum); border-color:#fff;}
+  .btn-ghost{border:1.5px solid var(--line); color:var(--fuchsia-deep); background:var(--panel);}
+  .btn-ghost:hover{border-color:var(--fuchsia); background:var(--cream-2);}
   .btn-wa{background:var(--wa); color:#fff;}
-  .btn-wa:hover{background:#0D6E39; box-shadow:0 10px 24px rgba(18,140,74,.3);}
-  .btn-light{border:1px solid rgba(250,248,245,.45); color:var(--bone);}
-  .btn-light:hover{background:var(--bone); color:var(--ink); border-color:var(--bone);}
+  .btn-wa:hover{background:#0D6E39; box-shadow:0 10px 26px rgba(18,140,74,.34);}
   .btn-wide{width:100%;}
-  .btn-sm{min-height:40px; padding:9px 16px; font-size:.86rem;}
+  .btn-sm{min-height:42px; padding:10px 18px; font-size:.86rem;}
 
   /* ---------- الأقسام ---------- */
-  section{scroll-margin-top:90px;}
-  .band{padding-block:clamp(56px, 8vw, 104px);}
-  .head{
-    display:flex; align-items:flex-end; justify-content:space-between;
-    gap:var(--s-3); margin-bottom:var(--s-4); flex-wrap:wrap;
-  }
-  .head h2{font-size:clamp(1.7rem, 3.6vw, 2.6rem); letter-spacing:-.02em;}
-  .head p{color:var(--ink-3); font-weight:300; max-width:46ch; margin-top:6px;}
+  section{scroll-margin-top:86px;}
+  .band{padding-block:clamp(56px, 8vw, 100px);}
+  .band-night{background:var(--grad-night); color:#fff;}
+  .band-night h2, .band-night h3{color:#fff;}
+  .band-tint{background:linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);}
+  .head{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s-3); margin-bottom:var(--s-4); flex-wrap:wrap;}
+  .head h2{font-size:clamp(1.8rem, 4vw, 2.8rem);}
+  .head p{color:var(--plum-3); margin-top:6px; max-width:46ch;}
+  .band-night .head p{color:rgba(255,255,255,.7);}
 
   /* ---------- مرشّح الفئات ---------- */
-  .filters{display:flex; flex-wrap:wrap; gap:8px; margin-bottom:var(--s-4);}
+  .filters{display:flex; flex-wrap:wrap; gap:9px; margin-bottom:var(--s-4);}
   .filter{
-    padding:9px 18px; border-radius:var(--r-pill);
-    border:1px solid var(--line); background:var(--panel);
-    font-size:.88rem; font-weight:500; color:var(--ink-2);
-    transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+    padding:10px 20px; border-radius:var(--r-pill); border:1.5px solid var(--line);
+    background:var(--panel); font-size:.87rem; font-weight:500; color:var(--plum-2);
+    transition:all .25s var(--ease);
   }
-  .filter:hover{border-color:var(--ink-3); color:var(--ink);}
-  .filter[aria-pressed="true"]{background:var(--ink); color:var(--bone); border-color:var(--ink);}
+  .filter:hover{border-color:var(--fuchsia); color:var(--fuchsia-deep); transform:translateY(-2px);}
+  .filter[aria-pressed="true"]{background:var(--grad-hot); color:var(--plum); border-color:transparent; box-shadow:0 6px 18px rgba(236,72,153,.3);}
 
   /* ---------- المنتجات ---------- */
-  .products{display:grid; gap:clamp(18px, 2.4vw, 30px); grid-template-columns:repeat(4, 1fr);}
-  .card{display:flex; flex-direction:column;}
+  .products{display:grid; gap:clamp(16px, 2.2vw, 28px); grid-template-columns:repeat(4, 1fr);}
+  .card{
+    display:flex; flex-direction:column; background:var(--panel);
+    border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow);
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .card:hover{transform:translateY(-8px); box-shadow:0 22px 48px var(--card-glow, rgba(236,72,153,.26));}
   .card-media{
-    position:relative; aspect-ratio:1 / 1; border-radius:var(--r-lg);
-    overflow:hidden; display:flex; align-items:center; justify-content:center;
-    background:linear-gradient(150deg, var(--blush), var(--sand));
+    position:relative; aspect-ratio:1 / 1; overflow:hidden;
+    display:grid; place-items:center; background:var(--card-grad, var(--grad-hot));
   }
   .card-media img{width:100%; height:100%; object-fit:cover;}
-  .card-media .glyph{width:38%; height:38%; color:var(--ink); opacity:.3;}
-  .card-flags{
-    position:absolute; top:12px; inset-inline-start:12px;
-    display:flex; flex-direction:column; align-items:flex-start; gap:6px;
-  }
-  .flag{
-    padding:5px 11px; border-radius:var(--r-pill);
-    font-size:.71rem; font-weight:700; letter-spacing:.04em;
-    background:var(--ink); color:var(--bone);
-  }
-  .flag-sale{background:var(--rose-ink);}
-  .flag-video{background:rgba(250,248,245,.94); color:var(--ink); display:inline-flex; align-items:center; gap:5px;}
-  /* تكبير خفيف للصورة عند المرور — الأزرار كلها ظاهرة دائماً، فلا يختفي أي إجراء خلف المؤشّر */
+  .card-media .glyph{width:44%; height:44%; color:#fff; opacity:.92; filter:drop-shadow(0 6px 14px rgba(0,0,0,.18));}
   .card-media img, .card-media .glyph{transition:transform .5s var(--ease);}
-  .card:hover .card-media img, .card:hover .card-media .glyph{transform:scale(1.05);}
-  .card-body{padding-top:16px; display:flex; flex-direction:column; flex:1;}
-  .card-cat{font-size:.74rem; letter-spacing:.14em; color:var(--ink-3); font-weight:500; margin-bottom:4px;}
-  .card-name{font-family:'Tajawal', sans-serif; font-size:1.02rem; font-weight:500; line-height:1.5;}
-  .card-price{display:flex; align-items:baseline; gap:9px; margin-top:8px;}
-  .card-price b{font-size:1.06rem; font-weight:700; color:var(--gold);}
-  .card-price del{font-size:.86rem; color:var(--ink-3);}
-  .card-links{display:flex; gap:8px; margin-top:14px;}
+  .card:hover .card-media img, .card:hover .card-media .glyph{transform:scale(1.07);}
+  .card-flags{position:absolute; top:12px; inset-inline-start:12px; display:flex; flex-direction:column; align-items:flex-start; gap:6px;}
+  .flag{
+    padding:5px 12px; border-radius:var(--r-pill); font-size:.71rem; font-weight:700;
+    background:rgba(255,255,255,.95); color:var(--plum);
+    box-shadow:0 3px 10px rgba(46,10,30,.14);
+  }
+  .flag-sale{background:var(--plum); color:#fff;}
+  .flag-video{display:inline-flex; align-items:center; gap:5px;}
+  .card-body{padding:18px; display:flex; flex-direction:column; flex:1;}
+  .card-cat{font-size:.72rem; letter-spacing:.1em; color:var(--fuchsia-deep); font-weight:600; margin-bottom:5px;}
+  .card-name{font-size:1rem; font-weight:500; line-height:1.55;}
+  .card-price{display:flex; align-items:baseline; gap:9px; margin:10px 0 16px;}
+  .card-price b{font-size:1.1rem; font-weight:700; color:var(--fuchsia-deep);}
+  .card-price del{font-size:.84rem; color:var(--plum-3);}
+  .card-links{display:flex; gap:8px; margin-top:auto;}
   .card-links .btn{flex:1;}
-  /* زرّ واتساب أيقونة فقط حتى يتّسع «أضيفي للسلة» داخل بطاقة ضيّقة */
   .card-links .btn-icon{flex:none; width:44px; min-height:44px; padding:0;}
   .card-social{display:flex; gap:14px; margin-top:12px;}
   .card-social a{
-    display:inline-flex; align-items:center; gap:5px;
-    font-size:.78rem; font-weight:500; color:var(--ink-3);
-    border-bottom:1px solid transparent; padding-bottom:1px;
+    display:inline-flex; align-items:center; gap:5px; font-size:.76rem; font-weight:500;
+    color:var(--plum-3); border-bottom:1px solid transparent; padding-bottom:1px;
     transition:color .25s var(--ease), border-color .25s var(--ease);
   }
-  .card-social a:hover{color:var(--ink); border-bottom-color:var(--ink);}
-  .empty{
-    grid-column:1 / -1; text-align:center; color:var(--ink-3);
-    padding:var(--s-5) var(--s-2); font-weight:300;
-  }
+  .card-social a:hover{color:var(--fuchsia-deep); border-bottom-color:var(--fuchsia);}
+  .empty{grid-column:1 / -1; text-align:center; color:var(--plum-3); padding:var(--s-5) var(--s-2);}
+
+  /* قسم اكسسوارات الهواتف — هويّته الفيروزية تميّزه عن قسم التجميل */
+  .phones{--card-glow:rgba(99,102,241,.3);}
+  .phones .card-cat{color:var(--cyan-deep);}
+  .phones .card-price b{color:var(--violet-deep);}
+  .phones .card-social a:hover{color:var(--violet-deep); border-bottom-color:var(--violet);}
 
   /* ---------- كيف تطلبين ---------- */
-  .how{background:var(--ink); color:var(--bone);}
-  .how h2{color:var(--bone);}
-  .how .kicker{color:var(--gold-soft);}
-  .how p{color:rgba(250,248,245,.72);}
-  .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(20px, 3vw, 44px); margin-top:var(--s-4);}
-  .step{border-top:1px solid rgba(250,248,245,.22); padding-top:20px;}
-  .step em{
-    font-family:'Playfair Display', serif; font-style:italic;
-    font-size:1.5rem; color:var(--gold-soft); display:block; margin-bottom:10px;
+  .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(20px, 3vw, 40px); margin-top:var(--s-4);}
+  .step{
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--r-lg); padding:26px;
   }
-  .step h3{font-size:1.1rem; color:var(--bone); margin-bottom:6px;}
-  .step p{font-size:.92rem; font-weight:300; line-height:1.75;}
+  .step em{
+    display:grid; place-items:center; width:46px; height:46px; border-radius:var(--r-pill);
+    background:var(--grad-hot); color:var(--plum); font-style:normal; font-weight:700;
+    font-size:1.05rem; margin-bottom:16px;
+  }
+  .step:nth-child(2) em{background:var(--grad-cool);}
+  .step:nth-child(3) em{background:linear-gradient(115deg,#F59E0B,#EC4899);}
+  .step h3{font-size:1.08rem; margin-bottom:6px;}
+  .step p{font-size:.9rem; color:rgba(255,255,255,.72); line-height:1.8;}
 
   /* ---------- الفيديوهات ---------- */
-  .videos-band{background:var(--sand);}
   .videos{display:grid; gap:clamp(18px, 2.4vw, 28px); grid-template-columns:repeat(auto-fit, minmax(240px, 320px)); justify-content:center;}
-  .reel{background:var(--panel); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;}
-  .reel-frame{position:relative; aspect-ratio:9 / 16; background:var(--blush);}
+  .reel{background:var(--panel); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);}
+  .reel:hover{transform:translateY(-8px); box-shadow:0 22px 48px rgba(236,72,153,.24);}
+  .reel-frame{position:relative; aspect-ratio:9 / 16; background:var(--grad-hot);}
   .reel-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
-  .reel-soon{
-    position:absolute; inset:0; display:flex; flex-direction:column;
-    align-items:center; justify-content:center; gap:12px; padding:20px;
-    text-align:center; color:var(--rose-ink);
-    background:linear-gradient(155deg, var(--blush), var(--sand));
-  }
+  .reel-soon{position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:12px; padding:20px; text-align:center; color:#fff;}
   .reel-soon span{font-size:.86rem; font-weight:500;}
   .reel-body{padding:18px; display:flex; flex-direction:column; flex:1;}
   .tag{
     display:inline-flex; align-items:center; gap:6px; align-self:flex-start;
-    padding:5px 12px; border-radius:var(--r-pill);
-    font-size:.72rem; font-weight:700; letter-spacing:.04em; margin-bottom:10px;
+    padding:5px 13px; border-radius:var(--r-pill); font-size:.72rem; font-weight:700; margin-bottom:10px;
   }
-  .tag-tiktok{background:var(--ink); color:#25F4EE;}
-  .tag-instagram{background:linear-gradient(120deg,#F09433,#DC2743 55%,#BC1888); color:#fff;}
-  .reel-body h3{font-size:1rem; font-weight:500; font-family:'Tajawal', sans-serif;}
-  .reel-body p{font-size:.88rem; color:var(--ink-3); font-weight:300; margin:4px 0 16px;}
-  /* الزرّ يلتصق بأسفل البطاقة مهما اختلف طول النصّ فوقه */
+  .tag-tiktok{background:var(--plum); color:#22D3EE;}
+  .tag-instagram{background:linear-gradient(115deg,#F59E0B,#EC4899 55%,#8B5CF6); color:#fff;}
+  .reel-body h3{font-size:1rem; font-weight:500;}
+  .reel-body p{font-size:.86rem; color:var(--plum-3); margin:4px 0 16px;}
   .reel-body .btn{margin-top:auto;}
 
   /* ---------- تواصل ---------- */
-  .contact{
-    background:linear-gradient(150deg, var(--blush) 0%, var(--sand) 100%);
-    text-align:center;
-  }
-  .contact h2{font-size:clamp(1.8rem, 4.2vw, 3rem); max-width:16ch; margin-inline:auto;}
-  .contact p{color:var(--ink-2); font-weight:300; margin:var(--s-2) auto var(--s-4); max-width:44ch;}
-  .contact-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+  .contact{position:relative; overflow:hidden; text-align:center; color:#fff; background:var(--grad-hot);}
+  .contact h2{font-size:clamp(1.9rem, 4.6vw, 3.1rem); max-width:16ch; margin-inline:auto; color:#fff;}
+  .contact p{margin:var(--s-2) auto var(--s-4); max-width:44ch; color:rgba(255,255,255,.88);}
+  .contact-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; position:relative;}
+  .contact .wrap{position:relative;}
 
   /* ---------- التذييل ---------- */
-  footer{background:var(--ink); color:rgba(250,248,245,.66); padding-block:var(--s-5) var(--s-3); font-size:.88rem;}
-  .foot-grid{display:grid; grid-template-columns:1.4fr 1fr 1fr; gap:var(--s-4); padding-bottom:var(--s-4);}
-  .foot-brand b{font-family:'Reem Kufi', sans-serif; font-size:1.25rem; color:var(--bone); display:block;}
-  .foot-brand p{margin-top:10px; font-weight:300; max-width:34ch; line-height:1.8;}
-  .foot-col h3{font-size:.76rem; letter-spacing:.16em; color:var(--bone); font-weight:500; margin-bottom:14px; font-family:'Tajawal', sans-serif;}
+  footer{background:var(--night); color:rgba(255,255,255,.62); padding-block:var(--s-5) var(--s-3); font-size:.87rem;}
+  .foot-grid{display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:var(--s-4); padding-bottom:var(--s-4);}
+  .foot-brand .brand{margin-bottom:12px;}
+  .foot-brand .brand b, .foot-brand .brand i{color:#fff;}
+  .foot-brand p{max-width:34ch; line-height:1.9;}
+  .foot-col h3{font-size:.74rem; letter-spacing:.16em; color:#fff; font-weight:600; margin-bottom:14px;}
   .foot-col a{display:block; padding-block:5px; transition:color .25s var(--ease);}
-  .foot-col a:hover{color:var(--bone);}
+  .foot-col a:hover{color:var(--cyan);}
   .foot-social{display:flex; gap:8px; margin-top:18px;}
   .foot-social a{
-    width:44px; height:44px; border-radius:var(--r-pill);
-    border:1px solid rgba(250,248,245,.22);
+    width:44px; height:44px; border-radius:var(--r-pill); border:1px solid rgba(255,255,255,.2);
     display:inline-flex; align-items:center; justify-content:center;
-    transition:background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease);
+    transition:all .25s var(--ease);
   }
-  .foot-social a:hover{background:var(--bone); color:var(--ink); border-color:var(--bone);}
-  .foot-base{
-    border-top:1px solid rgba(250,248,245,.14); padding-top:var(--s-3);
-    display:flex; justify-content:space-between; gap:var(--s-2); flex-wrap:wrap; font-size:.82rem;
-  }
+  .foot-social a:hover{background:var(--grad-hot); border-color:transparent; color:#fff; transform:translateY(-3px);}
+  .foot-base{border-top:1px solid rgba(255,255,255,.12); padding-top:var(--s-3); display:flex; justify-content:space-between; gap:var(--s-2); flex-wrap:wrap; font-size:.8rem;}
 
   /* ---------- السلة ---------- */
-  .veil{
-    position:fixed; inset:0; z-index:80; background:rgba(26,22,20,.42);
-    opacity:0; visibility:hidden; transition:opacity .3s var(--ease), visibility .3s var(--ease);
-    backdrop-filter:blur(2px);
-  }
+  .veil{position:fixed; inset:0; z-index:80; background:rgba(26,5,18,.5); backdrop-filter:blur(3px);
+    opacity:0; visibility:hidden; transition:opacity .3s var(--ease), visibility .3s var(--ease);}
   .veil.open{opacity:1; visibility:visible;}
   .drawer{
     position:fixed; inset-block:0; inset-inline-end:0; z-index:90;
     width:min(420px, 100%); display:flex; flex-direction:column;
-    background:var(--bone); box-shadow:0 0 60px rgba(26,22,20,.24);
+    background:var(--cream); box-shadow:0 0 70px rgba(26,5,18,.3);
     transform:translateX(-100%); transition:transform .36s var(--ease);
   }
   .drawer.open{transform:translateX(0);}
-  .drawer-head{display:flex; align-items:center; gap:12px; padding:20px 24px; border-bottom:1px solid var(--line);}
+  .drawer-head{display:flex; align-items:center; gap:12px; padding:20px 24px; background:var(--grad-hot); color:var(--plum);}
   .drawer-head h2{font-size:1.15rem; margin-inline-end:auto;}
+  .drawer-head .ico{color:var(--plum);}
+  .drawer-head .ico:hover{background:rgba(255,255,255,.3); color:var(--plum);}
   .drawer-body{flex:1; overflow-y:auto; padding-inline:24px;}
-  .line{display:flex; gap:14px; align-items:center; padding-block:18px; border-bottom:1px solid var(--line-soft);}
+  .line{display:flex; gap:14px; align-items:center; padding-block:18px; border-bottom:1px solid var(--line);}
   .line:last-child{border-bottom:none;}
-  .line-tile{
-    width:62px; height:62px; border-radius:var(--r-sm); flex:none; overflow:hidden;
-    background:linear-gradient(150deg, var(--blush), var(--sand));
-    display:flex; align-items:center; justify-content:center; color:var(--ink);
-  }
+  .line-tile{width:62px; height:62px; border-radius:var(--r-sm); flex:none; overflow:hidden;
+    display:grid; place-items:center; color:#fff; background:var(--card-grad, var(--grad-hot));}
   .line-tile img{width:100%; height:100%; object-fit:cover;}
-  .line-tile svg{width:52%; height:52%; opacity:.42;}
+  .line-tile svg{width:50%; height:50%; opacity:.92;}
   .line-info{flex:1; min-width:0;}
-  .line-info strong{display:block; font-size:.94rem; font-weight:500; line-height:1.5;}
-  .line-info span{font-size:.86rem; color:var(--gold); font-weight:700;}
-  .stepper{display:flex; align-items:center; gap:4px; border:1px solid var(--line); border-radius:var(--r-pill); padding:3px;}
-  .stepper button{
-    width:30px; height:30px; border-radius:var(--r-pill);
-    display:inline-flex; align-items:center; justify-content:center;
-    font-size:1rem; line-height:1; color:var(--ink-2);
-    transition:background .2s var(--ease), color .2s var(--ease);
-  }
-  .stepper button:hover{background:var(--ink); color:var(--bone);}
-  .stepper output{min-width:20px; text-align:center; font-size:.9rem; font-weight:500;}
-  .drawer-empty{text-align:center; color:var(--ink-3); padding:var(--s-5) var(--s-2); font-weight:300;}
+  .line-info strong{display:block; font-size:.92rem; font-weight:500; line-height:1.5;}
+  .line-info span{font-size:.86rem; color:var(--fuchsia-deep); font-weight:700;}
+  .stepper{display:flex; align-items:center; gap:4px; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:3px; background:var(--panel);}
+  .stepper button{width:32px; height:32px; border-radius:var(--r-pill); display:grid; place-items:center;
+    font-size:1.05rem; line-height:1; color:var(--fuchsia-deep); transition:all .2s var(--ease);}
+  .stepper button:hover{background:var(--grad-hot); color:var(--plum);}
+  .stepper output{min-width:20px; text-align:center; font-size:.9rem; font-weight:600;}
+  .drawer-empty{text-align:center; color:var(--plum-3); padding:var(--s-5) var(--s-2);}
   .drawer-empty svg{color:var(--line); margin:0 auto 14px;}
-  .drawer-foot{padding:20px 24px; border-top:1px solid var(--line); background:var(--sand);}
-  .sum{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px;}
-  .sum b{font-size:1.3rem; color:var(--ink);}
-  .note{font-size:.8rem; color:var(--ink-3); font-weight:300; text-align:center; margin-top:12px; line-height:1.6;}
+  .drawer-foot{padding:20px 24px; border-top:1px solid var(--line); background:var(--panel);}
+  .sum{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+  .sum b{font-size:1.35rem; font-weight:700; color:var(--fuchsia-deep);}
+  .note{font-size:.78rem; color:var(--plum-3); text-align:center; margin-top:12px; line-height:1.6;}
 
   /* ---------- إشعار ---------- */
-  .toast{
-    position:fixed; inset-inline:0; bottom:28px; z-index:100;
-    display:flex; justify-content:center; pointer-events:none;
-    opacity:0; transform:translateY(14px); transition:opacity .3s var(--ease), transform .3s var(--ease);
-  }
+  .toast{position:fixed; inset-inline:0; bottom:28px; z-index:100; display:flex; justify-content:center;
+    pointer-events:none; opacity:0; transform:translateY(14px);
+    transition:opacity .3s var(--ease), transform .3s var(--ease);}
   .toast.show{opacity:1; transform:translateY(0);}
-  .toast span{
-    display:inline-flex; align-items:center; gap:9px;
-    background:var(--ink); color:var(--bone); border-radius:var(--r-pill);
-    padding:12px 22px; font-size:.9rem; box-shadow:var(--shadow-lift);
-  }
-  .toast svg{color:var(--gold-soft);}
+  .toast span{display:inline-flex; align-items:center; gap:9px; background:var(--grad-hot); color:var(--plum);
+    border-radius:var(--r-pill); padding:12px 24px; font-size:.9rem; font-weight:600; box-shadow:var(--glow-hot);}
 
-  /* ---------- ظهور تدريجي عند التمرير ---------- */
-  .rise{opacity:0; transform:translateY(22px); transition:opacity .7s var(--ease), transform .7s var(--ease);}
+  /* ---------- ظهور تدريجي ---------- */
+  .rise{opacity:0; transform:translateY(26px); transition:opacity .75s var(--ease), transform .75s var(--ease);}
   .rise.in{opacity:1; transform:none;}
 
   /* ---------- الاستجابة ---------- */
   @media (max-width: 1080px){
     .products{grid-template-columns:repeat(3, 1fr);}
-    .hero-grid{grid-template-columns:1fr; }
-    .collage{max-width:420px;}
+    .hero-grid{grid-template-columns:1fr;}
+    .collage{max-width:400px;}
   }
   @media (max-width: 860px){
     .links{display:none;}
-    /* الاسم اللاتيني يُخفى حتى تتّسع الترويسة للاسم وأزرارها بلا تمرير أفقي */
     .brand i{display:none;}
     .nav-inner{gap:var(--s-2);}
-    .nav-actions{gap:2px;}
+    .nav-actions{gap:0;}
     .assure-grid{grid-template-columns:repeat(2, 1fr);}
     .assure-item:nth-child(3){border-inline-start:none;}
     .assure-item:nth-child(n+3){border-top:1px solid var(--line);}
@@ -462,16 +435,17 @@
   }
   @media (max-width: 620px){
     .products{grid-template-columns:repeat(2, 1fr);}
-    .card-media{border-radius:var(--r-md);}
-    .card-links .btn-sm{padding-inline:12px; font-size:.82rem;}
+    .card-body{padding:14px;}
+    .card-links .btn-sm{padding-inline:10px; font-size:.8rem;}
     .assure-grid{grid-template-columns:1fr;}
     .assure-item:nth-child(n+2){border-inline-start:none; border-top:1px solid var(--line);}
+    .hero-stats{gap:var(--s-3);}
   }
   @media (prefers-reduced-motion: reduce){
     html{scroll-behavior:auto;}
     *, *::before, *::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
     .rise{opacity:1; transform:none;}
-    .btn:hover, .ico:hover{transform:none;}
+    .btn:hover, .ico:hover, .card:hover, .reel:hover, .filter:hover{transform:none;}
   }
 </style>
 </head>
@@ -485,22 +459,24 @@
   <div class="nav" id="nav">
     <div class="nav-inner">
       <a class="brand" href="#top">
-        <b>متجر الجمال</b>
-        <!-- dir=ltr وإلا نقلت المحاذاة العربية علامة @ إلى آخر المعرّف -->
-        <i id="brand-handle" dir="ltr"></i>
+        <span class="brand-mark" aria-hidden="true">أ</span>
+        <span>
+          <b>أم آية</b>
+          <!-- dir=ltr وإلا نقلت المحاذاة العربية علامة @ إلى آخر المعرّف -->
+          <i id="brand-handle" dir="ltr"></i>
+        </span>
       </a>
       <nav class="links" aria-label="أقسام الموقع">
-        <a href="#products">المنتجات</a>
+        <a href="#products">التجميل</a>
+        <a href="#phones">اكسسوارات الهواتف</a>
         <a href="#how">كيف تطلبين</a>
         <a href="#videos">الفيديوهات</a>
-        <a href="#contact">تواصلي معنا</a>
       </nav>
       <div class="nav-actions" id="nav-actions"></div>
     </div>
   </div>
 </header>
 
-<!-- يظهر فقط ما دام شيء من بيانات المتجر غير مضبوط -->
 <div class="setup" id="setup" hidden>
   <div class="wrap">
     <span aria-hidden="true">⚙︎</span>
@@ -511,19 +487,28 @@
 <main id="top">
 
   <section class="hero">
+    <span class="blob blob-1" aria-hidden="true"></span>
+    <span class="blob blob-2" aria-hidden="true"></span>
+    <span class="blob blob-3" aria-hidden="true"></span>
+
     <div class="wrap hero-grid">
       <div class="rise">
-        <span class="kicker">Beauty essentials</span>
-        <h1>مختارة بعناية،<br>لا <em>بالصدفة</em>.</h1>
-        <p>أدوات تجميل واكسسوارات نجرّبها قبل أن نعرضها. تصفّحي، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.</p>
+        <span class="kicker kicker-light">Om Aya · جمالك وهاتفك</span>
+        <h1>كل ما يلفت <span class="glow-text">الأنظار</span><br>في مكان واحد.</h1>
+        <p>أدوات تجميل واكسسوارات نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.</p>
         <div class="hero-cta">
-          <a class="btn btn-ink" href="#products">تصفّحي المجموعة</a>
-          <a class="btn btn-line" href="#how">كيف أطلب؟</a>
+          <a class="btn btn-hot" href="#products">تصفّحي التجميل</a>
+          <a class="btn btn-ghost-light" href="#phones">اكسسوارات الهواتف</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat"><b id="stat-count">—</b><span>منتج مختار</span></div>
+          <div class="stat"><b>58</b><span>ولاية نوصل إليها</span></div>
+          <div class="stat"><b>0 دج</b><span>مقدّماً — الدفع عند الاستلام</span></div>
         </div>
       </div>
 
       <div class="collage rise" aria-hidden="true">
-        <div class="collage-panel" id="collage-panel"></div>
+        <div class="collage-orb" id="collage-orb"></div>
         <div class="collage-card">
           <span class="tile" id="collage-tile"></span>
           <span>
@@ -533,12 +518,10 @@
           </span>
         </div>
         <div class="seal">
-          <!-- xlink:href إلى جانب href حتى يرسم المتصفّح النصّ الدائري في كل الحالات -->
           <svg viewBox="0 0 100 100" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs><path id="ring" fill="none" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0"/></defs>
-            <!-- textLength = محيط الدائرة (2π×37 ≈ 232)، فتلتفّ العبارة دورة واحدة
-                 بالضبط مهما تغيّر طولها أو تعذّر تحميل الخطّ، بلا تداخل ولا فجوة. -->
-            <text><textPath href="#ring" xlink:href="#ring" textLength="232" lengthAdjust="spacing">BEAUTY ESSENTIALS · SELECTED WITH CARE ·</textPath></text>
+            <!-- textLength = محيط الدائرة (2π×37 ≈ 232) فتلتفّ العبارة دورة واحدة بلا تداخل -->
+            <text><textPath href="#ring" xlink:href="#ring" textLength="232" lengthAdjust="spacing">OM AYA · BEAUTY &amp; TECH · ONLINE STORE ·</textPath></text>
           </svg>
           <span class="seal-core" id="seal-core"></span>
         </div>
@@ -554,37 +537,51 @@
     <div class="wrap">
       <div class="head rise">
         <div>
-          <span class="kicker">The collection</span>
-          <h2>المجموعة</h2>
+          <span class="kicker">Beauty</span>
+          <h2>مجموعة التجميل</h2>
           <p>كل منتج بسعره الواضح — بلا مفاجآت عند الطلب.</p>
         </div>
-        <p class="kicker-ar" id="count-label"></p>
+        <p class="kicker" style="margin:0;" id="count-label"></p>
       </div>
       <div class="filters rise" id="filters" role="group" aria-label="تصفية حسب الفئة"></div>
       <div class="products" id="grid"></div>
     </div>
   </section>
 
-  <section class="band how" id="how">
+  <section class="band band-tint phones" id="phones">
+    <div class="wrap">
+      <div class="head rise">
+        <div>
+          <span class="kicker" style="color:var(--cyan-deep);">Tech</span>
+          <h2>اكسسوارات الهواتف الذكية</h2>
+          <p>أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.</p>
+        </div>
+        <div id="phones-cta"></div>
+      </div>
+      <div class="products" id="phones-grid"></div>
+    </div>
+  </section>
+
+  <section class="band band-night" id="how">
     <div class="wrap">
       <div class="rise">
-        <span class="kicker">How to order</span>
+        <span class="kicker kicker-light">How to order</span>
         <h2>كيف تطلبين؟</h2>
-        <p>ثلاث خطوات، ولا حاجة لحساب ولا بطاقة بنكية.</p>
+        <p style="color:rgba(255,255,255,.72); max-width:46ch;">ثلاث خطوات، ولا حاجة لحساب ولا بطاقة بنكية.</p>
       </div>
       <div class="steps rise">
         <div class="step">
-          <em>01</em>
+          <em>1</em>
           <h3>اختاري منتجاتكِ</h3>
-          <p>تصفّحي المجموعة وأضيفي ما يعجبكِ إلى السلة، وعدّلي الكميات كما تشائين.</p>
+          <p>تصفّحي التجميل واكسسوارات الهواتف، وأضيفي ما يعجبكِ إلى السلة، وعدّلي الكميات كما تشائين.</p>
         </div>
         <div class="step">
-          <em>02</em>
+          <em>2</em>
           <h3>أرسلي السلة على واتساب</h3>
           <p>زرّ واحد يفتح واتساب برسالة جاهزة فيها منتجاتكِ والكميات والإجمالي.</p>
         </div>
         <div class="step">
-          <em>03</em>
+          <em>3</em>
           <h3>استلمي وادفعي</h3>
           <p>نؤكّد الطلب والعنوان معكِ، ثم يصلكِ إلى ولايتكِ وتدفعين عند الاستلام.</p>
         </div>
@@ -592,7 +589,7 @@
     </div>
   </section>
 
-  <section class="band videos-band" id="videos">
+  <section class="band" id="videos">
     <div class="wrap">
       <div class="head rise">
         <div>
@@ -607,10 +604,11 @@
   </section>
 
   <section class="band contact" id="contact">
+    <span class="blob blob-2" aria-hidden="true" style="opacity:.3;"></span>
     <div class="wrap">
-      <span class="kicker">Say hello</span>
+      <span class="kicker" style="color:rgba(255,255,255,.85);">Say hello</span>
       <h2>سؤال قبل الطلب؟</h2>
-      <p>راسلينا مباشرة — نردّ بسرعة، ونساعدكِ تختارين ما يناسب بشرتكِ وذوقكِ.</p>
+      <p>راسلينا مباشرة — نردّ بسرعة، ونساعدكِ تختارين ما يناسبكِ.</p>
       <div class="contact-row" id="contact-row"></div>
     </div>
   </section>
@@ -621,20 +619,23 @@
   <div class="wrap">
     <div class="foot-grid">
       <div class="foot-brand">
-        <b>متجر الجمال</b>
-        <p>أدوات تجميل واكسسوارات نسائية مختارة بعناية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
+        <span class="brand">
+          <span class="brand-mark" aria-hidden="true">أ</span>
+          <span><b>أم آية</b> <i id="foot-handle" dir="ltr"></i></span>
+        </span>
+        <p>أدوات تجميل واكسسوارات نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
         <div class="foot-social" id="foot-social"></div>
       </div>
       <div class="foot-col">
         <h3>الموقع</h3>
-        <a href="#products">المنتجات</a>
+        <a href="#products">مجموعة التجميل</a>
+        <a href="#phones">اكسسوارات الهواتف</a>
         <a href="#how">كيف تطلبين</a>
         <a href="#videos">الفيديوهات</a>
-        <a href="#contact">تواصلي معنا</a>
       </div>
       <div class="foot-col">
         <h3>الطلب</h3>
-        <p style="font-weight:300; line-height:1.9;">
+        <p style="line-height:2;">
           توصيل لكل الولايات<br>
           الدفع عند الاستلام<br>
           رد سريع على واتساب
@@ -642,8 +643,8 @@
       </div>
     </div>
     <div class="foot-base">
-      <span>&copy; <span id="year"></span> متجر الجمال — جميع الحقوق محفوظة</span>
-      <span id="foot-handle" dir="ltr"></span>
+      <span>&copy; <span id="year"></span> أم آية — جميع الحقوق محفوظة</span>
+      <span id="foot-handle-2" dir="ltr"></span>
     </div>
   </div>
 </footer>
@@ -654,7 +655,7 @@
   <div class="drawer-head">
     <h2 id="drawer-title">سلة الطلب</h2>
     <button class="ico" id="drawer-close" aria-label="إغلاق السلة">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
     </button>
   </div>
   <div class="drawer-body" id="drawer-body"></div>
@@ -684,6 +685,7 @@
      ========================================================================== */
 
   const STORE = {
+    brand: 'أم آية',
     // رقم الواتساب بالصيغة الدولية، أرقاماً فقط بدون + ولا مسافات.
     phone: '213696847079',
     instagram: 'https://www.instagram.com/am_aya_x',
@@ -700,50 +702,73 @@
     'جديد كل أسبوع',
   ];
 
-  // المنتجات. لإضافة منتج انسخي أحد العناصر وغيّري بياناته.
-  //   id       : معرّف فريد لا يتكرّر (تستعمله السلة).
-  //   glyph    : رسم الفئة الظاهر مكان الصورة — من القائمة:
-  //              lipstick / polish / cream / eye / gem / brush
-  //   image    : رابط صورة المنتج (اختياري) — يحلّ محلّ الرسم عند وجوده.
-  //   was      : السعر قبل التخفيض (اختياري) — يُظهر شارة «تخفيض».
-  //   badge    : شارة نصّية مثل 'جديد' (اختياري).
-  //   tiktok / instagram : رابط فيديو المنتج على المنصّة (اختياري).
+  /* --- منتجات التجميل ---------------------------------------------------
+     id       : معرّف فريد لا يتكرّر (تستعمله السلة).
+     glyph    : الرسم الظاهر مكان الصورة — القائمة الكاملة في README.
+     image    : رابط صورة المنتج (اختياري) — يحلّ محلّ الرسم عند وجوده.
+     was      : السعر قبل التخفيض (اختياري) — يُظهر شارة «خصم ٪»، أو 0.
+     badge    : شارة نصّية مثل 'جديد' (اختياري).
+     tiktok / instagram : رابط فيديو المنتج على المنصّة (اختياري).            */
   const PRODUCTS = [
-    { id:'matte-lip',  name:'أحمر شفاه مطفي طويل الثبات', category:'شفاه',       price:1600, was:2100, badge:'', glyph:'lipstick', image:'', tiktok:'', instagram:'' },
-    { id:'gel-polish', name:'طلاء أظافر جل لامع',          category:'أظافر',      price:900,  was:0,    badge:'', glyph:'polish',   image:'', tiktok:'', instagram:'' },
-    { id:'face-cream', name:'كريم مرطّب للوجه',            category:'بشرة',       price:2800, was:0,    badge:'جديد', glyph:'cream', image:'', tiktok:'', instagram:'' },
-    { id:'eye-palette',name:'باليت ظلال العيون',           category:'عيون',       price:3200, was:3900, badge:'', glyph:'eye',      image:'', tiktok:'', instagram:'' },
-    { id:'gold-hoops', name:'أقراط ذهبية دائرية',          category:'اكسسوارات',  price:1800, was:0,    badge:'', glyph:'gem',      image:'', tiktok:'', instagram:'' },
-    { id:'kohl',       name:'كحل عيون أسود ناعم',          category:'عيون',       price:750,  was:0,    badge:'', glyph:'lipstick', image:'', tiktok:'', instagram:'' },
-    { id:'brush-set',  name:'طقم فرش مكياج — 6 قطع',       category:'أدوات',      price:2400, was:3000, badge:'', glyph:'brush',    image:'', tiktok:'', instagram:'' },
-    { id:'serum',      name:'سيروم فيتامين C',              category:'بشرة',       price:3500, was:0,    badge:'جديد', glyph:'cream', image:'', tiktok:'', instagram:'' },
+    { id:'matte-lip',   name:'أحمر شفاه مطفي طويل الثبات', category:'شفاه',      price:1600, was:2100, badge:'',      glyph:'lipstick', image:'', tiktok:'', instagram:'' },
+    { id:'gel-polish',  name:'طلاء أظافر جل لامع',          category:'أظافر',     price:900,  was:0,    badge:'',      glyph:'polish',   image:'', tiktok:'', instagram:'' },
+    { id:'face-cream',  name:'كريم مرطّب للوجه',            category:'بشرة',      price:2800, was:0,    badge:'جديد',  glyph:'cream',    image:'', tiktok:'', instagram:'' },
+    { id:'eye-palette', name:'باليت ظلال العيون',           category:'عيون',      price:3200, was:3900, badge:'',      glyph:'eye',      image:'', tiktok:'', instagram:'' },
+    { id:'gold-hoops',  name:'أقراط ذهبية دائرية',          category:'مجوهرات',   price:1800, was:0,    badge:'',      glyph:'gem',      image:'', tiktok:'', instagram:'' },
+    { id:'kohl',        name:'كحل عيون أسود ناعم',          category:'عيون',      price:750,  was:0,    badge:'',      glyph:'lipstick', image:'', tiktok:'', instagram:'' },
+    { id:'brush-set',   name:'طقم فرش مكياج — 6 قطع',       category:'أدوات',     price:2400, was:3000, badge:'',      glyph:'brush',    image:'', tiktok:'', instagram:'' },
+    { id:'serum',       name:'سيروم فيتامين C',              category:'بشرة',      price:3500, was:0,    badge:'جديد',  glyph:'cream',    image:'', tiktok:'', instagram:'' },
   ];
 
-  // الفيديوهات المعروضة في قسم «شاهدينا».
-  //   embedId : معرّف الفيديو فقط — لا الرابط كاملاً.
-  //             تيك توك:   https://www.tiktok.com/@am_aya_x/video/7412345678901234567  ←  7412345678901234567
-  //             انستقرام:  https://www.instagram.com/reel/Cx1y2Z3aBcD/                 ←  Cx1y2Z3aBcD
-  //   url     : رابط الفيديو كاملاً لزر «شاهدي على…». إن تُرك فارغاً يفتح الزرّ حسابكِ.
-  //   اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد بلون الموقع بدل إطار معطوب.
+  /* --- اكسسوارات الهواتف الذكية -----------------------------------------
+     نفس الحقول تماماً. الفئة تظهر فوق اسم المنتج، ولها هويّة لونية فيروزية. */
+  const PHONE = [
+    { id:'phone-case',  name:'غطاء هاتف سيليكون',            category:'أغطية',     price:1200, was:1600, badge:'',      glyph:'phone',     image:'', tiktok:'', instagram:'' },
+    { id:'ring-holder', name:'حامل حلقي لاصق للهاتف',        category:'حوامل',     price:600,  was:0,    badge:'',      glyph:'ring',      image:'', tiktok:'', instagram:'' },
+    { id:'earbuds',     name:'سمّاعات لاسلكية بعلبة شحن',    category:'صوتيات',    price:4500, was:5400, badge:'الأكثر طلباً', glyph:'earbuds', image:'', tiktok:'', instagram:'' },
+    { id:'powerbank',   name:'شاحن متنقّل 10000 مللي أمبير', category:'شواحن',     price:3800, was:0,    badge:'',      glyph:'powerbank', image:'', tiktok:'', instagram:'' },
+    { id:'car-mount',   name:'حامل هاتف للسيارة',            category:'حوامل',     price:1500, was:0,    badge:'جديد',  glyph:'carmount',  image:'', tiktok:'', instagram:'' },
+    { id:'phone-strap', name:'خيط تعليق للهاتف',             category:'أغطية',     price:800,  was:0,    badge:'',      glyph:'strap',     image:'', tiktok:'', instagram:'' },
+    { id:'fast-cable',  name:'كابل شحن سريع مجدول',          category:'شواحن',     price:700,  was:1000, badge:'',      glyph:'cable',     image:'', tiktok:'', instagram:'' },
+    { id:'selfie-ring', name:'حلقة إضاءة للتصوير',           category:'تصوير',     price:2600, was:0,    badge:'',      glyph:'ringlight', image:'', tiktok:'', instagram:'' },
+  ];
+
+  /* --- الفيديوهات --------------------------------------------------------
+     embedId : معرّف الفيديو فقط — لا الرابط كاملاً.
+               تيك توك:   https://www.tiktok.com/@am_aya_x/video/7412345678901234567  ←  7412345678901234567
+               انستقرام:  https://www.instagram.com/reel/Cx1y2Z3aBcD/                 ←  Cx1y2Z3aBcD
+     url     : رابط الفيديو كاملاً لزر «شاهدي على…». إن تُرك فارغاً يفتح الزرّ حسابكِ.
+     اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد بلون الموقع بدل إطار معطوب.        */
   const VIDEOS = [
     { platform:'tiktok',    embedId:'', url:'', title:'أحمر الشفاه المطفي — النتيجة على الطبيعة', text:'لون واحد، ثلاث إطلالات، وثبات طول اليوم.' },
     { platform:'instagram', embedId:'', url:'', title:'روتين مكياج يومي في 5 دقائق',              text:'خطوات سهلة بأدوات المجموعة وحدها.' },
-    { platform:'tiktok',    embedId:'', url:'', title:'اكسسوارات ذهبية تكمّل الإطلالة',            text:'كيف تنسّقين الأقراط مع لون الشفاه.' },
+    { platform:'tiktok',    embedId:'', url:'', title:'اكسسوارات هاتف تغيّر شكله كلياً',          text:'غطاء وحامل وخيط — تركيبة واحدة أنيقة.' },
   ];
 
   /* ==========================================================================
      ما بعد هذا السطر لا يحتاج تعديلاً.
      ========================================================================== */
 
-  /* رسوم خطّية (SVG) — لا رموز تعبيرية، حتى تبقى الأيقونات متّسقة وواضحة */
+  /* رسوم خطّية — لا رموز تعبيرية، فتبقى متّسقة وتقبل التلوين */
   const LINE = {
     lipstick:'<path d="M8 14.4h8v5.3a1.5 1.5 0 0 1-1.5 1.5h-5A1.5 1.5 0 0 1 8 19.7v-5.3Z"/><path d="M9.7 14.4V8.2a1.6 1.6 0 0 1 .84-1.41l3.3-1.79a.8.8 0 0 1 1.18.71v8.69Z"/>',
     polish:'<path d="M7.8 11.6a2.2 2.2 0 0 1 2.2-2.2h4a2.2 2.2 0 0 1 2.2 2.2v7.2a2.2 2.2 0 0 1-2.2 2.2h-4a2.2 2.2 0 0 1-2.2-2.2v-7.2Z"/><path d="M10.6 9.4V7h2.8v2.4"/><path d="M11.4 7V4.1h1.2V7"/><path d="M10 13.6h4"/>',
-    /* مرطّب: علبة عريضة قصيرة — لو طال جسمها قُرئت سلّة مهملات */
     cream:'<path d="M8.6 7.2V5.8a1.6 1.6 0 0 1 1.6-1.6h3.6a1.6 1.6 0 0 1 1.6 1.6v1.4"/><rect x="4.3" y="7.2" width="15.4" height="4.5" rx="1.8"/><path d="M6.1 11.7h11.8v4.9a3.4 3.4 0 0 1-3.4 3.4H9.5a3.4 3.4 0 0 1-3.4-3.4v-4.9Z"/>',
     eye:'<path d="M2.7 12S6.1 6.6 12 6.6 21.3 12 21.3 12 17.9 17.4 12 17.4 2.7 12 2.7 12Z"/><circle cx="12" cy="12" r="2.7"/>',
     gem:'<path d="M7.2 3.6h9.6l4 5.5-8.8 11.3L3.2 9.1l4-5.5Z"/><path d="M3.2 9.1h17.6"/><path d="M9.4 9.1 12 20.4l2.6-11.3"/><path d="m9.4 9.1 1.9-5.5m3.3 5.5-1.9-5.5"/>',
     brush:'<path d="m13.9 10.3 6.2-6.2a1.9 1.9 0 0 0-2.7-2.7l-6.2 6.2"/><path d="M8.9 9.6 14.4 15a3.6 3.6 0 0 1 0 5.1l-.7.7-9.5-9.5.7-.7a3.6 3.6 0 0 1 4 0Z"/><path d="M6.2 17.6 2.9 21"/>',
+
+    /* اكسسوارات الهواتف */
+    phone:'<rect x="6.2" y="2.4" width="11.6" height="19.2" rx="3"/><circle cx="9.6" cy="6.4" r="1.25"/><path d="M10.6 19h2.8"/>',
+    ring:'<rect x="6.4" y="2.5" width="11.2" height="19" rx="3"/><circle cx="12" cy="12" r="3.3"/>',
+    earbuds:'<path d="M7.4 3.6a3 3 0 0 1 3 3v3.1a3 3 0 1 1-6 0V6.6a3 3 0 0 1 3-3Z"/><path d="M4.4 9.7v6.5a2.2 2.2 0 0 0 2.2 2.2h.5"/><path d="M16.6 3.6a3 3 0 0 1 3 3v3.1a3 3 0 1 1-6 0V6.6a3 3 0 0 1 3-3Z"/><path d="M19.6 9.7v6.5a2.2 2.2 0 0 1-2.2 2.2h-.5"/>',
+    powerbank:'<rect x="5.6" y="2.6" width="12.8" height="18.8" rx="2.8"/><path d="M9.4 5.4h5.2"/><path d="M13.1 9.1 10 13.4h3.6l-2.7 4.2"/>',
+    carmount:'<rect x="7.4" y="2.6" width="9.2" height="13.6" rx="2.2"/><path d="M12 16.2v2.4"/><path d="M6.6 21.4a5.4 5.4 0 0 1 10.8 0Z"/>',
+    strap:'<rect x="6.6" y="2.6" width="10.8" height="14.6" rx="2.6"/><path d="M8.6 17.2c0 2.3 1.5 3.6 3.4 3.6s3.4-1.3 3.4-3.6"/><path d="M12 20.8v.8"/>',
+    cable:'<path d="M9.4 2.8h5.2v3.6H9.4z"/><path d="M12 6.4v3.2"/><path d="M8.6 9.6h6.8v3.2a3.4 3.4 0 0 1-3.4 3.4 3.4 3.4 0 0 1-3.4-3.4V9.6Z"/><path d="M12 16.2v5"/>',
+    ringlight:'<circle cx="12" cy="9.6" r="6.2"/><circle cx="12" cy="9.6" r="2.6"/><path d="M12 15.8v3.4"/><path d="M8.6 21.4h6.8"/>',
+
+    /* عامّة */
     truck:'<path d="M2.8 6.6h10.4v9.8H2.8z"/><path d="M13.2 10.2h3.9l3.1 3v3.2h-7Z"/><circle cx="6.6" cy="18.4" r="1.9"/><circle cx="16.6" cy="18.4" r="1.9"/>',
     cash:'<rect x="2.6" y="6.2" width="18.8" height="11.6" rx="2.2"/><circle cx="12" cy="12" r="2.7"/><path d="M6.2 9.6v4.8M17.8 9.6v4.8"/>',
     shield:'<path d="M12 2.9 20 6v5.7c0 4.3-3.2 7.7-8 9.4-4.8-1.7-8-5.1-8-9.4V6l8-3.1Z"/><path d="m8.7 11.9 2.3 2.3 4.3-4.3"/>',
@@ -751,23 +776,22 @@
     cart:'<path d="M2.9 3.7h2.2l2.3 10.6a2 2 0 0 0 2 1.6h7.1a2 2 0 0 0 2-1.53L20.5 8.1H6.2"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',
     play:'<path d="M8.6 5.6v12.8L19.4 12 8.6 5.6Z"/>',
     check:'<path d="M20 6.5 9.6 17 4 11.4"/>',
-    arrow:'<path d="M15.5 5.5 9 12l6.5 6.5"/>',
+    spark:'<path d="M12 2.6 14 9l6.4 2-6.4 2-2 6.4-2-6.4L3.6 11 10 9l2-6.4Z"/>',
   };
 
-  const SOLID = {
-    whatsapp:'<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/>',
-    tiktok:'<path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06v-3.1a5.66 5.66 0 0 0-.77-.05A5.68 5.68 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.24-1.48Z"/>',
-    instagram:'<path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38A5.9 5.9 0 0 0 .63 4.14c-.3.76-.5 1.64-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0Zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84Zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm7.85-10.41a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44Z"/>',
-    star:'<path d="M12 2.6 14.6 9h6.8l-5.5 4 2.1 6.6L12 15.7 6 19.6 8.1 13 2.6 9h6.8L12 2.6Z"/>',
-  };
-
-  // الرسوم الطويلة الضيّقة (أحمر الشفاه، الطلاء) مرسومة في شريط ضيّق من مربّع 24×24،
-  // فلو عُرضت بالمربّع كاملاً بدت شريحة رفيعة داخل إطارها. لكل منها إذن إطار أضيق،
-  // وسماكة الخطّ تُقسَم على معامل التكبير حتى تبقى السماكة الظاهرة واحدة في كل الرسوم.
+  // الرسوم الطويلة الضيّقة مرسومة في شريط ضيّق من مربّع 24×24، فلو عُرضت بالمربّع
+  // كاملاً بدت شريحة رفيعة داخل إطارها. لكل منها إطار أضيق، وسماكة الخطّ تُقسَم
+  // على معامل التكبير حتى تبقى السماكة الظاهرة واحدة في كل الرسوم.
   const BOX = {
     lipstick:[7.4, 3.6, 9.2, 18.2],
     polish:[7, 3.4, 10, 18.4],
     brush:[2, 0.8, 20, 21.6],
+    phone:[5.4, 1.6, 13.2, 20.8],
+    ring:[5.6, 1.7, 12.8, 20.6],
+    carmount:[6, 1.8, 12, 20.4],
+    strap:[5.8, 1.8, 12.4, 20.6],
+    powerbank:[4.8, 1.8, 14.4, 20.4],
+    cable:[7.8, 2, 8.4, 20],
   };
 
   const line = (name, size = 22, width = 1.6) => {
@@ -776,15 +800,36 @@
     return `<svg width="${size}" height="${size}" viewBox="${box.join(' ')}" fill="none" stroke="currentColor" stroke-width="${(width / scale).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${LINE[name] || ''}</svg>`;
   };
 
+  const SOLID = {
+    whatsapp:'<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/>',
+    tiktok:'<path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06v-3.1a5.66 5.66 0 0 0-.77-.05A5.68 5.68 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.24-1.48Z"/>',
+    instagram:'<path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38A5.9 5.9 0 0 0 .63 4.14c-.3.76-.5 1.64-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0Zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84Zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm7.85-10.41a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44Z"/>',
+  };
+
   const solid = (name, size = 20) =>
     `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${SOLID[name] || ''}</svg>`;
+
+  // تدرّج لوني لكل فئة — هو ما يعطي الشبكة حيويّتها
+  const GRADIENTS = {
+    'شفاه':    ['linear-gradient(135deg,#FB7185,#EC4899)', 'rgba(236,72,153,.3)'],
+    'أظافر':   ['linear-gradient(135deg,#F472B6,#A855F7)', 'rgba(168,85,247,.3)'],
+    'بشرة':    ['linear-gradient(135deg,#5EEAD4,#22D3EE)', 'rgba(34,211,238,.3)'],
+    'عيون':    ['linear-gradient(135deg,#A78BFA,#6D28D9)', 'rgba(109,40,217,.3)'],
+    'مجوهرات': ['linear-gradient(135deg,#FCD34D,#F59E0B)', 'rgba(245,158,11,.32)'],
+    'أدوات':   ['linear-gradient(135deg,#FDA4AF,#F43F5E)', 'rgba(244,63,94,.3)'],
+    'أغطية':   ['linear-gradient(135deg,#22D3EE,#6366F1)', 'rgba(99,102,241,.3)'],
+    'حوامل':   ['linear-gradient(135deg,#818CF8,#7C3AED)', 'rgba(124,58,237,.3)'],
+    'صوتيات':  ['linear-gradient(135deg,#34D399,#0EA5E9)', 'rgba(14,165,233,.3)'],
+    'شواحن':   ['linear-gradient(135deg,#FBBF24,#F97316)', 'rgba(249,115,22,.3)'],
+    'تصوير':   ['linear-gradient(135deg,#F0ABFC,#8B5CF6)', 'rgba(139,92,246,.3)'],
+  };
+  const gradFor = (cat) => GRADIENTS[cat] || ['linear-gradient(135deg,#EC4899,#8B5CF6)', 'rgba(236,72,153,.3)'];
 
   const esc = (value) =>
     String(value).replace(/[&<>"']/g, (c) =>
       ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
 
-  // فاصل آلاف بمسافة: «1 600» لا تُقرأ خطأً كعدد عشري مثل «1,600» أو «1.600».
-  // والمسافة هنا غير فاصلة (U+00A0) عمداً: المسافة العادية تقطع العدد إلى مقطعين
+  // فاصل آلاف بمسافة غير فاصلة (U+00A0): المسافة العادية تقطع العدد إلى مقطعين
   // فيعكس ترتيبَهما اتجاهُ الصفحة من اليمين، فيظهر 1600 هكذا: «600 1».
   const num = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
   const price = (value) => `${num(value)} ${STORE.currency}`;
@@ -793,7 +838,8 @@
   const phoneReady = /^\d{8,15}$/.test(STORE.phone);
   const wa = (text) => `https://wa.me/${STORE.phone}?text=${encodeURIComponent(text)}`;
 
-  const byId = (id) => PRODUCTS.find((p) => p.id === id);
+  const ALL = [...PRODUCTS, ...PHONE];
+  const byId = (id) => ALL.find((p) => p.id === id);
   const $ = (sel) => document.querySelector(sel);
 
   /* ---------- الشريط المتحرّك ---------- */
@@ -813,7 +859,7 @@
 
   function channels() {
     return [
-      phoneReady && { key:'whatsapp', label:'واتساب', href:wa('السلام عليكم، لدي استفسار عن منتجاتكم.') },
+      phoneReady && { key:'whatsapp', label:'واتساب', href:wa(`السلام عليكم، لدي استفسار عن منتجات ${STORE.brand}.`) },
       STORE.instagram && { key:'instagram', label:'انستقرام', href:STORE.instagram },
       STORE.tiktok && { key:'tiktok', label:'تيك توك', href:STORE.tiktok },
     ].filter(Boolean);
@@ -835,16 +881,22 @@
 
     $('#contact-row').innerHTML = list.length
       ? list.map((c, i) =>
-          `<a class="btn ${i === 0 ? 'btn-ink' : 'btn-line'}" href="${esc(c.href)}" target="_blank" rel="noopener">${solid(c.key, 18)} ${c.label}</a>`).join('')
-      : '<button class="btn btn-line" disabled>لم تُضبط وسائل التواصل بعد</button>';
+          `<a class="btn ${i === 0 ? 'btn-wa' : 'btn-ghost-light'}" href="${esc(c.href)}" target="_blank" rel="noopener">${solid(c.key, 18)} ${c.label}</a>`).join('')
+      : '<button class="btn btn-ghost-light" disabled>لم تُضبط وسائل التواصل بعد</button>';
 
     const follow = STORE.instagram || STORE.tiktok;
     $('#follow-btn').innerHTML = follow
-      ? `<a class="btn btn-soft btn-sm" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
+      ? `<a class="btn btn-ghost btn-sm" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
       : '';
 
-    $('#brand-handle').textContent = STORE.handle || '';
-    $('#foot-handle').textContent = STORE.handle || '';
+    $('#phones-cta').innerHTML = phoneReady
+      ? `<a class="btn btn-cool btn-sm" href="${esc(wa('السلام عليكم، أبحث عن اكسسوار لهاتفي.'))}" target="_blank" rel="noopener">${solid('whatsapp', 16)} اسألي عن موديل هاتفكِ</a>`
+      : '';
+
+    [['#brand-handle'], ['#foot-handle'], ['#foot-handle-2']].forEach(([sel]) => {
+      const el = $(sel);
+      if (el) el.textContent = STORE.handle || '';
+    });
   }
 
   /* ---------- شريط الضمانات ---------- */
@@ -859,7 +911,7 @@
   function renderAssurances() {
     $('#assure').innerHTML = ASSURANCES.map((a) => `
       <div class="assure-item">
-        ${line(a.icon, 26, 1.4)}
+        <span class="bubble">${line(a.icon, 22, 1.7)}</span>
         <span><b>${esc(a.title)}</b><small>${esc(a.text)}</small></span>
       </div>`).join('');
   }
@@ -875,9 +927,11 @@
   }
 
   function productCard(p) {
+    const [grad, glow] = gradFor(p.category);
+
     const media = p.image
       ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">`
-      : `<span class="glyph">${line(p.glyph || 'gem', 96, 1.1)}</span>`;
+      : `<span class="glyph">${line(p.glyph || 'spark', 110, 1.15)}</span>`;
 
     const flags = [
       p.badge && `<span class="flag">${esc(p.badge)}</span>`,
@@ -888,8 +942,8 @@
 
     const label = `مراسلة عبر واتساب بخصوص ${p.name}`;
     const order = phoneReady
-      ? `<a class="btn btn-soft btn-sm btn-icon" href="${esc(wa(`السلام عليكم، أريد طلب: ${p.name} — ${price(p.price)}.`))}" target="_blank" rel="noopener" aria-label="${esc(label)}" title="${esc(label)}">${solid('whatsapp', 17)}</a>`
-      : `<button class="btn btn-soft btn-sm btn-icon" disabled aria-label="${esc(label)}" title="لم يُضبط رقم الواتساب بعد">${solid('whatsapp', 17)}</button>`;
+      ? `<a class="btn btn-ghost btn-sm btn-icon" href="${esc(wa(`السلام عليكم، أريد طلب: ${p.name} — ${price(p.price)}.`))}" target="_blank" rel="noopener" aria-label="${esc(label)}" title="${esc(label)}">${solid('whatsapp', 17)}</a>`
+      : `<button class="btn btn-ghost btn-sm btn-icon" disabled aria-label="${esc(label)}" title="لم يُضبط رقم الواتساب بعد">${solid('whatsapp', 17)}</button>`;
 
     const social = [
       p.tiktok && `<a href="${esc(p.tiktok)}" target="_blank" rel="noopener">${solid('tiktok', 14)} تيك توك</a>`,
@@ -897,7 +951,7 @@
     ].filter(Boolean).join('');
 
     return `
-      <article class="card">
+      <article class="card" style="--card-grad:${grad}; --card-glow:${glow};">
         <div class="card-media">
           ${media}
           ${flags ? `<div class="card-flags">${flags}</div>` : ''}
@@ -910,7 +964,7 @@
             ${p.was > p.price ? `<del>${esc(price(p.was))}</del>` : ''}
           </p>
           <div class="card-links">
-            <button class="btn btn-ink btn-sm" data-add="${esc(p.id)}">أضيفي للسلة</button>
+            <button class="btn btn-hot btn-sm" data-add="${esc(p.id)}">أضيفي للسلة</button>
             ${order}
           </div>
           ${social ? `<div class="card-social">${social}</div>` : ''}
@@ -927,19 +981,26 @@
       ? shown.map(productCard).join('')
       : '<p class="empty">لا منتجات في هذه الفئة بعد.</p>';
 
-    $('#count-label').textContent = `${num(shown.length)} من ${num(PRODUCTS.length)} منتج`;
+    $('#count-label').textContent = `${num(shown.length)} من ${num(PRODUCTS.length)}`;
   }
 
-  /* ---------- اللوحة البصرية في الواجهة ---------- */
+  function renderPhones() {
+    $('#phones-grid').innerHTML = PHONE.length
+      ? PHONE.map(productCard).join('')
+      : '<p class="empty">لا اكسسوارات معروضة بعد.</p>';
+  }
+
+  /* ---------- لوحة الواجهة ---------- */
 
   function renderCollage() {
-    const star = PRODUCTS.find((p) => p.was > p.price) || PRODUCTS[0];
+    const star = ALL.find((p) => p.was > p.price) || ALL[0];
     if (!star) return;
-    $('#collage-panel').innerHTML = line(star.glyph || 'gem', 260, .9);
-    $('#collage-tile').innerHTML = line(star.glyph || 'gem', 30, 1.5);
+    $('#collage-orb').innerHTML = line(star.glyph || 'spark', 240, 1);
+    $('#collage-tile').innerHTML = line(star.glyph || 'spark', 28, 1.6);
     $('#collage-name').textContent = star.name;
     $('#collage-price').textContent = price(star.price);
-    $('#seal-core').innerHTML = solid('star', 18);
+    $('#seal-core').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${LINE.spark}</svg>`;
+    $('#stat-count').textContent = num(ALL.length);
   }
 
   /* ---------- الفيديوهات ---------- */
@@ -964,7 +1025,7 @@
 
       const frame = v.embedId
         ? `<iframe src="${esc(p.embed(v.embedId))}" title="${esc(v.title)}" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
-        : `<div class="reel-soon">${line('play', 34, 1.4)}<span>الفيديو قيد الإضافة</span></div>`;
+        : `<div class="reel-soon">${line('play', 34, 1.6)}<span>الفيديو قيد الإضافة</span></div>`;
 
       const watch = v.url || p.profile();
 
@@ -975,7 +1036,7 @@
             <span class="tag ${p.tag}">${solid(v.platform, 13)} ${p.label}</span>
             <h3>${esc(v.title)}</h3>
             <p>${esc(v.text)}</p>
-            ${watch ? `<a class="btn btn-line btn-sm" href="${esc(watch)}" target="_blank" rel="noopener">شاهدي على ${p.label}</a>` : ''}
+            ${watch ? `<a class="btn btn-ghost btn-sm" href="${esc(watch)}" target="_blank" rel="noopener">شاهدي على ${p.label}</a>` : ''}
           </div>
         </article>`;
     }).join('');
@@ -1027,8 +1088,8 @@
     $('#drawer-body').innerHTML = rows.length
       ? rows.map(({ p, qty }) => `
           <div class="line">
-            <span class="line-tile">${
-              p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : line(p.glyph || 'gem', 32, 1.4)
+            <span class="line-tile" style="--card-grad:${gradFor(p.category)[0]};">${
+              p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : line(p.glyph || 'spark', 32, 1.5)
             }</span>
             <span class="line-info">
               <strong>${esc(p.name)}</strong>
@@ -1040,7 +1101,7 @@
               <button data-inc="${esc(p.id)}" aria-label="زيادة كمية ${esc(p.name)}">+</button>
             </span>
           </div>`).join('')
-      : `<div class="drawer-empty">${line('cart', 44, 1.2)}<p>السلة فارغة — أضيفي ما يعجبكِ أولاً.</p></div>`;
+      : `<div class="drawer-empty">${line('cart', 44, 1.3)}<p>السلة فارغة — أضيفي ما يعجبكِ أولاً.</p></div>`;
 
     $('#sum-total').textContent = price(total());
 
@@ -1052,7 +1113,7 @@
 
   function orderMessage() {
     return [
-      'السلام عليكم، أرغب في طلب ما يلي من متجر الجمال:',
+      `السلام عليكم، أرغب في طلب ما يلي من ${STORE.brand}:`,
       '',
       ...lines().map(({ p, qty }) => `• ${p.name} × ${num(qty)} — ${price(p.price * qty)}`),
       '',
@@ -1095,7 +1156,7 @@
   let toastTimer;
   function toast(message) {
     const el = $('#toast');
-    el.firstElementChild.innerHTML = `${line('check', 17, 2)} ${esc(message)}`;
+    el.firstElementChild.innerHTML = `${line('check', 17, 2.2)} ${esc(message)}`;
     el.classList.add('show');
     clearTimeout(toastTimer);
     toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
@@ -1103,7 +1164,7 @@
 
   /* ---------- تنبيه الإعداد ---------- */
 
-  // لا يُنبّه إلا على ما يكسر المتجر فعلاً. الفيديو الناقص له تمهيده الخاص، فلا داعي لتنبيه.
+  // لا يُنبّه إلا على ما يكسر المتجر فعلاً. الفيديو الناقص له تمهيده الخاص.
   function renderSetup() {
     const missing = [
       !phoneReady && 'رقم الواتساب',
@@ -1134,7 +1195,7 @@
         entry.target.classList.add('in');
         io.unobserve(entry.target);
       });
-    }, { threshold: .12, rootMargin: '0px 0px -8% 0px' });
+    }, { threshold: .1, rootMargin: '0px 0px -8% 0px' });
     items.forEach((el) => io.observe(el));
   }
 
@@ -1145,6 +1206,7 @@
   renderAssurances();
   renderFilters();
   renderGrid();
+  renderPhones();
   renderCollage();
   renderReels();
   renderSetup();
