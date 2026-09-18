@@ -1,10 +1,10 @@
 // ينسخ متجر أم آية إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
 //
-// المصدر: beauty/          (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
-// الهدف:  dist/beauty/     ← يصبح الرابط https://<project>.web.app/beauty
+// المصدر: om-aya/          (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
+// الهدف:  dist/om-aya/     ← يصبح الرابط https://<project>.web.app/om-aya
 //
 // لنشر المتجر في جذر النطاق بدلاً من مسار فرعي، غيّر DEST_DIR إلى '' (سلسلة فارغة)
-// واحذف قسم hosting.rewrites الخاص بـ /beauty من firebase.json.
+// واحذف قسم hosting.rewrites الخاص بـ /om-aya من firebase.json.
 
 import { cp, mkdir, readdir } from 'node:fs/promises';
 import { extname, join } from 'node:path';
@@ -12,7 +12,7 @@ import { fileURLToPath } from 'node:url';
 
 const SITE_DIR = fileURLToPath(new URL('.', import.meta.url));
 const DIST_DIR = fileURLToPath(new URL('../dist', import.meta.url));
-const DEST_DIR = 'beauty';
+const DEST_DIR = 'om-aya';
 
 // ملفات التشغيل والتوثيق والتوليد لا تُنشر — في المجلد وفي مجلداته الفرعية.
 const EXCLUDED = new Set(['.mjs', '.md', '.py']);
@@ -42,7 +42,7 @@ for (const entry of entries) {
 }
 
 if (!copied.includes('index.html')) {
-  console.error('لم يُعثر على beauty/index.html — لم يُنسخ المتجر.');
+  console.error('لم يُعثر على om-aya/index.html — لم يُنسخ المتجر.');
   process.exit(1);
 }
 
