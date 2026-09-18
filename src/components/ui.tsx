@@ -108,7 +108,15 @@ export function NumberInput({
             inputMode="decimal"
             min={min}
             step={step ?? 'any'}
-            value={value}
+            // الصفر يُعرض فارغاً لا رقماً: حقل مبدوء بصفر يجعل الكتابة فيه
+            // «05000»، ولا تصحّحه React لأنها تقارن «05000» بـ5000 مقارنة مرنة
+            // فتراهما سواء. والفارغ هنا يعني صفراً على أي حال.
+            value={value === 0 ? '' : value}
+            onFocus={(event) => {
+              // تحديد ما في الحقل عند لمسه: من يضغط على مبلغ ليصحّحه يريد كتابته
+              // من جديد، لا إلحاق أرقامه بالقديم.
+              event.target.select();
+            }}
             onChange={(event) => {
               onChange(event.target.value);
             }}
@@ -240,7 +248,10 @@ export function LineItems({
               inputMode="decimal"
               min={0}
               step="any"
-              value={row.qty}
+              value={row.qty === 0 ? '' : row.qty}
+              onFocus={(event) => {
+                event.target.select();
+              }}
               onChange={(event) => {
                 onPatch(index, { qty: parse(event.target.value) });
               }}
@@ -254,7 +265,10 @@ export function LineItems({
               inputMode="decimal"
               min={0}
               step="any"
-              value={row.unitPrice}
+              value={row.unitPrice === 0 ? '' : row.unitPrice}
+              onFocus={(event) => {
+                event.target.select();
+              }}
               onChange={(event) => {
                 onPatch(index, { unitPrice: parse(event.target.value) });
               }}
@@ -290,20 +304,32 @@ interface ModalProps {
 export function Modal({ open, title, onClose, children, footer, wide }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // onClose تُكتب في موضع الاستدعاء كدالّة سهمية، فهويّتها تتغيّر مع كل رسم.
+  // حفظها في مرجع يمنع الأثر أدناه من إعادة التشغيل مع كل حرف يُكتب.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  // التركيز على اللوحة مرّة واحدة عند الفتح فقط. كان هذا السطر داخل أثرٍ يعتمد
+  // على onClose، فيُعاد تشغيله مع كل ضغطة مفتاح فينتزع التركيز من الحقل الذي
+  // يكتب فيه صاحبه — فلا يُقبل إلا أوّل حرف.
+  useEffect(() => {
+    if (!open) return;
+    panelRef.current?.focus();
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') closeRef.current();
     };
     document.addEventListener('keydown', onKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 
