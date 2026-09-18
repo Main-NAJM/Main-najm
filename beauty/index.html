@@ -1,0 +1,859 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>متجر الجمال | أدوات تجميل واكسسوارات نسائية</title>
+<meta name="description" content="متجر الجمال — أدوات تجميل واكسسوارات نسائية مختارة بعناية. اطلبي مباشرة عبر واتساب، وشاهدي المنتجات في فيديوهاتنا على تيك توك وانستقرام.">
+<meta name="theme-color" content="#f6d7e6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@300;400;600;700&family=Playfair+Display:wght@700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --rose: #f6d7e6;
+    --rose-soft: #fbeaf2;
+    --rose-deep: #c9607f;
+    --rose-ink: #8d3a55;
+    --gold: #c9a36a;
+    --cream: #fff8f5;
+    --panel: #ffffff;
+    --ink: #2b2226;
+    --muted: #756a6e;
+    --line: #f0e0e7;
+    --whatsapp: #128c4a;
+    --radius: 14px;
+    --wrap: 1180px;
+    --shadow: 0 4px 18px rgba(141, 58, 85, 0.08);
+    --shadow-lift: 0 14px 30px rgba(141, 58, 85, 0.16);
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--cream);
+    color:var(--ink);
+    font-family:'Cairo', sans-serif;
+    line-height:1.75;
+    font-size:16px;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-weight:600; line-height:1.3;}
+  .display{font-family:'Playfair Display', 'Cairo', serif; font-weight:700;}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  button{font:inherit; color:inherit; cursor:pointer; border:none; background:none;}
+  svg{flex:none;}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding:0 20px;}
+  :focus-visible{outline:2px solid var(--rose-ink); outline-offset:3px; border-radius:6px;}
+  .visually-hidden{
+    position:absolute; width:1px; height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
+  }
+
+  /* ---------- الترويسة ---------- */
+  header{
+    position:sticky; top:0; z-index:60;
+    background:rgba(246,215,230,0.94);
+    backdrop-filter:blur(8px);
+    border-bottom:1px solid rgba(201,96,127,0.18);
+  }
+  .bar{
+    display:flex; align-items:center; gap:16px;
+    min-height:68px; padding:10px 20px;
+    max-width:var(--wrap); margin:0 auto;
+  }
+  .logo{font-size:1.35rem; letter-spacing:.5px; white-space:nowrap;}
+  .main-nav{display:flex; gap:22px; margin-inline-start:14px; font-size:.95rem;}
+  .main-nav a{color:var(--rose-ink); font-weight:600; padding:4px 0; border-bottom:2px solid transparent;}
+  .main-nav a:hover{border-bottom-color:var(--rose-deep);}
+  .bar-actions{display:flex; align-items:center; gap:8px; margin-inline-start:auto;}
+  .icon-btn{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:42px; height:42px; border-radius:50%;
+    background:rgba(255,255,255,0.75); color:var(--rose-ink);
+    transition:background .2s ease, transform .2s ease;
+  }
+  .icon-btn:hover{background:#fff; transform:translateY(-2px);}
+  .cart-btn{position:relative;}
+  .cart-count{
+    position:absolute; top:-2px; inset-inline-start:-2px;
+    min-width:20px; height:20px; padding:0 5px;
+    border-radius:10px; background:var(--rose-deep); color:#fff;
+    font-size:.72rem; font-weight:700; line-height:20px; text-align:center;
+  }
+  .cart-count[hidden]{display:none;}
+
+  /* ---------- تنبيه الإعداد ---------- */
+  .setup-note{
+    background:#fff5d6; border-bottom:1px solid #e8d79a;
+    color:#6b5412; font-size:.9rem;
+  }
+  .setup-note .wrap{display:flex; gap:10px; align-items:flex-start; padding-block:12px;}
+  .setup-note code{
+    font-family:ui-monospace, monospace; background:rgba(0,0,0,.06);
+    padding:1px 5px; border-radius:4px;
+  }
+
+  /* ---------- الواجهة ---------- */
+  .hero{
+    background:linear-gradient(140deg, var(--rose) 0%, var(--rose-soft) 55%, var(--cream) 100%);
+    padding:72px 20px 84px;
+    text-align:center; position:relative; overflow:hidden;
+  }
+  .hero::before{
+    content:''; position:absolute; top:-140px; inset-inline-end:-120px;
+    width:420px; height:420px; border-radius:50%;
+    background:rgba(201,163,106,0.16);
+  }
+  .hero-inner{position:relative; max-width:760px; margin:0 auto;}
+  .hero h1{font-size:clamp(2rem, 6vw, 3.2rem); color:var(--rose-ink); margin-bottom:14px;}
+  .hero p{font-size:clamp(1rem, 2.4vw, 1.2rem); color:var(--muted); font-weight:300; margin-bottom:28px;}
+  .hero-actions{display:flex; flex-wrap:wrap; gap:12px; justify-content:center;}
+
+  /* ---------- الأزرار ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    padding:12px 22px; border-radius:10px;
+    font-weight:600; font-size:.95rem;
+    transition:transform .2s ease, box-shadow .2s ease, background .2s ease, color .2s ease;
+  }
+  .btn:hover{transform:translateY(-2px);}
+  .btn[disabled]{opacity:.5; cursor:not-allowed; transform:none;}
+  .btn-primary{background:var(--rose-deep); color:#fff; box-shadow:var(--shadow);}
+  .btn-primary:hover{background:var(--rose-ink); box-shadow:var(--shadow-lift);}
+  .btn-whatsapp{background:var(--whatsapp); color:#fff;}
+  .btn-whatsapp:hover{background:#0e6f3b;}
+  .btn-ghost{border:1.5px solid var(--rose-deep); color:var(--rose-ink); background:transparent;}
+  .btn-ghost:hover{background:var(--rose-deep); color:#fff;}
+  .btn-block{width:100%;}
+
+  /* ---------- الأقسام ---------- */
+  section{scroll-margin-top:80px;}
+  .section{padding:72px 0;}
+  .section-head{text-align:center; max-width:640px; margin:0 auto 44px;}
+  .section-head h2{font-size:clamp(1.6rem, 4vw, 2.3rem); margin-bottom:10px;}
+  .section-head h2::after{
+    content:''; display:block; width:56px; height:3px; margin:14px auto 0;
+    border-radius:2px; background:linear-gradient(90deg, var(--rose-deep), var(--gold));
+  }
+  .section-head p{color:var(--muted); font-weight:300;}
+
+  /* ---------- المنتجات ---------- */
+  .products{
+    display:grid; gap:24px;
+    grid-template-columns:repeat(auto-fill, minmax(260px, 1fr));
+  }
+  .product{
+    display:flex; flex-direction:column;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .product:hover{transform:translateY(-6px); box-shadow:var(--shadow-lift);}
+  .product-media{
+    position:relative; aspect-ratio:4 / 3;
+    background:linear-gradient(140deg, var(--rose), var(--rose-soft));
+    display:flex; align-items:center; justify-content:center;
+    font-size:3.4rem; overflow:hidden;
+  }
+  .product-media img{width:100%; height:100%; object-fit:cover;}
+  .product-tag{
+    position:absolute; top:12px; inset-inline-start:12px;
+    display:inline-flex; align-items:center; gap:5px;
+    padding:5px 10px; border-radius:20px;
+    background:rgba(43,34,38,0.78); color:#fff;
+    font-size:.72rem; font-weight:700;
+  }
+  .product-body{display:flex; flex-direction:column; flex:1; padding:20px;}
+  .product-name{font-size:1.1rem; font-weight:600;}
+  .product-cat{font-size:.82rem; color:var(--rose-ink); font-weight:600; margin-top:2px;}
+  .product-price{font-size:1.3rem; font-weight:700; color:var(--rose-ink); margin:10px 0 18px;}
+  .product-price span{font-size:.85rem; font-weight:600; color:var(--muted);}
+  .product-actions{display:flex; gap:10px; margin-top:auto;}
+  .product-actions .btn{flex:1; padding:11px 10px; font-size:.9rem;}
+  .product-social{
+    display:flex; gap:10px; margin-top:14px; padding-top:14px;
+    border-top:1px solid var(--line);
+  }
+  .chip{
+    flex:1; display:inline-flex; align-items:center; justify-content:center; gap:6px;
+    padding:8px; border-radius:8px; border:1.5px solid;
+    font-size:.8rem; font-weight:600;
+    transition:background .2s ease, color .2s ease;
+  }
+  .chip-tiktok{border-color:#2b2226; color:#2b2226;}
+  .chip-tiktok:hover{background:#2b2226; color:#25f4ee;}
+  .chip-instagram{border-color:#c13584; color:#a32a6d;}
+  .chip-instagram:hover{background:#c13584; color:#fff;}
+
+  /* ---------- الفيديوهات ---------- */
+  .videos-section{background:linear-gradient(160deg, var(--rose-soft) 0%, var(--cream) 100%);}
+  /* البطاقات مقيّدة بعرض أقصى لأن إطار 9:16 يصير طويلاً جداً كلما اتّسعت البطاقة. */
+  .videos{
+    display:grid; gap:26px; justify-content:center;
+    grid-template-columns:repeat(auto-fit, minmax(260px, 340px));
+  }
+  .video{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--radius); overflow:hidden;
+    box-shadow:var(--shadow);
+    transition:transform .25s ease, box-shadow .25s ease;
+  }
+  .video:hover{transform:translateY(-6px); box-shadow:var(--shadow-lift);}
+  .video-frame{position:relative; aspect-ratio:9 / 16; background:#efe6ea;}
+  .video-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .video-soon{
+    position:absolute; inset:0;
+    display:flex; flex-direction:column; align-items:center; justify-content:center; gap:10px;
+    color:var(--rose-ink); text-align:center; padding:20px;
+    background:linear-gradient(140deg, var(--rose), var(--rose-soft));
+  }
+  .video-soon span{font-size:.9rem; font-weight:600;}
+  .video-body{padding:20px;}
+  .badge{
+    display:inline-flex; align-items:center; gap:6px;
+    padding:5px 12px; border-radius:20px;
+    font-size:.76rem; font-weight:700; margin-bottom:10px;
+  }
+  .badge-tiktok{background:#2b2226; color:#25f4ee;}
+  .badge-instagram{background:linear-gradient(135deg, #f09433, #dc2743 55%, #bc1888); color:#fff;}
+  .video-title{font-size:1.05rem; font-weight:600;}
+  .video-text{color:var(--muted); font-size:.9rem; font-weight:300; margin-top:4px;}
+  .video-body .btn{margin-top:16px;}
+
+  /* ---------- تواصل ---------- */
+  .contact{
+    background:linear-gradient(140deg, var(--rose-deep), var(--rose-ink));
+    color:#fff; padding:72px 20px; text-align:center;
+  }
+  .contact h2{font-size:clamp(1.6rem, 4vw, 2.2rem); margin-bottom:10px;}
+  .contact p{opacity:.92; font-weight:300; margin-bottom:28px;}
+  .contact-list{
+    display:grid; gap:12px; max-width:380px; margin:0 auto;
+  }
+  .contact-list .btn{border:1.5px solid rgba(255,255,255,.75); color:#fff;}
+  .contact-list .btn:hover{background:#fff; color:var(--rose-ink);}
+  .contact-list .btn[disabled]{border-style:dashed;}
+
+  /* ---------- التذييل ---------- */
+  footer{background:var(--ink); color:#efe4e9; padding:34px 20px; text-align:center; font-size:.9rem;}
+  .footer-nav{display:flex; flex-wrap:wrap; gap:22px; justify-content:center; margin-bottom:14px;}
+  .footer-nav a{color:var(--gold);}
+  .footer-nav a:hover{color:#fff;}
+
+  /* ---------- السلة ---------- */
+  .overlay{
+    position:fixed; inset:0; z-index:80;
+    background:rgba(43,34,38,0.5);
+    opacity:0; visibility:hidden; transition:opacity .25s ease, visibility .25s ease;
+  }
+  .overlay.open{opacity:1; visibility:visible;}
+  .cart{
+    position:fixed; inset-block:0; inset-inline-end:0; z-index:90;
+    width:min(400px, 100%); display:flex; flex-direction:column;
+    background:var(--panel); box-shadow:0 0 40px rgba(43,34,38,.22);
+    transform:translateX(100%); transition:transform .3s ease;
+  }
+  html[dir="rtl"] .cart{transform:translateX(-100%);}
+  .cart.open, html[dir="rtl"] .cart.open{transform:translateX(0);}
+  .cart-head{
+    display:flex; align-items:center; gap:12px;
+    padding:18px 20px; border-bottom:1px solid var(--line);
+  }
+  .cart-head h2{font-size:1.15rem; margin-inline-end:auto;}
+  .cart-items{flex:1; overflow-y:auto; padding:8px 20px;}
+  .cart-empty{text-align:center; color:var(--muted); padding:48px 10px; font-weight:300;}
+  .cart-row{display:flex; gap:12px; align-items:center; padding:16px 0; border-bottom:1px solid var(--line);}
+  .cart-row:last-child{border-bottom:none;}
+  .cart-thumb{
+    width:52px; height:52px; border-radius:10px; flex:none;
+    background:linear-gradient(140deg, var(--rose), var(--rose-soft));
+    display:flex; align-items:center; justify-content:center; font-size:1.5rem; overflow:hidden;
+  }
+  .cart-thumb img{width:100%; height:100%; object-fit:cover;}
+  .cart-info{flex:1; min-width:0;}
+  .cart-info strong{display:block; font-size:.95rem; font-weight:600;}
+  .cart-info small{color:var(--rose-ink); font-weight:600;}
+  .qty{display:flex; align-items:center; gap:6px;}
+  .qty button{
+    width:30px; height:30px; border-radius:8px;
+    border:1px solid var(--line); background:var(--cream);
+    font-weight:700; color:var(--rose-ink); line-height:1;
+  }
+  .qty button:hover{background:var(--rose-soft);}
+  .qty output{min-width:22px; text-align:center; font-weight:600;}
+  .cart-foot{padding:18px 20px; border-top:1px solid var(--line); background:var(--cream);}
+  .cart-total{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:14px;}
+  .cart-total strong{font-size:1.25rem; color:var(--rose-ink);}
+  .cart-hint{font-size:.82rem; color:var(--muted); text-align:center; margin-top:10px; font-weight:300;}
+
+  /* ---------- إشعار ---------- */
+  .toast{
+    position:fixed; inset-inline:0; bottom:24px; z-index:100;
+    display:flex; justify-content:center; pointer-events:none;
+    opacity:0; transform:translateY(12px); transition:opacity .25s ease, transform .25s ease;
+  }
+  .toast.show{opacity:1; transform:translateY(0);}
+  .toast span{
+    background:var(--ink); color:#fff; border-radius:24px;
+    padding:10px 20px; font-size:.9rem; box-shadow:var(--shadow-lift);
+  }
+
+  @media (max-width: 720px){
+    .main-nav{display:none;}
+    .section{padding:56px 0;}
+    .product-actions{flex-direction:column;}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *, *::before, *::after{animation:none !important; transition:none !important;}
+    .btn:hover, .product:hover, .video:hover, .icon-btn:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="bar">
+    <a class="logo display" href="#home">✨ متجر الجمال</a>
+    <nav class="main-nav" aria-label="أقسام الموقع">
+      <a href="#products">المنتجات</a>
+      <a href="#videos">الفيديوهات</a>
+      <a href="#contact">تواصلي معنا</a>
+    </nav>
+    <div class="bar-actions" id="social-links"></div>
+  </div>
+</header>
+
+<!-- يظهر فقط إن بقيت بيانات المتجر على قيمها الافتراضية -->
+<div class="setup-note" id="setup-note" hidden>
+  <div class="wrap">
+    <span aria-hidden="true">⚙️</span>
+    <p id="setup-note-text"></p>
+  </div>
+</div>
+
+<main id="home">
+  <section class="hero">
+    <div class="hero-inner">
+      <h1 class="display">جمالكِ هو أولويتنا</h1>
+      <p>اكتشفي أدوات التجميل والاكسسوارات النسائية المختارة بعناية — بأسعار مميزة وطلب مباشر عبر واتساب.</p>
+      <div class="hero-actions">
+        <a class="btn btn-primary" href="#products">تصفّحي المنتجات</a>
+        <a class="btn btn-ghost" href="#videos">شاهدي الفيديوهات</a>
+      </div>
+    </div>
+  </section>
+
+  <section class="section" id="products">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="display">منتجاتنا المميزة</h2>
+        <p>أضيفي ما يعجبكِ إلى السلة، ثم أرسلي الطلب كاملاً في رسالة واتساب واحدة.</p>
+      </div>
+      <div class="products" id="products-grid"></div>
+    </div>
+  </section>
+
+  <section class="section videos-section" id="videos">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 class="display">شاهدينا على تيك توك وانستقرام</h2>
+        <p>المنتج قبل الشراء: النتيجة، الاستخدام، والفرق الحقيقي في فيديوهات قصيرة.</p>
+      </div>
+      <div class="videos" id="videos-grid"></div>
+    </div>
+  </section>
+
+  <section class="contact" id="contact">
+    <h2 class="display">تواصلي معنا</h2>
+    <p>عندكِ استفسار عن منتج أو طلب؟ نحن في انتظارك.</p>
+    <div class="contact-list" id="contact-links"></div>
+  </section>
+</main>
+
+<footer>
+  <nav class="footer-nav" aria-label="روابط التذييل">
+    <a href="#home">الرئيسية</a>
+    <a href="#products">المنتجات</a>
+    <a href="#videos">الفيديوهات</a>
+    <a href="#contact">تواصلي معنا</a>
+  </nav>
+  <p>&copy; <span id="year"></span> متجر الجمال — جميع الحقوق محفوظة</p>
+</footer>
+
+<div class="overlay" id="overlay" hidden></div>
+
+<aside class="cart" id="cart" role="dialog" aria-modal="true" aria-labelledby="cart-title" hidden>
+  <div class="cart-head">
+    <h2 id="cart-title">سلة الطلب</h2>
+    <button class="icon-btn" id="cart-close" aria-label="إغلاق السلة">
+      <svg width="20" height="20" viewBox="0 0 24 24" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/></svg>
+    </button>
+  </div>
+  <div class="cart-items" id="cart-items"></div>
+  <div class="cart-foot">
+    <div class="cart-total">
+      <span>الإجمالي</span>
+      <strong id="cart-total">0</strong>
+    </div>
+    <button class="btn btn-whatsapp btn-block" id="cart-send">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/></svg>
+      إتمام الطلب عبر واتساب
+    </button>
+    <p class="cart-hint">يُفتح واتساب برسالة جاهزة تحوي طلبكِ — راجعيها ثم أرسليها.</p>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+<noscript>
+  <div class="wrap" style="padding:40px 20px; text-align:center;">
+    <p>لعرض المنتجات وإرسال الطلبات يلزم تفعيل جافاسكربت في المتصفّح. للتواصل المباشر راسلينا على واتساب أو تابعينا على تيك توك وانستقرام.</p>
+  </div>
+</noscript>
+
+<script>
+  /* ==========================================================================
+     بيانات المتجر — هذا هو الجزء الوحيد الذي تحتاجين تعديله.
+     ========================================================================== */
+
+  const STORE = {
+    // رقم الواتساب بالصيغة الدولية، أرقاماً فقط بدون + ولا مسافات. مثال: 966512345678
+    phone: '',
+    // رابط حسابك على انستقرام، أو اتركيه فارغاً لإخفاء الزر.
+    instagram: '',
+    // رابط حسابك على تيك توك، أو اتركيه فارغاً لإخفاء الزر.
+    tiktok: '',
+    currency: 'ر.س',
+  };
+
+  // المنتجات. لإضافة منتج انسخي أحد العناصر وغيّري بياناته.
+  //   emoji : رمز يظهر مكان الصورة ريثما تُصوَّر المنتجات.
+  //   image : رابط صورة المنتج (اختياري) — يحلّ محل الرمز عند وجوده.
+  //   tiktok / instagram : رابط فيديو المنتج على المنصّة (اختياري).
+  const PRODUCTS = [
+    {
+      id: 'lipstick',
+      name: 'أحمر الشفاه الفاخر',
+      category: 'أحمر شفاه',
+      price: 89,
+      emoji: '💄',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+    {
+      id: 'nail-gel',
+      name: 'طلاء أظافر جل',
+      category: 'أظافر',
+      price: 65,
+      emoji: '💅',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+    {
+      id: 'face-cream',
+      name: 'كريم الوجه المرطّب',
+      category: 'عناية بالبشرة',
+      price: 120,
+      emoji: '✨',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+    {
+      id: 'eyeshadow',
+      name: 'ظل العيون البرّاق',
+      category: 'عيون',
+      price: 75,
+      emoji: '👁️',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+    {
+      id: 'earrings',
+      name: 'أقراط نسائية ذهبية',
+      category: 'اكسسوارات',
+      price: 99,
+      emoji: '💎',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+    {
+      id: 'eyeliner',
+      name: 'كحل العيون الناعم',
+      category: 'عيون',
+      price: 55,
+      emoji: '🖤',
+      image: '',
+      tiktok: '',
+      instagram: '',
+    },
+  ];
+
+  // الفيديوهات المعروضة في قسم «شاهدينا».
+  //   embedId : معرّف الفيديو فقط — لا الرابط كاملاً.
+  //             تيك توك:   https://www.tiktok.com/@حسابك/video/7412345678901234567  ←  7412345678901234567
+  //             انستقرام:  https://www.instagram.com/reel/Cx1y2Z3aBcD/              ←  Cx1y2Z3aBcD
+  //   url     : رابط الفيديو كاملاً لزر «شاهدي على…».
+  //   اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد أنيق بدل إطار معطوب.
+  const VIDEOS = [
+    {
+      platform: 'tiktok',
+      embedId: '',
+      url: '',
+      title: 'أحمر الشفاه الفاخر — النتيجة على الطبيعة',
+      text: 'شاهدي الفرق الذي يصنعه أحمر الشفاه الفاخر على إطلالتكِ.',
+    },
+    {
+      platform: 'instagram',
+      embedId: '',
+      url: '',
+      title: 'تقنيات مكياج احترافية بأدواتنا',
+      text: 'خطوات سهلة لتطبيق المكياج الاحترافي في المنزل.',
+    },
+    {
+      platform: 'tiktok',
+      embedId: '',
+      url: '',
+      title: 'موضة الاكسسوارات الذهبية',
+      text: 'إطلالات جديدة مع اكسسواراتنا الذهبية الفاخرة.',
+    },
+  ];
+
+  /* ==========================================================================
+     ما بعد هذا السطر لا يحتاج تعديلاً.
+     ========================================================================== */
+
+  const ICONS = {
+    whatsapp: '<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/>',
+    instagram: '<rect x="3" y="3" width="18" height="18" rx="5.2" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="12" cy="12" r="4" fill="none" stroke="currentColor" stroke-width="1.9"/><circle cx="17.3" cy="6.7" r="1.2"/>',
+    tiktok: '<path d="M14 3v11.3a3.3 3.3 0 1 1-2.7-3.24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><path d="M14 3.2c.45 2.6 2.15 4.25 4.9 4.55" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/>',
+    cart: '<path d="M2.8 3.6h2.3l2.3 10.6a2 2 0 0 0 2 1.6h7.2a2 2 0 0 0 2-1.53L20.6 8H6.1" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="20" r="1.6"/><circle cx="17" cy="20" r="1.6"/>',
+    play: '<path d="M9 6.8v10.4L18 12z" fill="currentColor"/>',
+  };
+
+  const svg = (name, size = 21) =>
+    `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${ICONS[name]}</svg>`;
+
+  const escapeHtml = (value) =>
+    String(value).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  const money = (amount) =>
+    `${amount.toLocaleString('ar-SA-u-nu-latn')} <span>${STORE.currency}</span>`;
+
+  const plainMoney = (amount) => `${amount.toLocaleString('ar-SA-u-nu-latn')} ${STORE.currency}`;
+
+  // رقم واتساب صالح: أرقام فقط، من 8 إلى 15 خانة (مع رمز الدولة).
+  const phoneReady = /^\d{8,15}$/.test(STORE.phone);
+
+  const waLink = (text) =>
+    `https://wa.me/${STORE.phone}?text=${encodeURIComponent(text)}`;
+
+  /* ---------- الروابط الاجتماعية ---------- */
+
+  function renderSocial() {
+    const links = [
+      phoneReady && { key: 'whatsapp', label: 'واتساب', href: waLink('السلام عليكم، لدي استفسار عن منتجاتكم.') },
+      STORE.instagram && { key: 'instagram', label: 'انستقرام', href: STORE.instagram },
+      STORE.tiktok && { key: 'tiktok', label: 'تيك توك', href: STORE.tiktok },
+    ].filter(Boolean);
+
+    const social = links
+      .map((link) =>
+        `<a class="icon-btn" href="${escapeHtml(link.href)}" target="_blank" rel="noopener" aria-label="${link.label}">${svg(link.key)}</a>`)
+      .join('');
+
+    document.getElementById('social-links').innerHTML = social +
+      `<button class="icon-btn cart-btn" id="cart-open" aria-label="فتح سلة الطلب">
+         ${svg('cart')}<span class="cart-count" id="cart-count" hidden>0</span>
+       </button>`;
+
+    document.getElementById('contact-links').innerHTML = links.length
+      ? links
+          .map((link) =>
+            `<a class="btn btn-ghost" href="${escapeHtml(link.href)}" target="_blank" rel="noopener">${svg(link.key, 18)} ${link.label}</a>`)
+          .join('')
+      : '<button class="btn btn-ghost" disabled>لم تُضبط وسائل التواصل بعد</button>';
+  }
+
+  /* ---------- المنتجات ---------- */
+
+  function renderProducts() {
+    document.getElementById('products-grid').innerHTML = PRODUCTS.map((product) => {
+      const media = product.image
+        ? `<img src="${escapeHtml(product.image)}" alt="${escapeHtml(product.name)}" loading="lazy">`
+        : `<span aria-hidden="true">${escapeHtml(product.emoji || '✨')}</span>`;
+
+      const hasVideo = product.tiktok || product.instagram;
+      const chips = [
+        product.tiktok && `<a class="chip chip-tiktok" href="${escapeHtml(product.tiktok)}" target="_blank" rel="noopener">${svg('tiktok', 16)} تيك توك</a>`,
+        product.instagram && `<a class="chip chip-instagram" href="${escapeHtml(product.instagram)}" target="_blank" rel="noopener">${svg('instagram', 16)} انستقرام</a>`,
+      ].filter(Boolean).join('');
+
+      const order = phoneReady
+        ? `<a class="btn btn-whatsapp" href="${escapeHtml(waLink(`السلام عليكم، أريد طلب: ${product.name} (${plainMoney(product.price)}).`))}" target="_blank" rel="noopener">${svg('whatsapp', 17)} واتساب</a>`
+        : `<button class="btn btn-whatsapp" disabled title="لم يُضبط رقم الواتساب بعد">${svg('whatsapp', 17)} واتساب</button>`;
+
+      return `
+        <article class="product">
+          <div class="product-media">
+            ${media}
+            ${hasVideo ? `<span class="product-tag">${svg('play', 13)} فيديو</span>` : ''}
+          </div>
+          <div class="product-body">
+            <h3 class="product-name">${escapeHtml(product.name)}</h3>
+            <p class="product-cat">${escapeHtml(product.category)}</p>
+            <p class="product-price">${money(product.price)}</p>
+            <div class="product-actions">
+              <button class="btn btn-primary" data-add="${escapeHtml(product.id)}">أضيفي للسلة</button>
+              ${order}
+            </div>
+            ${chips ? `<div class="product-social">${chips}</div>` : ''}
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  /* ---------- الفيديوهات ---------- */
+
+  const PLATFORMS = {
+    tiktok: {
+      label: 'تيك توك',
+      badge: 'badge-tiktok',
+      embed: (id) => `https://www.tiktok.com/embed/v2/${encodeURIComponent(id)}`,
+      profile: () => STORE.tiktok,
+    },
+    instagram: {
+      label: 'انستقرام',
+      badge: 'badge-instagram',
+      embed: (id) => `https://www.instagram.com/reel/${encodeURIComponent(id)}/embed`,
+      profile: () => STORE.instagram,
+    },
+  };
+
+  function renderVideos() {
+    document.getElementById('videos-grid').innerHTML = VIDEOS.map((video) => {
+      const platform = PLATFORMS[video.platform];
+      if (!platform) return '';
+
+      const frame = video.embedId
+        ? `<iframe src="${escapeHtml(platform.embed(video.embedId))}" title="${escapeHtml(video.title)}" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+        : `<div class="video-soon">${svg('play', 40)}<span>الفيديو قيد الإضافة</span></div>`;
+
+      const watch = video.url || platform.profile();
+      const action = watch
+        ? `<a class="btn btn-primary" href="${escapeHtml(watch)}" target="_blank" rel="noopener">${svg(video.platform, 17)} شاهدي على ${platform.label}</a>`
+        : '';
+
+      return `
+        <article class="video">
+          <div class="video-frame">${frame}</div>
+          <div class="video-body">
+            <span class="badge ${platform.badge}">${svg(video.platform, 15)} ${platform.label}</span>
+            <h3 class="video-title">${escapeHtml(video.title)}</h3>
+            <p class="video-text">${escapeHtml(video.text)}</p>
+            ${action}
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  /* ---------- السلة ---------- */
+
+  const CART_KEY = 'beauty-store-cart-v1';
+  const productById = (id) => PRODUCTS.find((product) => product.id === id);
+
+  function loadCart() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+      // تُستبعد المنتجات المحذوفة من القائمة والكميات غير الصالحة.
+      return Object.fromEntries(
+        Object.entries(saved).filter(([id, qty]) => productById(id) && Number.isInteger(qty) && qty > 0));
+    } catch {
+      return {};
+    }
+  }
+
+  function saveCart() {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {
+      // التخزين قد يكون ممنوعاً (تصفّح خاص) — السلة تبقى في الذاكرة فقط.
+    }
+  }
+
+  let cart = {};
+
+  const cartLines = () =>
+    Object.entries(cart).map(([id, qty]) => ({ product: productById(id), qty }));
+
+  const cartTotal = () =>
+    cartLines().reduce((sum, line) => sum + line.product.price * line.qty, 0);
+
+  const cartCount = () =>
+    cartLines().reduce((sum, line) => sum + line.qty, 0);
+
+  function setQty(id, qty) {
+    if (qty > 0) cart[id] = qty;
+    else delete cart[id];
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart() {
+    const count = cartCount();
+    const badge = document.getElementById('cart-count');
+    badge.textContent = count.toLocaleString('ar-SA-u-nu-latn');
+    badge.hidden = count === 0;
+    document.getElementById('cart-open').setAttribute(
+      'aria-label', count ? `فتح سلة الطلب — ${count} منتج` : 'فتح سلة الطلب');
+
+    const items = document.getElementById('cart-items');
+    const lines = cartLines();
+
+    items.innerHTML = lines.length
+      ? lines.map(({ product, qty }) => `
+          <div class="cart-row">
+            <div class="cart-thumb">${
+              product.image
+                ? `<img src="${escapeHtml(product.image)}" alt="" loading="lazy">`
+                : `<span aria-hidden="true">${escapeHtml(product.emoji || '✨')}</span>`
+            }</div>
+            <div class="cart-info">
+              <strong>${escapeHtml(product.name)}</strong>
+              <small>${plainMoney(product.price * qty)}</small>
+            </div>
+            <div class="qty">
+              <button data-dec="${escapeHtml(product.id)}" aria-label="إنقاص كمية ${escapeHtml(product.name)}">−</button>
+              <output aria-label="الكمية">${qty.toLocaleString('ar-SA-u-nu-latn')}</output>
+              <button data-inc="${escapeHtml(product.id)}" aria-label="زيادة كمية ${escapeHtml(product.name)}">+</button>
+            </div>
+          </div>`).join('')
+      : '<p class="cart-empty">السلة فارغة — أضيفي منتجاتكِ المفضّلة أولاً.</p>';
+
+    document.getElementById('cart-total').textContent = plainMoney(cartTotal());
+
+    const send = document.getElementById('cart-send');
+    send.disabled = !lines.length || !phoneReady;
+    send.title = phoneReady ? '' : 'لم يُضبط رقم الواتساب بعد';
+  }
+
+  function orderMessage() {
+    const lines = cartLines().map(
+      ({ product, qty }) => `• ${product.name} × ${qty} — ${plainMoney(product.price * qty)}`);
+    return [
+      'السلام عليكم، أرغب في طلب ما يلي من متجر الجمال:',
+      '',
+      ...lines,
+      '',
+      `الإجمالي: ${plainMoney(cartTotal())}`,
+    ].join('\n');
+  }
+
+  /* ---------- الدرج والإشعار ---------- */
+
+  const overlay = document.getElementById('overlay');
+  const drawer = document.getElementById('cart');
+  let lastFocused = null;
+
+  function openCart() {
+    lastFocused = document.activeElement;
+    overlay.hidden = drawer.hidden = false;
+    // إظهار العنصر قبل بدء الانتقال حتى لا يقفز الدرج إلى مكانه دفعة واحدة.
+    requestAnimationFrame(() => {
+      overlay.classList.add('open');
+      drawer.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+    document.getElementById('cart-close').focus();
+  }
+
+  function closeCart() {
+    overlay.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!drawer.classList.contains('open')) overlay.hidden = drawer.hidden = true;
+    }, 300);
+    if (lastFocused) lastFocused.focus();
+  }
+
+  let toastTimer;
+  function toast(message) {
+    const el = document.getElementById('toast');
+    el.firstElementChild.textContent = message;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2200);
+  }
+
+  /* ---------- تنبيه الإعداد ---------- */
+
+  function renderSetupNote() {
+    const missing = [
+      !phoneReady && 'رقم الواتساب',
+      !STORE.instagram && 'رابط انستقرام',
+      !STORE.tiktok && 'رابط تيك توك',
+      !VIDEOS.some((video) => video.embedId) && 'معرّفات الفيديوهات',
+    ].filter(Boolean);
+
+    if (!missing.length) return;
+
+    document.getElementById('setup-note-text').innerHTML =
+      `لم تُضبط بعد: ${escapeHtml(missing.join('، '))}. عدّليها في <code>STORE</code> و<code>VIDEOS</code> ` +
+      'أعلى سكربت هذا الملف — يختفي هذا التنبيه تلقائياً بعد ضبطها.';
+    document.getElementById('setup-note').hidden = false;
+  }
+
+  /* ---------- التشغيل ---------- */
+
+  renderSocial();
+  renderProducts();
+  renderVideos();
+  renderSetupNote();
+  cart = loadCart();
+  renderCart();
+  document.getElementById('year').textContent = new Date().getFullYear();
+
+  document.addEventListener('click', (event) => {
+    const add = event.target.closest('[data-add]');
+    if (add) {
+      const id = add.dataset.add;
+      setQty(id, (cart[id] || 0) + 1);
+      toast(`أُضيف «${productById(id).name}» إلى السلة`);
+      return;
+    }
+
+    const inc = event.target.closest('[data-inc]');
+    if (inc) {
+      setQty(inc.dataset.inc, (cart[inc.dataset.inc] || 0) + 1);
+      return;
+    }
+
+    const dec = event.target.closest('[data-dec]');
+    if (dec) {
+      setQty(dec.dataset.dec, (cart[dec.dataset.dec] || 0) - 1);
+      return;
+    }
+
+    if (event.target.closest('#cart-open')) openCart();
+    if (event.target.closest('#cart-close') || event.target === overlay) closeCart();
+
+    if (event.target.closest('#cart-send') && cartCount() && phoneReady) {
+      window.open(waLink(orderMessage()), '_blank', 'noopener');
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && drawer.classList.contains('open')) closeCart();
+  });
+</script>
+</body>
+</html>
