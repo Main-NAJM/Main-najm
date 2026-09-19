@@ -1611,18 +1611,27 @@
 
   // كل ما يلي يحتاج إعدادات صحيحة. بدونها تبقى اللوحة تُفتح وتشرح ما ينقص،
   // ويبقى المتجر يعرض ما في index.html من منتجات.
-  if (ready) {
+  if (ready) connect();
+
+  // دالة لا كتلة: تعذّر الوصول إلى الشبكة ينهيها بـ return هادئ، بلا خطأ غير ملتقط
+  // في سجلّ المتصفّح — والمتجر يبقى يعمل بما في index.html من منتجات.
+  async function connect() {
     /* ---------- الاتصال ---------- */
 
-    const [{ initializeApp }, authMod, dbMod] = await Promise.all([
-      import(`${SDK}/firebase-app.js`),
-      import(`${SDK}/firebase-auth.js`),
-      import(`${SDK}/firebase-firestore.js`),
-    ]).catch((err) => {
+    let mods;
+    try {
+      mods = await Promise.all([
+        import(`${SDK}/firebase-app.js`),
+        import(`${SDK}/firebase-auth.js`),
+        import(`${SDK}/firebase-firestore.js`),
+      ]);
+    } catch {
       UI.setState('error', 'تعذّر تحميل مكتبة Firebase');
       el.status.textContent = 'تعذّر تحميل مكتبة Firebase. تحقّقي من الاتصال بالإنترنت.';
-      throw err;
-    });
+      return;
+    }
+
+    const [{ initializeApp }, authMod, dbMod] = mods;
 
     const {
       getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
@@ -1681,6 +1690,8 @@
       'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase — فعّليه من Authentication ← Sign-in method.',
       'auth/email-already-in-use': 'هذا البريد له حساب بالفعل — اضغطي «دخول» بدل «إنشاء حساب».',
       'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+      // يحدث حين تُفتح الصفحة من نطاق غير مُدرج في Authentication ← Settings ← Authorized domains
+      'auth/unauthorized-domain': `هذا النطاق (${location.hostname}) غير مصرّح به في Firebase. أضيفيه في Authentication ← Settings ← Authorized domains.`,
       'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل بعد.',
     };
     const say = (err) => AUTH_ERRORS[err.code] || err.message || 'حدث خطأ غير متوقّع.';
