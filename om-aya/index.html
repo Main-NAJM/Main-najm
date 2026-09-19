@@ -1550,7 +1550,12 @@
   const $ = (sel) => document.querySelector(sel);
 
   const SHOP = 'omAya';                 // مسار المتجر: shop/omAya/products
-  const SDK = 'https://www.gstatic.com/firebasejs/11.1.0';
+
+  // المصدر jsDelivr لا gstatic: صفحات المعاينة على claude.ai تسمح بتحميل السكربتات
+  // من قائمة مصادر محدّدة، وgstatic ليس منها — فكانت المكتبة لا تُحمَّل هناك أصلاً.
+  // وjsDelivr يعمل في الموضعين: المعاينة والاستضافة الحقيقية.
+  const SDK = 'https://cdn.jsdelivr.net/npm/firebase@11.1.0';
+  const mod = (name) => `${SDK}/${name}/+esm`;
 
   const el = {
     veil: $('#admin-veil'), panel: $('#admin'), open: $('#admin-open'), close: $('#admin-close'),
@@ -1621,9 +1626,9 @@
     let mods;
     try {
       mods = await Promise.all([
-        import(`${SDK}/firebase-app.js`),
-        import(`${SDK}/firebase-auth.js`),
-        import(`${SDK}/firebase-firestore.js`),
+        import(mod('app')),
+        import(mod('auth')),
+        import(mod('firestore')),
       ]);
     } catch {
       UI.setState('error', 'تعذّر تحميل مكتبة Firebase');
