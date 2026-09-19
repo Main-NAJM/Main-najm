@@ -471,13 +471,23 @@
   .admin-item small{color:var(--plum-3); font-size:.78rem;}
   .admin-item .row-actions{display:flex; gap:6px;}
   .admin-item button{
-    width:38px; height:38px; border-radius:var(--r-sm); display:grid; place-items:center;
+    width:44px; height:44px; border-radius:var(--r-sm); display:grid; place-items:center;
     border:1.5px solid var(--line); color:var(--plum-2); background:var(--panel);
     transition:all .2s var(--ease);
   }
   .admin-item button:hover{border-color:var(--violet); color:var(--violet-deep);}
   .admin-item button.danger:hover{border-color:#E11D48; color:#E11D48; background:#FFF1F2;}
   .admin-empty{color:var(--plum-3); font-size:.88rem; padding:18px 0;}
+  .admin-uid{
+    background:#FFF3D6; border:1.5px solid #EFDFB4; border-radius:var(--r-sm);
+    padding:14px; margin-bottom:22px; font-size:.84rem; color:#6B5412; line-height:1.7;
+  }
+  .admin-uid-row{display:flex; gap:8px; align-items:center; margin-top:10px;}
+  .admin-uid code{
+    flex:1; min-width:0; overflow-x:auto; white-space:nowrap;
+    font-family:ui-monospace, monospace; font-size:.82rem;
+    background:rgba(0,0,0,.06); padding:9px 10px; border-radius:6px;
+  }
 
   /* ---------- إشعار ---------- */
   .toast{position:fixed; inset-inline:0; bottom:28px; z-index:100; display:flex; justify-content:center;
@@ -772,14 +782,24 @@
       <label>البريد الإلكتروني
         <input type="email" id="admin-email" autocomplete="username" required>
       </label>
-      <label>كلمة المرور
-        <input type="password" id="admin-pass" autocomplete="current-password" required>
+      <label>كلمة المرور <small>٦ أحرف على الأقل</small>
+        <input type="password" id="admin-pass" autocomplete="current-password" required minlength="6">
       </label>
       <button class="btn btn-hot btn-wide" type="submit">دخول</button>
+      <button class="btn btn-ghost btn-wide" type="button" id="admin-signup">إنشاء حساب — لأول مرّة</button>
       <p class="admin-error" id="admin-login-error" hidden></p>
     </form>
 
     <div id="admin-manage" hidden>
+      <!-- المعرّف هو ما يُوضع في firestore.rules ليُسمح لهذا الحساب بالكتابة،
+           فيُعرض هنا جاهزاً للنسخ بدل البحث عنه في كونسول Firebase. -->
+      <div class="admin-uid" id="admin-uid-box" hidden>
+        <p id="admin-uid-note"></p>
+        <div class="admin-uid-row">
+          <code id="admin-uid" dir="ltr"></code>
+          <button class="btn btn-ghost btn-sm" type="button" id="admin-uid-copy">نسخ</button>
+        </div>
+      </div>
       <form class="admin-form" id="admin-form">
         <h3 id="admin-form-title">منتج جديد</h3>
         <label>القسم
@@ -1539,6 +1559,8 @@
     form: $('#admin-form'), formTitle: $('#admin-form-title'), reset: $('#f-reset'),
     items: $('#admin-items'), count: $('#admin-count'), signout: $('#admin-signout'),
     cats: $('#f-cats'), glyph: $('#f-glyph'),
+    uidBox: $('#admin-uid-box'), uid: $('#admin-uid'), uidNote: $('#admin-uid-note'),
+    uidCopy: $('#admin-uid-copy'),
   };
 
   /* ---------- الدرج ---------- */
@@ -1603,7 +1625,8 @@
     });
 
     const {
-      getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged,
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      signOut, onAuthStateChanged,
     } = authMod;
     const {
       getFirestore, collection, doc, onSnapshot, query, orderBy,
@@ -1655,8 +1678,10 @@
       'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
       'auth/too-many-requests': 'محاولات كثيرة — انتظري قليلاً ثم أعيدي المحاولة.',
       'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
-      'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase.',
-      'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل. راجعي قواعد الأمان.',
+      'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase — فعّليه من Authentication ← Sign-in method.',
+      'auth/email-already-in-use': 'هذا البريد له حساب بالفعل — اضغطي «دخول» بدل «إنشاء حساب».',
+      'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+      'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل بعد.',
     };
     const say = (err) => AUTH_ERRORS[err.code] || err.message || 'حدث خطأ غير متوقّع.';
 
@@ -1665,7 +1690,19 @@
       node.hidden = !message;
     };
 
+    // المعرّف يُعرض دائماً بعد الدخول، وبنبرة أوضح عند رفض أول كتابة.
+    let uid = '';
+    function showUid(denied) {
+      el.uidBox.hidden = !uid;
+      if (!uid) return;
+      el.uid.textContent = uid;
+      el.uidNote.textContent = denied
+        ? 'حسابك غير مصرّح له بالتعديل بعد. انسخي هذا المعرّف وأرسليه لمن يضبط لكِ الموقع — سطر واحد في قواعد الأمان ويعمل الحفظ.'
+        : 'معرّف حسابك — هو ما يُوضع في قواعد الأمان ليُسمح لكِ بالتعديل.';
+    }
+
     onAuthStateChanged(auth, (user) => {
+      uid = user ? user.uid : '';
       UI.setSignedIn(!!user);
       el.login.hidden = !!user;
       el.manage.hidden = !user;
@@ -1674,21 +1711,46 @@
         ? 'أضيفي منتجاتك — كل حفظ يظهر للزبونات فوراً.'
         : 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.';
       showError(el.loginError, '');
+      showUid(false);
       if (user) renderAdminList();
     });
 
-    el.login.addEventListener('submit', async (e) => {
-      e.preventDefault();
+    async function auth1(fn) {
       showError(el.loginError, '');
-      const btn = el.login.querySelector('button[type="submit"]');
-      btn.disabled = true;
+      const buttons = el.login.querySelectorAll('button');
+      buttons.forEach((b) => { b.disabled = true; });
       try {
-        await signInWithEmailAndPassword(auth, $('#admin-email').value.trim(), $('#admin-pass').value);
+        await fn(auth, $('#admin-email').value.trim(), $('#admin-pass').value);
         $('#admin-pass').value = '';
       } catch (err) {
         showError(el.loginError, say(err));
       } finally {
-        btn.disabled = false;
+        buttons.forEach((b) => { b.disabled = false; });
+      }
+    }
+
+    el.login.addEventListener('submit', (e) => {
+      e.preventDefault();
+      auth1(signInWithEmailAndPassword);
+    });
+
+    // أول مرّة: يُنشأ الحساب من هنا بدل إنشائه في كونسول Firebase.
+    $('#admin-signup').addEventListener('click', () => {
+      if (!el.login.reportValidity()) return;
+      auth1(createUserWithEmailAndPassword);
+    });
+
+    el.uidCopy.addEventListener('click', async () => {
+      try {
+        await navigator.clipboard.writeText(uid);
+        UI.toast('نُسخ المعرّف');
+      } catch {
+        // نسخ ممنوع في بعض المتصفّحات — يُحدَّد النصّ لتنسخه بنفسها.
+        const r = document.createRange();
+        r.selectNodeContents(el.uid);
+        const sel = getSelection();
+        sel.removeAllRanges();
+        sel.addRange(r);
       }
     });
 
