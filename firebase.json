@@ -12,6 +12,10 @@
         "destination": "/albacha/index.html"
       },
       {
+        "source": "/om-aya",
+        "destination": "/om-aya/index.html"
+      },
+      {
         "source": "/app/**",
         "destination": "/app/index.html"
       },
