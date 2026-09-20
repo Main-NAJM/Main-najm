@@ -5,6 +5,7 @@ import { useToast } from '@/context/ToastContext';
 import { ConfirmDialog, NumberInput, SectionTitle, Select, TextInput } from '@/components/ui';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
+import { isUsingEmulators } from '@/lib/firebase';
 import { APP_NAME, CRAFTS, CURRENCIES, USER_TYPES } from '@/lib/constants';
 import { formatDateTime, toNumber } from '@/lib/format';
 import type { Craft, Profile, UserType } from '@/lib/types';
@@ -220,7 +221,14 @@ export default function Settings() {
             </span>
           ) : null}
           <span>
-            التخزين <strong>{storeKind === 'local' ? 'محلي' : 'Firebase'}</strong>
+            التخزين{' '}
+            <strong>
+              {storeKind === 'local'
+                ? 'محلي'
+                : isUsingEmulators
+                  ? 'محاكي Firebase (على هذا الجهاز)'
+                  : 'Firebase'}
+            </strong>
           </span>
         </div>
         <div className="card__actions">

@@ -210,25 +210,25 @@ export default function Dashboard() {
       <div className="stat-grid">
         <Link className="stat" to="/calculator">
           <span className="stat__label">حاسبة</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             التكلفة والربح
           </strong>
         </Link>
         <Link className="stat" to="/prices">
           <span className="stat__label">مؤشرات</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             أسعار السوق
           </strong>
         </Link>
         <Link className="stat" to="/debts">
           <span className="stat__label">سجل</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             الديون
           </strong>
         </Link>
         <Link className="stat" to="/print">
           <span className="stat__label">طباعة</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             الفواتير والكشوف
           </strong>
         </Link>

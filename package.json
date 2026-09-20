@@ -15,6 +15,11 @@
     "preview": "vite preview",
     "site": "node site/serve.mjs",
     "firebase:setup": "node scripts/firebase-setup.mjs",
+    "emulators": "npx --yes firebase-tools@13 emulators:start --only auth,firestore",
+    "test:rules": "node scripts/test-rules.mjs",
+    "dev:emulator": "vite --mode emulator",
+    "app:emulator": "npm run dev -w albacha-app -- --mode emulator",
+    "build:emulator": "tsc -b && vite build --mode emulator && node site/copy-to-dist.mjs && npm run build -w albacha-app -- --mode emulator --base=/app/ && node albacha-app/copy-to-dist.mjs",
     "deploy": "npm run build && npx --yes firebase-tools@13 deploy --only hosting",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
     "lint": "tsc -b"
@@ -26,6 +31,7 @@
     "react-router-dom": "^6.28.0"
   },
   "devDependencies": {
+    "@firebase/rules-unit-testing": "^4.0.1",
     "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
     "@vitejs/plugin-react": "^4.3.4",

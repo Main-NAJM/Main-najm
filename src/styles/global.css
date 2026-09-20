@@ -222,9 +222,12 @@ a {
   text-decoration: none;
 }
 
-a:hover {
-  text-decoration: underline;
-  text-underline-offset: 3px;
+/* التحويم للفأرة فقط — على اللمس يبقى الأثر «عالقًا» بعد رفع الإصبع */
+@media (hover: hover) and (pointer: fine) {
+  a:hover {
+    text-decoration: underline;
+    text-underline-offset: 3px;
+  }
 }
 
 :focus-visible {
@@ -315,10 +318,12 @@ a:hover {
   transition: background var(--fast) var(--ease);
 }
 
-.header-btn:hover {
-  background: rgba(255, 255, 255, 0.2);
-  text-decoration: none;
-  color: var(--on-bar);
+@media (hover: hover) and (pointer: fine) {
+  .header-btn:hover {
+    background: rgba(255, 255, 255, 0.2);
+    text-decoration: none;
+    color: var(--on-bar);
+  }
 }
 
 .app-main {
@@ -334,8 +339,7 @@ a:hover {
 .bottom-nav {
   position: fixed;
   bottom: 0;
-  right: 0;
-  left: 0;
+  inset-inline: 0;
   z-index: 40;
   display: grid;
   grid-template-columns: repeat(5, 1fr);
@@ -360,9 +364,11 @@ a:hover {
   transition: color var(--fast) var(--ease);
 }
 
-.bottom-nav__item:hover {
-  text-decoration: none;
-  color: #cddcf0;
+@media (hover: hover) and (pointer: fine) {
+  .bottom-nav__item:hover {
+    text-decoration: none;
+    color: #cddcf0;
+  }
 }
 
 .bottom-nav__item svg {
@@ -448,9 +454,11 @@ a:hover {
   transition: background var(--fast) var(--ease), transform var(--fast) var(--ease);
 }
 
-.more-sheet__link:hover {
-  text-decoration: none;
-  background: var(--surface-3);
+@media (hover: hover) and (pointer: fine) {
+  .more-sheet__link:hover {
+    text-decoration: none;
+    background: var(--surface-3);
+  }
 }
 
 .more-sheet__link:active {
@@ -599,9 +607,11 @@ a:hover {
     background var(--fast) var(--ease);
 }
 
-.btn:hover:not(:disabled) {
-  filter: brightness(1.1);
-  text-decoration: none;
+@media (hover: hover) and (pointer: fine) {
+  .btn:hover:not(:disabled) {
+    filter: brightness(1.1);
+    text-decoration: none;
+  }
 }
 
 .btn:active:not(:disabled) {
@@ -620,9 +630,11 @@ a:hover {
   box-shadow: none;
 }
 
-.btn--ghost:hover:not(:disabled) {
-  background: var(--surface-3);
-  filter: none;
+@media (hover: hover) and (pointer: fine) {
+  .btn--ghost:hover:not(:disabled) {
+    background: var(--surface-3);
+    filter: none;
+  }
 }
 
 .btn--soft {
@@ -632,9 +644,11 @@ a:hover {
   box-shadow: none;
 }
 
-.btn--soft:hover:not(:disabled) {
-  filter: none;
-  background: color-mix(in srgb, var(--gold-tint) 76%, var(--gold) 10%);
+@media (hover: hover) and (pointer: fine) {
+  .btn--soft:hover:not(:disabled) {
+    filter: none;
+    background: color-mix(in srgb, var(--gold-tint) 76%, var(--gold) 10%);
+  }
 }
 
 .btn--danger {
@@ -642,10 +656,12 @@ a:hover {
   color: #fff;
 }
 
+/* «الصغير» يعني نصًّا وحشوًا أفقيًا أقل — لا هدف لمس أصغر.
+   44px هو الحدّ الذي يُلمس من أول مرّة بإبهام في الشارع. */
 .btn--sm {
   padding: 6px 13px;
   font-size: 13px;
-  min-height: 36px;
+  min-height: 44px;
   border-radius: var(--r-xs);
 }
 
@@ -664,14 +680,16 @@ a:hover {
   transition: background var(--fast) var(--ease), color var(--fast) var(--ease);
 }
 
-.icon-btn:hover {
-  background: var(--surface-3);
-  color: var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .icon-btn:hover {
+    background: var(--surface-3);
+    color: var(--ink);
+  }
 }
 
 .fab {
   position: fixed;
-  left: 18px;
+  inset-inline-end: 18px;
   bottom: calc(var(--nav-h) + 20px + env(safe-area-inset-bottom, 0px));
   z-index: 35;
   border: none;
@@ -686,8 +704,10 @@ a:hover {
   transition: transform var(--base) var(--ease), filter var(--fast) var(--ease);
 }
 
-.fab:hover {
-  filter: brightness(1.1);
+@media (hover: hover) and (pointer: fine) {
+  .fab:hover {
+    filter: brightness(1.1);
+  }
 }
 
 .fab:active {
@@ -729,10 +749,12 @@ a:hover {
   color: var(--ink-3);
 }
 
-.input:focus {
-  outline: none;
+/* حلقة التركيز عبر outline لا box-shadow: الـ outline وحده يظهر في وضع
+   التباين العالي (forced-colors) الذي يتجاهل الظلال تمامًا. */
+.input:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  outline-offset: 0;
   border-color: var(--gold);
-  box-shadow: 0 0 0 3.5px color-mix(in srgb, var(--gold) 18%, transparent);
 }
 
 .input--area {
@@ -748,7 +770,16 @@ a:hover {
   background-position: 15px calc(50% - 2px), 20px calc(50% - 2px);
   background-size: 5px 5px, 5px 5px;
   background-repeat: no-repeat;
-  padding-left: 36px;
+  padding-inline-end: 36px;
+}
+
+/* حقل مضغوط داخل صفّ أفعال البطاقة: الضغط أفقي (عرض وخط أصغر)،
+   أمّا الارتفاع فيبقى 44px لأنه هدف لمس. */
+.input--compact {
+  max-width: 130px;
+  padding: 6px 10px;
+  font-size: 13px;
+  min-height: 44px;
 }
 
 .input-wrap {
@@ -759,7 +790,7 @@ a:hover {
 
 .input-wrap__suffix {
   position: absolute;
-  left: 13px;
+  inset-inline-end: 13px;
   font-size: 12.5px;
   font-weight: 600;
   color: var(--ink-3);
@@ -767,7 +798,7 @@ a:hover {
 }
 
 .input-wrap .input {
-  padding-left: 64px;
+  padding-inline-end: 64px;
 }
 
 .grid-2 {
@@ -882,9 +913,11 @@ a:hover {
   background: var(--info);
 }
 
-a.stat:hover {
-  text-decoration: none;
-  box-shadow: var(--sh-2);
+@media (hover: hover) and (pointer: fine) {
+  a.stat:hover {
+    text-decoration: none;
+    box-shadow: var(--sh-2);
+  }
 }
 
 a.stat:active {
@@ -912,6 +945,14 @@ a.stat:active {
   .stat__value {
     font-size: 22px;
   }
+}
+
+/* قيمة نصّية لا رقمية (الروابط السريعة): حجم أهدأ، وبلا أرقام جدولية
+   لأن الأخيرة تُباعد الحروف العربية بلا داعٍ. */
+.stat__value--text {
+  font-size: clamp(14px, 3.8vw, 15px);
+  font-variant-numeric: normal;
+  letter-spacing: -0.012em;
 }
 
 .stat__sub {
@@ -965,9 +1006,11 @@ a.stat:active {
     border-color var(--fast) var(--ease);
 }
 
-.chip:hover {
-  background: var(--surface-3);
-  color: var(--ink);
+@media (hover: hover) and (pointer: fine) {
+  .chip:hover {
+    background: var(--surface-3);
+    color: var(--ink);
+  }
 }
 
 .chip.is-active {
@@ -982,12 +1025,12 @@ a.stat:active {
 }
 
 .search-bar .input {
-  padding-right: 40px;
+  padding-inline-start: 40px;
 }
 
 .search-bar__icon {
   position: absolute;
-  right: 14px;
+  inset-inline-start: 14px;
   top: 50%;
   transform: translateY(-50%);
   color: var(--ink-3);
@@ -1020,7 +1063,7 @@ a.stat:active {
 .modal {
   width: 100%;
   max-width: 560px;
-  max-height: 92vh;
+  max-height: 92dvh;
   background: var(--surface);
   border-radius: var(--r-lg) var(--r-lg) 0 0;
   display: flex;
@@ -1036,7 +1079,7 @@ a.stat:active {
 @media (min-width: 640px) {
   .modal {
     border-radius: var(--r-lg);
-    max-height: 88vh;
+    max-height: 88dvh;
   }
 }
 
@@ -1064,9 +1107,11 @@ a.stat:active {
   color: var(--on-bar-2);
 }
 
-.modal__header .icon-btn:hover {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+@media (hover: hover) and (pointer: fine) {
+  .modal__header .icon-btn:hover {
+    background: rgba(255, 255, 255, 0.12);
+    color: #fff;
+  }
 }
 
 .modal__body {
@@ -1141,8 +1186,7 @@ a.stat:active {
   position: fixed;
   z-index: 90;
   bottom: calc(var(--nav-h) + 16px + env(safe-area-inset-bottom, 0px));
-  right: 16px;
-  left: 16px;
+  inset-inline: 16px;
   display: flex;
   flex-direction: column;
   gap: 8px;
@@ -1155,7 +1199,7 @@ a.stat:active {
   border: none;
   max-width: 440px;
   width: 100%;
-  text-align: right;
+  text-align: start;
   border-radius: var(--r-sm);
   padding: 12px 15px;
   font-size: 13.5px;
@@ -1206,7 +1250,7 @@ a.stat:active {
 }
 
 .page-loader {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1216,7 +1260,7 @@ a.stat:active {
 /* ------------------------------------------------------------- شاشة الدخول */
 
 .auth {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -1344,8 +1388,10 @@ a.stat:active {
   transition: background var(--fast) var(--ease);
 }
 
-.auth__google:hover {
-  background: var(--surface-3);
+@media (hover: hover) and (pointer: fine) {
+  .auth__google:hover {
+    background: var(--surface-3);
+  }
 }
 
 /* -------------------------------------------------------------- عناصر مساعدة */
@@ -1382,6 +1428,33 @@ a.stat:active {
   align-items: center;
   justify-content: space-between;
   gap: 12px;
+  /* اللفّ يمنع الفيض على 320px حين يطول أحد الطرفين */
+  flex-wrap: wrap;
+}
+
+/* مجموعة أفعال متجاورة تلفّ بدل أن تفيض */
+.cluster {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.text-end {
+  text-align: end;
+}
+
+.text-center {
+  text-align: center;
+}
+
+/* مبلغ مالي: أرقام جدولية كي تتراصّ الخانات رأسيًا بين البطاقات */
+.amount {
+  font-size: 17px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.02em;
+  color: var(--ink);
 }
 
 .muted {
@@ -1529,12 +1602,18 @@ a.stat:active {
 
 .table-wrap {
   overflow-x: auto;
+  /* يمنع تمرير الجدول من جرّ الصفحة خلفه على الجوال */
+  overscroll-behavior-inline: contain;
+  -webkit-overflow-scrolling: touch;
   border: 1px solid var(--line);
   border-radius: var(--r);
   background: var(--surface);
   box-shadow: var(--sh-1);
 }
 
+/* 520px تفرض تمريرًا أفقيًا داخل .table-wrap على الحاسوب واللوحي — وهو
+   المقصود لجدول بأربعة أعمدة. أمّا تحت 560px فـ .table-wrap--cards يُلغيها
+   ويحوّل الصفوف إلى بطاقات، فلا تمرير أفقي على الجوال. */
 table.data {
   width: 100%;
   border-collapse: collapse;
@@ -1545,7 +1624,7 @@ table.data {
 table.data th,
 table.data td {
   padding: 11px 14px;
-  text-align: right;
+  text-align: start;
   border-bottom: 1px solid var(--line);
   white-space: nowrap;
 }
@@ -1563,8 +1642,87 @@ table.data tbody tr:last-child td {
 
 table.data td.num,
 table.data th.num {
-  text-align: left;
+  text-align: end;
   font-variant-numeric: tabular-nums;
+}
+
+/* جدول يتحوّل إلى بطاقات على الجوال.
+   الجدول يظلّ جدولًا في الـ DOM — لقارئ الشاشة وللحاسوب — لكن على الشاشة
+   الضيّقة يصير كل صفّ بطاقة بأسطر «تسمية: قيمة»، لأن التمرير الأفقي داخل
+   نافذة ضيّقة أسوأ تجربة ممكنة لقراءة بيانات. التسميات تأتي من data-label. */
+@media (max-width: 560px) {
+  .table-wrap--cards {
+    overflow-x: visible;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .table-wrap--cards table.data {
+    min-width: 0;
+    display: block;
+  }
+
+  /* الرؤوس تبقى للقارئ الصوتي وتختفي بصريًا */
+  .table-wrap--cards thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .table-wrap--cards tbody {
+    display: block;
+  }
+
+  .table-wrap--cards tbody tr {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--sh-1);
+    padding: 6px 14px;
+    margin-bottom: 8px;
+  }
+
+  .table-wrap--cards tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .table-wrap--cards tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    white-space: normal;
+    text-align: start;
+  }
+
+  .table-wrap--cards tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--ink-3);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .table-wrap--cards tbody td:last-child {
+    border-bottom: none;
+  }
+
+  /* خلية الأفعال: بلا تسمية، والزرّ إلى نهاية السطر */
+  .table-wrap--cards tbody td.actions {
+    justify-content: flex-end;
+  }
+
+  .table-wrap--cards tbody td.actions::before {
+    content: none;
+  }
 }
 
 /* ------------------------------------------------------------- شريط التقدّم */

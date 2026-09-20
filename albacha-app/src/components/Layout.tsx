@@ -62,7 +62,7 @@ export default function Layout() {
       {printing ? null : (
         <header className="topbar">
           <div className="topbar__title">
-            <strong>{APP_SHORT}</strong>
+            <h1>{APP_SHORT}</h1>
             <span>إدارة الزبائن والطلبات</span>
           </div>
           <button

@@ -288,16 +288,55 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
 
   useEffect(() => {
     if (!open) return;
+
+    // العنصر الذي فتح النافذة — يُعاد إليه التركيز عند الإغلاق، وإلا وجد
+    // مستخدم لوحة المفاتيح نفسه في أول الصفحة بلا سياق.
+    const opener = document.activeElement as HTMLElement | null;
+
     const onKeyDown = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      // حبس التركيز: بدونه يخرج Tab إلى الصفحة خلف النافذة وهي معطّلة بصريًا
+      const panel = panelRef.current;
+      if (!panel) return;
+      const items = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.getClientRects().length > 0);
+
+      if (items.length === 0) {
+        event.preventDefault();
+        panel.focus();
+        return;
+      }
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || active === panel)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     document.addEventListener('keydown', onKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
     panelRef.current?.focus();
+
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
+      opener?.focus();
     };
   }, [open, onClose]);
 

@@ -210,8 +210,8 @@ export default function MarketPrices() {
                           {price.source ? ` · ${price.source}` : ''}
                         </p>
                       </div>
-                      <div style={{ textAlign: 'left' }}>
-                        <strong style={{ fontSize: 17 }}>
+                      <div className="text-end">
+                        <strong className="amount">
                           {formatMoney(price.price, profile.currency)}
                         </strong>
                         <div>

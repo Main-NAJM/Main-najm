@@ -163,7 +163,7 @@ export default function Login() {
                   {busy ? 'جارٍ…' : codeSent ? 'تأكيد الرمز والدخول' : 'إرسال رمز التحقّق'}
                 </button>
                 {codeSent ? (
-                  <div style={{ textAlign: 'center' }}>
+                  <div className="text-center">
                     <button
                       type="button"
                       className="auth__link"
@@ -207,7 +207,7 @@ export default function Login() {
             )}
 
             {mode === 'signin' ? (
-              <div style={{ textAlign: 'center' }}>
+              <div className="text-center">
                 <button type="button" className="auth__link" onClick={forgot}>
                   نسيت كلمة المرور؟
                 </button>
@@ -255,7 +255,7 @@ export default function Login() {
         <button type="button" className="btn btn--ghost btn--block mt-8" onClick={useLocalAccount}>
           المتابعة بدون حساب (على هذا الجهاز)
         </button>
-        <p className="small muted mt-8" style={{ textAlign: 'center' }}>
+        <p className="small muted mt-8 text-center">
           بدون حساب تُحفظ البيانات في هذا المتصفّح فقط ولا تتزامن بين الأجهزة.
         </p>
 

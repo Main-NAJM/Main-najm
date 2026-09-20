@@ -59,6 +59,51 @@ check() {
   return 0
 }
 
+# فحص واعٍ بالأقواس: يُبلّغ عن النمط فقط حين يكون خارج كتلة @media معيّنة.
+# السبب: القاعدة داخل حارسها ليست مخالفة، والبوّابة التي تصرخ بلا سبب
+# يتعلّم المرء تجاهلها — فتفقد قيمتها كلّها.
+#   $1 نمط المخالفة · $2 نمط سطر @media الحارس · $3 الوصف
+check_outside_media() {
+  local pattern="$1" guard_pattern="$2" label="$3"
+  local files hits count
+
+  files="$(sources '*.css')"
+  [[ -z "$files" ]] && return 0
+
+  hits="$(printf '%s\n' "$files" | xargs -d '\n' awk \
+    -v pat="$pattern" -v guardpat="$guard_pattern" '
+    FNR == 1 { depth = 0; guard = -1 }
+    {
+      line = $0
+      is_media = (line ~ /^[[:space:]]*@media/)
+      opens_guard = (is_media && line ~ guardpat)
+
+      if (!is_media && guard < 0 && line ~ pat)
+        printf "%s:%d:%s\n", FILENAME, FNR, line
+
+      n = gsub(/\{/, "{", line)
+      m = gsub(/\}/, "}", line)
+
+      for (i = 0; i < n; i++) {
+        depth++
+        if (opens_guard && guard < 0) { guard = depth; opens_guard = 0 }
+      }
+      for (i = 0; i < m; i++) {
+        if (guard == depth) guard = -1
+        depth--
+      }
+    }
+  ' 2>/dev/null || true)"
+
+  [[ -z "$hits" ]] && return 0
+  count="$(printf '%s\n' "$hits" | grep -c . || true)"
+  printf '%s!%s %s %s(%s)%s\n' "$YEL" "$OFF" "$label" "$DIM" "$count" "$OFF"
+  WARNINGS=$((WARNINGS + count))
+  printf '%s\n' "$hits" | head -8 | sed "s/^/    ${DIM}/;s/$/${OFF}/"
+  [[ "$count" -gt 8 ]] && printf '    %s… و%s أخرى%s\n' "$DIM" "$((count - 8))" "$OFF"
+  return 0
+}
+
 echo
 echo "── بوّابة الجودة ──────────────────────────────"
 echo "${DIM}${ROOT}${OFF}"
@@ -116,13 +161,13 @@ check '[0-9](\.[0-9]+)?vh([^a-z]|$)' \
   'وحدة vh — استخدم dvh أو svh (شريط متصفح الجوال يكسر vh)' \
   error '*.css'
 
-check '(^|[^-a-z])(min-)?width[[:space:]]*:[[:space:]]*[0-9]{3,}px' \
-  'عرض ثابت كبير — قد يُنتج تمريرًا أفقيًا على 320px' \
-  warn '*.css' '@media|@container'
+# عرض ثابت داخل @media (min-width: …) لا يطال الشاشات الضيّقة أصلًا
+check_outside_media '(^|[^-a-z])(min-)?width[[:space:]]*:[[:space:]]*[0-9]{3,}px' \
+  'min-width' \
+  'عرض ثابت كبير — قد يُنتج تمريرًا أفقيًا على 320px'
 
-check ':hover' \
-  ':hover — تأكّد أنه داخل @media (hover: hover) وإلا علق على اللمس' \
-  warn '*.css'
+check_outside_media ':hover' 'hover[[:space:]]*:[[:space:]]*hover' \
+  ':hover خارج @media (hover: hover) — يعلق بعد اللمس على الجوال'
 
 echo
 
@@ -133,9 +178,10 @@ check '#[0-9a-fA-F]{3,8}([^0-9a-fA-F]|$)' \
   'لون خام خارج global.css — أضف رمزًا في src/styles/global.css' \
   error '*.css' '(styles/global\.css|/vendor/)'
 
-check '!important' \
-  '!important — يُسمح به فقط لتجاوز مكتبة خارجية، مع تعليق' \
-  warn '*.css'
+# داخل prefers-reduced-motion و@media print الـ !important هو الاستخدام
+# الصحيح — لا بدّ له من كسر كل ما سبقه. خارجهما يبقى رائحة كود.
+check_outside_media '!important' 'prefers-reduced-motion|print' \
+  '!important — يُسمح به فقط لتجاوز مكتبة خارجية، مع تعليق'
 
 check 'outline[[:space:]]*:[[:space:]]*(none|0)' \
   'outline: none — يكسر التنقّل بلوحة المفاتيح ما لم يوجد بديل :focus-visible' \

@@ -320,8 +320,7 @@ export default function Orders() {
 
                 <div className="card__actions">
                   <select
-                    className="input input--select"
-                    style={{ maxWidth: 130, padding: '6px 10px', fontSize: 13 }}
+                    className="input input--select input--compact"
                     value={order.status}
                     onChange={(event) => {
                       void changeStatus(order, event.target.value as OrderStatus);
