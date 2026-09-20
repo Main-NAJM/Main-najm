@@ -26,9 +26,23 @@ import {
 } from 'firebase/auth';
 import { auth, authErrorMessage, isFirebaseConfigured } from '@/lib/firebase';
 import { getLocalUid } from '@/data/localStore';
-import type { AppUser } from '@/lib/types';
+import {
+  clearSession,
+  getAccount,
+  getSession,
+  listAccounts,
+  patchAccount,
+  registerAccount,
+  signInAccount,
+  type LocalAccount,
+  type RegisterInput,
+} from '@/data/accounts';
+import { normalizePhone } from '@/lib/phone';
+import type { AppUser, Craft, PricingBasis, UserType } from '@/lib/types';
 
 const LOCAL_MODE_KEY = 'herfah-pro:v1:local-mode';
+
+export { normalizePhone };
 
 interface AuthContextValue {
   user: AppUser | null;
@@ -36,6 +50,21 @@ interface AuthContextValue {
   /** true إذا كان التطبيق يعمل بدون Firebase (تخزين على الجهاز فقط). */
   localMode: boolean;
   firebaseAvailable: boolean;
+  /** الحسابات المسجّلة على هذا الجهاز — تُعرض في شاشة الدخول. */
+  accounts: LocalAccount[];
+  /** إنشاء حساب على الجهاز بالهاتف أو البريد مع المهنة. */
+  registerLocal: (input: RegisterInput) => Promise<void>;
+  /** دخول بحساب مسجّل على الجهاز. */
+  signInLocal: (ident: string, password: string) => Promise<void>;
+  /** تحديث اسم الحساب ومهنته حين تتغيّر من الإعدادات. */
+  updateLocalAccount: (patch: {
+    displayName?: string;
+    userType?: UserType;
+    craft?: Craft;
+    customCraft?: string;
+    customMaterial?: string;
+    customBasis?: PricingBasis;
+  }) => void;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (name: string, email: string, password: string) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
@@ -62,50 +91,62 @@ const toAppUser = (user: User): AppUser => ({
   isLocal: false,
 });
 
-const localUser = (): AppUser => ({
+/** جلسة «بدون حساب»: مستخدم واحد ثابت لهذا الجهاز. */
+const guestUser = (): AppUser => ({
   uid: getLocalUid(),
   email: null,
   displayName: null,
   phoneNumber: null,
   isAnonymous: false,
   isLocal: true,
+  isGuest: true,
 });
 
-const readLocalModeFlag = (): boolean => {
+const accountUser = (account: LocalAccount): AppUser => ({
+  uid: account.uid,
+  email: account.kind === 'email' ? account.ident : null,
+  displayName: account.displayName || null,
+  phoneNumber: account.kind === 'phone' ? account.ident : null,
+  isAnonymous: false,
+  isLocal: true,
+  isGuest: false,
+  userType: account.userType,
+  craft: account.craft,
+  customCraft: account.customCraft,
+  customMaterial: account.customMaterial,
+  customBasis: account.customBasis,
+});
+
+/** المستخدم المحلي عند الإقلاع: صاحب الجلسة المحفوظة، أو لا أحد. */
+const restoreLocalUser = (): AppUser | null => {
+  const uid = getSession();
+  if (!uid) return null;
+  const account = getAccount(uid);
+  return account ? accountUser(account) : null;
+};
+
+const GUEST_KEY = 'herfah-pro:v1:guest';
+
+const readFlag = (key: string): boolean => {
   try {
-    return window.localStorage.getItem(LOCAL_MODE_KEY) === '1';
+    return window.localStorage.getItem(key) === '1';
   } catch {
     return false;
   }
 };
 
-const writeLocalModeFlag = (on: boolean): void => {
+const writeFlag = (key: string, on: boolean): void => {
   try {
-    if (on) window.localStorage.setItem(LOCAL_MODE_KEY, '1');
-    else window.localStorage.removeItem(LOCAL_MODE_KEY);
+    if (on) window.localStorage.setItem(key, '1');
+    else window.localStorage.removeItem(key);
   } catch {
     /* التخزين غير متاح، الوضع يبقى لهذه الجلسة فقط */
   }
 };
 
-/**
- * توحيد صيغة رقم الهاتف إلى الصيغة الدولية التي يشترطها Firebase (‎+213…‎).
- * يقبل: ‎0673232932‎ و ‎00213673232932‎ و ‎+213 673 23 29 32‎.
- * يعيد null إذا تعذّر فهم الرقم.
- */
-const DEFAULT_COUNTRY_CODE = '+213'; // الجزائر
-
-export const normalizePhone = (input: string): string | null => {
-  const digitsOnly = input.replace(/[\s‏‎()-]/g, '');
-  if (!digitsOnly) return null;
-
-  let value = digitsOnly;
-  if (value.startsWith('00')) value = `+${value.slice(2)}`;
-  else if (value.startsWith('0')) value = `${DEFAULT_COUNTRY_CODE}${value.slice(1)}`;
-  else if (!value.startsWith('+')) value = `${DEFAULT_COUNTRY_CODE}${value}`;
-
-  // الصيغة الدولية: + ثم ٨ إلى ١٥ رقماً.
-  return /^\+\d{8,15}$/.test(value) ? value : null;
+const readLocalModeFlag = (): boolean => readFlag(LOCAL_MODE_KEY);
+const writeLocalModeFlag = (on: boolean): void => {
+  writeFlag(LOCAL_MODE_KEY, on);
 };
 
 const wrapError = (error: unknown): Error => {
@@ -114,17 +155,28 @@ const wrapError = (error: unknown): Error => {
   return error instanceof Error ? error : new Error('حدث خطأ غير متوقّع.');
 };
 
+/** حالة الإقلاع المحلية: حساب الجلسة، أو جلسة ضيف، أو لا أحد (فتُعرض شاشة الدخول). */
+const initialLocalUser = (): AppUser | null =>
+  restoreLocalUser() ?? (readFlag(GUEST_KEY) ? guestUser() : null);
+
 export function AuthProvider({ children }: { children: ReactNode }) {
   // بدون إعدادات Firebase يعمل التطبيق محلياً مباشرة.
   const [localMode, setLocalMode] = useState<boolean>(
     () => !isFirebaseConfigured || readLocalModeFlag(),
   );
   const [user, setUser] = useState<AppUser | null>(() =>
-    !isFirebaseConfigured || readLocalModeFlag() ? localUser() : null,
+    !isFirebaseConfigured || readLocalModeFlag() ? initialLocalUser() : null,
   );
   const [loading, setLoading] = useState<boolean>(
     () => isFirebaseConfigured && !readLocalModeFlag(),
   );
+  const [accounts, setAccounts] = useState<LocalAccount[]>(() => {
+    try {
+      return listAccounts();
+    } catch {
+      return [];
+    }
+  });
 
   // عمليات دخول الهاتف الجارية: متحقّق reCAPTCHA ونتيجة إرسال الرمز.
   const recaptchaRef = useRef<RecaptchaVerifier | null>(null);
@@ -260,10 +312,45 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     clearRecaptcha();
   }, [clearRecaptcha]);
 
-  const useLocalAccount = useCallback(() => {
+  const registerLocal = useCallback(async (input: RegisterInput) => {
+    const account = await registerAccount(input);
+    writeFlag(GUEST_KEY, false);
     writeLocalModeFlag(true);
     setLocalMode(true);
-    setUser(localUser());
+    setAccounts(listAccounts());
+    setUser(accountUser(account));
+    setLoading(false);
+  }, []);
+
+  const signInLocal = useCallback(async (ident: string, password: string) => {
+    const account = await signInAccount(ident, password);
+    writeFlag(GUEST_KEY, false);
+    writeLocalModeFlag(true);
+    setLocalMode(true);
+    setAccounts(listAccounts());
+    setUser(accountUser(account));
+    setLoading(false);
+  }, []);
+
+  // مُحدّث الحساب يكتب في التخزين، فلا يُشغَّل داخل مُحدِّث حالة (يُستدعى مرّتين في
+  // StrictMode). يقرأ المستخدم الحالي من مرجع يتبع الحالة.
+  const userRef = useRef<AppUser | null>(user);
+  userRef.current = user;
+
+  const updateLocalAccount = useCallback<AuthContextValue['updateLocalAccount']>((patch) => {
+    const current = userRef.current;
+    if (!current || !current.isLocal || current.isGuest) return;
+    const updated = patchAccount(current.uid, patch);
+    if (!updated) return;
+    setAccounts(listAccounts());
+    setUser(accountUser(updated));
+  }, []);
+
+  const useLocalAccount = useCallback(() => {
+    writeFlag(GUEST_KEY, true);
+    writeLocalModeFlag(true);
+    setLocalMode(true);
+    setUser(guestUser());
     setLoading(false);
   }, []);
 
@@ -271,17 +358,19 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   useEffect(() => () => clearRecaptcha(), [clearRecaptcha]);
 
   const signOut = useCallback(async () => {
-    writeLocalModeFlag(false);
     cancelPhoneSignIn();
+    // الخروج المحلي يُنهي الجلسة ويعيد شاشة الدخول، والبيانات تبقى محفوظة للحساب.
+    clearSession();
+    writeFlag(GUEST_KEY, false);
+    setAccounts(listAccounts());
     if (isFirebaseConfigured && auth) {
+      writeLocalModeFlag(false);
       await fbSignOut(auth).catch(() => undefined);
       setLocalMode(false);
-      setUser(null);
-    } else {
-      // بدون Firebase لا يوجد خروج فعلي؛ يبقى الحساب المحلي.
-      setUser(localUser());
     }
-  }, []);
+    setUser(null);
+    setLoading(false);
+  }, [cancelPhoneSignIn]);
 
   const value = useMemo<AuthContextValue>(
     () => ({
@@ -289,6 +378,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       loading,
       localMode,
       firebaseAvailable: isFirebaseConfigured,
+      accounts,
+      registerLocal,
+      signInLocal,
+      updateLocalAccount,
       signIn,
       signUp,
       resetPassword,
@@ -303,6 +396,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       user,
       loading,
       localMode,
+      accounts,
+      registerLocal,
+      signInLocal,
+      updateLocalAccount,
       signIn,
       signUp,
       resetPassword,

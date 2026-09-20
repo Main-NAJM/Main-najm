@@ -11,6 +11,7 @@ const Orders = lazy(() => import('@/pages/Orders'));
 const Schedule = lazy(() => import('@/pages/Schedule'));
 const Calculator = lazy(() => import('@/pages/Calculator'));
 const ProductPricing = lazy(() => import('@/pages/ProductPricing'));
+const Inventory = lazy(() => import('@/pages/Inventory'));
 const MarketPrices = lazy(() => import('@/pages/MarketPrices'));
 const Debts = lazy(() => import('@/pages/Debts'));
 const Print = lazy(() => import('@/pages/Print'));
@@ -39,6 +40,7 @@ export default function App() {
             <Route path="/schedule" element={<Schedule />} />
             <Route path="/calculator" element={<Calculator />} />
             <Route path="/products" element={<ProductPricing />} />
+            <Route path="/inventory" element={<Inventory />} />
             <Route path="/prices" element={<MarketPrices />} />
             <Route path="/debts" element={<Debts />} />
             <Route path="/print" element={<Print />} />

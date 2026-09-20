@@ -1,29 +1,61 @@
-/** بيانات تجريبية تُزرع مرّة واحدة عند أول دخول في الوضع المحلي. */
+/**
+ * محتوى البداية.
+ *
+ * نوعان مختلفان عمداً:
+ * - محتوى مرجعي (قوالب التسعير ومؤشّر الأسعار) يُزرع لكل حساب جديد حسب مهنته،
+ *   لأنه أرقام يعدّلها صاحب الورشة لا بيانات زبائن.
+ * - بيانات تجريبية كاملة (طلبيات ومواعيد وديون) لا تُزرع تلقائياً لحساب حقيقي —
+ *   فزبائن وهميون وديون وهمية في تطبيق عمل خطر — بل بطلب صريح من الإعدادات.
+ */
 import { addDays, todayIso } from '@/lib/format';
 import { newId } from '@/lib/id';
+import { tradeFor } from '@/lib/trades';
 import type { NewRecord } from './store';
 import type {
   Appointment,
   Calculation,
+  Craft,
   Debt,
+  InventoryItem,
   MarketPrice,
   Order,
+  PricingBasis,
   Profile,
   ProductTemplate,
+  UserType,
 } from '@/lib/types';
 
-export const defaultProfile = (): Profile => ({
-  businessName: 'ورشتي',
-  ownerName: '',
-  phone: '',
-  address: '',
-  userType: 'craftsman',
-  craft: 'carpenter',
-  currency: 'د.ع',
-  defaultLaborRate: 5000,
-  defaultMarginPct: 25,
-  updatedAt: Date.now(),
-});
+export interface ProfileSeed {
+  businessName?: string;
+  phone?: string;
+  userType?: UserType;
+  craft?: Craft;
+  customCraft?: string;
+  customMaterial?: string;
+  customBasis?: PricingBasis;
+}
+
+/** ملف العمل الافتراضي، مبنيّ على ما سجّله صاحبه عند إنشاء الحساب. */
+export const defaultProfile = (seed: ProfileSeed = {}): Profile => {
+  const craft = seed.craft ?? 'carpenter';
+  const userType = seed.userType ?? 'craftsman';
+  const trade = tradeFor(craft);
+  return {
+    businessName: seed.businessName?.trim() || 'ورشتي',
+    ownerName: seed.businessName?.trim() ?? '',
+    phone: seed.phone ?? '',
+    address: '',
+    userType,
+    craft,
+    customCraft: seed.customCraft?.trim() ?? '',
+    customMaterial: seed.customMaterial?.trim() ?? '',
+    customBasis: seed.customBasis ?? 'unit',
+    currency: 'د.ع',
+    defaultLaborRate: userType === 'merchant' ? 0 : trade.defaultLaborRate,
+    defaultMarginPct: userType === 'merchant' ? 15 : trade.defaultMarginPct,
+    updatedAt: Date.now(),
+  };
+};
 
 export const seedOrders = (): NewRecord<Order>[] => [
   {
@@ -118,7 +150,7 @@ export const seedCalculations = (): NewRecord<Calculation>[] => [
   },
 ];
 
-export const seedMarketPrices = (): NewRecord<MarketPrice>[] => [
+const ALL_MARKET_PRICES = (): NewRecord<MarketPrice>[] => [
   {
     kind: 'wood',
     name: 'لوح MDF ١٨ ملم',
@@ -173,6 +205,121 @@ export const seedMarketPrices = (): NewRecord<MarketPrice>[] => [
     source: 'سوق الأقمشة',
     priceDate: todayIso(),
   },
+  {
+    kind: 'aluminium',
+    name: 'مقطع ألمنيوم',
+    unit: 'متر',
+    price: 1400,
+    previousPrice: 1300,
+    source: 'موزّع الألمنيوم',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'glass',
+    name: 'زجاج ٤ ملم',
+    unit: 'متر مربّع',
+    price: 2200,
+    previousPrice: 2200,
+    source: 'محل الزجاج',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'glass',
+    name: 'زجاج مزدوج',
+    unit: 'متر مربّع',
+    price: 6500,
+    previousPrice: 6200,
+    source: 'محل الزجاج',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'building',
+    name: 'كيس إسمنت ٥٠ كغ',
+    unit: 'كيس',
+    price: 850,
+    previousPrice: 800,
+    source: 'تاجر مواد البناء',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'building',
+    name: 'رمل',
+    unit: 'متر مكعّب',
+    price: 2500,
+    previousPrice: 2500,
+    source: 'مقلع الرمل',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'building',
+    name: 'آجر',
+    unit: 'ألف طوبة',
+    price: 14000,
+    previousPrice: 13000,
+    source: 'معمل الآجر',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'parts',
+    name: 'زيت محرّك ٥ لتر',
+    unit: 'علبة',
+    price: 4200,
+    previousPrice: 3900,
+    source: 'موزّع قطع الغيار',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'parts',
+    name: 'فلتر زيت',
+    unit: 'قطعة',
+    price: 700,
+    previousPrice: 700,
+    source: 'موزّع قطع الغيار',
+    priceDate: todayIso(),
+  },
+  {
+    kind: 'parts',
+    name: 'طقم فرامل أمامي',
+    unit: 'طقم',
+    price: 5500,
+    previousPrice: 5200,
+    source: 'موزّع قطع الغيار',
+    priceDate: todayIso(),
+  },
+];
+
+/** سلع تجريبية للمخزون — للتجربة فقط، لا تُزرع لحساب حقيقي. */
+export const seedInventory = (): NewRecord<InventoryItem>[] => [
+  {
+    name: 'لوح MDF ١٨ ملم',
+    unit: 'لوح',
+    qty: 12,
+    lowAt: 5,
+    costPrice: 35000,
+    salePrice: 42000,
+    supplier: 'سوق المواد الإنشائية',
+    notes: '',
+  },
+  {
+    name: 'مفصّلات أبواب',
+    unit: 'علبة',
+    qty: 3,
+    lowAt: 4,
+    costPrice: 8000,
+    salePrice: 11000,
+    supplier: 'محل الخردوات',
+    notes: 'العلبة ١٠ مفصّلات.',
+  },
+  {
+    name: 'ورق صنفرة',
+    unit: 'لفّة',
+    qty: 0,
+    lowAt: 2,
+    costPrice: 4500,
+    salePrice: 0,
+    supplier: '',
+    notes: 'نفد — يُطلب مع الطلبية القادمة.',
+  },
 ];
 
 export const seedDebts = (): NewRecord<Debt>[] => [
@@ -200,8 +347,38 @@ export const seedDebts = (): NewRecord<Debt>[] => [
   },
 ];
 
+/**
+ * مؤشّر الأسعار: أسطر أصناف المواد التي تخصّ المهنة، وكلّها إن لم تُحدَّد مهنة.
+ * المهنة المكتوبة يدوياً لا أسعار جاهزة لها — إلا سطراً باسم مادّتها إن سمّاها
+ * صاحبها، ليجد الصفحة مبدوءة لا فارغة.
+ */
+export const seedMarketPrices = (
+  craft?: Craft,
+  customMaterial?: string,
+): NewRecord<MarketPrice>[] => {
+  const rows = ALL_MARKET_PRICES();
+  if (!craft) return rows;
+  if (craft === 'other') {
+    const name = customMaterial?.trim();
+    if (!name) return [];
+    return [
+      {
+        kind: 'other',
+        name,
+        unit: 'وحدة',
+        price: 0,
+        previousPrice: null,
+        source: '',
+        priceDate: todayIso(),
+      },
+    ];
+  }
+  const materials = tradeFor(craft).materials;
+  return rows.filter((row) => materials.includes(row.kind));
+};
+
 /** قوالب منتجات شائعة لكل حرفة — نقطة انطلاق يعدّلها صاحب الورشة. */
-export const seedProducts = (): NewRecord<ProductTemplate>[] => [
+const ALL_PRODUCTS = (): NewRecord<ProductTemplate>[] => [
   {
     name: 'باب خشب داخلي',
     craft: 'carpenter',
@@ -292,4 +469,160 @@ export const seedProducts = (): NewRecord<ProductTemplate>[] => [
     defaultDepth: 0,
     notes: 'تسعير بالقطعة لا بالمقاس.',
   },
+  {
+    name: 'نافذة ألمنيوم',
+    craft: 'aluminium',
+    basis: 'area',
+    unitPrice: 14000,
+    density: 0,
+    wastePct: 7,
+    fittings: 6000,
+    labor: 9000,
+    marginPct: 24,
+    defaultWidth: 120,
+    defaultHeight: 100,
+    defaultDepth: 0,
+    notes: 'السعر للمتر المربّع شاملاً المقطع والزجاج. الإكسسوارات: بكرات ومقابض.',
+  },
+  {
+    name: 'باب ألمنيوم بزجاج',
+    craft: 'aluminium',
+    basis: 'area',
+    unitPrice: 17000,
+    density: 0,
+    wastePct: 8,
+    fittings: 12000,
+    labor: 14000,
+    marginPct: 24,
+    defaultWidth: 90,
+    defaultHeight: 210,
+    defaultDepth: 0,
+    notes: 'الإكسسوارات تشمل القفل والمفصّلات ومغلاق الباب.',
+  },
+  {
+    name: 'واجهة زجاجية',
+    craft: 'aluminium',
+    basis: 'area',
+    unitPrice: 22000,
+    density: 0,
+    wastePct: 6,
+    fittings: 0,
+    labor: 12000,
+    marginPct: 22,
+    defaultWidth: 300,
+    defaultHeight: 250,
+    defaultDepth: 0,
+    notes: 'زجاج سميك على هيكل ألمنيوم — يُسعّر بمساحة الواجهة.',
+  },
+  {
+    name: 'تغيير زيت وفلتر',
+    craft: 'mechanic',
+    basis: 'unit',
+    unitPrice: 4900,
+    density: 0,
+    wastePct: 0,
+    fittings: 0,
+    labor: 2000,
+    marginPct: 30,
+    defaultWidth: 0,
+    defaultHeight: 0,
+    defaultDepth: 0,
+    notes: 'سعر الوحدة = الزيت والفلتر. الأجرة أجرة اليد.',
+  },
+  {
+    name: 'تصليح الفرامل',
+    craft: 'mechanic',
+    basis: 'unit',
+    unitPrice: 5500,
+    density: 0,
+    wastePct: 0,
+    fittings: 1000,
+    labor: 4000,
+    marginPct: 30,
+    defaultWidth: 0,
+    defaultHeight: 0,
+    defaultDepth: 0,
+    notes: 'الطقم الأمامي. الإكسسوارات: سائل الفرامل.',
+  },
+  {
+    name: 'تشخيص العطب',
+    craft: 'mechanic',
+    basis: 'unit',
+    unitPrice: 0,
+    density: 0,
+    wastePct: 0,
+    fittings: 0,
+    labor: 2500,
+    marginPct: 0,
+    defaultWidth: 0,
+    defaultHeight: 0,
+    defaultDepth: 0,
+    notes: 'أجرة عمل فقط بلا قطع.',
+  },
+  {
+    name: 'بناء جدار آجر',
+    craft: 'builder',
+    basis: 'area',
+    unitPrice: 3800,
+    density: 0,
+    wastePct: 8,
+    fittings: 0,
+    labor: 2200,
+    marginPct: 18,
+    defaultWidth: 400,
+    defaultHeight: 280,
+    defaultDepth: 0,
+    notes: 'السعر للمتر المربّع: آجر وإسمنت ورمل. الأجرة أجرة البناء.',
+  },
+  {
+    name: 'صبّ خرسانة',
+    craft: 'builder',
+    basis: 'volume',
+    unitPrice: 62000,
+    density: 0,
+    wastePct: 5,
+    fittings: 0,
+    labor: 18000,
+    marginPct: 18,
+    defaultWidth: 400,
+    defaultHeight: 20,
+    defaultDepth: 400,
+    notes: 'السعر للمتر المكعّب. الارتفاع هنا سماكة الصبّة.',
+  },
 ];
+
+/**
+ * قالب البداية لمهنة كتبها صاحبها بنفسه: باسم مهنته، وبطريقة التسعير التي
+ * اختارها، وبأرقام صفرية يملؤها هو — فلا نخترع له سعراً لا نعرفه.
+ */
+export const seedCustomProduct = (
+  name: string,
+  basis: PricingBasis,
+  marginPct: number,
+): NewRecord<ProductTemplate>[] => {
+  const trimmed = name.trim();
+  if (!trimmed) return [];
+  return [
+    {
+      name: trimmed,
+      craft: 'other',
+      basis,
+      unitPrice: 0,
+      density: 0,
+      wastePct: 0,
+      fittings: 0,
+      labor: 0,
+      marginPct,
+      defaultWidth: basis === 'unit' ? 0 : 100,
+      defaultHeight: basis === 'area' || basis === 'volume' || basis === 'weight' ? 100 : 0,
+      defaultDepth: basis === 'volume' || basis === 'weight' ? 10 : 0,
+      notes: 'قالب بداية — ضع فيه سعر وحدتك وأجرتك ونسبة ربحك.',
+    },
+  ];
+};
+
+/** قوالب المهنة المختارة، وكلّها إن لم تُحدَّد مهنة. */
+export const seedProducts = (craft?: Craft): NewRecord<ProductTemplate>[] => {
+  const rows = ALL_PRODUCTS();
+  return craft ? rows.filter((row) => row.craft === craft) : rows;
+};

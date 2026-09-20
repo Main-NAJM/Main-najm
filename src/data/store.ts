@@ -38,6 +38,7 @@ export interface Store {
 export const COLLECTIONS: CollectionName[] = [
   'orders',
   'products',
+  'inventory',
   'appointments',
   'calculations',
   'marketPrices',
