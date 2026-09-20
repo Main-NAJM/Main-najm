@@ -1536,7 +1536,12 @@
   });
 </script>
 
-<!-- إعدادات المشروع. ملف منفصل ليملأه سكربت الإعداد وخطوة النشر تلقائياً. -->
+<!-- المنتجات محفوظة هنا داخل الصفحة نفسها. لوحة الإدارة تعيد كتابة هذا السطر
+     وتحفظ نسخة جديدة من الصفحة، فيراها كل من يفتح الرابط. -->
+<script type="application/json" id="catalogue">[]</script>
+
+<!-- إعدادات المشروع. ملف منفصل ليملأه سكربت الإعداد وخطوة النشر تلقائياً.
+     لا يُستعمل إلا عند استضافة المتجر على نطاق حقيقي. -->
 <script src="./firebase-config.js"></script>
 
 <!-- ======================================================================
@@ -1545,17 +1550,25 @@
      يعمل بما في index.html من منتجات، ولا تنكسر الصفحة.
      ====================================================================== -->
 <script type="module">
+  /* ======================================================================
+     مصدر المنتجات ولوحة الإدارة.
+
+     واجهتان خلفيتان بنفس اللوحة:
+
+     ١) «الصفحة تحفظ نفسها» — حين تعمل الصفحة داخل معاينة claude.ai. المنتجات
+        مخزّنة في الصفحة ذاتها (الوسم #catalogue)، وكل حفظ يكتب نسخة جديدة من
+        الصفحة فيراها كل من يفتح الرابط. لا حساب ولا كلمة مرور: المنصّة تعرف
+        صاحبة الصفحة، والزائرة تحصل على عرض للقراءة فقط.
+
+     ٢) Firestore — حين يُستضاف المتجر على نطاق حقيقي. هناك تعمل قاعدة
+        البيانات وتسجيل الدخول كالمعتاد.
+
+     تُختار الأولى إن كانت متاحة، وإلا الثانية. وإن تعذّرت الاثنتان يبقى المتجر
+     يعرض ما في الصفحة من منتجات ولا ينكسر.
+     ====================================================================== */
+
   const UI = window.OmAya;
-  const cfg = window.OM_AYA_FIREBASE || {};
   const $ = (sel) => document.querySelector(sel);
-
-  const SHOP = 'omAya';                 // مسار المتجر: shop/omAya/products
-
-  // المصدر jsDelivr لا gstatic: صفحات المعاينة على claude.ai تسمح بتحميل السكربتات
-  // من قائمة مصادر محدّدة، وgstatic ليس منها — فكانت المكتبة لا تُحمَّل هناك أصلاً.
-  // وjsDelivr يعمل في الموضعين: المعاينة والاستضافة الحقيقية.
-  const SDK = 'https://cdn.jsdelivr.net/npm/firebase@11.1.0';
-  const mod = (name) => `${SDK}/${name}/+esm`;
 
   const el = {
     veil: $('#admin-veil'), panel: $('#admin'), open: $('#admin-open'), close: $('#admin-close'),
@@ -1563,10 +1576,44 @@
     who: $('#admin-who'), loginError: $('#admin-login-error'), formError: $('#admin-form-error'),
     form: $('#admin-form'), formTitle: $('#admin-form-title'), reset: $('#f-reset'),
     items: $('#admin-items'), count: $('#admin-count'), signout: $('#admin-signout'),
-    cats: $('#f-cats'), glyph: $('#f-glyph'),
+    cats: $('#f-cats'), glyph: $('#f-glyph'), save: $('#f-save'),
     uidBox: $('#admin-uid-box'), uid: $('#admin-uid'), uidNote: $('#admin-uid-note'),
-    uidCopy: $('#admin-uid-copy'),
+    uidCopy: $('#admin-uid-copy'), catalogue: $('#catalogue'),
   };
+
+  const showError = (node, message) => {
+    node.textContent = message;
+    node.hidden = !message;
+  };
+
+  /* ---------- المنتجات المخزّنة في الصفحة ---------- */
+
+  const clean = (v) => ({
+    id: String(v.id || ''),
+    section: v.section === 'phone' ? 'phone' : 'beauty',
+    name: String(v.name || ''),
+    category: String(v.category || ''),
+    price: Number(v.price) || 0,
+    was: Number(v.was) || 0,
+    badge: String(v.badge || ''),
+    glyph: String(v.glyph || 'spark'),
+    image: String(v.image || ''),
+    tiktok: String(v.tiktok || ''),
+    instagram: String(v.instagram || ''),
+    sort: Number(v.sort) || 0,
+  });
+
+  function readEmbedded() {
+    try {
+      const raw = JSON.parse(el.catalogue.textContent || '[]');
+      return Array.isArray(raw) ? raw.map(clean).filter((p) => p.id && p.name) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  let products = readEmbedded().sort((a, b) => a.sort - b.sort);
+  if (products.length) UI.setProducts(products);
 
   /* ---------- الدرج ---------- */
 
@@ -1602,42 +1649,89 @@
   el.glyph.innerHTML = UI.glyphs
     .map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
 
-  /* ---------- بلا إعدادات: يُقال ذلك صراحةً ولا يُترك نموذج لا يحفظ ---------- */
+  /* ---------- الواجهة الخلفية الأولى: الصفحة تحفظ نفسها ---------- */
 
-  const ready = ['apiKey', 'authDomain', 'projectId', 'appId']
-    .every((k) => typeof cfg[k] === 'string' && cfg[k].trim());
+  // الحاويات التي تُملأ وقت التشغيل. تُفرَّغ قبل حفظ نسخة جديدة حتى لا تُخزَّن
+  // الصفحة وفيها نسخة مرسومة من نفسها، فترسمها من جديد عند كل فتح.
+  const RENDERED = [
+    '#ticker', '#nav-actions', '#collage-orb', '#collage-tile', '#seal-core', '#assure',
+    '#filters', '#grid', '#phones-cta', '#phones-grid', '#follow-btn', '#reels',
+    '#contact-row', '#foot-social', '#drawer-body', '#f-cats', '#f-glyph', '#admin-items',
+  ];
 
-  if (!ready) {
-    UI.setState('unconfigured');
-    el.status.innerHTML =
-      'قاعدة البيانات غير مربوطة بعد، فلا يمكن حفظ المنتجات. املأي القيم الستّ في ' +
-      '<code>firebase-config.js</code> بجانب هذا الملف — مصدرها مكتوب داخله.';
+  function pageSource() {
+    const doc = document.documentElement.cloneNode(true);
+
+    RENDERED.forEach((sel) => {
+      const node = doc.querySelector(sel);
+      if (node) node.innerHTML = '';
+    });
+
+    // حالة عابرة لا تُحفظ: أدراج مفتوحة، وقفل التمرير، ونصوص أخطاء.
+    doc.querySelectorAll('.open').forEach((n) => n.classList.remove('open'));
+    ['#admin', '#admin-veil', '#drawer', '#veil'].forEach((sel) => {
+      const n = doc.querySelector(sel);
+      if (n) n.setAttribute('hidden', '');
+    });
+    const body = doc.querySelector('body');
+    if (body) body.removeAttribute('style');
+    ['#admin-login-error', '#admin-form-error'].forEach((sel) => {
+      const n = doc.querySelector(sel);
+      if (n) { n.textContent = ''; n.setAttribute('hidden', ''); }
+    });
+
+    const data = doc.querySelector('#catalogue');
+    if (data) data.textContent = JSON.stringify(products);
+
+    return `<!DOCTYPE html>\n${doc.outerHTML}`;
   }
 
-  // كل ما يلي يحتاج إعدادات صحيحة. بدونها تبقى اللوحة تُفتح وتشرح ما ينقص،
-  // ويبقى المتجر يعرض ما في index.html من منتجات.
-  if (ready) connect();
+  function pageBackend(artifact, canEdit) {
+    return {
+      kind: 'page',
+      needsLogin: false,
+      canEdit,
+      label: canEdit
+        ? 'أضيفي منتجاتك — كل حفظ يحدّث الصفحة لكل من يفتح الرابط.'
+        : 'هذه الصفحة للعرض فقط. صاحبة المتجر وحدها تعدّل المنتجات.',
+      async write() {
+        await artifact.publish(pageSource());
+      },
+    };
+  }
 
-  // دالة لا كتلة: تعذّر الوصول إلى الشبكة ينهيها بـ return هادئ، بلا خطأ غير ملتقط
-  // في سجلّ المتصفّح — والمتجر يبقى يعمل بما في index.html من منتجات.
-  async function connect() {
-    /* ---------- الاتصال ---------- */
+  /* ---------- الواجهة الخلفية الثانية: Firestore ---------- */
 
+  const cfg = window.OM_AYA_FIREBASE || {};
+  const cfgReady = ['apiKey', 'authDomain', 'projectId', 'appId']
+    .every((k) => typeof cfg[k] === 'string' && cfg[k].trim());
+
+  const SDK = 'https://cdn.jsdelivr.net/npm/firebase@11.1.0';
+  const mod = (name) => `${SDK}/${name}/+esm`;
+
+  const AUTH_ERRORS = {
+    'auth/invalid-email': 'صيغة البريد غير صحيحة.',
+    'auth/user-not-found': 'لا يوجد حساب بهذا البريد.',
+    'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+    'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
+    'auth/too-many-requests': 'محاولات كثيرة — انتظري قليلاً ثم أعيدي المحاولة.',
+    'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
+    'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase.',
+    'auth/email-already-in-use': 'هذا البريد له حساب بالفعل — اضغطي «دخول» بدل «إنشاء حساب».',
+    'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+    'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل بعد.',
+  };
+  const say = (err) => AUTH_ERRORS[err && err.code] || (err && err.message) || 'حدث خطأ غير متوقّع.';
+
+  async function firebaseBackend() {
     let mods;
     try {
-      mods = await Promise.all([
-        import(mod('app')),
-        import(mod('auth')),
-        import(mod('firestore')),
-      ]);
+      mods = await Promise.all([import(mod('app')), import(mod('auth')), import(mod('firestore'))]);
     } catch {
-      UI.setState('error', 'تعذّر تحميل مكتبة Firebase');
-      el.status.textContent = 'تعذّر تحميل مكتبة Firebase. تحقّقي من الاتصال بالإنترنت.';
-      return;
+      return null;
     }
 
     const [{ initializeApp }, authMod, dbMod] = mods;
-
     const {
       getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
       signOut, onAuthStateChanged,
@@ -1649,273 +1743,305 @@
 
     const app = initializeApp(cfg);
     const auth = getAuth(app);
-    const db = getFirestore(app);
-    const productsRef = collection(db, 'shop', SHOP, 'products');
+    const ref = collection(getFirestore(app), 'shop', 'omAya', 'products');
 
-    /* ---------- قراءة المنتجات (للزبونات وللإدارة معاً) ---------- */
-
-    let items = [];
-
-    onSnapshot(query(productsRef, orderBy('sort', 'asc')), (snap) => {
-      items = snap.docs.map((d) => {
-        const v = d.data() || {};
-        return {
-          id: d.id,
-          section: v.section === 'phone' ? 'phone' : 'beauty',
-          name: String(v.name || ''),
-          category: String(v.category || ''),
-          price: Number(v.price) || 0,
-          was: Number(v.was) || 0,
-          badge: String(v.badge || ''),
-          glyph: String(v.glyph || 'spark'),
-          image: String(v.image || ''),
-          tiktok: String(v.tiktok || ''),
-          instagram: String(v.instagram || ''),
-          sort: Number(v.sort) || 0,
-        };
-      });
-      UI.setProducts(items);
+    onSnapshot(query(ref, orderBy('sort', 'asc')), (snap) => {
+      products = snap.docs.map((d) => clean({ id: d.id, ...(d.data() || {}) }));
+      UI.setProducts(products);
       UI.setState('ready');
-      renderAdminList();
+      renderList();
     }, (err) => {
-      // الفشل هنا لا يُفرغ المتجر: يبقى ما في index.html معروضاً.
       UI.setState('error', err.code || err.message);
       el.status.textContent = `تعذّرت قراءة المنتجات: ${err.code || err.message}`;
     });
 
-    /* ---------- الدخول ---------- */
-
-    const AUTH_ERRORS = {
-      'auth/invalid-email': 'صيغة البريد غير صحيحة.',
-      'auth/user-not-found': 'لا يوجد حساب بهذا البريد.',
-      'auth/wrong-password': 'كلمة المرور غير صحيحة.',
-      'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
-      'auth/too-many-requests': 'محاولات كثيرة — انتظري قليلاً ثم أعيدي المحاولة.',
-      'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
-      'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase — فعّليه من Authentication ← Sign-in method.',
-      'auth/email-already-in-use': 'هذا البريد له حساب بالفعل — اضغطي «دخول» بدل «إنشاء حساب».',
-      'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
-      // يحدث حين تُفتح الصفحة من نطاق غير مُدرج في Authentication ← Settings ← Authorized domains
-      'auth/unauthorized-domain': `هذا النطاق (${location.hostname}) غير مصرّح به في Firebase. أضيفيه في Authentication ← Settings ← Authorized domains.`,
-      'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل بعد.',
-    };
-    const say = (err) => AUTH_ERRORS[err.code] || err.message || 'حدث خطأ غير متوقّع.';
-
-    const showError = (node, message) => {
-      node.textContent = message;
-      node.hidden = !message;
-    };
-
-    // المعرّف يُعرض دائماً بعد الدخول، وبنبرة أوضح عند رفض أول كتابة.
     let uid = '';
-    function showUid(denied) {
-      el.uidBox.hidden = !uid;
-      if (!uid) return;
-      el.uid.textContent = uid;
-      el.uidNote.textContent = denied
-        ? 'حسابك غير مصرّح له بالتعديل بعد. انسخي هذا المعرّف وأرسليه لمن يضبط لكِ الموقع — سطر واحد في قواعد الأمان ويعمل الحفظ.'
-        : 'معرّف حسابك — هو ما يُوضع في قواعد الأمان ليُسمح لكِ بالتعديل.';
-    }
+    const back = {
+      kind: 'firebase',
+      needsLogin: true,
+      canEdit: false,
+      label: 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.',
+      async write(product, removeId) {
+        if (removeId) {
+          await deleteDoc(doc(ref, removeId));
+          return;
+        }
+        const { id, ...rest } = product;
+        await setDoc(doc(ref, id), { ...rest, updatedAt: serverTimestamp() }, { merge: true });
+      },
+      signIn: (email, pass) => signInWithEmailAndPassword(auth, email, pass),
+      signUp: (email, pass) => createUserWithEmailAndPassword(auth, email, pass),
+      signOut: () => signOut(auth),
+    };
 
     onAuthStateChanged(auth, (user) => {
       uid = user ? user.uid : '';
+      back.canEdit = !!user;
       UI.setSignedIn(!!user);
-      el.login.hidden = !!user;
-      el.manage.hidden = !user;
       el.who.textContent = user ? user.email || '' : '';
-      el.status.textContent = user
-        ? 'أضيفي منتجاتك — كل حفظ يظهر للزبونات فوراً.'
-        : 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.';
-      showError(el.loginError, '');
-      showUid(false);
-      if (user) renderAdminList();
+      el.uidBox.hidden = !uid;
+      if (uid) {
+        el.uid.textContent = uid;
+        el.uidNote.textContent = 'معرّف حسابك — هو ما يُوضع في قواعد الأمان ليُسمح لكِ بالتعديل.';
+      }
+      applyBackend();
     });
 
-    async function auth1(fn) {
-      showError(el.loginError, '');
-      const buttons = el.login.querySelectorAll('button');
-      buttons.forEach((b) => { b.disabled = true; });
-      try {
-        await fn(auth, $('#admin-email').value.trim(), $('#admin-pass').value);
-        $('#admin-pass').value = '';
-      } catch (err) {
-        showError(el.loginError, say(err));
-      } finally {
-        buttons.forEach((b) => { b.disabled = false; });
-      }
-    }
-
-    el.login.addEventListener('submit', (e) => {
-      e.preventDefault();
-      auth1(signInWithEmailAndPassword);
-    });
-
-    // أول مرّة: يُنشأ الحساب من هنا بدل إنشائه في كونسول Firebase.
-    $('#admin-signup').addEventListener('click', () => {
-      if (!el.login.reportValidity()) return;
-      auth1(createUserWithEmailAndPassword);
-    });
-
-    el.uidCopy.addEventListener('click', async () => {
-      try {
-        await navigator.clipboard.writeText(uid);
-        UI.toast('نُسخ المعرّف');
-      } catch {
-        // نسخ ممنوع في بعض المتصفّحات — يُحدَّد النصّ لتنسخه بنفسها.
-        const r = document.createRange();
-        r.selectNodeContents(el.uid);
-        const sel = getSelection();
-        sel.removeAllRanges();
-        sel.addRange(r);
-      }
-    });
-
-    el.signout.addEventListener('click', () => signOut(auth));
-
-    /* ---------- إضافة وتعديل ---------- */
-
-    let editingId = null;
-
-    const fields = {
-      section: $('#f-section'), name: $('#f-name'), category: $('#f-category'),
-      price: $('#f-price'), was: $('#f-was'), glyph: el.glyph, image: $('#f-image'),
-      badge: $('#f-badge'), tiktok: $('#f-tiktok'), instagram: $('#f-instagram'),
-    };
-
-    function fillForm(p) {
-      editingId = p ? p.id : null;
-      fields.section.value = p ? p.section : 'beauty';
-      fields.name.value = p ? p.name : '';
-      fields.category.value = p ? p.category : '';
-      fields.price.value = p ? p.price : '';
-      fields.was.value = p && p.was ? p.was : '';
-      fields.glyph.value = p ? p.glyph : 'lipstick';
-      fields.image.value = p ? p.image : '';
-      fields.badge.value = p ? p.badge : '';
-      fields.tiktok.value = p ? p.tiktok : '';
-      fields.instagram.value = p ? p.instagram : '';
-      el.formTitle.textContent = p ? `تعديل: ${p.name}` : 'منتج جديد';
-      el.reset.hidden = !p;
-      showError(el.formError, '');
-    }
-
-    el.reset.addEventListener('click', () => fillForm(null));
-
-    el.form.addEventListener('submit', async (e) => {
-      e.preventDefault();
-      showError(el.formError, '');
-
-      const price = Number(fields.price.value);
-      const was = Number(fields.was.value) || 0;
-      if (!Number.isFinite(price) || price < 0) {
-        showError(el.formError, 'السعر يجب أن يكون رقماً.');
-        return;
-      }
-      // «قبل التخفيض» أصغر من السعر يعطي شارة خصم بالسالب، فيُرفض قبل الحفظ.
-      if (was && was <= price) {
-        showError(el.formError, 'سعر ما قبل التخفيض يجب أن يكون أكبر من السعر الحالي.');
-        return;
-      }
-
-      const data = {
-        section: fields.section.value === 'phone' ? 'phone' : 'beauty',
-        name: fields.name.value.trim(),
-        category: fields.category.value.trim(),
-        price, was,
-        glyph: fields.glyph.value,
-        image: fields.image.value.trim(),
-        badge: fields.badge.value.trim(),
-        tiktok: fields.tiktok.value.trim(),
-        instagram: fields.instagram.value.trim(),
-        sort: editingId
-          ? (items.find((p) => p.id === editingId)?.sort ?? Date.now())
-          : Date.now(),
-        updatedAt: serverTimestamp(),
-      };
-
-      const btn = $('#f-save');
-      btn.disabled = true;
-      try {
-        // معرّف من الوقت: فريد، ويجعل الترتيب الافتراضي زمنياً.
-        const id = editingId || `p${Date.now().toString(36)}`;
-        await setDoc(doc(productsRef, id), data, { merge: true });
-        UI.toast(editingId ? 'حُفظ التعديل' : 'أُضيف المنتج');
-        fillForm(null);
-      } catch (err) {
-        showError(el.formError, say(err));
-      } finally {
-        btn.disabled = false;
-      }
-    });
-
-    /* ---------- قائمة المنتجات داخل اللوحة ---------- */
-
-    function renderAdminList() {
-      if (!el.items) return;
-
-      el.cats.innerHTML = UI.categories.map((c) => `<option value="${c}"></option>`).join('');
-      el.count.textContent = items.length ? `(${items.length})` : '';
-
-      if (!items.length) {
-        el.items.innerHTML = '<p class="admin-empty">لا منتجات بعد. املأي النموذج أعلاه واضغطي «حفظ المنتج».</p>';
-        return;
-      }
-
-      el.items.innerHTML = items.map((p) => `
-        <div class="admin-item" data-id="${p.id}">
-          <span class="tile" style="--card-grad:${UI.gradient(p.category)};">${
-            p.image ? `<img src="${p.image}" alt="" loading="lazy">` : UI.glyph(p.glyph, 22)
-          }</span>
-          <span class="info">
-            <strong></strong>
-            <small></small>
-          </span>
-          <span class="row-actions">
-            <button type="button" data-edit="${p.id}" aria-label="تعديل">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1Z"/><path d="M14.5 6.5l3 3"/></svg>
-            </button>
-            <button type="button" class="danger" data-del="${p.id}" aria-label="حذف">
-              <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
-            </button>
-          </span>
-        </div>`).join('');
-
-      // الاسم والفئة يُكتبان نصّاً لا HTML، فلا يُفسَّر ما تكتبه صاحبة المتجر كوسوم.
-      items.forEach((p) => {
-        const row = el.items.querySelector(`[data-id="${CSS.escape(p.id)}"]`);
-        if (!row) return;
-        row.querySelector('strong').textContent = p.name;
-        row.querySelector('small').textContent =
-          `${p.section === 'phone' ? 'هواتف' : 'تجميل'} · ${p.category} · ${UI.money(p.price)}`;
-      });
-    }
-
-    el.items.addEventListener('click', async (e) => {
-      const edit = e.target.closest('[data-edit]');
-      if (edit) {
-        const p = items.find((x) => x.id === edit.dataset.edit);
-        if (p) {
-          fillForm(p);
-          el.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
-        }
-        return;
-      }
-
-      const del = e.target.closest('[data-del]');
-      if (!del) return;
-      const p = items.find((x) => x.id === del.dataset.del);
-      if (!p || !confirm(`حذف «${p.name}» نهائياً؟`)) return;
-      try {
-        await deleteDoc(doc(productsRef, p.id));
-        if (editingId === p.id) fillForm(null);
-        UI.toast('حُذف المنتج');
-      } catch (err) {
-        showError(el.formError, say(err));
-      }
-    });
-
-    fillForm(null);
+    return back;
   }
+
+  /* ---------- اختيار الواجهة ---------- */
+
+  let backend = null;
+
+  function applyBackend() {
+    if (!backend) return;
+    el.login.hidden = !backend.needsLogin || backend.canEdit;
+    el.manage.hidden = !backend.canEdit;
+    el.status.textContent = backend.label;
+    el.signout.hidden = backend.kind !== 'firebase';
+    el.uidBox.hidden = backend.kind !== 'firebase' || !el.uid.textContent;
+    showError(el.loginError, '');
+    if (backend.canEdit) renderList();
+  }
+
+  async function detectPage() {
+    if (!window.claude || typeof window.claude.use !== 'function') return null;
+    try {
+      const artifact = await window.claude.use('artifact');
+      if (!artifact) return null;
+      let canEdit = true;
+      try {
+        const user = await window.claude.use('user');
+        if (user && typeof user.canEdit === 'function') canEdit = !!user.canEdit();
+      } catch { /* تعذّرت معرفة الصلاحية — تُترك المحاولة للحفظ نفسه */ }
+      return pageBackend(artifact, canEdit);
+    } catch {
+      return null;
+    }
+  }
+
+  (async () => {
+    backend = await detectPage();
+
+    if (!backend && cfgReady) backend = await firebaseBackend();
+
+    if (!backend) {
+      UI.setState(cfgReady ? 'error' : 'unconfigured');
+      el.status.textContent = cfgReady
+        ? 'تعذّر الوصول إلى خدمة حفظ المنتجات من هذه الصفحة.'
+        : 'لم تُربط وسيلة حفظ المنتجات بعد.';
+      return;
+    }
+
+    if (backend.kind === 'page') {
+      UI.setState('ready');
+      UI.setSignedIn(backend.canEdit);
+    }
+    applyBackend();
+  })();
+
+  /* ---------- النموذج ---------- */
+
+  let editingId = null;
+
+  const fields = {
+    section: $('#f-section'), name: $('#f-name'), category: $('#f-category'),
+    price: $('#f-price'), was: $('#f-was'), glyph: el.glyph, image: $('#f-image'),
+    badge: $('#f-badge'), tiktok: $('#f-tiktok'), instagram: $('#f-instagram'),
+  };
+
+  function fillForm(p) {
+    editingId = p ? p.id : null;
+    fields.section.value = p ? p.section : 'beauty';
+    fields.name.value = p ? p.name : '';
+    fields.category.value = p ? p.category : '';
+    fields.price.value = p ? p.price : '';
+    fields.was.value = p && p.was ? p.was : '';
+    fields.glyph.value = p ? p.glyph : 'lipstick';
+    fields.image.value = p ? p.image : '';
+    fields.badge.value = p ? p.badge : '';
+    fields.tiktok.value = p ? p.tiktok : '';
+    fields.instagram.value = p ? p.instagram : '';
+    el.formTitle.textContent = p ? `تعديل: ${p.name}` : 'منتج جديد';
+    el.reset.hidden = !p;
+    showError(el.formError, '');
+  }
+
+  el.reset.addEventListener('click', () => fillForm(null));
+
+  el.form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.formError, '');
+    if (!backend || !backend.canEdit) return;
+
+    const price = Number(fields.price.value);
+    const was = Number(fields.was.value) || 0;
+    if (!Number.isFinite(price) || price < 0) {
+      showError(el.formError, 'السعر يجب أن يكون رقماً.');
+      return;
+    }
+    // «قبل التخفيض» أصغر من السعر يعطي شارة خصم بالسالب، فيُرفض قبل الحفظ.
+    if (was && was <= price) {
+      showError(el.formError, 'سعر ما قبل التخفيض يجب أن يكون أكبر من السعر الحالي.');
+      return;
+    }
+
+    const product = clean({
+      id: editingId || `p${Date.now().toString(36)}`,
+      section: fields.section.value,
+      name: fields.name.value.trim(),
+      category: fields.category.value.trim(),
+      price, was,
+      glyph: fields.glyph.value,
+      image: fields.image.value.trim(),
+      badge: fields.badge.value.trim(),
+      tiktok: fields.tiktok.value.trim(),
+      instagram: fields.instagram.value.trim(),
+      sort: editingId ? (products.find((p) => p.id === editingId) || {}).sort || Date.now() : Date.now(),
+    });
+
+    el.save.disabled = true;
+    const before = products;
+    try {
+      // في واجهة الصفحة تُحدَّث القائمة ثم تُحفظ؛ وفي Firestore يعيدها الاشتراك.
+      if (backend.kind === 'page') {
+        products = [...products.filter((p) => p.id !== product.id), product]
+          .sort((a, b) => a.sort - b.sort);
+        UI.setProducts(products);
+      }
+      await backend.write(product);
+      UI.toast(editingId ? 'حُفظ التعديل' : 'أُضيف المنتج');
+      fillForm(null);
+      renderList();
+    } catch (err) {
+      products = before;
+      UI.setProducts(products);
+      renderList();
+      showError(el.formError, say(err));
+    } finally {
+      el.save.disabled = false;
+    }
+  });
+
+  /* ---------- القائمة ---------- */
+
+  function renderList() {
+    if (!el.items) return;
+
+    el.cats.innerHTML = UI.categories.map((c) => `<option value="${c}"></option>`).join('');
+    el.count.textContent = products.length ? `(${products.length})` : '';
+
+    if (!products.length) {
+      el.items.innerHTML = '<p class="admin-empty">لا منتجات بعد. املأي النموذج أعلاه واضغطي «حفظ المنتج».</p>';
+      return;
+    }
+
+    el.items.innerHTML = products.map((p) => `
+      <div class="admin-item" data-id="${p.id}">
+        <span class="tile" style="--card-grad:${UI.gradient(p.category)};">${
+          p.image ? `<img src="${p.image}" alt="" loading="lazy">` : UI.glyph(p.glyph, 22)
+        }</span>
+        <span class="info"><strong></strong><small></small></span>
+        <span class="row-actions">
+          <button type="button" data-edit="${p.id}" aria-label="تعديل">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1Z"/><path d="M14.5 6.5l3 3"/></svg>
+          </button>
+          <button type="button" class="danger" data-del="${p.id}" aria-label="حذف">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+          </button>
+        </span>
+      </div>`).join('');
+
+    // الاسم والفئة يُكتبان نصّاً لا HTML، فلا يُفسَّر ما تكتبه صاحبة المتجر كوسوم.
+    products.forEach((p) => {
+      const row = el.items.querySelector(`[data-id="${CSS.escape(p.id)}"]`);
+      if (!row) return;
+      row.querySelector('strong').textContent = p.name;
+      row.querySelector('small').textContent =
+        `${p.section === 'phone' ? 'هواتف' : 'تجميل'} · ${p.category} · ${UI.money(p.price)}`;
+    });
+  }
+
+  el.items.addEventListener('click', async (e) => {
+    const edit = e.target.closest('[data-edit]');
+    if (edit) {
+      const p = products.find((x) => x.id === edit.dataset.edit);
+      if (p) {
+        fillForm(p);
+        el.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    const del = e.target.closest('[data-del]');
+    if (!del || !backend || !backend.canEdit) return;
+    const p = products.find((x) => x.id === del.dataset.del);
+    if (!p || !confirm(`حذف «${p.name}» نهائياً؟`)) return;
+
+    const before = products;
+    try {
+      if (backend.kind === 'page') {
+        products = products.filter((x) => x.id !== p.id);
+        UI.setProducts(products);
+      }
+      await backend.write(p, p.id);
+      if (editingId === p.id) fillForm(null);
+      renderList();
+      UI.toast('حُذف المنتج');
+    } catch (err) {
+      products = before;
+      UI.setProducts(products);
+      renderList();
+      showError(el.formError, say(err));
+    }
+  });
+
+  /* ---------- الدخول (لواجهة Firestore وحدها) ---------- */
+
+  async function auth1(fn) {
+    showError(el.loginError, '');
+    const buttons = el.login.querySelectorAll('button');
+    buttons.forEach((b) => { b.disabled = true; });
+    try {
+      await fn($('#admin-email').value.trim(), $('#admin-pass').value);
+      $('#admin-pass').value = '';
+    } catch (err) {
+      showError(el.loginError, say(err));
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+    }
+  }
+
+  el.login.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (backend && backend.signIn) auth1(backend.signIn);
+  });
+
+  $('#admin-signup').addEventListener('click', () => {
+    if (!el.login.reportValidity()) return;
+    if (backend && backend.signUp) auth1(backend.signUp);
+  });
+
+  el.signout.addEventListener('click', () => {
+    if (backend && backend.signOut) backend.signOut();
+  });
+
+  el.uidCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(el.uid.textContent);
+      UI.toast('نُسخ المعرّف');
+    } catch {
+      // نسخ ممنوع في بعض المتصفّحات — يُحدَّد النصّ لتنسخه بنفسها.
+      const r = document.createRange();
+      r.selectNodeContents(el.uid);
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+  });
+
+  fillForm(null);
 </script>
 </body>
 </html>
