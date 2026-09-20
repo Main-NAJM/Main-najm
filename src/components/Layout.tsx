@@ -2,7 +2,9 @@ import { useEffect, useState, type ReactNode } from 'react';
 import { NavLink, useLocation } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
-import { APP_NAME, craftLabel, userTypeLabel } from '@/lib/constants';
+import { APP_NAME } from '@/lib/constants';
+import { tradeLabel } from '@/lib/trades';
+import { InstallPrompt } from './InstallPrompt';
 import {
   CalculatorIcon,
   CalendarIcon,
@@ -14,6 +16,7 @@ import {
   PrintIcon,
   ProductIcon,
   SettingsIcon,
+  StockIcon,
 } from './icons';
 
 const primaryLinks = [
@@ -24,6 +27,7 @@ const primaryLinks = [
 ];
 
 const moreLinks = [
+  { to: '/inventory', label: 'المخزون', Icon: StockIcon },
   { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
   { to: '/calculator', label: 'حاسبة التكلفة', Icon: CalculatorIcon },
   { to: '/prices', label: 'أسعار السوق', Icon: PriceIcon },
@@ -38,6 +42,7 @@ const pageTitles: Record<string, string> = {
   '/debts': 'سجل الديون',
   '/calculator': 'حاسبة التكلفة والربح',
   '/products': 'حاسبة سعر المنتج',
+  '/inventory': 'المخزون والسلع',
   '/prices': 'مؤشرات أسعار السوق',
   '/print': 'الطباعة والتقارير',
   '/settings': 'الإعدادات',
@@ -79,8 +84,7 @@ export function Layout({ children }: { children: ReactNode }) {
           <div>
             <h1 className="app-header__title">{title}</h1>
             <div className="app-header__sub">
-              {profile.businessName || APP_NAME} · {userTypeLabel(profile.userType)}
-              {profile.userType === 'craftsman' ? ` · ${craftLabel(profile.craft)}` : ''}
+              {profile.businessName || APP_NAME} · {tradeLabel(profile)}
             </div>
           </div>
           <div className="app-header__actions">
@@ -104,7 +108,10 @@ export function Layout({ children }: { children: ReactNode }) {
         </div>
       ) : null}
 
-      <main className="app-main">{children}</main>
+      <main className="app-main">
+        <InstallPrompt />
+        {children}
+      </main>
 
       <nav className="bottom-nav" aria-label="التنقّل الرئيسي">
         {primaryLinks.map(({ to, label, Icon, end }) => (

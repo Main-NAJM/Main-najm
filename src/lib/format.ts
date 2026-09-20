@@ -1,4 +1,5 @@
 /** أدوات التنسيق: أرقام، عملة، تواريخ، هواتف. */
+import { normalizePhone } from './phone';
 
 const numberFormatter = new Intl.NumberFormat('ar-EG-u-nu-latn', {
   maximumFractionDigits: 2,
@@ -132,9 +133,19 @@ export const telHref = (phone: string): string | null => {
   return cleaned.length >= 5 ? `tel:${cleaned}` : null;
 };
 
-export const whatsappHref = (phone: string): string | null => {
-  const cleaned = (phone ?? '').replace(/\D/g, '');
-  return cleaned.length >= 8 ? `https://wa.me/${cleaned}` : null;
+/**
+ * رابط محادثة واتساب. wa.me لا يقبل إلا الرقم الدولي بلا صفر بادئ ولا علامة +،
+ * فالرقم المحلي (‎0551234567‎) يُحوّل أوّلاً إلى صيغته الدولية.
+ */
+export const whatsappHref = (phone: string, message?: string): string | null => {
+  const international = normalizePhone(phone ?? '');
+  if (!international) return null;
+  const number = international.slice(1); // إسقاط علامة +
+  const text = message?.trim();
+  // wa.me يفتح المحادثة والرسالة مكتوبة في الحقل، ولا يرسلها — الإرسال بيد صاحبها.
+  return text
+    ? `https://wa.me/${number}?text=${encodeURIComponent(text)}`
+    : `https://wa.me/${number}`;
 };
 
 export const percent = (value: number): string => `${formatNumber(round2(value))}٪`;

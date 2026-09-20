@@ -48,3 +48,9 @@ google-services.json
 # مخرجات بناء GitHub Pages
 pages-dist/
 dist-herfah/
+
+# بناء APK: مخرجات ومفتاح توقيع — المفتاح لا يُرفع أبداً إلى مستودع عام،
+# فمن يملكه يستطيع توقيع تحديث زائف باسم التطبيق.
+build-apk/
+*.keystore
+*.jks

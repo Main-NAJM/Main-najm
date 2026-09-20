@@ -38,6 +38,8 @@ interface TextInputProps {
   autoFocus?: boolean;
   inputMode?: 'text' | 'tel' | 'numeric' | 'decimal' | 'email';
   disabled?: boolean;
+  /** 'ltr' لمحتوى لاتيني (هاتف، بريد) داخل واجهة عربية، مع إبقائه محاذياً لليمين. */
+  dir?: 'ltr';
 }
 
 export function TextInput({
@@ -51,13 +53,14 @@ export function TextInput({
   autoFocus,
   inputMode,
   disabled,
+  dir,
 }: TextInputProps) {
   return (
     <Field label={label} hint={hint}>
       {(id) => (
         <input
           id={id}
-          className="input"
+          className={`input${dir === 'ltr' ? ' input--ltr' : ''}`}
           type={type}
           value={value}
           placeholder={placeholder}
@@ -65,6 +68,7 @@ export function TextInput({
           autoFocus={autoFocus}
           inputMode={inputMode}
           disabled={disabled}
+          dir={dir}
           onChange={(event: ChangeEvent<HTMLInputElement>) => {
             onChange(event.target.value);
           }}
@@ -104,7 +108,15 @@ export function NumberInput({
             inputMode="decimal"
             min={min}
             step={step ?? 'any'}
-            value={value}
+            // الصفر يُعرض فارغاً لا رقماً: حقل مبدوء بصفر يجعل الكتابة فيه
+            // «05000»، ولا تصحّحه React لأنها تقارن «05000» بـ5000 مقارنة مرنة
+            // فتراهما سواء. والفارغ هنا يعني صفراً على أي حال.
+            value={value === 0 ? '' : value}
+            onFocus={(event) => {
+              // تحديد ما في الحقل عند لمسه: من يضغط على مبلغ ليصحّحه يريد كتابته
+              // من جديد، لا إلحاق أرقامه بالقديم.
+              event.target.select();
+            }}
             onChange={(event) => {
               onChange(event.target.value);
             }}
@@ -236,7 +248,10 @@ export function LineItems({
               inputMode="decimal"
               min={0}
               step="any"
-              value={row.qty}
+              value={row.qty === 0 ? '' : row.qty}
+              onFocus={(event) => {
+                event.target.select();
+              }}
               onChange={(event) => {
                 onPatch(index, { qty: parse(event.target.value) });
               }}
@@ -250,7 +265,10 @@ export function LineItems({
               inputMode="decimal"
               min={0}
               step="any"
-              value={row.unitPrice}
+              value={row.unitPrice === 0 ? '' : row.unitPrice}
+              onFocus={(event) => {
+                event.target.select();
+              }}
               onChange={(event) => {
                 onPatch(index, { unitPrice: parse(event.target.value) });
               }}
@@ -286,6 +304,19 @@ interface ModalProps {
 export function Modal({ open, title, onClose, children, footer, wide }: ModalProps) {
   const panelRef = useRef<HTMLDivElement>(null);
 
+  // onClose تُكتب في موضع الاستدعاء كدالّة سهمية، فهويّتها تتغيّر مع كل رسم.
+  // حفظها في مرجع يمنع الأثر أدناه من إعادة التشغيل مع كل حرف يُكتب.
+  const closeRef = useRef(onClose);
+  closeRef.current = onClose;
+
+  // التركيز على اللوحة مرّة واحدة عند الفتح فقط. كان هذا السطر داخل أثرٍ يعتمد
+  // على onClose، فيُعاد تشغيله مع كل ضغطة مفتاح فينتزع التركيز من الحقل الذي
+  // يكتب فيه صاحبه — فلا يُقبل إلا أوّل حرف.
+  useEffect(() => {
+    if (!open) return;
+    panelRef.current?.focus();
+  }, [open]);
+
   useEffect(() => {
     if (!open) return;
 
@@ -294,8 +325,10 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
     const opener = document.activeElement as HTMLElement | null;
 
     const onKeyDown = (event: KeyboardEvent) => {
+      // closeRef لا onClose: هويّة onClose تتغيّر مع كل رسم، والاعتماد عليها
+      // هنا هو ما كان ينتزع التركيز من الحقل بعد أوّل حرف.
       if (event.key === 'Escape') {
-        onClose();
+        closeRef.current();
         return;
       }
       if (event.key !== 'Tab') return;
@@ -331,14 +364,13 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
     document.addEventListener('keydown', onKeyDown);
     const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    panelRef.current?.focus();
 
     return () => {
       document.removeEventListener('keydown', onKeyDown);
       document.body.style.overflow = previousOverflow;
       opener?.focus();
     };
-  }, [open, onClose]);
+  }, [open]);
 
   if (!open) return null;
 

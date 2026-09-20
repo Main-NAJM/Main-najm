@@ -205,3 +205,39 @@ export const computeProductPrice = (
     totalProfit: round2(unitProfit * quantity),
   };
 };
+
+/* ------------------------------------------------------------------ المخزون */
+
+/** حالة السلعة في المخزون. */
+export type StockLevel = 'out' | 'low' | 'ok';
+
+export const stockLevel = (item: { qty: number; lowAt: number }): StockLevel => {
+  const qty = Math.max(0, item.qty || 0);
+  if (qty <= 0) return 'out';
+  // حدّ تنبيه غير مضبوط (صفر) لا يجعل كل شيء منخفضاً.
+  return (item.lowAt || 0) > 0 && qty <= item.lowAt ? 'low' : 'ok';
+};
+
+export interface InventoryTotals {
+  items: number;
+  /** السلع التي نفدت أو نزلت إلى حدّ التنبيه. */
+  needsRestock: number;
+  outOfStock: number;
+  /** قيمة المخزون بسعر الشراء. */
+  value: number;
+}
+
+export const inventoryTotals = (
+  items: { qty: number; lowAt: number; costPrice: number }[],
+): InventoryTotals => {
+  let needsRestock = 0;
+  let outOfStock = 0;
+  let value = 0;
+  items.forEach((item) => {
+    const level = stockLevel(item);
+    if (level === 'out') outOfStock += 1;
+    if (level !== 'ok') needsRestock += 1;
+    value += Math.max(0, item.qty || 0) * Math.max(0, item.costPrice || 0);
+  });
+  return { items: items.length, needsRestock, outOfStock, value: round2(value) };
+};
