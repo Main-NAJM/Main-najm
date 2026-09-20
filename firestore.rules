@@ -42,7 +42,10 @@ service cloud.firestore {
     // ------------------------------------------------------------------
     match /shop/{shopId} {
       allow read: if true;
-      allow write: if false;
+      // مستند المتجر يحمل الإعدادات التي تحفظها لوحة التحكّم (الاسم والحسابات
+      // والنصوص والفيديوهات) — نفس صاحب المنتجات هو من يكتبها.
+      allow write: if request.auth != null
+        && request.auth.uid in ['ضعي-معرّف-حسابك-هنا'];
 
       match /products/{productId} {
         allow read: if true;

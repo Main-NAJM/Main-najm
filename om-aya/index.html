@@ -423,25 +423,75 @@
     text-underline-offset:3px; margin-inline-start:10px; padding:11px 8px;
   }
   .admin-link:hover{color:var(--cyan);}
+  /* اللوحة صفحة كاملة لا درجاً جانبياً: ما يُدار منها هو الموقع كلّه، لا
+     المنتجات وحدها، فالعرض الضيّق كان يخنق النماذج الطويلة. */
   .admin{
-    position:fixed; inset-block:0; inset-inline-start:0; z-index:95;
-    width:min(480px, 100%); display:flex; flex-direction:column;
-    background:var(--cream); box-shadow:0 0 70px rgba(26,5,18,.35);
-    transform:translateX(100%); transition:transform .36s var(--ease);
+    position:fixed; inset:0; z-index:95; display:flex; flex-direction:column;
+    background:var(--cream);
+    transform:translateY(100%); transition:transform .36s var(--ease);
   }
-  .admin.open{transform:translateX(0);}
-  .admin-head{display:flex; align-items:center; gap:12px; padding:18px 22px; background:var(--grad-cool); color:var(--plum);}
-  .admin-head h2{font-size:1.1rem;}
+  .admin.open{transform:translateY(0);}
+  .admin-in{width:100%; max-width:860px; margin-inline:auto;}
+  .admin-head{background:var(--grad-cool); color:var(--plum); padding:16px clamp(16px, 4vw, 28px);}
+  .admin-head-row{display:flex; align-items:center; gap:12px;}
+  .admin-head h2{font-size:1.15rem;}
   .admin-who{font-size:.76rem; opacity:.75; margin-inline-start:auto; direction:ltr;}
   .admin-head .ico{color:var(--plum);}
   .admin-head .ico:hover{background:rgba(255,255,255,.3); color:var(--plum);}
-  .admin-body{flex:1; overflow-y:auto; padding:20px 22px 28px;}
+  .admin-body{flex:1; overflow-y:auto; padding:20px clamp(16px, 4vw, 28px) 40px;}
   .admin-note{font-size:.86rem; color:var(--plum-3); margin-bottom:16px;}
+  .admin-hint{
+    font-size:.8rem; color:var(--plum-3); line-height:1.8;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-sm); padding:10px 12px;
+  }
+  .admin-hint code{
+    font-family:ui-monospace, monospace; font-size:.78rem;
+    background:var(--cream-2); padding:1px 5px; border-radius:4px;
+  }
+
+  /* التبويبات */
+  .admin-tabs{
+    display:flex; gap:6px; overflow-x:auto; margin-bottom:20px;
+    border-bottom:1.5px solid var(--line); padding-bottom:2px;
+  }
+  .admin-tab{
+    flex:none; padding:11px 14px; font-size:.87rem; font-weight:500;
+    color:var(--plum-3); border-bottom:2.5px solid transparent; margin-bottom:-2px;
+    white-space:nowrap; transition:color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .admin-tab:hover{color:var(--fuchsia-deep);}
+  .admin-tab[aria-selected="true"]{color:var(--violet-deep); border-bottom-color:var(--violet);}
+
+  /* صفوف قابلة للحذف: جمل الشريط والفيديوهات */
+  .admin-rows{display:grid; gap:10px;}
+  .admin-line{display:flex; gap:8px; align-items:center;}
+  .admin-line input{flex:1; min-width:0;}
+  .admin-line button{
+    width:44px; height:44px; flex:none; border-radius:var(--r-sm); display:grid; place-items:center;
+    border:1.5px solid var(--line); color:var(--plum-2); background:var(--panel);
+    transition:all .2s var(--ease);
+  }
+  .admin-line button:hover{border-color:#E11D48; color:#E11D48; background:#FFF1F2;}
+  .admin-card{
+    display:grid; gap:10px; padding:14px;
+    background:var(--panel); border:1.5px solid var(--line); border-radius:var(--r-md);
+  }
+  .admin-card-head{display:flex; align-items:center; gap:10px;}
+  .admin-card-head b{font-size:.86rem; font-weight:600; margin-inline-end:auto;}
   .admin-error{
     font-size:.84rem; color:#9F1239; background:#FFE4E6;
     border-radius:var(--r-sm); padding:10px 12px; margin-top:12px;
   }
   .admin-form{display:grid; gap:12px; margin-bottom:26px;}
+  .admin-form textarea{
+    font:inherit; font-size:.92rem; font-weight:400; color:var(--plum); line-height:1.8;
+    padding:11px 13px; border:1.5px solid var(--line); border-radius:var(--r-sm);
+    background:var(--panel); width:100%; resize:vertical;
+  }
+  .admin-form textarea:focus{border-color:var(--violet); outline:none;}
+  .admin-form h3{margin-top:10px;}
+  .admin-form h3:first-child{margin-top:0;}
   .admin-form h3{font-size:1rem;}
   .admin-form label{display:grid; gap:5px; font-size:.84rem; font-weight:500; color:var(--plum-2);}
   .admin-form small{font-weight:300; color:var(--plum-3); font-size:.78rem;}
@@ -539,6 +589,9 @@
     .foot-brand{grid-column:1 / -1;}
   }
   @media (max-width: 620px){
+    /* أربعة تبويبات على شاشة ٣٦٠ لا تتّسع بالحشو الكامل، والرابع المخفيّ لا يُبحث عنه */
+    .admin-tabs{gap:2px;}
+    .admin-tab{padding:11px 10px; font-size:.83rem;}
     .products{grid-template-columns:repeat(2, 1fr);}
     .card-body{padding:14px;}
     .card-links .btn-sm{padding-inline:10px; font-size:.8rem;}
@@ -564,15 +617,15 @@
   <div class="nav" id="nav">
     <div class="nav-inner">
       <a class="brand" href="#top">
-        <span class="brand-mark" aria-hidden="true">أ</span>
+        <span class="brand-mark" id="brand-mark" aria-hidden="true">أ</span>
         <span>
-          <b>أم آية</b>
+          <b id="brand-name">أم آية</b>
           <!-- dir=ltr وإلا نقلت المحاذاة العربية علامة @ إلى آخر المعرّف -->
           <i id="brand-handle" dir="ltr"></i>
         </span>
       </a>
       <nav class="links" aria-label="أقسام الموقع">
-        <a href="#products">البيجامات</a>
+        <a href="#products" id="nav-sleep">البيجامات</a>
         <a href="#phones">اكسسوارات الهواتف</a>
         <a href="#how">كيف تطلبين</a>
         <a href="#videos">الفيديوهات</a>
@@ -598,12 +651,12 @@
 
     <div class="wrap hero-grid">
       <div class="rise">
-        <span class="kicker kicker-light">Om Aya · راحتك وهاتفك</span>
-        <h1>راحتكِ في البيت <span class="glow-text">وأناقتكِ</span><br>في مكان واحد.</h1>
-        <p>بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.</p>
+        <span class="kicker kicker-light" id="hero-kicker">Om Aya · راحتك وهاتفك</span>
+        <h1 id="hero-title">راحتكِ في البيت <span class="glow-text">وأناقتكِ</span><br>في مكان واحد.</h1>
+        <p id="hero-text">بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.</p>
         <div class="hero-cta">
-          <a class="btn btn-hot" href="#products">تصفّحي البيجامات</a>
-          <a class="btn btn-ghost-light" href="#phones">اكسسوارات الهواتف</a>
+          <a class="btn btn-hot" href="#products" id="hero-cta-1">تصفّحي البيجامات</a>
+          <a class="btn btn-ghost-light" href="#phones" id="hero-cta-2">اكسسوارات الهواتف</a>
         </div>
         <div class="hero-stats">
           <div class="stat" id="stat-products" hidden><b id="stat-count">—</b><span>منتج مختار</span></div>
@@ -643,8 +696,8 @@
       <div class="head rise">
         <div>
           <span class="kicker">Sleepwear</span>
-          <h2>بيجامات وملابس نوم</h2>
-          <p>كل قطعة بسعرها الواضح ومقاساتها — بلا مفاجآت عند الطلب.</p>
+          <h2 id="sleep-title">بيجامات وملابس نوم</h2>
+          <p id="sleep-text">كل قطعة بسعرها الواضح ومقاساتها — بلا مفاجآت عند الطلب.</p>
         </div>
         <p class="kicker" style="margin:0;" id="count-label"></p>
       </div>
@@ -658,8 +711,8 @@
       <div class="head rise">
         <div>
           <span class="kicker" style="color:var(--cyan-deep);">Tech</span>
-          <h2>اكسسوارات الهواتف الذكية</h2>
-          <p>أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.</p>
+          <h2 id="phones-title">اكسسوارات الهواتف الذكية</h2>
+          <p id="phones-text">أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.</p>
         </div>
         <div id="phones-cta"></div>
       </div>
@@ -725,15 +778,15 @@
     <div class="foot-grid">
       <div class="foot-brand">
         <span class="brand">
-          <span class="brand-mark" aria-hidden="true">أ</span>
-          <span><b>أم آية</b> <i id="foot-handle" dir="ltr"></i></span>
+          <span class="brand-mark" id="foot-mark" aria-hidden="true">أ</span>
+          <span><b id="foot-brand-name">أم آية</b> <i id="foot-handle" dir="ltr"></i></span>
         </span>
-        <p>بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
+        <p id="foot-text">بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
         <div class="foot-social" id="foot-social"></div>
       </div>
       <div class="foot-col">
         <h3>الموقع</h3>
-        <a href="#products">البيجامات</a>
+        <a href="#products" id="foot-sleep">البيجامات</a>
         <a href="#phones">اكسسوارات الهواتف</a>
         <a href="#how">كيف تطلبين</a>
         <a href="#videos">الفيديوهات</a>
@@ -748,10 +801,10 @@
       </div>
     </div>
     <div class="foot-base">
-      <span>&copy; <span id="year"></span> أم آية — جميع الحقوق محفوظة</span>
+      <span>&copy; <span id="year"></span> <span id="foot-copy-name">أم آية</span> — جميع الحقوق محفوظة</span>
       <span>
         <span id="foot-handle-2" dir="ltr"></span>
-        <button class="admin-link" id="admin-open">لوحة الإدارة</button>
+        <button class="admin-link" id="admin-open">لوحة التحكّم</button>
       </span>
     </div>
   </div>
@@ -786,14 +839,17 @@
 <div class="veil" id="admin-veil" hidden></div>
 <aside class="admin" id="admin" role="dialog" aria-modal="true" aria-labelledby="admin-title" hidden>
   <div class="admin-head">
-    <h2 id="admin-title">لوحة الإدارة</h2>
-    <span class="admin-who" id="admin-who"></span>
-    <button class="ico" id="admin-close" aria-label="إغلاق اللوحة">
-      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
-    </button>
+    <div class="admin-in admin-head-row">
+      <h2 id="admin-title">لوحة التحكّم</h2>
+      <span class="admin-who" id="admin-who"></span>
+      <button class="ico" id="admin-close" aria-label="إغلاق اللوحة والعودة إلى المتجر">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
   </div>
 
   <div class="admin-body" id="admin-body">
+   <div class="admin-in">
     <p class="admin-note" id="admin-status">جارٍ الاتصال…</p>
 
     <form class="admin-form" id="admin-login" hidden>
@@ -819,6 +875,14 @@
           <button class="btn btn-ghost btn-sm" type="button" id="admin-uid-copy">نسخ</button>
         </div>
       </div>
+      <nav class="admin-tabs" id="admin-tabs" role="tablist" aria-label="أقسام لوحة التحكّم">
+        <button class="admin-tab" type="button" role="tab" data-tab="products" aria-selected="true">المنتجات</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="store" aria-selected="false">المتجر</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="texts" aria-selected="false">النصوص</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="videos" aria-selected="false">الفيديوهات</button>
+      </nav>
+
+      <section class="admin-panel" data-panel="products" role="tabpanel">
       <form class="admin-form" id="admin-form">
         <h3 id="admin-form-title">منتج جديد</h3>
         <label>القسم
@@ -887,9 +951,121 @@
         <h3>المنتجات <span id="admin-count"></span></h3>
         <div id="admin-items"></div>
       </div>
+      </section>
+
+      <section class="admin-panel" data-panel="store" role="tabpanel" hidden>
+        <form class="admin-form" id="store-form">
+          <h3>بيانات المتجر</h3>
+          <label>اسم المتجر <small>يظهر في الترويسة والتذييل ورسالة الطلب</small>
+            <input type="text" id="s-brand" maxlength="40" required>
+          </label>
+          <div class="admin-row">
+            <label>رقم واتساب <small>برمز الدولة، أرقاماً فقط</small>
+              <!-- الحدّ ٢٤ لا ١٥: لوحة الهاتف تضيف + ومسافات، وهي تُنظَّف عند الحفظ،
+                   فحدٌّ بعدد الأرقام وحدها كان يقطع آخر رقم من الرقم الملصوق. -->
+              <input type="tel" id="s-phone" dir="ltr" inputmode="tel" maxlength="24" placeholder="213696847079">
+            </label>
+            <label>العملة
+              <input type="text" id="s-currency" maxlength="8" placeholder="د.ج">
+            </label>
+          </div>
+          <label>المعرّف <small>يظهر بجانب الاسم وفي الشريط المتحرّك</small>
+            <input type="text" id="s-handle" dir="ltr" maxlength="32" placeholder="@am_aya_x">
+          </label>
+
+          <h3>الحسابات</h3>
+          <p class="admin-hint">كل حساب تتركينه فارغاً يختفي زرّه من الموقع بدل أن يظهر رابطاً معطوباً.</p>
+          <label>انستقرام
+            <input type="url" id="s-instagram" dir="ltr" placeholder="https://www.instagram.com/…">
+          </label>
+          <label>تيك توك
+            <input type="url" id="s-tiktok" dir="ltr" placeholder="https://www.tiktok.com/@…">
+          </label>
+          <label>سناب شات
+            <input type="url" id="s-snapchat" dir="ltr" placeholder="https://www.snapchat.com/add/…">
+          </label>
+          <label>فيسبوك <small>اختياري</small>
+            <input type="url" id="s-facebook" dir="ltr" placeholder="https://www.facebook.com/…">
+          </label>
+
+          <h3>الشريط المتحرّك</h3>
+          <p class="admin-hint">الجمل التي تمرّ في أعلى الصفحة. معرّفكِ يُضاف في آخرها تلقائياً.</p>
+          <div class="admin-rows" id="ticker-rows"></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="ticker-add">أضيفي جملة</button>
+
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="store-save">حفظ</button>
+          </div>
+          <p class="admin-error" id="store-error" hidden></p>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-panel="texts" role="tabpanel" hidden>
+        <form class="admin-form" id="texts-form">
+          <h3>الواجهة</h3>
+          <p class="admin-hint">
+            ضعي الكلمة التي تريدينها <strong>مضيئة</strong> بين قوسين معقوفين هكذا:
+            <code dir="ltr">{وأناقتكِ}</code>. والسطر الجديد يقطع السطر في العنوان.
+          </p>
+          <label>السطر الصغير فوق العنوان
+            <input type="text" id="t-hero-kicker" maxlength="60">
+          </label>
+          <label>العنوان الكبير
+            <textarea id="t-hero-title" rows="2" maxlength="120"></textarea>
+          </label>
+          <label>الفقرة تحته
+            <textarea id="t-hero-text" rows="3" maxlength="300"></textarea>
+          </label>
+
+          <h3>قسم البيجامات</h3>
+          <label>العنوان <small>يظهر أيضاً في قائمة الموقع وزرّ الواجهة</small>
+            <input type="text" id="t-sleep-title" maxlength="40">
+          </label>
+          <label>السطر تحته
+            <textarea id="t-sleep-text" rows="2" maxlength="200"></textarea>
+          </label>
+
+          <h3>قسم اكسسوارات الهواتف</h3>
+          <label>العنوان
+            <input type="text" id="t-phones-title" maxlength="40">
+          </label>
+          <label>السطر تحته
+            <textarea id="t-phones-text" rows="2" maxlength="200"></textarea>
+          </label>
+
+          <h3>التذييل</h3>
+          <label>تعريف المتجر أسفل الصفحة
+            <textarea id="t-foot-text" rows="3" maxlength="300"></textarea>
+          </label>
+
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="texts-save">حفظ</button>
+            <button class="btn btn-ghost" type="button" id="texts-reset">استرجاع النصّ الأصلي</button>
+          </div>
+          <p class="admin-error" id="texts-error" hidden></p>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-panel="videos" role="tabpanel" hidden>
+        <form class="admin-form" id="videos-form">
+          <h3>الفيديوهات</h3>
+          <p class="admin-hint">
+            معرّف الفيديو هو آخر الرابط لا الرابط كلّه: في تيك توك الأرقام بعد
+            <code dir="ltr">/video/</code>، وفي انستقرام الرمز بعد <code dir="ltr">/reel/</code>.
+            واتركيه فارغاً ليظهر مكانه تمهيد بلون الموقع بدل إطار معطوب.
+          </p>
+          <div class="admin-rows" id="video-rows"></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="video-add">أضيفي فيديو</button>
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="videos-save">حفظ</button>
+          </div>
+          <p class="admin-error" id="videos-error" hidden></p>
+        </form>
+      </section>
 
       <button class="btn btn-ghost btn-wide" id="admin-signout">خروج</button>
     </div>
+   </div>
   </div>
 </aside>
 
@@ -903,7 +1079,11 @@
 
 <script>
   /* ==========================================================================
-     بيانات المتجر — هذا هو الجزء الوحيد الذي تحتاجين تعديله.
+     بيانات المتجر.
+
+     هذه قيم البداية فقط. ما تحفظه صاحبة المتجر من **لوحة التحكّم** يُخزَّن في
+     الوسم ‎#settings‎ أسفل الصفحة ويحلّ محلّ ما هنا عند كل فتح — فلا حاجة
+     لتعديل هذا الملفّ بعد اليوم.
      ========================================================================== */
 
   const STORE = {
@@ -914,12 +1094,25 @@
     tiktok: 'https://www.tiktok.com/@am_aya_x',
     // معرّف سناب شات مختلف عن معرّف المنصّتين الأخريين، فلكلٍّ رابطه.
     snapchat: 'https://www.snapchat.com/add/aichocha2005',
+    facebook: '',
     handle: '@am_aya_x',
     currency: 'د.ج',
   };
 
+  // نصوص الصفحة التي تُحرَّر من اللوحة. مفاتيحها هي معرّفات العناصر في الصفحة.
+  const TEXTS = {
+    'hero-kicker':  'Om Aya · راحتك وهاتفك',
+    'hero-title':   'راحتكِ في البيت {وأناقتكِ}\nفي مكان واحد.',
+    'hero-text':    'بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.',
+    'sleep-title':  'بيجامات وملابس نوم',
+    'sleep-text':   'كل قطعة بسعرها الواضح ومقاساتها — بلا مفاجآت عند الطلب.',
+    'phones-title': 'اكسسوارات الهواتف الذكية',
+    'phones-text':  'أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.',
+    'foot-text':    'بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.',
+  };
+
   // الجمل التي تمرّ في الشريط العلوي.
-  const TICKER = [
+  let TICKER = [
     'توصيل لكل ولايات الوطن',
     'الدفع عند الاستلام',
     'أقمشة مريحة',
@@ -954,7 +1147,7 @@
                انستقرام:  https://www.instagram.com/reel/Cx1y2Z3aBcD/                 ←  Cx1y2Z3aBcD
      url     : رابط الفيديو كاملاً لزر «شاهدي على…». إن تُرك فارغاً يفتح الزرّ حسابكِ.
      اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد بلون الموقع بدل إطار معطوب.        */
-  const VIDEOS = [
+  let VIDEOS = [
     { platform:'tiktok',    embedId:'', url:'', title:'طقم بيجامة صيفي — القماش على الطبيعة', text:'قطن خفيف، ألوان هادئة، ومقاسات لكل القياسات.' },
     { platform:'instagram', embedId:'', url:'', title:'كيف تختارين مقاسكِ من البيت',            text:'قياسان فقط بشريط القياس، وتعرفين مقاسكِ.' },
     { platform:'tiktok',    embedId:'', url:'', title:'اكسسوارات هاتف تغيّر شكله كلياً',        text:'غطاء وحامل وخيط — تركيبة واحدة أنيقة.' },
@@ -1022,6 +1215,7 @@
   };
 
   const SOLID = {
+    facebook:'<path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/>',
     snapchat:'<path d="M12 2.6c3.2 0 5.5 2.4 5.5 5.6v2.4c0 1.4.5 2.6 1.4 3.6.4.5.2 1.2-.4 1.4l-1.5.5a.9.9 0 0 0-.6.7l-.2 1c-.1.5-.6.8-1.1.6l-1.3-.4a2 2 0 0 0-1.7.3l-1.3.9c-.5.3-1.1.3-1.6 0l-1.3-.9a2 2 0 0 0-1.7-.3l-1.3.4c-.5.2-1-.1-1.1-.6l-.2-1a.9.9 0 0 0-.6-.7l-1.5-.5c-.6-.2-.8-.9-.4-1.4.9-1 1.4-2.2 1.4-3.6V8.2c0-3.2 2.3-5.6 5.5-5.6Z"/>',
     whatsapp:'<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/>',
     tiktok:'<path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06v-3.1a5.66 5.66 0 0 0-.77-.05A5.68 5.68 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.24-1.48Z"/>',
@@ -1059,7 +1253,8 @@
   const price = (value) => `${num(value)} ${STORE.currency}`;
 
   // رقم واتساب صالح: أرقام فقط، من 8 إلى 15 خانة مع رمز الدولة.
-  const phoneReady = /^\d{8,15}$/.test(STORE.phone);
+  // الرقم يُعدَّل من اللوحة، فيُحسَب عند كل استعمال لا مرّة واحدة عند التحميل.
+  const phoneReady = () => /^\d{8,15}$/.test(STORE.phone);
   const wa = (text) => `https://wa.me/${STORE.phone}?text=${encodeURIComponent(text)}`;
 
   // مصدر المنتجات: قاعدة البيانات متى اتّصلت، وإلا القائمتان المحلّيتان أعلاه.
@@ -1091,10 +1286,11 @@
 
   function channels() {
     return [
-      phoneReady && { key:'whatsapp', label:'واتساب', href:wa(`السلام عليكم، لدي استفسار عن منتجات ${STORE.brand}.`) },
+      phoneReady() && { key:'whatsapp', label:'واتساب', href:wa(`السلام عليكم، لدي استفسار عن منتجات ${STORE.brand}.`) },
       STORE.instagram && { key:'instagram', label:'انستقرام', href:STORE.instagram },
       STORE.tiktok && { key:'tiktok', label:'تيك توك', href:STORE.tiktok },
       STORE.snapchat && { key:'snapchat', label:'سناب شات', href:STORE.snapchat },
+      STORE.facebook && { key:'facebook', label:'فيسبوك', href:STORE.facebook },
     ].filter(Boolean);
   }
 
@@ -1122,7 +1318,7 @@
       ? `<a class="btn btn-ghost btn-sm" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
       : '';
 
-    $('#phones-cta').innerHTML = phoneReady
+    $('#phones-cta').innerHTML = phoneReady()
       ? `<a class="btn btn-cool btn-sm" href="${esc(wa('السلام عليكم، أبحث عن اكسسوار لهاتفي.'))}" target="_blank" rel="noopener">${solid('whatsapp', 16)} اسألي عن موديل هاتفكِ</a>`
       : '';
 
@@ -1130,6 +1326,47 @@
       const el = $(sel);
       if (el) el.textContent = STORE.handle || '';
     });
+  }
+
+  /* ---------- نصوص الصفحة ---------- */
+
+  // النصّ يُكتب كنصّ لا HTML، فما تكتبه صاحبة المتجر لا يُفسَّر وسوماً. ويبقى
+  // تمييزان اثنان: {كلمة} تُضاء، وسطر جديد يقطع السطر.
+  function styled(text) {
+    return esc(text)
+      .replace(/\{([^}]*)\}/g, '<span class="glow-text">$1</span>')
+      .replace(/\n/g, '<br>');
+  }
+
+  function renderTexts() {
+    Object.entries(TEXTS).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = styled(text);
+    });
+
+    const brand = STORE.brand || '';
+    ['#brand-name', '#foot-brand-name', '#foot-copy-name'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = brand;
+    });
+    // الحرف في الدائرة أول حرف من اسم المتجر — يتبعه إن تغيّر الاسم.
+    const mark = brand.trim()[0] || 'م';
+    ['#brand-mark', '#foot-mark'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = mark;
+    });
+
+    // عنوان قسم البيجامات يقود أيضاً روابط القائمة وزرّ الواجهة وعنوان التبويب،
+    // فلا تتناقض التسميات. يُؤخذ كما كتبته لا مقطوعاً: «ملابس النوم» كانت تصير «ملابس».
+    const sleep = (TEXTS['sleep-title'] || '').trim();
+    ['#nav-sleep', '#foot-sleep'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = sleep;
+    });
+    const cta = $('#hero-cta-1');
+    if (cta) cta.textContent = `تصفّحي ${sleep}`;
+
+    document.title = `${brand} | ${sleep} واكسسوارات الهواتف`;
   }
 
   /* ---------- شريط الضمانات ---------- */
@@ -1176,7 +1413,7 @@
     ].filter(Boolean).join('');
 
     const label = `مراسلة عبر واتساب بخصوص ${p.name}`;
-    const order = phoneReady
+    const order = phoneReady()
       ? `<a class="btn btn-ghost btn-sm btn-icon" href="${esc(wa(`السلام عليكم، أريد طلب: ${p.name} — ${price(p.price)}.`))}" target="_blank" rel="noopener" aria-label="${esc(label)}" title="${esc(label)}">${solid('whatsapp', 17)}</a>`
       : `<button class="btn btn-ghost btn-sm btn-icon" disabled aria-label="${esc(label)}" title="لم يُضبط رقم الواتساب بعد">${solid('whatsapp', 17)}</button>`;
 
@@ -1233,7 +1470,7 @@
 
   // حالة الفراغ: لا شبكة خالية ولا سطر جافّ، بل دعوة للتواصل ما دام الطلب عبر واتساب
   function emptyState(title, text) {
-    const ask = phoneReady
+    const ask = phoneReady()
       ? `<a class="btn btn-hot" href="${esc(wa(`السلام عليكم، متى تتوفّر منتجات ${STORE.brand}؟`))}" target="_blank" rel="noopener">${solid('whatsapp', 17)} راسلينا على واتساب</a>`
       : '';
     const follow = STORE.instagram || STORE.tiktok;
@@ -1376,8 +1613,8 @@
     $('#sum-total').textContent = price(total());
 
     const btn = $('#checkout');
-    btn.disabled = !rows.length || !phoneReady;
-    btn.title = phoneReady ? '' : 'لم يُضبط رقم الواتساب بعد';
+    btn.disabled = !rows.length || !phoneReady();
+    btn.title = phoneReady() ? '' : 'لم يُضبط رقم الواتساب بعد';
     btn.innerHTML = `${solid('whatsapp', 18)} ${rows.length ? `إتمام الطلب (${num(n)})` : 'إتمام الطلب عبر واتساب'}`;
   }
 
@@ -1438,7 +1675,7 @@
   // ونصّه يتبع حالة الاتصال: لا معنى لإرسالها إلى الملفّ وقاعدة البيانات موصولة.
   function renderSetup() {
     const contact = [
-      !phoneReady && 'رقم الواتساب',
+      !phoneReady() && 'رقم الواتساب',
       !STORE.instagram && 'رابط انستقرام',
       !STORE.tiktok && 'رابط تيك توك',
     ].filter(Boolean);
@@ -1526,6 +1763,28 @@
     setSignedIn(yes) {
       DB.signedIn = !!yes;
     },
+    // كل ما تحفظه اللوحة من غير المنتجات يمرّ من هنا: بيانات المتجر ونصوصه
+    // وشريطه وفيديوهاته. القيم المفقودة تبقى على ما كانت.
+    setSettings(data) {
+      if (!data || typeof data !== 'object') return;
+      if (data.store && typeof data.store === 'object') Object.assign(STORE, data.store);
+      if (data.texts && typeof data.texts === 'object') Object.assign(TEXTS, data.texts);
+      if (Array.isArray(data.ticker) && data.ticker.length) TICKER = data.ticker.slice(0, 8);
+      if (Array.isArray(data.videos)) VIDEOS = data.videos.slice(0, 6);
+      renderTexts();
+      renderTicker();
+      renderChannels();
+      renderReels();
+      renderCatalogue();
+    },
+    get settings() {
+      return {
+        store: { ...STORE },
+        texts: { ...TEXTS },
+        ticker: [...TICKER],
+        videos: VIDEOS.map((v) => ({ ...v })),
+      };
+    },
     get products() { return LIVE || []; },
     get categories() { return [...new Set(all().map((p) => p.category))].filter(Boolean); },
     glyphs: PRODUCT_GLYPHS,
@@ -1537,6 +1796,7 @@
 
   /* ---------- التشغيل ---------- */
 
+  renderTexts();
   renderTicker();
   renderChannels();
   renderAssurances();
@@ -1591,7 +1851,7 @@
     if (event.target.closest('#cart-toggle')) openDrawer();
     if (event.target.closest('#drawer-close') || event.target === veil) closeDrawer();
 
-    if (event.target.closest('#checkout') && count() && phoneReady) {
+    if (event.target.closest('#checkout') && count() && phoneReady()) {
       window.open(wa(orderMessage()), '_blank', 'noopener');
     }
   });
@@ -1607,6 +1867,10 @@
 
 <!-- إعدادات المشروع. ملف منفصل ليملأه سكربت الإعداد وخطوة النشر تلقائياً.
      لا يُستعمل إلا عند استضافة المتجر على نطاق حقيقي. -->
+<!-- إعدادات المتجر ونصوصه وفيديوهاته، كما حفظتها لوحة التحكّم. فارغ يعني
+     «استعملي القيم المكتوبة في السكربت أعلاه». -->
+<script type="application/json" id="settings">{}</script>
+
 <script src="./firebase-config.js"></script>
 
 <!-- ======================================================================
@@ -1643,7 +1907,13 @@
     items: $('#admin-items'), count: $('#admin-count'), signout: $('#admin-signout'),
     cats: $('#f-cats'), glyph: $('#f-glyph'), save: $('#f-save'),
     uidBox: $('#admin-uid-box'), uid: $('#admin-uid'), uidNote: $('#admin-uid-note'),
-    uidCopy: $('#admin-uid-copy'), catalogue: $('#catalogue'),
+    uidCopy: $('#admin-uid-copy'), catalogue: $('#catalogue'), settingsTag: $('#settings'),
+    tabs: $('#admin-tabs'),
+    storeForm: $('#store-form'), storeError: $('#store-error'),
+    tickerRows: $('#ticker-rows'), tickerAdd: $('#ticker-add'),
+    textsForm: $('#texts-form'), textsError: $('#texts-error'), textsReset: $('#texts-reset'),
+    videosForm: $('#videos-form'), videosError: $('#videos-error'),
+    videoRows: $('#video-rows'), videoAdd: $('#video-add'),
     photo: $('#f-photo'), photoPick: $('#f-photo-pick'), photoClear: $('#f-photo-clear'),
     photoThumb: $('#f-photo-thumb'), photoNote: $('#f-photo-note'),
   };
@@ -1681,6 +1951,24 @@
 
   let products = readEmbedded().sort((a, b) => a.sort - b.sort);
   if (products.length) UI.setProducts(products);
+
+  /* ---------- الإعدادات المخزّنة في الصفحة ---------- */
+
+  // ما حفظته اللوحة سابقاً. القيم الأصلية في السكربت أعلى الصفحة هي المرجع،
+  // وهذه تحلّ محلّ ما يقابلها منها فحسب — فلا يكسر مفتاحٌ ناقص شيئاً.
+  function readSettings() {
+    try {
+      const raw = JSON.parse((el.settingsTag && el.settingsTag.textContent) || '{}');
+      return raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+    } catch {
+      return {};
+    }
+  }
+
+  if (Object.keys(readSettings()).length) UI.setSettings(readSettings());
+
+  // النسخة الحيّة من الإعدادات: المعروض على الصفحة الآن، لا المحفوظ وحده.
+  let settings = UI.settings;
 
   /* ---------- الدرج ---------- */
 
@@ -1724,6 +2012,7 @@
     '#ticker', '#nav-actions', '#collage-orb', '#collage-tile', '#seal-core', '#assure',
     '#filters', '#grid', '#phones-cta', '#phones-grid', '#follow-btn', '#reels',
     '#contact-row', '#foot-social', '#drawer-body', '#f-cats', '#f-glyph', '#admin-items',
+    '#ticker-rows', '#video-rows',
   ];
 
   function pageSource() {
@@ -1739,7 +2028,7 @@
 
     // disabled خاصيّة تنعكس على الوسم: زرّ الحفظ مُعطَّل أثناء الحفظ، والحفظ هو
     // اللحظة التي تُنسخ فيها الصفحة — فكان يُخزَّن مُعطَّلاً فلا يعود يعمل أبداً.
-    doc.querySelectorAll('#f-save, #f-photo-pick, #admin-login button')
+    doc.querySelectorAll('#f-save, #f-photo-pick, #store-save, #texts-save, #videos-save, #admin-login button')
       .forEach((b) => b.removeAttribute('disabled'));
     doc.querySelectorAll('details[open]').forEach((d) => d.removeAttribute('open'));
     ['#admin', '#admin-veil', '#drawer', '#veil'].forEach((sel) => {
@@ -1748,9 +2037,17 @@
     });
     const body = doc.querySelector('body');
     if (body) body.removeAttribute('style');
-    ['#admin-login-error', '#admin-form-error'].forEach((sel) => {
-      const n = doc.querySelector(sel);
-      if (n) { n.textContent = ''; n.setAttribute('hidden', ''); }
+    ['#admin-login-error', '#admin-form-error', '#store-error', '#texts-error', '#videos-error']
+      .forEach((sel) => {
+        const n = doc.querySelector(sel);
+        if (n) { n.textContent = ''; n.setAttribute('hidden', ''); }
+      });
+    // التبويب المفتوح حالة عابرة كذلك: تُحفظ الصفحة دائماً على تبويب المنتجات.
+    doc.querySelectorAll('#admin-tabs .admin-tab').forEach((t, i) =>
+      t.setAttribute('aria-selected', i === 0 ? 'true' : 'false'));
+    doc.querySelectorAll('.admin-panel').forEach((n, i) => {
+      if (i === 0) n.removeAttribute('hidden');
+      else n.setAttribute('hidden', '');
     });
     // مصغّر الصورة في النموذج نسخة ثانية من صورة ثقيلة — يُفرَّغ فلا يتضاعف حجم الصفحة.
     const thumb = doc.querySelector('#f-photo-thumb');
@@ -1758,6 +2055,8 @@
 
     const data = doc.querySelector('#catalogue');
     if (data) data.textContent = JSON.stringify(products);
+    const conf = doc.querySelector('#settings');
+    if (conf) conf.textContent = JSON.stringify(settings);
 
     return `<!DOCTYPE html>\n${doc.outerHTML}`;
   }
@@ -1768,8 +2067,9 @@
       needsLogin: false,
       canEdit,
       label: canEdit
-        ? 'أضيفي منتجاتك — كل حفظ يحدّث الصفحة لكل من يفتح الرابط.'
-        : 'هذه الصفحة للعرض فقط. صاحبة المتجر وحدها تعدّل المنتجات.',
+        ? 'كل حفظ يحدّث الصفحة فوراً لكل من يفتح الرابط.'
+        : 'هذه الصفحة للعرض فقط. صاحبة المتجر وحدها تعدّلها.',
+      // الصفحة تُنشر كاملة، فالمنتجات والإعدادات تُحفظان معاً مهما كان النداء.
       async write() {
         const html = pageSource();
         // الصور مخزّنة داخل الصفحة، فللصفحة سقف. يُقال ذلك بوضوح قبل أن يرفضه الخادم.
@@ -1824,7 +2124,19 @@
 
     const app = initializeApp(cfg);
     const auth = getAuth(app);
-    const ref = collection(getFirestore(app), 'shop', 'omAya', 'products');
+    const db = getFirestore(app);
+    const shopDoc = doc(db, 'shop', 'omAya');
+    const ref = collection(db, 'shop', 'omAya', 'products');
+
+    // الإعدادات في مستند المتجر نفسه: تصل إلى كل من يفتح الصفحة كما تصل المنتجات.
+    onSnapshot(shopDoc, (snap) => {
+      const saved = snap.exists() ? (snap.data() || {}).settings : null;
+      if (saved) {
+        UI.setSettings(saved);
+        settings = UI.settings;
+        fillPanel();
+      }
+    }, () => { /* قراءة الإعدادات ليست حرجة — تبقى قيم الصفحة */ });
 
     onSnapshot(query(ref, orderBy('sort', 'asc')), (snap) => {
       products = snap.docs.map((d) => clean({ id: d.id, ...(d.data() || {}) }));
@@ -1842,7 +2154,12 @@
       needsLogin: true,
       canEdit: false,
       label: 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.',
-      async write(product, removeId) {
+      async write(product, removeId, conf) {
+        // نداء بإعدادات وحدها: تُكتب في مستند المتجر لا في المنتجات.
+        if (conf) {
+          await setDoc(shopDoc, { settings: conf, updatedAt: serverTimestamp() }, { merge: true });
+          return;
+        }
         if (removeId) {
           await deleteDoc(doc(ref, removeId));
           return;
@@ -1883,7 +2200,10 @@
     el.signout.hidden = backend.kind !== 'firebase';
     el.uidBox.hidden = backend.kind !== 'firebase' || !el.uid.textContent;
     showError(el.loginError, '');
-    if (backend.canEdit) renderList();
+    if (backend.canEdit) {
+      renderList();
+      fillPanel();
+    }
   }
 
   async function detectPage() {
@@ -2225,7 +2545,236 @@
     }
   });
 
+  /* ---------- التبويبات ---------- */
+
+  el.tabs.addEventListener('click', (e) => {
+    const tab = e.target.closest('.admin-tab');
+    if (!tab) return;
+    el.tabs.querySelectorAll('.admin-tab').forEach((t) =>
+      t.setAttribute('aria-selected', String(t === tab)));
+    document.querySelectorAll('.admin-panel').forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+    });
+    el.panel.querySelector('.admin-body').scrollTop = 0;
+  });
+
+  /* ---------- تبويب المتجر والحسابات ---------- */
+
+  const STORE_FIELDS = {
+    brand: '#s-brand', phone: '#s-phone', currency: '#s-currency', handle: '#s-handle',
+    instagram: '#s-instagram', tiktok: '#s-tiktok', snapchat: '#s-snapchat', facebook: '#s-facebook',
+  };
+
+  // زرّ الحذف واحد في كل الصفوف القابلة للحذف.
+  const TRASH = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+
+  function tickerRow(value = '') {
+    const row = document.createElement('div');
+    row.className = 'admin-line';
+    row.innerHTML = `<input type="text" maxlength="48" value=""><button type="button" aria-label="حذف الجملة">${TRASH}</button>`;
+    row.querySelector('input').value = value;
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  function fillStoreForm() {
+    Object.entries(STORE_FIELDS).forEach(([key, sel]) => {
+      const input = $(sel);
+      if (input) input.value = settings.store[key] || '';
+    });
+    el.tickerRows.innerHTML = '';
+    settings.ticker.forEach((line) => el.tickerRows.appendChild(tickerRow(line)));
+    showError(el.storeError, '');
+  }
+
+  el.tickerAdd.addEventListener('click', () => {
+    if (el.tickerRows.children.length >= 8) {
+      showError(el.storeError, 'ثماني جمل أكثر من كافية — الشريط يمرّ ولا يُقرأ كلّه.');
+      return;
+    }
+    el.tickerRows.appendChild(tickerRow(''));
+    el.tickerRows.lastElementChild.querySelector('input').focus();
+  });
+
+  el.storeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.storeError, '');
+
+    const store = {};
+    Object.entries(STORE_FIELDS).forEach(([key, sel]) => {
+      const input = $(sel);
+      store[key] = input ? input.value.trim() : '';
+    });
+    // الرقم يُنظَّف مما تضيفه لوحة المفاتيح: + ومسافات وشرطات.
+    store.phone = store.phone.replace(/[^\d]/g, '');
+    if (!store.brand) {
+      showError(el.storeError, 'اسم المتجر لا يُترك فارغاً.');
+      return;
+    }
+    if (store.phone && !/^\d{8,15}$/.test(store.phone)) {
+      showError(el.storeError, 'رقم الواتساب يُكتب برمز الدولة أرقاماً فقط — مثل 213696847079.');
+      return;
+    }
+    const bad = ['instagram', 'tiktok', 'snapchat', 'facebook']
+      .find((k) => store[k] && !/^https?:\/\//i.test(store[k]));
+    if (bad) {
+      showError(el.storeError, 'روابط الحسابات تبدأ بـ https — انسخي الرابط كاملاً من التطبيق.');
+      return;
+    }
+
+    const ticker = [...el.tickerRows.querySelectorAll('input')]
+      .map((i) => i.value.trim()).filter(Boolean);
+
+    await saveSettings({ store, ticker }, el.storeError, fillStoreForm);
+  });
+
+  /* ---------- تبويب النصوص ---------- */
+
+  const TEXT_FIELDS = [
+    'hero-kicker', 'hero-title', 'hero-text',
+    'sleep-title', 'sleep-text', 'phones-title', 'phones-text', 'foot-text',
+  ];
+
+  // النصوص الأصلية المكتوبة في السكربت — تُلتقط قبل أي تعديل ليعمل زرّ الاسترجاع.
+  const ORIGINAL_TEXTS = { ...UI.settings.texts };
+
+  function fillTextsForm(from = settings.texts) {
+    TEXT_FIELDS.forEach((key) => {
+      const input = $(`#t-${key}`);
+      if (input) input.value = from[key] || '';
+    });
+    showError(el.textsError, '');
+  }
+
+  el.textsReset.addEventListener('click', () => {
+    fillTextsForm(ORIGINAL_TEXTS);
+    UI.toast('رُجّع النصّ الأصلي — اضغطي «حفظ» لتثبيته');
+  });
+
+  el.textsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.textsError, '');
+    const texts = {};
+    TEXT_FIELDS.forEach((key) => {
+      const input = $(`#t-${key}`);
+      texts[key] = input ? input.value.trim() : '';
+    });
+    if (!texts['sleep-title'] || !texts['phones-title']) {
+      showError(el.textsError, 'عنوانا القسمين لا يُتركان فارغين — هما ما تراه الزائرة أولاً.');
+      return;
+    }
+    await saveSettings({ texts }, el.textsError, fillTextsForm);
+  });
+
+  /* ---------- تبويب الفيديوهات ---------- */
+
+  function videoRow(video = {}, index = 0) {
+    const row = document.createElement('div');
+    row.className = 'admin-card';
+    row.innerHTML = `
+      <div class="admin-card-head">
+        <b>فيديو ${index + 1}</b>
+        <button type="button" class="v-del" aria-label="حذف الفيديو">${TRASH}</button>
+      </div>
+      <div class="admin-row">
+        <label>المنصّة
+          <select class="v-platform">
+            <option value="tiktok">تيك توك</option>
+            <option value="instagram">انستقرام</option>
+          </select>
+        </label>
+        <label>معرّف الفيديو <small>اختياري</small>
+          <input type="text" class="v-id" dir="ltr" maxlength="40">
+        </label>
+      </div>
+      <label>العنوان
+        <input type="text" class="v-title" maxlength="80">
+      </label>
+      <label>السطر تحته
+        <input type="text" class="v-text" maxlength="120">
+      </label>
+      <label>رابط الفيديو <small>اختياري — لزرّ «شاهدي على…»</small>
+        <input type="url" class="v-url" dir="ltr" placeholder="https://…">
+      </label>`;
+    row.querySelector('.v-platform').value = video.platform === 'instagram' ? 'instagram' : 'tiktok';
+    row.querySelector('.v-id').value = video.embedId || '';
+    row.querySelector('.v-title').value = video.title || '';
+    row.querySelector('.v-text').value = video.text || '';
+    row.querySelector('.v-url').value = video.url || '';
+    row.querySelector('.v-del').addEventListener('click', () => {
+      row.remove();
+      renumberVideos();
+    });
+    return row;
+  }
+
+  function renumberVideos() {
+    [...el.videoRows.children].forEach((row, i) => {
+      row.querySelector('.admin-card-head b').textContent = `فيديو ${i + 1}`;
+    });
+  }
+
+  function fillVideosForm() {
+    el.videoRows.innerHTML = '';
+    settings.videos.forEach((v, i) => el.videoRows.appendChild(videoRow(v, i)));
+    showError(el.videosError, '');
+  }
+
+  el.videoAdd.addEventListener('click', () => {
+    if (el.videoRows.children.length >= 6) {
+      showError(el.videosError, 'ستّة فيديوهات هي الحدّ — أكثر منها يثقل الصفحة.');
+      return;
+    }
+    el.videoRows.appendChild(videoRow({}, el.videoRows.children.length));
+  });
+
+  el.videosForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.videosError, '');
+    const videos = [...el.videoRows.children].map((row) => ({
+      platform: row.querySelector('.v-platform').value,
+      embedId: row.querySelector('.v-id').value.trim(),
+      url: row.querySelector('.v-url').value.trim(),
+      title: row.querySelector('.v-title').value.trim(),
+      text: row.querySelector('.v-text').value.trim(),
+    })).filter((v) => v.title);
+    await saveSettings({ videos }, el.videosError, fillVideosForm);
+  });
+
+  /* ---------- حفظ الإعدادات ---------- */
+
+  // كل التبويبات تمرّ من هنا: تُطبَّق على الصفحة أولاً لتراها كما ستكون، ثم
+  // تُحفظ. وإن فشل الحفظ رجعت الصفحة إلى ما كانت عليه.
+  async function saveSettings(patch, errorNode, refill) {
+    if (!backend || !backend.canEdit) return;
+    const before = settings;
+    const buttons = el.panel.querySelectorAll('#store-save, #texts-save, #videos-save');
+    buttons.forEach((b) => { b.disabled = true; });
+    try {
+      settings = { ...settings, ...patch };
+      UI.setSettings(settings);
+      await backend.write(null, null, settings);
+      UI.toast('حُفظ');
+      if (refill) refill();
+    } catch (err) {
+      settings = before;
+      UI.setSettings(settings);
+      if (refill) refill();
+      showError(errorNode, say(err));
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+    }
+  }
+
+  function fillPanel() {
+    settings = UI.settings;
+    fillStoreForm();
+    fillTextsForm();
+    fillVideosForm();
+  }
+
   fillForm(null);
+  fillPanel();
 </script>
 </body>
 </html>
