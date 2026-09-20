@@ -22,9 +22,18 @@ import { doc, getDoc, setDoc, setLogLevel } from 'firebase/firestore';
 setLogLevel('silent');
 
 const ROOT = fileURLToPath(new URL('..', import.meta.url));
-const PROJECT_ID = 'albacha-metals-fecd8';
-const HOST = process.env.FIRESTORE_EMULATOR_HOST_NAME ?? '127.0.0.1';
-const PORT = Number(process.env.FIRESTORE_EMULATOR_PORT ?? 8080);
+const PROJECT_ID = process.env.GCLOUD_PROJECT ?? 'albacha-metals-fecd8';
+
+// ‎firebase emulators:exec‎ يضبط FIRESTORE_EMULATOR_HOST بصيغة host:port، فنقرأه
+// كما هو ليعمل السكربت في CI بلا إعداد، ونرجع إلى المنفذ الافتراضي محليًا.
+const [HOST, PORT] = (() => {
+  const fromEnv = process.env.FIRESTORE_EMULATOR_HOST;
+  if (fromEnv) {
+    const lastColon = fromEnv.lastIndexOf(':');
+    return [fromEnv.slice(0, lastColon), Number(fromEnv.slice(lastColon + 1))];
+  }
+  return ['127.0.0.1', 8080];
+})();
 
 const results = [];
 const check = async (name, promise) => {
