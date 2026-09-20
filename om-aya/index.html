@@ -452,6 +452,25 @@
   }
   .admin-form input:focus, .admin-form select:focus{border-color:var(--violet); outline:none;}
   .admin-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .admin-photo{display:grid; gap:9px;}
+  .admin-photo-title{font-size:.84rem; font-weight:500; color:var(--plum-2);}
+  .admin-photo-row{display:flex; align-items:center; gap:12px;}
+  .admin-photo-thumb{
+    width:64px; height:64px; flex:none; border-radius:var(--r-sm); overflow:hidden;
+    border:1.5px solid var(--line); background:var(--panel);
+  }
+  .admin-photo-thumb img{width:100%; height:100%; object-fit:cover;}
+  .admin-photo-btns{display:flex; gap:8px; flex-wrap:wrap; flex:1;}
+  .admin-photo-note{font-size:.78rem; color:var(--plum-3); line-height:1.6;}
+  .admin-photo-note.busy{color:var(--violet-deep);}
+  .admin-photo-note.bad{color:#9F1239;}
+  .admin-photo-link summary{
+    font-size:.8rem; color:var(--plum-3); cursor:pointer;
+    padding-block:6px; list-style-position:inside;
+  }
+  .admin-photo-link summary:hover{color:var(--fuchsia-deep);}
+  .admin-photo-link input{margin-top:6px;}
+  .admin-photo-link small{display:block; margin-top:5px;}
   .admin-actions{display:flex; gap:10px; flex-wrap:wrap;}
   .admin-actions .btn{flex:1;}
   .admin-list h3{font-size:1rem; margin-bottom:12px;}
@@ -826,9 +845,26 @@
         <label>الرسم <small>يظهر إن لم تكن هناك صورة</small>
           <select id="f-glyph"></select>
         </label>
-        <label>رابط الصورة <small>اختياري — رابط الصورة نفسها، ينتهي بـ .jpg أو .png. رابط حساب أو منشور لا يصلح، ويظهر الرسم مكانه.</small>
-          <input type="url" id="f-image" placeholder="https://…/photo.jpg">
-        </label>
+        <!-- صورة المنتج: الاختيار من الهاتف أوّلاً لأن المتجر يُدار من هاتف.
+             تُصغَّر الصورة وتُضغط في المتصفّح ثم تُخزَّن داخل الصفحة نفسها،
+             فلا حاجة لموقع رفع ولا لرابط خارجي قد ينكسر بعد حين. -->
+        <div class="admin-photo">
+          <span class="admin-photo-title">صورة المنتج <small>اختياري — إن لم تضيفيها ظهر الرسم أعلاه</small></span>
+          <div class="admin-photo-row">
+            <span class="admin-photo-thumb" id="f-photo-thumb" hidden></span>
+            <span class="admin-photo-btns">
+              <button class="btn btn-ghost btn-sm" type="button" id="f-photo-pick">اختاري صورة من هاتفك</button>
+              <button class="btn btn-ghost btn-sm" type="button" id="f-photo-clear" hidden>إزالة الصورة</button>
+            </span>
+          </div>
+          <input type="file" id="f-photo" accept="image/*" hidden>
+          <p class="admin-photo-note" id="f-photo-note">تُصغَّر الصورة تلقائياً لتبقى الصفحة سريعة.</p>
+          <details class="admin-photo-link">
+            <summary>أو الصقي رابط صورة جاهزاً</summary>
+            <input type="url" id="f-image" placeholder="https://…/photo.jpg">
+            <small>رابط الصورة نفسها، ينتهي بـ ‎.jpg‎ أو ‎.png‎. رابط حساب أو منشور لا يصلح، ويظهر الرسم مكانه.</small>
+          </details>
+        </div>
         <label>شارة <small>اختياري — مثل: جديد</small>
           <input type="text" id="f-badge" maxlength="20">
         </label>
@@ -1593,6 +1629,8 @@
     cats: $('#f-cats'), glyph: $('#f-glyph'), save: $('#f-save'),
     uidBox: $('#admin-uid-box'), uid: $('#admin-uid'), uidNote: $('#admin-uid-note'),
     uidCopy: $('#admin-uid-copy'), catalogue: $('#catalogue'),
+    photo: $('#f-photo'), photoPick: $('#f-photo-pick'), photoClear: $('#f-photo-clear'),
+    photoThumb: $('#f-photo-thumb'), photoNote: $('#f-photo-note'),
   };
 
   const showError = (node, message) => {
@@ -1686,7 +1724,9 @@
 
     // disabled خاصيّة تنعكس على الوسم: زرّ الحفظ مُعطَّل أثناء الحفظ، والحفظ هو
     // اللحظة التي تُنسخ فيها الصفحة — فكان يُخزَّن مُعطَّلاً فلا يعود يعمل أبداً.
-    doc.querySelectorAll('#f-save, #admin-login button').forEach((b) => b.removeAttribute('disabled'));
+    doc.querySelectorAll('#f-save, #f-photo-pick, #admin-login button')
+      .forEach((b) => b.removeAttribute('disabled'));
+    doc.querySelectorAll('details[open]').forEach((d) => d.removeAttribute('open'));
     ['#admin', '#admin-veil', '#drawer', '#veil'].forEach((sel) => {
       const n = doc.querySelector(sel);
       if (n) n.setAttribute('hidden', '');
@@ -1697,6 +1737,9 @@
       const n = doc.querySelector(sel);
       if (n) { n.textContent = ''; n.setAttribute('hidden', ''); }
     });
+    // مصغّر الصورة في النموذج نسخة ثانية من صورة ثقيلة — يُفرَّغ فلا يتضاعف حجم الصفحة.
+    const thumb = doc.querySelector('#f-photo-thumb');
+    if (thumb) { thumb.innerHTML = ''; thumb.setAttribute('hidden', ''); }
 
     const data = doc.querySelector('#catalogue');
     if (data) data.textContent = JSON.stringify(products);
@@ -1713,7 +1756,12 @@
         ? 'أضيفي منتجاتك — كل حفظ يحدّث الصفحة لكل من يفتح الرابط.'
         : 'هذه الصفحة للعرض فقط. صاحبة المتجر وحدها تعدّل المنتجات.',
       async write() {
-        await artifact.publish(pageSource());
+        const html = pageSource();
+        // الصور مخزّنة داخل الصفحة، فللصفحة سقف. يُقال ذلك بوضوح قبل أن يرفضه الخادم.
+        if (html.length > 12 * 1024 * 1024) {
+          throw new Error('الصفحة امتلأت بالصور. احذفي صور بعض المنتجات أو استعملي روابط صور بدلاً منها.');
+        }
+        await artifact.publish(html);
       },
     };
   }
@@ -1859,6 +1907,102 @@
     applyBackend();
   })();
 
+  /* ---------- صورة المنتج ---------- */
+
+  /* الصورة تُخزَّن داخل الصفحة نفسها (نصّاً بصيغة data:)، لأن المتجر يُدار من
+     هاتف ولا موقع رفع في الطريق. ولأنها تُحمَّل مع الصفحة عند كل فتح تُصغَّر
+     وتُضغط أولاً: أطول ضلع ٧٢٠ نقطة، وجودة تنزل تدريجياً حتى يصغر الحجم. */
+
+  const PHOTO_EDGE = 720;
+  const PHOTO_MAX = 180 * 1024;   // بالمحارف بعد الترميز — نحو ١٣٥ كيلوبايت فعلية
+
+  // صورة المنتج الحالي: رابط خارجي أو نصّ data: — فارغة تعني «بلا صورة».
+  let photo = '';
+
+  function showPhoto(src) {
+    photo = src || '';
+    el.photoThumb.innerHTML = photo
+      ? `<img src="${photo.replace(/"/g, '&quot;')}" alt="">` : '';
+    el.photoThumb.hidden = !photo;
+    el.photoClear.hidden = !photo;
+    el.photoPick.textContent = photo ? 'تغيير الصورة' : 'اختاري صورة من هاتفك';
+  }
+
+  function note(text, tone = '') {
+    el.photoNote.textContent = text;
+    el.photoNote.className = `admin-photo-note${tone ? ` ${tone}` : ''}`;
+  }
+
+  const NOTE_IDLE = 'تُصغَّر الصورة تلقائياً لتبقى الصفحة سريعة.';
+
+  function shrink(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('تعذّرت قراءة الملف.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('هذا الملف ليس صورة يمكن عرضها.'));
+        img.onload = () => {
+          const scale = Math.min(1, PHOTO_EDGE / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          // خلفية بيضاء: الشفافية في PNG تصير سواداً حين تُحوَّل إلى JPEG
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          let quality = 0.82;
+          let out = canvas.toDataURL('image/jpeg', quality);
+          while (out.length > PHOTO_MAX && quality > 0.4) {
+            quality -= 0.12;
+            out = canvas.toDataURL('image/jpeg', quality);
+          }
+          resolve(out);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  el.photoPick.addEventListener('click', () => el.photo.click());
+
+  el.photoClear.addEventListener('click', () => {
+    showPhoto('');
+    $('#f-image').value = '';
+    el.photo.value = '';
+    note(NOTE_IDLE);
+  });
+
+  el.photo.addEventListener('change', async () => {
+    const file = el.photo.files && el.photo.files[0];
+    if (!file) return;
+    note('جارٍ تجهيز الصورة…', 'busy');
+    el.photoPick.disabled = true;
+    try {
+      const src = await shrink(file);
+      showPhoto(src);
+      $('#f-image').value = '';
+      note(`جاهزة — ${Math.round(src.length / 1024)} كيلوبايت تقريباً.`);
+    } catch (err) {
+      note(err.message || 'تعذّر تجهيز الصورة.', 'bad');
+    } finally {
+      el.photoPick.disabled = false;
+      // تفريغ الحقل حتى يُقبل اختيار الملفّ نفسه مرّة ثانية
+      el.photo.value = '';
+    }
+  });
+
+  // رابط مكتوب باليد يحلّ محلّ الصورة المختارة، ويظهر في المعاينة نفسها.
+  $('#f-image').addEventListener('change', () => {
+    const url = $('#f-image').value.trim();
+    if (url) showPhoto(url);
+    else if (photo.startsWith('http')) showPhoto('');
+  });
+
   /* ---------- النموذج ---------- */
 
   let editingId = null;
@@ -1877,7 +2021,11 @@
     fields.price.value = p ? p.price : '';
     fields.was.value = p && p.was ? p.was : '';
     fields.glyph.value = p ? p.glyph : 'lipstick';
-    fields.image.value = p ? p.image : '';
+    // الصورة المخزّنة داخل الصفحة نصّ طويل لا يُعرض في خانة رابط؛ يُعرض مصغّرها وحده.
+    const img = p ? p.image : '';
+    fields.image.value = img.startsWith('data:') ? '' : img;
+    showPhoto(img);
+    note(NOTE_IDLE);
     fields.badge.value = p ? p.badge : '';
     fields.tiktok.value = p ? p.tiktok : '';
     fields.instagram.value = p ? p.instagram : '';
@@ -1912,7 +2060,8 @@
       category: fields.category.value.trim(),
       price, was,
       glyph: fields.glyph.value,
-      image: fields.image.value.trim(),
+      // الصورة المختارة من الهاتف تسبق الرابط المكتوب، وهي ما تراه في المعاينة.
+      image: photo || fields.image.value.trim(),
       badge: fields.badge.value.trim(),
       tiktok: fields.tiktok.value.trim(),
       instagram: fields.instagram.value.trim(),
