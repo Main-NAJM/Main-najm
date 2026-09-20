@@ -77,7 +77,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <header className="app-header">
         <div className="app-header__row">
           <div>
-            <div className="app-header__title">{title}</div>
+            <h1 className="app-header__title">{title}</h1>
             <div className="app-header__sub">
               {profile.businessName || APP_NAME} · {userTypeLabel(profile.userType)}
               {profile.userType === 'craftsman' ? ` · ${craftLabel(profile.craft)}` : ''}

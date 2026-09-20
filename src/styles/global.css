@@ -1444,6 +1444,10 @@ a.stat:active {
   text-align: end;
 }
 
+.text-center {
+  text-align: center;
+}
+
 /* مبلغ مالي: أرقام جدولية كي تتراصّ الخانات رأسيًا بين البطاقات */
 .amount {
   font-size: 17px;
@@ -1607,6 +1611,9 @@ a.stat:active {
   box-shadow: var(--sh-1);
 }
 
+/* 520px تفرض تمريرًا أفقيًا داخل .table-wrap على الحاسوب واللوحي — وهو
+   المقصود لجدول بأربعة أعمدة. أمّا تحت 560px فـ .table-wrap--cards يُلغيها
+   ويحوّل الصفوف إلى بطاقات، فلا تمرير أفقي على الجوال. */
 table.data {
   width: 100%;
   border-collapse: collapse;
@@ -1637,6 +1644,85 @@ table.data td.num,
 table.data th.num {
   text-align: end;
   font-variant-numeric: tabular-nums;
+}
+
+/* جدول يتحوّل إلى بطاقات على الجوال.
+   الجدول يظلّ جدولًا في الـ DOM — لقارئ الشاشة وللحاسوب — لكن على الشاشة
+   الضيّقة يصير كل صفّ بطاقة بأسطر «تسمية: قيمة»، لأن التمرير الأفقي داخل
+   نافذة ضيّقة أسوأ تجربة ممكنة لقراءة بيانات. التسميات تأتي من data-label. */
+@media (max-width: 560px) {
+  .table-wrap--cards {
+    overflow-x: visible;
+    border: none;
+    border-radius: 0;
+    background: none;
+    box-shadow: none;
+  }
+
+  .table-wrap--cards table.data {
+    min-width: 0;
+    display: block;
+  }
+
+  /* الرؤوس تبقى للقارئ الصوتي وتختفي بصريًا */
+  .table-wrap--cards thead {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+  }
+
+  .table-wrap--cards tbody {
+    display: block;
+  }
+
+  .table-wrap--cards tbody tr {
+    display: block;
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--sh-1);
+    padding: 6px 14px;
+    margin-bottom: 8px;
+  }
+
+  .table-wrap--cards tbody tr:last-child {
+    margin-bottom: 0;
+  }
+
+  .table-wrap--cards tbody td {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 9px 0;
+    border-bottom: 1px solid var(--line);
+    white-space: normal;
+    text-align: start;
+  }
+
+  .table-wrap--cards tbody td::before {
+    content: attr(data-label);
+    flex-shrink: 0;
+    color: var(--ink-3);
+    font-size: 12.5px;
+    font-weight: 600;
+  }
+
+  .table-wrap--cards tbody td:last-child {
+    border-bottom: none;
+  }
+
+  /* خلية الأفعال: بلا تسمية، والزرّ إلى نهاية السطر */
+  .table-wrap--cards tbody td.actions {
+    justify-content: flex-end;
+  }
+
+  .table-wrap--cards tbody td.actions::before {
+    content: none;
+  }
 }
 
 /* ------------------------------------------------------------- شريط التقدّم */
