@@ -5,8 +5,9 @@
  * ويحفظ كل البيانات في متصفّح الجهاز، بحيث يمكن تجربته قبل إعداد Firebase.
  */
 import { initializeApp, type FirebaseApp } from 'firebase/app';
-import { getAuth, type Auth } from 'firebase/auth';
+import { connectAuthEmulator, getAuth, type Auth } from 'firebase/auth';
 import {
+  connectFirestoreEmulator,
   initializeFirestore,
   persistentLocalCache,
   persistentMultipleTabManager,
@@ -40,6 +41,21 @@ let app: FirebaseApp | null = null;
 let authInstance: Auth | null = null;
 let dbInstance: Firestore | null = null;
 
+/**
+ * محاكي Firebase: يشغّل Auth و Firestore حقيقيَّين على الجهاز بلا مشروع سحابي
+ * وبلا فاتورة، فيمكن اختبار المزامنة وقواعد الأمان فعليًا قبل النشر.
+ *
+ *   npm run emulators          # نافذة أولى
+ *   npm run dev:emulator       # نافذة ثانية
+ *
+ * يُفعَّل بـ VITE_FIREBASE_EMULATORS=1 (موجود في .env.emulator)، ولا يُفعَّل
+ * أبدًا في بناء الإنتاج لأن .env.emulator لا يُحمَّل إلا مع ‎--mode emulator‎.
+ */
+const useEmulators = env.VITE_FIREBASE_EMULATORS === '1';
+const emulatorHost = (env.VITE_FIREBASE_EMULATOR_HOST as string | undefined) ?? '127.0.0.1';
+const authEmulatorPort = Number(env.VITE_FIREBASE_AUTH_EMULATOR_PORT ?? 9099);
+const firestoreEmulatorPort = Number(env.VITE_FIREBASE_FIRESTORE_EMULATOR_PORT ?? 8080);
+
 if (isFirebaseConfigured) {
   app = initializeApp(firebaseConfig as Required<typeof firebaseConfig>);
   authInstance = getAuth(app);
@@ -47,7 +63,17 @@ if (isFirebaseConfigured) {
   dbInstance = initializeFirestore(app, {
     localCache: persistentLocalCache({ tabManager: persistentMultipleTabManager() }),
   });
+
+  if (useEmulators) {
+    connectAuthEmulator(authInstance, `http://${emulatorHost}:${authEmulatorPort}`, {
+      disableWarnings: true,
+    });
+    connectFirestoreEmulator(dbInstance, emulatorHost, firestoreEmulatorPort);
+  }
 }
+
+/** هل يتّصل التطبيق بمحاكي محلي بدل السحابة؟ يُعرض في الإعدادات. */
+export const isUsingEmulators: boolean = isFirebaseConfigured && useEmulators;
 
 export const firebaseApp = app;
 export const auth = authInstance;
