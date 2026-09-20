@@ -2,10 +2,11 @@
 <html lang="ar" dir="rtl">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>مؤسسة الباشة للمعادن | ألمنيوم وحديد — تيمياوين، برج باجي مختار</title>
 <meta name="description" content="مؤسسة الباشة للمعادن — تصنيع وتركيب أبواب ونوافذ الألمنيوم والحديد. من التصميم على الورق إلى التركيب في مكانه. تيمياوين، ولاية برج باجي مختار.">
-<meta name="theme-color" content="#EDEAE2">
+<meta name="theme-color" content="#EDEAE2" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#16140F" media="(prefers-color-scheme: dark)">
 <!-- تثبيت الموقع كتطبيق على الهاتف والحاسوب (PWA) -->
 <link rel="manifest" href="./manifest.webmanifest">
 <link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
@@ -31,9 +32,49 @@
     --line: #D2CBB9;
     --radius: 3px;
     --wrap: 1180px;
+    /* حشو الصفحة سائل: 16px على أضيق هاتف، 28px على الحاسوب */
+    --gutter: clamp(16px, 4vw, 28px);
   }
+
+  /* الوضع الداكن: أسطح مرفوعة لا ألوان معكوسة، وذهب أقل تشبّعًا كي لا يتوهّج */
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg: #16140F;
+      --bg-alt: #1E1B15;
+      --panel: #221F18;
+      --ink: #F2EFE7;
+      --ink-soft: #B8B2A4;
+      --ink-faint: #8A8478;
+      --accent: #C79A5B;
+      --accent-deep: #E0B878;
+      --steel: #9AA0A2;
+      --steel-light: #4A4F50;
+      --line: #35302633;
+    }
+    header{background:rgba(22,20,15,0.92) !important;}
+    .process .sec-head p, .step p, .contact-col.dark p,
+    .contact-col.dark .info-row p, .wa-block p{color:var(--ink-soft) !important;}
+  }
+
   *{box-sizing:border-box; margin:0; padding:0;}
   html{scroll-behavior:smooth;}
+
+  /* بعض المستخدمين تسبّب لهم الحركة دوارًا فعليًا — الاحترام هنا ليس تحسينًا اختياريًا */
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *,*::before,*::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+    }
+  }
+
+  /* حلقة تركيز مرئية — بدونها التنقّل بلوحة المفاتيح أعمى تمامًا */
+  :focus-visible{
+    outline:2px solid var(--accent-deep);
+    outline-offset:3px;
+    border-radius:2px;
+  }
   body{
     background:var(--bg);
     color:var(--ink);
@@ -51,7 +92,12 @@
   }
   a{color:inherit; text-decoration:none;}
   img{max-width:100%; display:block;}
-  .wrap{max-width:var(--wrap); margin:0 auto; padding:0 28px;}
+  .wrap{
+    max-width:var(--wrap); margin:0 auto;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-left))
+      calc(var(--gutter) + env(safe-area-inset-right));
+  }
   ul{list-style:none;}
 
   /* ---------- Header ---------- */
@@ -62,14 +108,19 @@
     border-bottom:1px solid var(--line);
   }
   .nav-inner{
-    display:flex; align-items:center; justify-content:space-between;
-    padding:16px 28px; max-width:var(--wrap); margin:0 auto;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
+    padding-block:12px;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-left))
+      calc(var(--gutter) + env(safe-area-inset-right));
+    max-width:var(--wrap); margin:0 auto;
   }
   .logo{
     font-family:'El Messiri', sans-serif;
-    font-size:1.35rem;
+    font-size:clamp(1.05rem, 4.2vw, 1.35rem);
     font-weight:700;
     display:flex; flex-direction:column; line-height:1.15;
+    min-width:0;
   }
   .logo span{
     font-family:'IBM Plex Sans Arabic', sans-serif;
@@ -82,24 +133,41 @@
   nav.links{display:flex; gap:34px;}
   nav.links a{
     font-size:0.95rem; color:var(--ink-soft);
-    position:relative; padding:4px 0;
+    position:relative;
+    /* هدف لمس 44px ارتفاعًا رغم أن النصّ أصغر */
+    display:flex; align-items:center; min-height:44px;
     transition:color .25s ease;
   }
-  nav.links a:hover{color:var(--accent-deep);}
   nav.links a::after{
-    content:""; position:absolute; right:0; bottom:0; width:0; height:1px;
+    content:""; position:absolute; inset-inline-start:0; bottom:8px; width:0; height:1px;
     background:var(--accent); transition:width .25s ease;
   }
-  nav.links a:hover::after{width:100%;}
   .nav-cta{
-    display:flex; align-items:center; gap:8px;
+    display:flex; align-items:center; justify-content:center; gap:8px;
     background:var(--ink); color:var(--panel);
-    padding:10px 20px; border-radius:var(--radius);
-    font-size:0.9rem; transition:background .25s ease;
+    padding:11px 20px; min-height:44px; border-radius:var(--radius);
+    font-size:0.9rem; white-space:nowrap;
+    transition:background .25s ease;
   }
-  .nav-cta:hover{background:var(--accent-deep);}
-  .burger{display:none; flex-direction:column; gap:5px; cursor:pointer; background:none; border:none;}
-  .burger span{width:24px; height:2px; background:var(--ink);}
+  @media (hover: hover) and (pointer: fine){
+    nav.links a:hover{color:var(--accent-deep);}
+    nav.links a:hover::after{width:100%;}
+    .nav-cta:hover{background:var(--accent-deep);}
+  }
+
+  /* زرّ القائمة: 44×44 فعليًا، والأعواد الثلاثة تتحوّل إلى × عند الفتح */
+  .burger{
+    display:none; width:44px; height:44px;
+    flex-direction:column; align-items:center; justify-content:center; gap:5px;
+    cursor:pointer; background:none; border:none; flex-shrink:0;
+  }
+  .burger span{
+    width:24px; height:2px; background:var(--ink); border-radius:2px;
+    transition:transform .22s cubic-bezier(.16,1,.3,1), opacity .16s ease;
+  }
+  .burger[aria-expanded="true"] span:nth-child(1){transform:translateY(7px) rotate(45deg);}
+  .burger[aria-expanded="true"] span:nth-child(2){opacity:0;}
+  .burger[aria-expanded="true"] span:nth-child(3){transform:translateY(-7px) rotate(-45deg);}
 
   /* ---------- Hero ---------- */
   .hero{
@@ -130,9 +198,13 @@
     font-size:0.95rem; transition:all .25s ease; border:1px solid transparent;
   }
   .btn-primary{background:var(--accent); color:#FBF9F4;}
-  .btn-primary:hover{background:var(--accent-deep);}
   .btn-outline{border-color:var(--ink); color:var(--ink);}
-  .btn-outline:hover{background:var(--ink); color:var(--panel);}
+  @media (hover: hover) and (pointer: fine){
+    .btn-primary:hover{background:var(--accent-deep);}
+    .btn-outline:hover{background:var(--ink); color:var(--panel);}
+  }
+  /* ردّ فعل اللمس: على الجوال لا يوجد :hover يمنحه */
+  .btn:active{transform:scale(0.975);}
 
   .hero-art{
     position:relative; aspect-ratio:1/1.05;
@@ -178,7 +250,7 @@
   .material-list li:last-child{border-bottom:none;}
   .material-list li svg{width:16px; height:16px; color:var(--accent); flex-shrink:0;}
   .material-note{
-    font-size:0.86rem; color:var(--ink-faint); margin-bottom:22px; padding-right:2px;
+    font-size:0.86rem; color:var(--ink-faint); margin-bottom:22px; padding-inline-start:2px;
   }
   .product-photo{
     aspect-ratio:16/9; border:1px dashed var(--steel-light);
@@ -197,7 +269,7 @@
     position:relative;
   }
   .steps::before{
-    content:""; position:absolute; top:20px; right:12%; left:12%; height:1px;
+    content:""; position:absolute; top:20px; inset-inline:12%; height:1px;
     background:linear-gradient(to left, transparent, #6b6559, transparent);
   }
   .step{padding:0 20px; position:relative;}
@@ -221,7 +293,9 @@
     gap:12px; color:var(--ink-faint); border:1px dashed transparent;
     transition:border-color .2s ease;
   }
-  .gallery-slot:hover{border-color:var(--steel-light);}
+  @media (hover: hover) and (pointer: fine){
+    .gallery-slot:hover{border-color:var(--steel-light);}
+  }
   .gallery-slot svg{width:34px; height:34px; opacity:0.55;}
   .gallery-slot span{font-size:0.82rem;}
 
@@ -244,6 +318,10 @@
   .info-row .dark svg{color:var(--accent);}
   .info-row h4{font-size:0.95rem; margin-bottom:4px;}
   .info-row p{font-size:0.9rem; color:var(--ink-soft); margin:0;}
+  .info-row p + p{margin-top:10px;}
+  .info-row strong{color:var(--ink);}
+  .contact-col h2{margin-bottom:28px;}
+  .kicker--accent{color:var(--accent);}
   .contact-col.dark .info-row p{color:#B9B2A5;}
   .contact-col.dark .info-row h4{color:var(--bg);}
   .wa-block{
@@ -258,22 +336,53 @@
 
   /* ---------- Floating WhatsApp ---------- */
   .wa-float{
-    position:fixed; bottom:26px; left:26px; z-index:200;
+    position:fixed; z-index:200;
+    /* المناطق الآمنة: بدونها يقع الزرّ تحت شريط الصفحة الرئيسية في آيفون */
+    bottom:calc(26px + env(safe-area-inset-bottom));
+    inset-inline-end:calc(26px + env(safe-area-inset-right));
     width:56px; height:56px; border-radius:50%;
     background:var(--accent); color:#fff;
     display:flex; align-items:center; justify-content:center;
-    box-shadow:0 6px 18px rgba(30,27,23,0.25);
-    transition:transform .2s ease, background .2s ease;
+    /* ظلّ بطبقتين: تماس ضيّق + انتشار واسع */
+    box-shadow:0 2px 4px rgba(30,27,23,0.14), 0 8px 22px rgba(30,27,23,0.22);
+    transition:transform .2s cubic-bezier(.16,1,.3,1), background .2s ease;
   }
-  .wa-float:hover{transform:scale(1.06); background:var(--accent-deep);}
+  @media (hover: hover) and (pointer: fine){
+    .wa-float:hover{transform:scale(1.06); background:var(--accent-deep);}
+  }
+  .wa-float:active{transform:scale(0.94);}
   .wa-float svg{width:26px; height:26px;}
 
   /* ---------- Responsive ---------- */
   @media (max-width:900px){
-    nav.links{display:none;}
+    /* القائمة لوحة منسدلة تحت الشريط، تُفتح بالصنف لا بأنماط سطرية من JS */
+    nav.links{
+      position:absolute; inset-inline:0; top:100%;
+      flex-direction:column; gap:0;
+      background:var(--bg); border-bottom:1px solid var(--line);
+      padding-inline:var(--gutter);
+      box-shadow:0 2px 4px rgba(30,27,23,0.06), 0 12px 28px rgba(30,27,23,0.12);
+      max-height:0; overflow:hidden; visibility:hidden;
+      transition:max-height .26s cubic-bezier(.32,.72,0,1), visibility 0s linear .26s;
+    }
+    nav.links.is-open{
+      max-height:min(60dvh, 420px); overflow-y:auto; visibility:visible;
+      transition:max-height .26s cubic-bezier(.32,.72,0,1), visibility 0s;
+    }
+    nav.links a{min-height:52px; border-bottom:1px solid var(--line);}
+    nav.links a:last-child{border-bottom:none;}
+    nav.links a::after{display:none;}
     .burger{display:flex;}
-    .hero .wrap{grid-template-columns:1fr;}
+    .hero{padding:56px 0 64px;}
+    .hero .wrap{grid-template-columns:1fr; gap:36px;}
     .hero-art{order:-1; max-width:320px; margin:0 auto;}
+    /* 12ch على عمود بعرض 358px يُنتج خمسة أسطر مهلهلة — العنوان يأخذ عرض العمود */
+    .hero h1{max-width:20ch;}
+    section{padding:64px 0;}
+    .sec-head{margin-bottom:36px;}
+    .material-block{padding:28px var(--gutter);}
+    .contact-col{padding:32px var(--gutter);}
+    .why-item{padding:28px var(--gutter);}
     .about .wrap{grid-template-columns:1fr;}
     .materials-grid{grid-template-columns:1fr;}
     .steps{grid-template-columns:1fr 1fr; row-gap:40px;}
@@ -286,6 +395,9 @@
     .steps{grid-template-columns:1fr;}
     .gallery-grid{grid-template-columns:1fr;}
     .about-stats{grid-template-columns:1fr;}
+    /* الشريط يضيق: زرّ واتساب العائم يؤدّي الفعل نفسه ويبقى ظاهرًا دائمًا،
+       فإبقاء نسخة ثانية منه في الشريط يزاحم الاسم بلا مقابل. */
+    .nav-cta{display:none;}
   }
 </style>
 </head>
@@ -294,7 +406,7 @@
 <header>
   <div class="nav-inner">
     <div class="logo">مؤسسة الباشة<span>للمعادن — ألمنيوم وحديد</span></div>
-    <nav class="links">
+    <nav class="links" id="site-nav">
       <a href="#about">من نحن</a>
       <a href="#products">منتجاتنا</a>
       <a href="#process">مراحل العمل</a>
@@ -304,7 +416,7 @@
     <a class="nav-cta" href="https://wa.me/213673232932" target="_blank" rel="noopener">
       تواصل واتساب
     </a>
-    <button class="burger" aria-label="القائمة"><span></span><span></span><span></span></button>
+    <button class="burger" type="button" aria-label="القائمة" aria-controls="site-nav" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
 
@@ -413,7 +525,7 @@
 <section class="process" id="process">
   <div class="wrap">
     <div class="sec-head">
-      <div class="kicker" style="color:var(--accent);">مراحل العمل</div>
+      <div class="kicker kicker--accent">مراحل العمل</div>
       <h2>من الفكرة إلى التركيب في أربع خطوات</h2>
       <p>نتابع معكم كل مرحلة، بدون أي فجوة بين ما تم الاتفاق عليه وما يُنفَّذ فعليًا.</p>
     </div>
@@ -487,21 +599,21 @@
   <div class="wrap">
     <div class="contact-col">
       <div class="kicker">اتصل بنا</div>
-      <h2 style="margin-bottom:28px;">جاهزون لاستقبال طلبك</h2>
+      <h2>جاهزون لاستقبال طلبك</h2>
 
       <div class="info-row">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M12 21s-7-6.2-7-11a7 7 0 0 1 14 0c0 4.8-7 11-7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
         <div>
           <h4>الموقع</h4>
-          <p style="margin-bottom:10px;"><strong style="color:var(--ink);">تيمياوين:</strong> أمام المتوسطة، بجانب الجمارك الجزائرية</p>
-          <p><strong style="color:var(--ink);">برج باجي مختار:</strong> حي أول نوفمبر، عند لابلاسيطة</p>
+          <p><strong>تيمياوين:</strong> أمام المتوسطة، بجانب الجمارك الجزائرية</p>
+          <p><strong>برج باجي مختار:</strong> حي أول نوفمبر، عند لابلاسيطة</p>
         </div>
       </div>
       <div class="info-row">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"><path d="M4 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L14 13l5 2v4a2 2 0 0 1-2 2c-8 0-15-7-15-15a2 2 0 0 1 2-2z"/></svg>
         <div>
           <h4>الهاتف / واتساب</h4>
-          <p dir="ltr" style="text-align:right;">+213 673 232 932</p>
+          <p><bdi>+213 673 232 932</bdi></p>
         </div>
       </div>
       <div class="info-row">
@@ -538,20 +650,35 @@
 </a>
 
 <script>
+  // القائمة: الحالة في صنف واحد والأنماط كلها في CSS، كي يبقى للقائمة
+  // مصدر شكل واحد ويبقى aria-expanded صادقًا لقارئ الشاشة.
   const burger = document.querySelector('.burger');
   const links = document.querySelector('nav.links');
+
+  const setMenu = (open) => {
+    links.classList.toggle('is-open', open);
+    burger.setAttribute('aria-expanded', String(open));
+  };
+
   burger.addEventListener('click', () => {
-    const open = links.style.display === 'flex';
-    links.style.display = open ? 'none' : 'flex';
-    links.style.flexDirection = 'column';
-    links.style.position = 'absolute';
-    links.style.top = '68px';
-    links.style.right = '0';
-    links.style.left = '0';
-    links.style.background = 'var(--bg)';
-    links.style.padding = '20px 28px';
-    links.style.borderBottom = '1px solid var(--line)';
-    links.style.gap = '18px';
+    setMenu(burger.getAttribute('aria-expanded') !== 'true');
+  });
+
+  // الانتقال إلى قسم يُغلق القائمة، وإلا غطّت الوجهة التي نقر عليها المستخدم
+  links.addEventListener('click', (event) => {
+    if (event.target.closest('a')) setMenu(false);
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && burger.getAttribute('aria-expanded') === 'true') {
+      setMenu(false);
+      burger.focus();
+    }
+  });
+
+  // التوسيع إلى شريط أفقي يترك القائمة مفتوحة منطقيًا لولا هذا
+  window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
+    if (event.matches) setMenu(false);
   });
 
   // تسجيل عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).

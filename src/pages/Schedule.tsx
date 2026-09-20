@@ -212,7 +212,7 @@ export default function Schedule() {
             <strong>{formatDate(today)}</strong>
             <p className="small muted">{formatWeekday(today)}</p>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="cluster">
             <button
               type="button"
               className="btn btn--soft btn--sm"

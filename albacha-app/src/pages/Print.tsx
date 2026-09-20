@@ -50,7 +50,7 @@ export default function Print() {
               {profile.phone}
             </div>
           </div>
-          <div style={{ textAlign: 'left' }}>
+          <div className="text-end">
             <strong>{isQuote ? 'عرض سعر' : 'فاتورة'}</strong>
             <div className="small">رقم: {order.id.slice(-6)}</div>
             <div className="small">التاريخ: {formatDate(order.createdAt)}</div>

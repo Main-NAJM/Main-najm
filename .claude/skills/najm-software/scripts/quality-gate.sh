@@ -59,6 +59,47 @@ check() {
   return 0
 }
 
+# :hover غير محمي — يتتبّع الأقواس كي لا يُبلّغ عن القواعد الموجودة فعلًا
+# داخل @media (hover: hover). البوّابة التي تصرخ بلا سبب يتعلّم المرء تجاهلها.
+check_unguarded_hover() {
+  local files hits count
+  files="$(sources '*.css')"
+  [[ -z "$files" ]] && return 0
+
+  hits="$(printf '%s\n' "$files" | xargs -d '\n' awk '
+    FNR == 1 { depth = 0; guard = -1 }
+    {
+      line = $0
+      is_media = (line ~ /^[[:space:]]*@media/)
+      opens_hover_guard = (is_media && line ~ /hover[[:space:]]*:[[:space:]]*hover/)
+
+      if (!is_media && guard < 0 && line ~ /:hover/)
+        printf "%s:%d:%s\n", FILENAME, FNR, line
+
+      n = gsub(/\{/, "{", line)
+      m = gsub(/\}/, "}", line)
+
+      for (i = 0; i < n; i++) {
+        depth++
+        if (opens_hover_guard && guard < 0) { guard = depth; opens_hover_guard = 0 }
+      }
+      for (i = 0; i < m; i++) {
+        if (guard == depth) guard = -1
+        depth--
+      }
+    }
+  ' 2>/dev/null || true)"
+
+  [[ -z "$hits" ]] && return 0
+  count="$(printf '%s\n' "$hits" | grep -c . || true)"
+  printf '%s!%s %s %s(%s)%s\n' "$YEL" "$OFF" \
+    ':hover خارج @media (hover: hover) — يعلق بعد اللمس على الجوال' "$DIM" "$count" "$OFF"
+  WARNINGS=$((WARNINGS + count))
+  printf '%s\n' "$hits" | head -8 | sed "s/^/    ${DIM}/;s/$/${OFF}/"
+  [[ "$count" -gt 8 ]] && printf '    %s… و%s أخرى%s\n' "$DIM" "$((count - 8))" "$OFF"
+  return 0
+}
+
 echo
 echo "── بوّابة الجودة ──────────────────────────────"
 echo "${DIM}${ROOT}${OFF}"
@@ -120,9 +161,7 @@ check '(^|[^-a-z])(min-)?width[[:space:]]*:[[:space:]]*[0-9]{3,}px' \
   'عرض ثابت كبير — قد يُنتج تمريرًا أفقيًا على 320px' \
   warn '*.css' '@media|@container'
 
-check ':hover' \
-  ':hover — تأكّد أنه داخل @media (hover: hover) وإلا علق على اللمس' \
-  warn '*.css'
+check_unguarded_hover
 
 echo
 
