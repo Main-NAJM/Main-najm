@@ -811,8 +811,8 @@
         <label>اسم المنتج
           <input type="text" id="f-name" required maxlength="80">
         </label>
-        <label>الفئة <small>مثل: شفاه، عيون، أغطية</small>
-          <input type="text" id="f-category" required maxlength="40" list="f-cats">
+        <label>الفئة <small>كلمة أو كلمتان — تصير زرّ تصفية. مثل: شفاه، عيون، أغطية</small>
+          <input type="text" id="f-category" required maxlength="24" list="f-cats">
           <datalist id="f-cats"></datalist>
         </label>
         <div class="admin-row">
@@ -826,8 +826,8 @@
         <label>الرسم <small>يظهر إن لم تكن هناك صورة</small>
           <select id="f-glyph"></select>
         </label>
-        <label>رابط الصورة <small>اختياري</small>
-          <input type="url" id="f-image" placeholder="https://…">
+        <label>رابط الصورة <small>اختياري — رابط الصورة نفسها، ينتهي بـ .jpg أو .png. رابط حساب أو منشور لا يصلح، ويظهر الرسم مكانه.</small>
+          <input type="url" id="f-image" placeholder="https://…/photo.jpg">
         </label>
         <label>شارة <small>اختياري — مثل: جديد</small>
           <input type="text" id="f-badge" maxlength="20">
@@ -1115,7 +1115,7 @@
     const [grad, glow] = gradFor(p.category);
 
     const media = p.image
-      ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy">`
+      ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" data-glyph="${esc(p.glyph || 'spark')}">`
       : `<span class="glyph">${line(p.glyph || 'spark', 110, 1.15)}</span>`;
 
     const flags = [
@@ -1307,7 +1307,9 @@
       ? rows.map(({ p, qty }) => `
           <div class="line">
             <span class="line-tile" style="--card-grad:${gradFor(p.category)[0]};">${
-              p.image ? `<img src="${esc(p.image)}" alt="" loading="lazy">` : line(p.glyph || 'spark', 32, 1.5)
+              p.image
+                ? `<img src="${esc(p.image)}" alt="" loading="lazy" data-glyph="${esc(p.glyph || 'spark')}">`
+                : line(p.glyph || 'spark', 32, 1.5)
             }</span>
             <span class="line-info">
               <strong>${esc(p.name)}</strong>
@@ -1494,6 +1496,18 @@
   observeRise();
   $('#year').textContent = new Date().getFullYear();
 
+  // رابط لا يشير إلى صورة (أو صورة حُذفت) يترك أيقونة مكسورة في البطاقة.
+  // يُستبدل بالرسم بهدوء. وحدث error لا يتصاعد، فيُلتقط في مرحلة الالتقاط.
+  document.addEventListener('error', (event) => {
+    const img = event.target;
+    if (!(img instanceof HTMLImageElement) || !img.dataset.glyph) return;
+    const inCard = !!img.closest('.card-media');
+    const span = document.createElement('span');
+    if (inCard) span.className = 'glyph';
+    span.innerHTML = line(img.dataset.glyph, inCard ? 110 : 32, inCard ? 1.15 : 1.5);
+    img.replaceWith(span);
+  }, true);
+
   const nav = $('#nav');
   const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
   onScroll();
@@ -1669,6 +1683,10 @@
 
     // حالة عابرة لا تُحفظ: أدراج مفتوحة، وقفل التمرير، ونصوص أخطاء.
     doc.querySelectorAll('.open').forEach((n) => n.classList.remove('open'));
+
+    // disabled خاصيّة تنعكس على الوسم: زرّ الحفظ مُعطَّل أثناء الحفظ، والحفظ هو
+    // اللحظة التي تُنسخ فيها الصفحة — فكان يُخزَّن مُعطَّلاً فلا يعود يعمل أبداً.
+    doc.querySelectorAll('#f-save, #admin-login button').forEach((b) => b.removeAttribute('disabled'));
     ['#admin', '#admin-veil', '#drawer', '#veil'].forEach((sel) => {
       const n = doc.querySelector(sel);
       if (n) n.setAttribute('hidden', '');
@@ -1940,7 +1958,9 @@
     el.items.innerHTML = products.map((p) => `
       <div class="admin-item" data-id="${p.id}">
         <span class="tile" style="--card-grad:${UI.gradient(p.category)};">${
-          p.image ? `<img src="${p.image}" alt="" loading="lazy">` : UI.glyph(p.glyph, 22)
+          p.image
+            ? `<img src="${p.image}" alt="" loading="lazy" data-glyph="${p.glyph || 'spark'}">`
+            : UI.glyph(p.glyph, 22)
         }</span>
         <span class="info"><strong></strong><small></small></span>
         <span class="row-actions">
