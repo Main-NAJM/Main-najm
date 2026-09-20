@@ -22,7 +22,8 @@
     "build:emulator": "tsc -b && vite build --mode emulator && node site/copy-to-dist.mjs && npm run build -w albacha-app -- --mode emulator --base=/app/ && node albacha-app/copy-to-dist.mjs",
     "deploy": "npm run build && npx --yes firebase-tools@13 deploy --only hosting",
     "typecheck": "tsc -b --noEmit false --emitDeclarationOnly false",
-    "lint": "tsc -b"
+    "lint": "tsc -b",
+    "build:pages": "node scripts/build-pages.mjs"
   },
   "dependencies": {
     "firebase": "^11.1.0",

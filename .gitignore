@@ -44,3 +44,7 @@ google-services.json
 # TypeScript build info
 *.tsbuildinfo
 .artifact-build/
+
+# مخرجات بناء GitHub Pages
+pages-dist/
+dist-herfah/
