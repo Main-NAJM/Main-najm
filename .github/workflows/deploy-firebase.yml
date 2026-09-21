@@ -2,7 +2,10 @@ name: نشر على Firebase Hosting
 
 on:
   push:
-    branches: [main]
+    # يُتابَع الدفع إلى كل الفروع، والنشر محصور في الفرع الرئيسي بشرط الوظيفة أدناه.
+    # السبب: اسم الفرع الرئيسي يُقرأ وقت التشغيل، فلا يتوقّف النشر بصمت إن تغيّر
+    # الفرع الافتراضي للمستودع أو أُعيدت تسميته.
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
@@ -16,6 +19,8 @@ jobs:
   deploy:
     name: بناء ونشر
     runs-on: ubuntu-latest
+    # لا يُنشر إلا الفرع الرئيسي — main أو الفرع الافتراضي للمستودع أيًّا كان اسمه — أو تشغيل يدوي.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == github.event.repository.default_branch }}
     steps:
       - name: جلب الشيفرة
         uses: actions/checkout@v4
