@@ -21,6 +21,10 @@ jobs:
     runs-on: ubuntu-latest
     # لا يُنشر إلا الفرع الرئيسي — main أو الفرع الافتراضي للمستودع أيًّا كان اسمه — أو تشغيل يدوي.
     if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == github.event.repository.default_branch }}
+    permissions:
+      contents: read
+      # تلزم للمصادقة بلا مفتاح: GitHub يوقّع هوية التشغيل، وGoogle يتحقّق منها.
+      id-token: write
     steps:
       - name: جلب الشيفرة
         uses: actions/checkout@v4
@@ -60,14 +64,26 @@ jobs:
           echo "المشروع: $project"
           echo "id=$project" >> "$GITHUB_OUTPUT"
 
+      # الطريق المفضّل: مصادقة بلا مفتاح. GitHub يوقّع هوية هذا التشغيل، وGoogle
+      # يقبلها من هذا المستودع وحده، فلا يوجد مفتاح دائم يُسرَّب أو تنتهي صلاحيته.
+      # وهو الطريق الوحيد حين تمنع سياسة المؤسسة إنشاء مفاتيح لحسابات الخدمة.
+      # يُفعَّل تلقائيا متى ضُبط متغيّرا المستودع؛ انظر scripts/setup-workload-identity.sh
+      - name: مصادقة Google بلا مفتاح
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      # الطريق البديل حين لا تُضبط المصادقة بلا مفتاح: مفتاح في سرّ المستودع.
       # المفتاح يكتب في ملف خارج مساحة العمل ولا يطبع أبدا.
       - name: تجهيز مفتاح حساب الخدمة
-        id: sa
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER == '' }}
         env:
           SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
         run: |
           if [ -z "$SA" ]; then
-            echo "::error::لا يوجد سر باسم FIREBASE_SERVICE_ACCOUNT. أضفه في Settings ثم Secrets and variables ثم Actions، كـ Repository secret لا Environment secret. قيمته محتوى ملف JSON كامل من Firebase ثم Project settings ثم Service accounts ثم Generate new private key."
+            echo "::error::لا توجد اعتمادات. الطريق المفضّل بلا مفتاح: شغّل scripts/setup-workload-identity.sh مرة واحدة في Google Cloud Shell ثم أضف المتغيّرين اللذين يطبعهما. البديل: سرّ باسم FIREBASE_SERVICE_ACCOUNT قيمته ملف JSON كامل لحساب خدمة."
             exit 1
           fi
           key_file="$RUNNER_TEMP/firebase-sa.json"
@@ -78,19 +94,16 @@ jobs:
             exit 1
           fi
           echo "مفتاح حساب الخدمة صالح."
-          echo "path=$key_file" >> "$GITHUB_OUTPUT"
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$key_file" >> "$GITHUB_ENV"
 
       # مفاتيح الويب ليست أسرارا (تشحن داخل الشيفرة على أي حال)، فتجلب من
       # المشروع نفسه بدل أن يضيفها المستخدم يدويا ستة أسرار.
+      # الاعتمادات تصل من خطوة المصادقة أيًّا كان طريقها، عبر بيئة الوظيفة.
       - name: جلب مفاتيح تطبيق الويب وكتابة .env.local
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.sa.outputs.path }}
         run: node scripts/firebase-setup.mjs --force
 
       - name: بناء نسخة الإنتاج
         run: npm run build
 
       - name: النشر على Firebase
-        env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.sa.outputs.path }}
         run: npx --yes firebase-tools@13 deploy --only hosting,firestore:rules --project "${{ steps.project.outputs.id }}" --non-interactive
