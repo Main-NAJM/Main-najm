@@ -30,21 +30,44 @@ export default function Openings() {
   const [sheetRate, setSheetRate] = useState(profile.openingSheetRate || 0);
   const [saving, setSaving] = useState(false);
 
+  // عدد القطع يختلف بين نوع وآخر، ويُحفظ لكل نوع على حدة.
+  const piecesField = {
+    fanlight: 'openingPiecesFanlight',
+    window: 'openingPiecesWindow',
+    door: 'openingPiecesDoor',
+  } as const;
+  const savedPieces = profile[piecesField[kind]] || 0;
+  const [piecesByKind, setPiecesByKind] = useState<Record<OpeningKind, number>>({
+    fanlight: profile.openingPiecesFanlight || 0,
+    window: profile.openingPiecesWindow || 0,
+    door: profile.openingPiecesDoor || 0,
+  });
+  const pieces = piecesByKind[kind];
+
   const money = (value: number) => formatMoney(value, profile.currency);
 
   const result = useMemo(
-    () => computeOpeningPrice({ lengthCm, widthCm, quantity, rate, sheetRate }),
-    [lengthCm, widthCm, quantity, rate, sheetRate],
+    () => computeOpeningPrice({ lengthCm, widthCm, quantity, pieces, rate, sheetRate }),
+    [lengthCm, widthCm, quantity, pieces, rate, sheetRate],
   );
 
   const ratesChanged =
-    rate !== (profile.openingRate || 0) || sheetRate !== (profile.openingSheetRate || 0);
+    rate !== (profile.openingRate || 0) ||
+    sheetRate !== (profile.openingSheetRate || 0) ||
+    pieces !== savedPieces;
 
   const saveRates = async () => {
     setSaving(true);
     try {
-      await saveProfile({ ...profile, openingRate: rate, openingSheetRate: sheetRate });
-      notify('حُفظ السعران، فلن تعيد كتابتهما.');
+      await saveProfile({
+        ...profile,
+        openingRate: rate,
+        openingSheetRate: sheetRate,
+        openingPiecesFanlight: piecesByKind.fanlight,
+        openingPiecesWindow: piecesByKind.window,
+        openingPiecesDoor: piecesByKind.door,
+      });
+      notify('حُفظت الأرقام، فلن تعيد كتابتها.');
     } catch (error) {
       notifyError(error);
     } finally {
@@ -79,7 +102,7 @@ export default function Openings() {
         </div>
         {ratesChanged ? (
           <button type="button" className="btn btn--soft btn--sm mt-12" onClick={saveRates} disabled={saving}>
-            {saving ? 'جارٍ…' : 'حفظ السعرين'}
+            {saving ? 'جارٍ…' : 'حفظ الأرقام'}
           </button>
         ) : null}
       </div>
@@ -102,6 +125,16 @@ export default function Openings() {
             </button>
           ))}
         </div>
+
+        <NumberInput
+          label={`عدد القطع في ${openingKindLabel(kind)}`}
+          value={pieces}
+          onChange={(v) => {
+            setPiecesByKind((current) => ({ ...current, [kind]: toNumber(v) }));
+          }}
+          suffix="قطعة"
+          hint="قطع البروفيل: الإطار والضلف والقضبان. نافذة ١×١ فيها ١١ عادةً."
+        />
 
         <div className="grid-2 mt-12">
           <NumberInput
@@ -132,8 +165,11 @@ export default function Openings() {
 
         <div className="summary-box mt-16">
           <div className="summary-row">
-            <span>المحيط</span>
-            <span>{formatNumber(result.perimeter)} م.ط</span>
+            <span>البروفيل</span>
+            <span>
+              {formatNumber(result.pieces)} قطعة × {formatNumber(result.pieceLength)} م ={' '}
+              {formatNumber(result.profileMetres)} م.ط
+            </span>
           </div>
           <div className="summary-row">
             <span>المساحة</span>
@@ -141,7 +177,7 @@ export default function Openings() {
           </div>
           <div className="summary-row">
             <span>
-              البروفيل ({formatNumber(result.perimeter)} م.ط × {money(rate)})
+              قيمة البروفيل ({formatNumber(result.profileMetres)} م.ط × {money(rate)})
             </span>
             <span>{money(result.profileCost)}</span>
           </div>
@@ -165,9 +201,9 @@ export default function Openings() {
           ) : null}
         </div>
 
-        {rate <= 0 ? (
+        {rate <= 0 || pieces <= 0 ? (
           <div className="notice notice--warn mt-12">
-            أدخل سعر المتر للقطعة أعلاه ليظهر الثمن.
+            أدخل سعر المتر للقطعة وعدد القطع ليظهر الثمن.
           </div>
         ) : null}
       </div>

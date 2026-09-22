@@ -216,6 +216,14 @@ export interface Profile {
    */
   openingRate: number;
   openingSheetRate: number;
+  /**
+   * عدد قطع البروفيل في كل نوع. نافذة ١×١ فيها ١١ قطعة لا أربع:
+   * الإطار الخارجي وضلفتاه وقضبانه. العدد يختلف بين ورشة وأخرى
+   * وبين تصميم وآخر، فيضبطه صاحب الورشة مرّة لكل نوع.
+   */
+  openingPiecesFanlight: number;
+  openingPiecesWindow: number;
+  openingPiecesDoor: number;
   updatedAt: number;
 }
 
