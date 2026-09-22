@@ -55,6 +55,9 @@ export const defaultProfile = (seed: ProfileSeed = {}): Profile => {
     defaultMarginPct: userType === 'merchant' ? 15 : trade.defaultMarginPct,
     openingRate: 1800,
     openingSheetRate: 0,
+    openingPiecesFanlight: 4,
+    openingPiecesWindow: 11,
+    openingPiecesDoor: 11,
     updatedAt: Date.now(),
   };
 };

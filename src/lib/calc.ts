@@ -271,11 +271,16 @@ export const inventoryTotals = (
 /* --------------------------------------------- حاسبة الأبواب والنوافذ */
 
 /**
- * تسعير فتحة (طاقة، نافذة، باب) من مقاسين وسعرين.
+ * تسعير فتحة (طاقة، نافذة، باب) من مقاسين وسعرين وعدد قطع.
  *
- * البروفيل يدور حول الفتحة فيُحسب بمحيطها بالمتر الطولي، والزجاج أو الصفيحة
- * تملؤها فتُحسب بمساحتها بالمتر المربّع. المقاسان نفسهما يعطيان الاثنين:
- * المحيط ٢×(الطول+العرض) والمساحة الطول×العرض.
+ * الفتحة ليست إطاراً واحداً حول محيطها: نافذة ١×١ فيها ١١ قطعة بروفيل —
+ * الإطار الخارجي وضلفتاها وقضبانها — لا أربع. فالبروفيل يُحسب بعدد القطع
+ * لا بالمحيط، وهذا فرق يزيد ثمن النافذة الواحدة أكثر من الضعف.
+ *
+ * وطول القطعة يتبع المقاس، فتُقدَّر بمتوسط الضلعين: في فتحة ١×١ متر تكون
+ * القطعة متراً، فيصير ١١ قطعة = ١١ م.ط = ما تحسبه الورشة فعلاً.
+ *
+ * والزجاج أو الصفيحة تملأ الفتحة فتُحسب بمساحتها بالمتر المربّع.
  */
 export const OPENING_KINDS: { value: OpeningKind; label: string }[] = [
   { value: 'fanlight', label: 'طاقة' },
@@ -291,16 +296,22 @@ export interface OpeningInput {
   lengthCm: number;
   widthCm: number;
   quantity: number;
-  /** سعر المتر الطولي للبروفيل. */
+  /** عدد قطع البروفيل في هذه الفتحة. */
+  pieces: number;
+  /** سعر المتر الطولي للبروفيل — ثمن القطعة الواحدة حين يكون طولها متراً. */
   rate: number;
   /** سعر المتر المربّع للزجاج أو الصفيحة، صفر إن بلا صفيحة. */
   sheetRate: number;
 }
 
 export interface OpeningResult {
-  /** محيط الفتحة بالمتر الطولي. */
-  perimeter: number;
-  /** مساحتها بالمتر المربّع. */
+  /** عدد القطع. */
+  pieces: number;
+  /** متوسط طول القطعة بالمتر — نصف مجموع الضلعين. */
+  pieceLength: number;
+  /** إجمالي أمتار البروفيل: القطع × طول القطعة. */
+  profileMetres: number;
+  /** مساحة الفتحة بالمتر المربّع. */
   area: number;
   profileCost: number;
   sheetCost: number;
@@ -314,15 +325,19 @@ export const computeOpeningPrice = (input: OpeningInput): OpeningResult => {
   const l = Math.max(0, input.lengthCm || 0) / 100;
   const w = Math.max(0, input.widthCm || 0) / 100;
 
-  const perimeter = 2 * (l + w);
+  const pieces = Math.max(0, input.pieces || 0);
+  const pieceLength = (l + w) / 2;
+  const profileMetres = pieces * pieceLength;
   const area = l * w;
-  const profileCost = perimeter * Math.max(0, input.rate || 0);
+  const profileCost = profileMetres * Math.max(0, input.rate || 0);
   const sheetCost = area * Math.max(0, input.sheetRate || 0);
   const unitTotal = profileCost + sheetCost;
   const quantity = Math.max(0, input.quantity || 0);
 
   return {
-    perimeter: round2(perimeter),
+    pieces,
+    pieceLength: round2(pieceLength),
+    profileMetres: round2(profileMetres),
     area: round2(area),
     profileCost: round2(profileCost),
     sheetCost: round2(sheetCost),
