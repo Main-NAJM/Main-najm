@@ -53,6 +53,8 @@ export const defaultProfile = (seed: ProfileSeed = {}): Profile => {
     currency: 'د.ج',
     defaultLaborRate: userType === 'merchant' ? 0 : trade.defaultLaborRate,
     defaultMarginPct: userType === 'merchant' ? 15 : trade.defaultMarginPct,
+    openingRate: 1800,
+    openingSheetRate: 0,
     updatedAt: Date.now(),
   };
 };
@@ -491,14 +493,18 @@ const ALL_PRODUCTS = (): NewRecord<ProductTemplate>[] => [
     density: 0,
     sheetPrice: 0,
     sheetName: 'زجاج',
-    wastePct: 5,
+    // سعر المتر شامل: الإكسسوارات والأجرة والربح داخله. فلا هالك ولا إضافات
+    // فوقه، وإلا خرج السعر أعلى ممّا تعرضه الورشة على الزبون فعلاً.
+    wastePct: 0,
     fittings: 0,
     labor: 0,
     marginPct: 0,
     defaultWidth: 100,
     defaultHeight: 200,
     defaultDepth: 0,
-    notes: 'المتر الطولي ١٨٠٠ دج للبروفيل العادي. ضع سعر المتر المربّع للزجاج في خانة الصفيحة.',
+    notes:
+      'المتر الطولي ١٨٠٠ دج شاملاً الإكسسوارات والأجرة والربح. ' +
+      'ضع سعر المتر المربّع للزجاج في خانة الصفيحة إن كان يُحاسب عليه.',
   },
   {
     name: 'باب ألمنيوم — ملوّن',
@@ -508,14 +514,17 @@ const ALL_PRODUCTS = (): NewRecord<ProductTemplate>[] => [
     density: 0,
     sheetPrice: 0,
     sheetName: 'زجاج',
-    wastePct: 5,
+    // سعر شامل كذلك — انظر التعليق في الباب العادي.
+    wastePct: 0,
     fittings: 0,
     labor: 0,
     marginPct: 0,
     defaultWidth: 100,
     defaultHeight: 200,
     defaultDepth: 0,
-    notes: 'المتر الطولي ٢٥٠٠ دج للبروفيل الملوّن. ضع سعر المتر المربّع للزجاج في خانة الصفيحة.',
+    notes:
+      'المتر الطولي ٢٥٠٠ دج شاملاً الإكسسوارات والأجرة والربح. ' +
+      'ضع سعر المتر المربّع للزجاج في خانة الصفيحة إن كان يُحاسب عليه.',
   },
   {
     name: 'نافذة ألمنيوم',

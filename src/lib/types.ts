@@ -210,8 +210,17 @@ export interface Profile {
   defaultLaborRate: number;
   /** نسبة الربح الافتراضية في الحاسبة. */
   defaultMarginPct: number;
+  /**
+   * سعرا حاسبة الفتحات (طاقة، نافذة، باب): المتر الطولي للبروفيل،
+   * والمتر المربّع للزجاج أو الصفيحة. يُدخلهما صاحب الورشة مرّة فيثبتان.
+   */
+  openingRate: number;
+  openingSheetRate: number;
   updatedAt: number;
 }
+
+/** نوع الفتحة في حاسبة الأبواب والنوافذ. */
+export type OpeningKind = 'fanlight' | 'window' | 'door';
 
 export type CollectionName =
   | 'orders'
