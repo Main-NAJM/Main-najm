@@ -2208,6 +2208,38 @@ table.data th.num {
 /* ----------------------------------------------------------------- الطباعة */
 
 @media print {
+  /* الورق أبيض دائمًا. المتصفّح يُسقط ألوان الخلفيات عند الطباعة ويُبقي لون
+     النصّ، فصفحة داكنة تُطبع حبرًا فاتحًا على بياض — أي فاتورة لا تُقرأ.
+     لذا تعود الرموز إلى قيمها الفاتحة هنا مهما كان مظهر الشاشة. */
+  :root {
+    --bg: #ffffff;
+    --surface: #ffffff;
+    --surface-2: #ffffff;
+    --surface-3: #f1f5f9;
+    --line: #cbd5e1;
+    --line-strong: #94a3b8;
+
+    --ink: #020617;
+    --ink-2: #334155;
+    --ink-3: #475569;
+
+    --gold: #7a4c06;
+    --gold-tint: #ffffff;
+    --gold-line: #cbd5e1;
+    --on-gold: #ffffff;
+
+    --ok: #065f46;
+    --ok-tint: #ffffff;
+    --warn: #854d0e;
+    --warn-tint: #ffffff;
+    --danger: #991b1b;
+    --danger-tint: #ffffff;
+    --info: #1e40af;
+    --info-tint: #ffffff;
+
+    color-scheme: light;
+  }
+
   .app-header,
   .bottom-nav,
   .fab,
