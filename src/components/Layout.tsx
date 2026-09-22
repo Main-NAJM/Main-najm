@@ -28,6 +28,7 @@ const primaryLinks = [
 
 const moreLinks = [
   { to: '/inventory', label: 'المخزون', Icon: StockIcon },
+  { to: '/openings', label: 'الأبواب والنوافذ', Icon: ProductIcon },
   { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
   { to: '/calculator', label: 'حاسبة التكلفة', Icon: CalculatorIcon },
   { to: '/prices', label: 'أسعار السوق', Icon: PriceIcon },
@@ -42,6 +43,7 @@ const pageTitles: Record<string, string> = {
   '/debts': 'سجل الديون',
   '/calculator': 'حاسبة التكلفة والربح',
   '/products': 'حاسبة سعر المنتج',
+  '/openings': 'الأبواب والنوافذ',
   '/inventory': 'المخزون والسلع',
   '/prices': 'مؤشرات أسعار السوق',
   '/print': 'الطباعة والتقارير',

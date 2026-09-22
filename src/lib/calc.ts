@@ -3,6 +3,7 @@ import { round2 } from './format';
 import type {
   Calculation,
   Debt,
+  OpeningKind,
   Order,
   PricingBasis,
   ProductTemplate,
@@ -265,4 +266,68 @@ export const inventoryTotals = (
     value += Math.max(0, item.qty || 0) * Math.max(0, item.costPrice || 0);
   });
   return { items: items.length, needsRestock, outOfStock, value: round2(value) };
+};
+
+/* --------------------------------------------- حاسبة الأبواب والنوافذ */
+
+/**
+ * تسعير فتحة (طاقة، نافذة، باب) من مقاسين وسعرين.
+ *
+ * البروفيل يدور حول الفتحة فيُحسب بمحيطها بالمتر الطولي، والزجاج أو الصفيحة
+ * تملؤها فتُحسب بمساحتها بالمتر المربّع. المقاسان نفسهما يعطيان الاثنين:
+ * المحيط ٢×(الطول+العرض) والمساحة الطول×العرض.
+ */
+export const OPENING_KINDS: { value: OpeningKind; label: string }[] = [
+  { value: 'fanlight', label: 'طاقة' },
+  { value: 'window', label: 'نافذة' },
+  { value: 'door', label: 'باب كامل' },
+];
+
+export const openingKindLabel = (kind: OpeningKind): string =>
+  OPENING_KINDS.find((k) => k.value === kind)?.label ?? kind;
+
+export interface OpeningInput {
+  /** بالسنتيمتر — كما يقيسها الحرفي على الأرض. */
+  lengthCm: number;
+  widthCm: number;
+  quantity: number;
+  /** سعر المتر الطولي للبروفيل. */
+  rate: number;
+  /** سعر المتر المربّع للزجاج أو الصفيحة، صفر إن بلا صفيحة. */
+  sheetRate: number;
+}
+
+export interface OpeningResult {
+  /** محيط الفتحة بالمتر الطولي. */
+  perimeter: number;
+  /** مساحتها بالمتر المربّع. */
+  area: number;
+  profileCost: number;
+  sheetCost: number;
+  /** ثمن القطعة الواحدة. */
+  unitTotal: number;
+  quantity: number;
+  total: number;
+}
+
+export const computeOpeningPrice = (input: OpeningInput): OpeningResult => {
+  const l = Math.max(0, input.lengthCm || 0) / 100;
+  const w = Math.max(0, input.widthCm || 0) / 100;
+
+  const perimeter = 2 * (l + w);
+  const area = l * w;
+  const profileCost = perimeter * Math.max(0, input.rate || 0);
+  const sheetCost = area * Math.max(0, input.sheetRate || 0);
+  const unitTotal = profileCost + sheetCost;
+  const quantity = Math.max(0, input.quantity || 0);
+
+  return {
+    perimeter: round2(perimeter),
+    area: round2(area),
+    profileCost: round2(profileCost),
+    sheetCost: round2(sheetCost),
+    unitTotal: round2(unitTotal),
+    quantity,
+    total: round2(unitTotal * quantity),
+  };
 };
