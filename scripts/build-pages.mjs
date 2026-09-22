@@ -8,6 +8,7 @@
  *   /            موقع الباشة التعريفي
  *   /herfah/     تطبيق حرفة برو      (قاعدة /Main-najm/herfah/)
  *   /app/        تطبيق الباشة        (قاعدة /Main-najm/app/)
+ *   /bofaida/    موقع BOFAIDA ADS
  *   /albacha/    تحويل قديم إلى /    (يُبقى كي لا تنكسر روابط منشورة)
  *   /404.html    تحويل المسارات العميقة إلى التطبيق المناسب
  *   /.nojekyll   يمنع Jekyll من ابتلاع مجلّدات تبدأ بـ _
@@ -63,7 +64,11 @@ await cp(join(ROOT, 'albacha-app', 'dist'), join(OUT, 'app'), { recursive: true 
 console.log('\nالموقع التعريفي → /');
 await copySiteFiles(join(ROOT, 'site'), OUT);
 
-// 4) /albacha/ → تحويل إلى الجذر (روابط قديمة منشورة)
+// 4) موقع BOFAIDA ADS → /bofaida/
+console.log('\nBOFAIDA ADS → /bofaida/');
+await copySiteFiles(join(ROOT, 'bofaida'), join(OUT, 'bofaida'));
+
+// 5) /albacha/ → تحويل إلى الجذر (روابط قديمة منشورة)
 await mkdir(join(OUT, 'albacha'), { recursive: true });
 await writeFile(
   join(OUT, 'albacha', 'index.html'),
@@ -81,7 +86,7 @@ await writeFile(
   'utf8',
 );
 
-// 5) 404 — يحوّل المسارات العميقة إلى التطبيق المناسب.
+// 6) 404 — يحوّل المسارات العميقة إلى التطبيق المناسب.
 //    Pages لا يعرف توجيه SPA، فأي رابط عميق يصل إلى 404.html أولًا.
 await writeFile(
   join(OUT, '404.html'),
@@ -97,7 +102,7 @@ await writeFile(
   var path = loc.pathname;
   var rest = path.indexOf(BASE) === 0 ? path.slice(BASE.length) : path.replace(/^\\//, '');
 
-  var statics = ["albacha/"];
+  var statics = ["albacha/", "bofaida/"];
   for (var i = 0; i < statics.length; i++) {
     var dir = statics[i];
     var name = dir.slice(0, -1);
