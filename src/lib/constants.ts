@@ -25,6 +25,8 @@ export const MATERIAL_KINDS: { value: MaterialKind; label: string; unit: string 
 ];
 
 export const CURRENCIES = [
+  // الجزائر أولاً: رمز الهاتف الافتراضي في التطبيق ‎+213‎، فتتبعه العملة.
+  { code: 'د.ج', label: 'دينار جزائري (د.ج)' },
   { code: 'د.ع', label: 'دينار عراقي (د.ع)' },
   { code: 'ر.س', label: 'ريال سعودي (ر.س)' },
   { code: 'د.إ', label: 'درهم إماراتي (د.إ)' },
@@ -34,7 +36,6 @@ export const CURRENCIES = [
   { code: 'د.ك', label: 'دينار كويتي (د.ك)' },
   { code: 'ر.ي', label: 'ريال يمني (ر.ي)' },
   { code: 'د.ت', label: 'دينار تونسي (د.ت)' },
-  { code: 'د.ج', label: 'دينار جزائري (د.ج)' },
   { code: 'د.ل', label: 'دينار ليبي (د.ل)' },
   { code: 'د.م', label: 'درهم مغربي (د.م)' },
   { code: 'ر.ع', label: 'ريال عُماني (ر.ع)' },
@@ -85,6 +86,13 @@ export const PRICING_BASES: {
     unit: 'م.ط',
     needs: ['width'],
     hint: 'العرض وحده — دربزين، إفريز، حواف',
+  },
+  {
+    value: 'frame',
+    label: 'إطار بالمتر الطولي (المحيط)',
+    unit: 'م.ط',
+    needs: ['width', 'height'],
+    hint: '٢ × (العرض + الارتفاع) — أبواب ونوافذ الألمنيوم والحديد، مع زجاجها بالمتر المربّع',
   },
   {
     value: 'volume',

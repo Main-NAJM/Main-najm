@@ -27,6 +27,8 @@ const emptyProduct = (craft: Craft): NewRecord<ProductTemplate> => ({
   basis: 'area',
   unitPrice: 0,
   density: 0,
+  sheetPrice: 0,
+  sheetName: '',
   wastePct: 5,
   fittings: 0,
   labor: 0,
@@ -111,6 +113,8 @@ export default function ProductPricing() {
       basis: product.basis,
       unitPrice: product.unitPrice,
       density: product.density,
+      sheetPrice: product.sheetPrice,
+      sheetName: product.sheetName,
       wastePct: product.wastePct,
       fittings: product.fittings,
       labor: product.labor,
@@ -320,9 +324,22 @@ export default function ProductPricing() {
                     </div>
                   ) : null}
                   <div className="summary-row">
-                    <span>قيمة المادة</span>
+                    <span>
+                      {selected.basis === 'frame'
+                        ? `البروفيل (${formatNumber(result.measure)} م.ط × ${money(selected.unitPrice)})`
+                        : 'قيمة المادة'}
+                    </span>
                     <span>{money(result.materialCost)}</span>
                   </div>
+                  {result.sheetCost > 0 ? (
+                    <div className="summary-row">
+                      <span>
+                        {selected.sheetName || 'الصفيحة'} ({formatNumber(result.sheetArea)} م² ×{' '}
+                        {money(selected.sheetPrice)})
+                      </span>
+                      <span>{money(result.sheetCost)}</span>
+                    </div>
+                  ) : null}
                   {result.wasteCost > 0 ? (
                     <div className="summary-row">
                       <span>الهالك ({percent(selected.wastePct)})</span>
@@ -588,12 +605,17 @@ function ProductForm({
 
       <div className="grid-2 mt-12">
         <NumberInput
-          label={`سعر الوحدة (${basisUnit(draft.basis)})`}
+          label={
+            draft.basis === 'frame'
+              ? 'سعر المتر الطولي للبروفيل'
+              : `سعر الوحدة (${basisUnit(draft.basis)})`
+          }
           value={draft.unitPrice}
           onChange={(v) => {
             onPatch({ unitPrice: toNumber(v) });
           }}
           suffix={currency}
+          hint={draft.basis === 'frame' ? 'العادي ١٨٠٠ · الملوّن ٢٥٠٠' : undefined}
         />
         {draft.basis === 'weight' ? (
           <NumberInput
@@ -615,6 +637,29 @@ function ProductForm({
             }}
           />
         )}
+      </div>
+
+      {/* الصفيحة تُحسب بمساحتها فوق الإطار — بابٌ إطارُه بالمتر الطولي
+          وزجاجُه بالمتر المربّع في حساب واحد. صفر يعني بلا صفيحة. */}
+      <div className="grid-2 mt-12">
+        <NumberInput
+          label="سعر المتر المربّع للصفيحة"
+          value={draft.sheetPrice}
+          onChange={(v) => {
+            onPatch({ sheetPrice: toNumber(v) });
+          }}
+          suffix={currency}
+          hint="زجاج أو أي لوح يملأ الإطار. اتركه صفراً إن لا صفيحة."
+        />
+        <TextInput
+          label="اسم الصفيحة"
+          value={draft.sheetName}
+          onChange={(v) => {
+            onPatch({ sheetName: v });
+          }}
+          placeholder="زجاج ٤ مم"
+          hint="يظهر في عرض السعر المطبوع"
+        />
       </div>
 
       {draft.basis === 'weight' ? (
