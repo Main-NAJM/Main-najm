@@ -21,6 +21,24 @@
     <meta name="apple-mobile-web-app-title" content="حرفة برو" />
     <title>حرفة برو</title>
     <script>
+      // المظهر المحفوظ يُطبَّق قبل أول رسم: لو انتظرنا تحميل التطبيق لومض الأبيض
+      // في وجه من اختار الداكن. مفتاحه نفسه في src/lib/theme.ts.
+      (function () {
+        try {
+          var saved = localStorage.getItem('herfah.theme');
+          if (saved !== 'light' && saved !== 'dark') return;
+          document.documentElement.setAttribute('data-theme', saved);
+          var metas = document.querySelectorAll('meta[name="theme-color"]');
+          for (var i = 0; i < metas.length; i++) metas[i].remove();
+          var meta = document.createElement('meta');
+          meta.name = 'theme-color';
+          meta.content = saved === 'dark' ? '#0b1324' : '#0f172a';
+          document.head.appendChild(meta);
+        } catch (e) {
+          /* التخزين محجوب — يبقى المظهر تابعاً للجهاز */
+        }
+      })();
+
       // استعادة المسار بعد تحويلة 404.html على GitHub Pages (استضافة ملفات ساكنة
       // لا تعرف مسارات التطبيق). لا أثر لها على الاستضافات التي تعيد الكتابة بنفسها.
       (function () {
@@ -32,10 +50,10 @@
         window.history.replaceState(null, '', path + (q ? '?' + q : '') + window.location.hash);
       })();
     </script>
-    <script type="module" crossorigin src="/Main-najm/herfah/assets/index-FlEThreC.js"></script>
+    <script type="module" crossorigin src="/Main-najm/herfah/assets/index-B4kdAg2L.js"></script>
     <link rel="modulepreload" crossorigin href="/Main-najm/herfah/assets/react-B2hhXPGZ.js">
     <link rel="modulepreload" crossorigin href="/Main-najm/herfah/assets/firebase-bdiMsMzR.js">
-    <link rel="stylesheet" crossorigin href="/Main-najm/herfah/assets/index-CQ4i8s3B.css">
+    <link rel="stylesheet" crossorigin href="/Main-najm/herfah/assets/index-By81WwCR.css">
   </head>
   <body>
     <div id="root"></div>
