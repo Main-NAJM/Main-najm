@@ -783,29 +783,138 @@ a {
   min-height: 44px;
 }
 
+/* الحقل ذو اللاحقة: الإطار على الغلاف والرقم واللاحقة صفّان داخله.
+   كانت اللاحقة معلّقة فوق الحقل بحشوٍ ثابت 64px يُفرغ لها مكانًا؛ فعلى شاشة
+   320px لا يبقى للرقم إلا 40px، فيخرج أوّله عن النظر ويُقرأ ١٨٠٠ ثلاثمئة.
+   وحشوٌ ثابت لا يكفي أصلًا للاحقة مثل «متر مكعّب» أو وحدة يكتبها صاحب
+   الورشة بنفسه. فصارت اللاحقة في مجرى الصفّ: تأخذ قدرها ويأخذ الرقم الباقي. */
 .input-wrap {
   position: relative;
   display: flex;
   align-items: center;
+  background: var(--surface);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  transition: border-color var(--fast) var(--ease);
+}
+
+.input-wrap:focus-within {
+  outline: 3px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  border-color: var(--gold);
+}
+
+.input-wrap .input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  background: transparent;
+  padding-inline-end: 6px;
+}
+
+/* بلا لاحقة: يعود الحشو متساويًا من الطرفين. */
+.input-wrap .input:last-child {
+  padding-inline-end: 13px;
+}
+
+/* الحلقة على الغلاف لا على الحقل، وإلا ظهرت حلقتان متداخلتان. */
+.input-wrap .input:focus-visible {
+  outline: none; /* بديل: .input-wrap:focus-within */
 }
 
 .input-wrap__suffix {
-  position: absolute;
-  inset-inline-end: 13px;
+  flex: 0 0 auto;
+  max-width: 45%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  padding-inline-end: 13px;
+  padding-inline-start: 2px;
   font-size: 12.5px;
   font-weight: 500;
   color: var(--ink-3);
   pointer-events: none;
 }
 
-.input-wrap .input {
-  padding-inline-end: 64px;
+/* العدّاد: زرّ نقصان، ثمّ الحقل، ثمّ زرّ زيادة. الزرّان 46px مربّعان لأنهما
+   يُضغطان مرّتين وثلاثًا في النَّفَس الواحد، والحقل بينهما يبقى مكتوبًا فيه
+   لمن يعرف رقمه فلا ينقره اثنتي عشرة مرّة. */
+.stepper {
+  display: flex;
+  align-items: stretch;
+  gap: 8px;
+}
+
+.stepper__field {
+  flex: 1;
+  min-width: 0;
+}
+
+/* سهما المتصفّح داخل الحقل زائدان هنا: الزرّان بجانبه أكبر وأوضح، والسهمان
+   يزاحمان كلمة «قطعة» على شاشة ضيّقة. */
+.stepper__field .input {
+  appearance: textfield;
+}
+
+.stepper__field .input::-webkit-outer-spin-button,
+.stepper__field .input::-webkit-inner-spin-button {
+  appearance: none;
+  margin: 0;
+}
+
+.stepper__btn {
+  flex: 0 0 auto;
+  width: 46px;
+  min-height: 46px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  line-height: 1;
+  font-weight: 500;
+  color: var(--ink);
+  background: var(--surface-2);
+  border: 1.5px solid var(--line);
+  border-radius: var(--r-sm);
+  /* الرمزان − و+ يُنسخان مع الرقم عند النسخ لولا هذا. */
+  user-select: none;
+  transition: background var(--fast) var(--ease), border-color var(--fast) var(--ease),
+    transform var(--fast) var(--ease);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .stepper__btn:hover:not(:disabled) {
+    background: var(--surface-3);
+    border-color: var(--line-strong);
+  }
+}
+
+.stepper__btn:active:not(:disabled) {
+  transform: scale(0.94);
+}
+
+.stepper__btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}
+
+.stepper__btn:focus-visible {
+  outline: 3px solid color-mix(in srgb, var(--gold) 45%, transparent);
+  outline-offset: 1px;
+  border-color: var(--gold);
 }
 
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0 12px;
+}
+
+/* على شاشة 320px لا يبقى للعمود إلا 119px، فمبلغ من سبعة أرقام
+   (١٢٥٠٠٠٠ دينارًا) يخرج أوّله عن النظر. عمود واحد يردّ المبلغ كاملًا. */
+@media (max-width: 360px) {
+  .grid-2 {
+    grid-template-columns: minmax(0, 1fr);
+  }
 }
 
 .grid-3 {

@@ -88,6 +88,90 @@ interface NumberInputProps {
   step?: number;
 }
 
+/**
+ * عدّاد: رقم بين زرَّي نقصان وزيادة.
+ *
+ * يُستعمل حيث يكون الرقم صغيراً ويُعدَّل بخطوة واحدة — عدد قطع البروفيل مثلاً:
+ * صاحب الورشة يعرف أنها «إحدى عشرة أو اثنتا عشرة»، فيرفعها بضغطة بدل أن يفتح
+ * لوحة المفاتيح الرقمية ويمسح ويكتب. والحقل يبقى قابلاً للكتابة لمن يعرف رقمه.
+ */
+export function Stepper({
+  label,
+  value,
+  onChange,
+  hint,
+  suffix,
+  min = 0,
+  max,
+  step = 1,
+}: {
+  label: string;
+  value: number;
+  onChange: (value: number) => void;
+  hint?: string;
+  suffix?: string;
+  min?: number;
+  max?: number;
+  step?: number;
+}) {
+  const clamp = (next: number) => {
+    const bounded = Math.max(min, max === undefined ? next : Math.min(max, next));
+    // كسور الفاصلة العائمة تُنتج ١١٫٠٠٠٠٠٠٠٠٠٠٠٠٢ عند الجمع المتكرّر.
+    return Math.round(bounded * 1000) / 1000;
+  };
+
+  return (
+    <Field label={label} hint={hint}>
+      {(id) => (
+        <div className="stepper">
+          <button
+            type="button"
+            className="stepper__btn"
+            onClick={() => {
+              onChange(clamp(value - step));
+            }}
+            disabled={value <= min}
+            aria-label={`نقصان ${label}`}
+          >
+            −
+          </button>
+          <div className="input-wrap stepper__field">
+            <input
+              id={id}
+              className="input"
+              type="number"
+              inputMode="numeric"
+              min={min}
+              max={max}
+              step={step}
+              value={value === 0 ? '' : value}
+              onFocus={(event) => {
+                event.target.select();
+              }}
+              onChange={(event) => {
+                const next = Number(event.target.value);
+                onChange(Number.isFinite(next) ? clamp(next) : min);
+              }}
+            />
+            {suffix ? <span className="input-wrap__suffix">{suffix}</span> : null}
+          </div>
+          <button
+            type="button"
+            className="stepper__btn"
+            onClick={() => {
+              onChange(clamp(value + step));
+            }}
+            disabled={max !== undefined && value >= max}
+            aria-label={`زيادة ${label}`}
+          >
+            +
+          </button>
+        </div>
+      )}
+    </Field>
+  );
+}
+
 export function NumberInput({
   label,
   value,

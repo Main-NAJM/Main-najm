@@ -183,9 +183,13 @@ check '#[0-9a-fA-F]{3,8}([^0-9a-fA-F]|$)' \
 check_outside_media '!important' 'prefers-reduced-motion|print' \
   '!important — يُسمح به فقط لتجاوز مكتبة خارجية، مع تعليق'
 
+# استثناء واحد معلن: سطر يكتب بديله إلى جانبه، هكذا:
+#   outline: none; /* بديل: .input-wrap:focus-within */
+# يعني أن الحلقة انتقلت إلى عنصر أعلى لا أنها أُلغيت — وهو ما يقع حين يحمل
+# الغلاف الإطار ويحمل معه الحلقة. وأيّ outline: none بلا بديل مكتوب يبقى مخالفة.
 check 'outline[[:space:]]*:[[:space:]]*(none|0)' \
   'outline: none — يكسر التنقّل بلوحة المفاتيح ما لم يوجد بديل :focus-visible' \
-  error '*.css'
+  error '*.css' '/\* بديل: '
 
 if ! grep -q 'prefers-reduced-motion' src/styles/global.css 2>/dev/null; then
   echo "${YEL}!${OFF} لا يوجد @media (prefers-reduced-motion) في global.css"

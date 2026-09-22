@@ -1,7 +1,7 @@
 import { useMemo, useState } from 'react';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
-import { NumberInput, SectionTitle } from '@/components/ui';
+import { NumberInput, SectionTitle, Stepper } from '@/components/ui';
 import {
   OPENING_KINDS,
   computeOpeningPrice,
@@ -126,14 +126,14 @@ export default function Openings() {
           ))}
         </div>
 
-        <NumberInput
+        <Stepper
           label={`عدد القطع في ${openingKindLabel(kind)}`}
           value={pieces}
           onChange={(v) => {
-            setPiecesByKind((current) => ({ ...current, [kind]: toNumber(v) }));
+            setPiecesByKind((current) => ({ ...current, [kind]: v }));
           }}
           suffix="قطعة"
-          hint="قطع البروفيل: الإطار والضلف والقضبان. نافذة ١×١ فيها ١١ عادةً."
+          hint="قطع البروفيل: الإطار والضلف والقضبان. نافذة ١×١ فيها ١١ عادةً — زِد أو أنقص بحسب قطعتك."
         />
 
         <div className="grid-2 mt-12">
