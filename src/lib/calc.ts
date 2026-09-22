@@ -117,7 +117,14 @@ export interface ProductDimensions {
 
 export type ProductPricingInput = Pick<
   ProductTemplate,
-  'basis' | 'unitPrice' | 'density' | 'wastePct' | 'fittings' | 'labor' | 'marginPct'
+  | 'basis'
+  | 'unitPrice'
+  | 'density'
+  | 'wastePct'
+  | 'fittings'
+  | 'labor'
+  | 'marginPct'
+  | 'sheetPrice'
 >;
 
 export interface ProductPriceResult {
@@ -126,6 +133,10 @@ export interface ProductPriceResult {
   measureUnit: string;
   /** قيمة المادة قبل الهالك، للقطعة الواحدة. */
   materialCost: number;
+  /** مساحة الصفيحة بالمتر المربّع (العرض × الارتفاع)، صفر إن لا صفيحة. */
+  sheetArea: number;
+  /** قيمة الصفيحة: المساحة × سعر مترها المربّع. */
+  sheetCost: number;
   wasteCost: number;
   fittings: number;
   labor: number;
@@ -144,6 +155,7 @@ export interface ProductPriceResult {
 const BASIS_UNITS: Record<PricingBasis, string> = {
   area: 'م²',
   length: 'م.ط',
+  frame: 'م.ط',
   volume: 'م³',
   weight: 'كغ',
   unit: 'قطعة',
@@ -165,6 +177,10 @@ export const measureFor = (
       return w * h;
     case 'length':
       return w;
+    // الإطار يدور حول القطعة كلها، فالمقدار محيطها لا ضلع واحد منها:
+    // بابٌ 100×200 سم يلزمه 6 أمتار طولية من البروفيل لا مترٌ واحد.
+    case 'frame':
+      return 2 * (w + h);
     case 'volume':
       return w * h * d;
     case 'weight':
@@ -181,10 +197,17 @@ export const computeProductPrice = (
 ): ProductPriceResult => {
   const measure = measureFor(product.basis, dims, product.density);
   const materialCost = measure * (product.unitPrice || 0);
-  const wasteCost = materialCost * ((product.wastePct || 0) / 100);
+
+  // الصفيحة (زجاج، لوح) تُحسب بمساحتها دائماً، أيّاً كان أساس الإطار.
+  const sheetRate = Math.max(0, product.sheetPrice || 0);
+  const sheetArea = sheetRate > 0 ? measureFor('area', dims) : 0;
+  const sheetCost = sheetArea * sheetRate;
+
+  // الهالك يطال المادتين معاً: قصّ البروفيل وقصّ الزجاج كلاهما يُهدر.
+  const wasteCost = (materialCost + sheetCost) * ((product.wastePct || 0) / 100);
   const fittings = product.fittings || 0;
   const labor = product.labor || 0;
-  const unitCost = materialCost + wasteCost + fittings + labor;
+  const unitCost = materialCost + sheetCost + wasteCost + fittings + labor;
   const unitProfit = unitCost * ((product.marginPct || 0) / 100);
   const unitTotal = unitCost + unitProfit;
   const quantity = Math.max(0, dims.quantity || 0);
@@ -193,6 +216,8 @@ export const computeProductPrice = (
     measure: round2(measure),
     measureUnit: basisUnit(product.basis),
     materialCost: round2(materialCost),
+    sheetArea: round2(sheetArea),
+    sheetCost: round2(sheetCost),
     wasteCost: round2(wasteCost),
     fittings: round2(fittings),
     labor: round2(labor),

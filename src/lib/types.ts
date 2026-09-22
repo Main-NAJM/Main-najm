@@ -36,7 +36,7 @@ export type MaterialKind =
  * weight — الكيلوغرام (يُحسب من الحجم × كثافة المادة): حديد بالوزن.
  * unit  — القطعة: تسعير ثابت لا يتبع المقاس.
  */
-export type PricingBasis = 'area' | 'length' | 'volume' | 'weight' | 'unit';
+export type PricingBasis = 'area' | 'length' | 'frame' | 'volume' | 'weight' | 'unit';
 
 /** حقول مشتركة لكل السجلات المخزّنة. */
 export interface BaseRecord {
@@ -169,6 +169,14 @@ export interface ProductTemplate extends BaseRecord {
   unitPrice: number;
   /** كثافة المادة كغ/م³ — تُستعمل مع أساس الوزن فقط. */
   density: number;
+  /**
+   * سعر المتر المربّع للصفيحة التي تملأ الإطار: زجاج، لوح، بانو…
+   * صفر يعني بلا صفيحة. يُضاف فوق أساس التسعير، ولا يحلّ محلّه —
+   * فباب الألمنيوم إطارُه بالمتر الطولي وزجاجُه بالمتر المربّع معاً.
+   */
+  sheetPrice: number;
+  /** اسم الصفيحة كما يظهر في عرض السعر: «زجاج 4 مم» مثلاً. */
+  sheetName: string;
   /** نسبة الهالك من قيمة المادة. */
   wastePct: number;
   /** إضافات ثابتة لكل قطعة: إكسسوارات، أقفال، تركيب. */

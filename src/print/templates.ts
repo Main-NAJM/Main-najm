@@ -440,10 +440,17 @@ export const buildProductQuote = (
             <td>${
               product.basis === 'unit'
                 ? 'قيمة المادة'
-                : `قيمة المادة (${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} × ${money(product.unitPrice, profile)})`
+                : product.basis === 'frame'
+                  ? `البروفيل — المحيط (${escapeHtml(formatNumber(result.measure))} م.ط × ${money(product.unitPrice, profile)})`
+                  : `قيمة المادة (${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} × ${money(product.unitPrice, profile)})`
             }</td>
             <td class="num">${money(result.materialCost, profile)}</td>
           </tr>
+          ${
+            result.sheetCost > 0
+              ? `<tr><td>${escapeHtml(product.sheetName || 'الصفيحة')} (${escapeHtml(formatNumber(result.sheetArea))} م² × ${money(product.sheetPrice, profile)})</td><td class="num">${money(result.sheetCost, profile)}</td></tr>`
+              : ''
+          }
           ${
             result.wasteCost > 0
               ? `<tr><td>الهالك (${escapeHtml(formatNumber(product.wastePct))}٪)</td><td class="num">${money(result.wasteCost, profile)}</td></tr>`
