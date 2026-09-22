@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """توليد أيقونات «BOFAIDA ADS».
 
-الرمز: مكبّر صوت مبسّط بموجتين — إشارة مباشرة إلى الإعلان، بلا نصّ حتى يبقى
-واضحاً في الأحجام الصغيرة، وبألوان الموقع نفسها.
+الرمز: مثلّث تشغيل داخل إطار، وشرارة إلى جانبه — فيديو صُنع بالذكاء
+الاصطناعي، بلا نصّ حتى يبقى واضحاً في الأحجام الصغيرة، وبألوان الموقع نفسها.
 
     pip install pillow
     python3 bofaida/icons/generate-icons.py
@@ -30,45 +30,41 @@ def draw_icon(size: int, padding: float) -> Image.Image:
 
     pad = s * padding
     box = s - pad * 2
-    cy = s / 2
 
-    # جسم المكبّر: مستطيل صغير (الفوهة الخلفية) يليه مثلّث مفتوح نحو اليمين.
-    # يتّجه الصوت يميناً لأن الشكل يُقرأ أفقياً في كل الاتجاهات، والأيقونة
-    # المربّعة لا اتجاه لها.
-    back_w = box * 0.20
-    back_h = box * 0.30
-    back_x = pad + box * 0.06
+    # إطار الفيديو: مربّع بزوايا ناعمة، وداخله مثلّث التشغيل.
+    frame = box * 0.86
+    fx = pad
+    fy = pad + (box - frame) / 2
+    stroke = max(int(box * 0.085), 2)
     draw.rounded_rectangle(
-        [back_x, cy - back_h / 2, back_x + back_w, cy + back_h / 2],
-        radius=back_w * 0.22,
-        fill=CREAM,
+        [fx, fy, fx + frame, fy + frame],
+        radius=frame * 0.22,
+        outline=CREAM,
+        width=stroke,
     )
 
-    horn_x = back_x + back_w
-    horn_w = box * 0.26
-    horn_h = box * 0.62
+    # مثلّث التشغيل، متوازن بصرياً لا حسابياً: يُزاح قليلاً نحو اليمين لأن
+    # العين تراه أثقل من جهة القاعدة.
+    cx = fx + frame / 2 + frame * 0.04
+    cy = fy + frame / 2
+    h = frame * 0.40
+    w = h * 0.88
     draw.polygon(
-        [
-            (horn_x - back_w * 0.1, cy - back_h / 2),
-            (horn_x + horn_w, cy - horn_h / 2),
-            (horn_x + horn_w, cy + horn_h / 2),
-            (horn_x - back_w * 0.1, cy + back_h / 2),
-        ],
-        fill=CREAM,
+        [(cx - w * 0.5, cy - h / 2), (cx - w * 0.5, cy + h / 2), (cx + w * 0.62, cy)],
+        fill=FLAME,
     )
 
-    # موجتان صوتيّتان: قوسان بالبرتقالي.
-    stroke = max(int(box * 0.075), 2)
-    for i, ratio in enumerate((0.34, 0.52)):
-        r = box * ratio
-        cx = horn_x + horn_w * 0.55
-        draw.arc(
-            [cx - r, cy - r, cx + r, cy + r],
-            start=-52,
-            end=52,
-            fill=FLAME,
-            width=stroke - i * int(stroke * 0.18),
-        )
+    # الشرارة: أربع نقاط نجمية في الزاوية العليا — إشارة الذكاء الاصطناعي.
+    sx = fx + frame * 0.94
+    sy = fy - frame * 0.02
+    r = box * 0.13
+    draw.polygon(
+        [(sx, sy - r), (sx + r * 0.3, sy - r * 0.3), (sx + r, sy),
+         (sx + r * 0.3, sy + r * 0.3), (sx, sy + r),
+         (sx - r * 0.3, sy + r * 0.3), (sx - r, sy),
+         (sx - r * 0.3, sy - r * 0.3)],
+        fill=FLAME,
+    )
 
     return img.resize((size, size), Image.LANCZOS)
 

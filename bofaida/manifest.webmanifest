@@ -1,7 +1,7 @@
 {
-  "name": "BOFAIDA ADS — وكالة إعلان وتصميم",
+  "name": "BOFAIDA ADS — فيديوهات إعلانية بالذكاء الاصطناعي",
   "short_name": "BOFAIDA ADS",
-  "description": "هوية بصرية، لافتات، طباعة، إعلانات السوشيال ميديا، تغليف سيارات، تصوير — تيمياوين وبرج باجي مختار.",
+  "description": "فيديوهات ترويجية لمنتجاتك التجارية بالذكاء الاصطناعي، بسعر في متناول الجميع — برج باجي مختار.",
   "lang": "ar",
   "dir": "rtl",
   "start_url": "./",
@@ -10,7 +10,9 @@
   "display": "standalone",
   "background_color": "#FBF8F5",
   "theme_color": "#FBF8F5",
-  "categories": ["business"],
+  "categories": [
+    "business"
+  ],
   "icons": [
     {
       "src": "./icons/icon-192.png",
@@ -33,7 +35,7 @@
   ],
   "shortcuts": [
     {
-      "name": "خدماتنا",
+      "name": "ما نصنع",
       "url": "./#services"
     },
     {
