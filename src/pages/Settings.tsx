@@ -11,6 +11,8 @@ import {
   TextInput,
 } from '@/components/ui';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
+import { useTheme } from '@/hooks/useTheme';
+import { THEME_CHOICES } from '@/lib/theme';
 import { changePassword } from '@/data/accounts';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
 import { isUsingEmulators } from '@/lib/firebase';
@@ -24,6 +26,7 @@ export default function Settings() {
   const { user, signOut, firebaseAvailable, updateLocalAccount } = useAuth();
   const { notify, notifyError } = useToast();
   const { canInstall, installed, install } = usePwaInstall();
+  const { theme, setTheme } = useTheme();
 
   const [draft, setDraft] = useState<Profile>(profile);
   const [saving, setSaving] = useState(false);
@@ -252,6 +255,31 @@ export default function Settings() {
             <span className="small muted">آخر تحديث: {formatDateTime(profile.updatedAt)}</span>
           ) : null}
         </div>
+      </div>
+
+      <div className="card">
+        <SectionTitle>المظهر</SectionTitle>
+        <p className="small muted">
+          يُحفظ في هذا الجهاز وحده — فلهاتفك مظهر ولحاسوب الورشة آخر إن شئت.
+        </p>
+        <div className="chips mt-12" role="group" aria-label="مظهر التطبيق">
+          {THEME_CHOICES.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`chip${theme === option.value ? ' is-active' : ''}`}
+              aria-pressed={theme === option.value}
+              onClick={() => {
+                setTheme(option.value);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <p className="small muted mt-12">
+          {THEME_CHOICES.find((option) => option.value === theme)?.hint}
+        </p>
       </div>
 
       <div className="card">
