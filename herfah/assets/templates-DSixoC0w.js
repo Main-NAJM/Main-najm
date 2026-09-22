@@ -1,4 +1,4 @@
-import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y,g as h,o as v,i as w,t as _}from"./index-lay6xYxk.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
+import{d as u,o as b}from"./calc-Cvb9wZrR.js";import{x as l,Q as $,A as x,z as y,g as h,o as v,i as w,t as _}from"./index-C7q_XB-3.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
   @page { size: A4; margin: 14mm 12mm; }
   * { box-sizing: border-box; }
   body {
@@ -63,7 +63,7 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
 <html lang="ar" dir="rtl">
 <head><meta charset="utf-8"><title>${d(t)}</title><style>${k}</style></head>
 <body><div class="doc">${s}</div></body>
-</html>`,P=(t,s)=>{const n=g(t,s),a=document.createElement("iframe");a.setAttribute("aria-hidden","true"),a.style.position="fixed",a.style.inset="0",a.style.width="0",a.style.height="0",a.style.border="0",a.style.opacity="0",document.body.appendChild(a);const o=()=>{window.setTimeout(()=>{a.remove()},1e3)};a.onload=()=>{const p=a.contentWindow;if(!p){o();return}p.focus(),p.onafterprint=o,window.setTimeout(()=>{try{p.print()}catch{o()}},120)};const e=a.contentDocument;if(!e){o();return}e.open(),e.write(n),e.close()},z=(t,s,n)=>{const a=new Blob([g(t,s)],{type:"text/html;charset=utf-8"}),o=URL.createObjectURL(a),e=document.createElement("a");e.href=o,e.download=n.endsWith(".html")?n:`${n}.html`,document.body.appendChild(e),e.click(),e.remove(),window.setTimeout(()=>{URL.revokeObjectURL(o)},2e3)},r=(t,s,n)=>`
+</html>`,P=(t,s)=>{const n=g(t,s),a=document.createElement("iframe");a.setAttribute("aria-hidden","true"),a.style.position="fixed",a.style.inset="0",a.style.width="0",a.style.height="0",a.style.border="0",a.style.opacity="0",document.body.appendChild(a);const o=()=>{window.setTimeout(()=>{a.remove()},1e3)};a.onload=()=>{const r=a.contentWindow;if(!r){o();return}r.focus(),r.onafterprint=o,window.setTimeout(()=>{try{r.print()}catch{o()}},120)};const e=a.contentDocument;if(!e){o();return}e.open(),e.write(n),e.close()},z=(t,s,n)=>{const a=new Blob([g(t,s)],{type:"text/html;charset=utf-8"}),o=URL.createObjectURL(a),e=document.createElement("a");e.href=o,e.download=n.endsWith(".html")?n:`${n}.html`,document.body.appendChild(e),e.click(),e.remove(),window.setTimeout(()=>{URL.revokeObjectURL(o)},2e3)},p=(t,s,n)=>`
   <div class="doc__head">
     <div>
       <p class="doc__brand">${d(t.businessName||"ورشتي")}</p>
@@ -88,11 +88,11 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
         <tr>
           <td class="num">${e+1}</td>
           <td>${d(o.name)}</td>
-          <td class="num">${d(c(o.qty))}</td>
+          <td class="num">${d(l(o.qty))}</td>
           <td class="num">${i(o.unitPrice,s)}</td>
           <td class="num">${i(o.qty*o.unitPrice,s)}</td>
         </tr>`).join(""):'<tr><td colspan="5" style="text-align:center;color:#6b7280">لا توجد بنود مفصّلة</td></tr>';return`
-    ${r(s,"فاتورة",$(t.id))}
+    ${p(s,"فاتورة",$(t.id))}
     <div class="block">
       <p class="block__title">بيانات الزبون</p>
       <div class="kv">
@@ -131,18 +131,18 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
     </div>
     ${t.notes?`<div class="block"><p class="block__title">ملاحظات</p><div class="note">${d(t.notes)}</div></div>`:""}
     <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
-    ${m(s)}`},j=(t,s,n)=>{const a=t.reduce((e,p)=>{const l=b(p);return{total:e.total+l.total,paid:e.paid+l.paid,remaining:e.remaining+l.remaining}},{total:0,paid:0,remaining:0}),o=t.length?t.map((e,p)=>{const l=b(e);return`
+    ${m(s)}`},j=(t,s,n)=>{const a=t.reduce((e,r)=>{const c=b(r);return{total:e.total+c.total,paid:e.paid+c.paid,remaining:e.remaining+c.remaining}},{total:0,paid:0,remaining:0}),o=t.length?t.map((e,r)=>{const c=b(e);return`
           <tr>
-            <td class="num">${p+1}</td>
+            <td class="num">${r+1}</td>
             <td>${d(e.title||"—")}</td>
             <td>${d(e.customerName||"—")}</td>
             <td><span class="pill">${d(v(e.status))}</span></td>
             <td class="num">${d(e.dueDate?h(e.dueDate):"—")}</td>
-            <td class="num">${i(l.total,s)}</td>
-            <td class="num">${i(l.paid,s)}</td>
-            <td class="num">${i(l.remaining,s)}</td>
+            <td class="num">${i(c.total,s)}</td>
+            <td class="num">${i(c.paid,s)}</td>
+            <td class="num">${i(c.remaining,s)}</td>
           </tr>`}).join(""):'<tr><td colspan="8" style="text-align:center;color:#6b7280">لا توجد طلبيات</td></tr>';return`
-    ${r(s,"كشف الطلبيات","")}
+    ${p(s,"كشف الطلبيات","")}
     <div class="block">
       <p class="block__title">${d(n)}</p>
       <table>
@@ -169,19 +169,19 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
         </tfoot>
       </table>
     </div>
-    ${m(s,"كشف حساب داخلي")}`},N=(t,s,n)=>{const a=t.reduce((e,p)=>{const l=u(p);return{amount:e.amount+l.amount,paid:e.paid+l.paid,remaining:e.remaining+l.remaining}},{amount:0,paid:0,remaining:0}),o=t.length?t.map((e,p)=>{const l=u(e);return`
+    ${m(s,"كشف حساب داخلي")}`},N=(t,s,n)=>{const a=t.reduce((e,r)=>{const c=u(r);return{amount:e.amount+c.amount,paid:e.paid+c.paid,remaining:e.remaining+c.remaining}},{amount:0,paid:0,remaining:0}),o=t.length?t.map((e,r)=>{const c=u(e);return`
           <tr>
-            <td class="num">${p+1}</td>
+            <td class="num">${r+1}</td>
             <td>${d(e.customerName||"—")}</td>
             <td class="num">${d(e.phone||"—")}</td>
             <td>${d(e.address||"—")}</td>
             <td>${d(e.goods||"—")}</td>
-            <td class="num">${i(l.amount,s)}</td>
-            <td class="num">${i(l.paid,s)}</td>
-            <td class="num">${i(l.remaining,s)}</td>
+            <td class="num">${i(c.amount,s)}</td>
+            <td class="num">${i(c.paid,s)}</td>
+            <td class="num">${i(c.remaining,s)}</td>
             <td class="num">${d(e.dueDate?h(e.dueDate):"—")}</td>
           </tr>`}).join(""):'<tr><td colspan="9" style="text-align:center;color:#6b7280">لا توجد ديون مسجّلة</td></tr>';return`
-    ${r(s,"سجل الديون","")}
+    ${p(s,"سجل الديون","")}
     <div class="block">
       <p class="block__title">${d(n)}</p>
       <table>
@@ -217,7 +217,7 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
           <td class="num">${i(o.amount,s)}</td>
           <td>${d(o.note||"—")}</td>
         </tr>`).join(""):'<tr><td colspan="4" style="text-align:center;color:#6b7280">لا توجد دفعات</td></tr>';return`
-    ${r(s,"كشف دين",$(t.id))}
+    ${p(s,"كشف دين",$(t.id))}
     <div class="block">
       <p class="block__title">بيانات الزبون</p>
       <div class="kv">
@@ -255,11 +255,11 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
         <tr>
           <td class="num">${o+1}</td>
           <td>${d(a.name)}</td>
-          <td class="num">${d(c(a.qty))}</td>
+          <td class="num">${d(l(a.qty))}</td>
           <td class="num">${i(a.unitPrice,s)}</td>
           <td class="num">${i(a.qty*a.unitPrice,s)}</td>
         </tr>`).join(""):'<tr><td colspan="5" style="text-align:center;color:#6b7280">لا توجد مواد</td></tr>';return`
-    ${r(s,"ورقة تسعير",$(t.id))}
+    ${p(s,"ورقة تسعير",$(t.id))}
     <div class="block">
       <p class="block__title">${d(t.title||"حساب تكلفة")}</p>
       <table>
@@ -276,11 +276,11 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
       </table>
       <table class="totals">
         <tbody>
-          <tr><td>تكلفة المواد (مع الهالك ${d(c(t.wastePct))}٪)</td><td>${i(t.materialsCost,s)}</td></tr>
-          <tr><td>أجور العمل (${d(c(t.laborHours))} ساعة)</td><td>${i(t.laborCost,s)}</td></tr>
+          <tr><td>تكلفة المواد (مع الهالك ${d(l(t.wastePct))}٪)</td><td>${i(t.materialsCost,s)}</td></tr>
+          <tr><td>أجور العمل (${d(l(t.laborHours))} ساعة)</td><td>${i(t.laborCost,s)}</td></tr>
           <tr><td>مصاريف عامة</td><td>${i(t.overhead,s)}</td></tr>
           <tr><td>إجمالي التكلفة</td><td>${i(t.totalCost,s)}</td></tr>
-          <tr><td>الربح (${d(c(t.marginPct))}٪)</td><td>${i(t.profit,s)}</td></tr>
+          <tr><td>الربح (${d(l(t.marginPct))}٪)</td><td>${i(t.profit,s)}</td></tr>
           <tr class="grand"><td>السعر المقترح</td><td>${i(t.suggestedPrice,s)}</td></tr>
         </tbody>
       </table>
@@ -291,11 +291,11 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
           <td class="num">${o+1}</td>
           <td>${d(a.title||"—")}</td>
           <td class="num">${i(a.totalCost,s)}</td>
-          <td class="num">${d(c(a.marginPct))}٪</td>
+          <td class="num">${d(l(a.marginPct))}٪</td>
           <td class="num">${i(a.profit,s)}</td>
           <td class="num">${i(a.suggestedPrice,s)}</td>
         </tr>`).join(""):'<tr><td colspan="6" style="text-align:center;color:#6b7280">لا توجد حسابات محفوظة</td></tr>';return`
-    ${r(s,"سجل التسعير","")}
+    ${p(s,"سجل التسعير","")}
     <div class="block">
       <p class="block__title">كل عمليات حساب التكلفة والربح</p>
       <table>
@@ -312,16 +312,16 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
         <tbody>${n}</tbody>
       </table>
     </div>
-    ${m(s,"سجل تسعير داخلي")}`},S=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${c(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${c(s.heightCm)} سم`:"",s.depthCm?`العمق ${c(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
-    ${r(a,"عرض سعر",$(t.id))}
+    ${m(s,"سجل تسعير داخلي")}`},S=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${l(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${l(s.heightCm)} سم`:"",s.depthCm?`العمق ${l(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
+    ${p(a,"عرض سعر",$(t.id))}
     <div class="block">
       <p class="block__title">${d(t.name)}</p>
       <div class="kv">
         <div><span>الحرفة:</span><span>${d(x(t.craft,a.customCraft))}</span></div>
         <div><span>التسعير:</span><span>${d(y(t.basis))}</span></div>
         ${o?`<div><span>المقاس:</span><span>${d(o)}</span></div>`:""}
-        ${t.basis==="unit"?"":`<div><span>المقدار:</span><span>${d(c(n.measure))} ${d(n.measureUnit)} للقطعة</span></div>`}
-        <div><span>الكمية:</span><span>${d(c(n.quantity))} قطعة</span></div>
+        ${t.basis==="unit"?"":`<div><span>المقدار:</span><span>${d(l(n.measure))} ${d(n.measureUnit)} للقطعة</span></div>`}
+        <div><span>الكمية:</span><span>${d(l(n.quantity))} قطعة</span></div>
       </div>
     </div>
     <div class="block">
@@ -335,10 +335,11 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
         </thead>
         <tbody>
           <tr>
-            <td>${t.basis==="unit"?"قيمة المادة":`قيمة المادة (${d(c(n.measure))} ${d(n.measureUnit)} × ${i(t.unitPrice,a)})`}</td>
+            <td>${t.basis==="unit"?"قيمة المادة":t.basis==="frame"?`البروفيل — المحيط (${d(l(n.measure))} م.ط × ${i(t.unitPrice,a)})`:`قيمة المادة (${d(l(n.measure))} ${d(n.measureUnit)} × ${i(t.unitPrice,a)})`}</td>
             <td class="num">${i(n.materialCost,a)}</td>
           </tr>
-          ${n.wasteCost>0?`<tr><td>الهالك (${d(c(t.wastePct))}٪)</td><td class="num">${i(n.wasteCost,a)}</td></tr>`:""}
+          ${n.sheetCost>0?`<tr><td>${d(t.sheetName||"الصفيحة")} (${d(l(n.sheetArea))} م² × ${i(t.sheetPrice,a)})</td><td class="num">${i(n.sheetCost,a)}</td></tr>`:""}
+          ${n.wasteCost>0?`<tr><td>الهالك (${d(l(t.wastePct))}٪)</td><td class="num">${i(n.wasteCost,a)}</td></tr>`:""}
           ${n.fittings>0?`<tr><td>إكسسوارات</td><td class="num">${i(n.fittings,a)}</td></tr>`:""}
           ${n.labor>0?`<tr><td>أجرة العمل</td><td class="num">${i(n.labor,a)}</td></tr>`:""}
         </tbody>
@@ -346,9 +347,9 @@ import{d as u,o as b}from"./calc-C1M7HYrf.js";import{x as c,Q as $,A as x,z as y
       <table class="totals">
         <tbody>
           <tr><td>تكلفة القطعة</td><td>${i(n.unitCost,a)}</td></tr>
-          <tr><td>الربح (${d(c(t.marginPct))}٪)</td><td>${i(n.unitProfit,a)}</td></tr>
+          <tr><td>الربح (${d(l(t.marginPct))}٪)</td><td>${i(n.unitProfit,a)}</td></tr>
           <tr><td>سعر القطعة</td><td>${i(n.unitTotal,a)}</td></tr>
-          <tr class="grand"><td>الإجمالي (${d(c(n.quantity))} قطعة)</td><td>${i(n.total,a)}</td></tr>
+          <tr class="grand"><td>الإجمالي (${d(l(n.quantity))} قطعة)</td><td>${i(n.total,a)}</td></tr>
         </tbody>
       </table>
     </div>
