@@ -1,4 +1,4 @@
-import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y,g as h,o as v,i as w,t as _}from"./index-B2uDhG4v.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
+import{d as u,o as b}from"./calc-B81aD7nr.js";import{x as l,U as $,D as x,z as y,g as h,o as v,i as w,t as _}from"./index-FlEThreC.js";const d=t=>String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#39;"),k=`
   @page { size: A4; margin: 14mm 12mm; }
   * { box-sizing: border-box; }
   body {
@@ -210,7 +210,7 @@ import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y
         </tfoot>
       </table>
     </div>
-    ${m(s,"سجل ديون داخلي")}`},R=(t,s)=>{const n=u(t),a=(t.payments??[]).length?t.payments.map((o,e)=>`
+    ${m(s,"سجل ديون داخلي")}`},T=(t,s)=>{const n=u(t),a=(t.payments??[]).length?t.payments.map((o,e)=>`
         <tr>
           <td class="num">${e+1}</td>
           <td class="num">${d(h(o.date))}</td>
@@ -251,7 +251,7 @@ import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y
     </div>
     ${t.notes?`<div class="block"><div class="note">${d(t.notes)}</div></div>`:""}
     <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
-    ${m(s,"كشف دين")}`},T=(t,s)=>{const n=(t.materials??[]).length?t.materials.map((a,o)=>`
+    ${m(s,"كشف دين")}`},R=(t,s)=>{const n=(t.materials??[]).length?t.materials.map((a,o)=>`
         <tr>
           <td class="num">${o+1}</td>
           <td>${d(a.name)}</td>
@@ -286,7 +286,7 @@ import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y
       </table>
     </div>
     ${t.notes?`<div class="block"><div class="note">${d(t.notes)}</div></div>`:""}
-    ${m(s,"ورقة تسعير داخلية")}`},q=(t,s)=>{const n=t.length?t.map((a,o)=>`
+    ${m(s,"ورقة تسعير داخلية")}`},U=(t,s)=>{const n=t.length?t.map((a,o)=>`
         <tr>
           <td class="num">${o+1}</td>
           <td>${d(a.title||"—")}</td>
@@ -312,7 +312,7 @@ import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y
         <tbody>${n}</tbody>
       </table>
     </div>
-    ${m(s,"سجل تسعير داخلي")}`},S=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${l(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${l(s.heightCm)} سم`:"",s.depthCm?`العمق ${l(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
+    ${m(s,"سجل تسعير داخلي")}`},q=(t,s,n,a)=>{const o=[s.widthCm?`العرض ${l(s.widthCm)} سم`:"",s.heightCm?`الارتفاع ${l(s.heightCm)} سم`:"",s.depthCm?`العمق ${l(s.depthCm)} سم`:""].filter(Boolean).join(" × ");return`
     ${p(a,"عرض سعر",$(t.id))}
     <div class="block">
       <p class="block__title">${d(t.name)}</p>
@@ -355,4 +355,4 @@ import{d as u,o as b}from"./calc-ClsljWKI.js";import{x as l,R as $,D as x,z as y
     </div>
     ${t.notes?`<div class="block"><p class="block__title">ملاحظات</p><div class="note">${d(t.notes)}</div></div>`:""}
     <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
-    ${m(a,"عرض سعر — صالح حسب أسعار المواد وقت إصداره")}`};export{T as a,D as b,S as c,N as d,R as e,z as f,q as g,j as h,P as p};
+    ${m(a,"عرض سعر — صالح حسب أسعار المواد وقت إصداره")}`};export{R as a,D as b,q as c,N as d,T as e,z as f,U as g,j as h,P as p};
