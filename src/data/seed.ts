@@ -487,49 +487,6 @@ const ALL_PRODUCTS = (): NewRecord<ProductTemplate>[] => [
     notes: 'تسعير بالقطعة لا بالمقاس.',
   },
   {
-    // تسعير الورشة الفعلي: البروفيل بالمتر الطولي حول محيط الباب،
-    // والزجاج أو الصفيحة بالمتر المربّع. المقاسان يكفيان لاستخراج الاثنين.
-    name: 'باب ألمنيوم — عادي',
-    craft: 'aluminium',
-    basis: 'frame',
-    unitPrice: 1800,
-    density: 0,
-    sheetPrice: 0,
-    sheetName: 'زجاج',
-    // سعر المتر شامل: الإكسسوارات والأجرة والربح داخله. فلا هالك ولا إضافات
-    // فوقه، وإلا خرج السعر أعلى ممّا تعرضه الورشة على الزبون فعلاً.
-    wastePct: 0,
-    fittings: 0,
-    labor: 0,
-    marginPct: 0,
-    defaultWidth: 100,
-    defaultHeight: 200,
-    defaultDepth: 0,
-    notes:
-      'المتر الطولي ١٨٠٠ دج شاملاً الإكسسوارات والأجرة والربح. ' +
-      'ضع سعر المتر المربّع للزجاج في خانة الصفيحة إن كان يُحاسب عليه.',
-  },
-  {
-    name: 'باب ألمنيوم — ملوّن',
-    craft: 'aluminium',
-    basis: 'frame',
-    unitPrice: 2500,
-    density: 0,
-    sheetPrice: 0,
-    sheetName: 'زجاج',
-    // سعر شامل كذلك — انظر التعليق في الباب العادي.
-    wastePct: 0,
-    fittings: 0,
-    labor: 0,
-    marginPct: 0,
-    defaultWidth: 100,
-    defaultHeight: 200,
-    defaultDepth: 0,
-    notes:
-      'المتر الطولي ٢٥٠٠ دج شاملاً الإكسسوارات والأجرة والربح. ' +
-      'ضع سعر المتر المربّع للزجاج في خانة الصفيحة إن كان يُحاسب عليه.',
-  },
-  {
     name: 'نافذة ألمنيوم',
     craft: 'aluminium',
     basis: 'area',

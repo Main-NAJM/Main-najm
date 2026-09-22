@@ -88,13 +88,6 @@ export const PRICING_BASES: {
     hint: 'العرض وحده — دربزين، إفريز، حواف',
   },
   {
-    value: 'frame',
-    label: 'إطار بالمتر الطولي (المحيط)',
-    unit: 'م.ط',
-    needs: ['width', 'height'],
-    hint: '٢ × (العرض + الارتفاع) — أبواب ونوافذ الألمنيوم والحديد، مع زجاجها بالمتر المربّع',
-  },
-  {
     value: 'volume',
     label: 'بالمتر المكعّب',
     unit: 'م³',
@@ -117,11 +110,26 @@ export const PRICING_BASES: {
   },
 ];
 
+/**
+ * «المحيط» (frame) لم يعد يُعرض في قائمة إنشاء القوالب: الفتحة ليست إطاراً
+ * واحداً حول محيطها — نافذة ١×١ فيها ١١ قطعة بروفيل لا أربع — فالحساب
+ * بالمحيط يضعها عند أقلّ من نصف ثمنها. الأبواب والنوافذ لها شاشتها التي
+ * تحسب بعدد القطع.
+ *
+ * لكنّه يبقى مفهوماً هنا كي تظل القوالب التي أُنشئت قبل التصحيح تعرض
+ * مقاساتها واسمها بدل أن تنهار أو تفقد حقولها.
+ */
+const RETIRED_BASES: Record<string, { label: string; needs: ('width' | 'height' | 'depth')[] }> = {
+  frame: { label: 'إطار بالمحيط (طريقة قديمة)', needs: ['width', 'height'] },
+};
+
+export const isRetiredBasis = (basis: PricingBasis): boolean => basis in RETIRED_BASES;
+
 export const basisLabel = (basis: PricingBasis): string =>
-  PRICING_BASES.find((b) => b.value === basis)?.label ?? basis;
+  PRICING_BASES.find((b) => b.value === basis)?.label ?? RETIRED_BASES[basis]?.label ?? basis;
 
 export const basisNeeds = (basis: PricingBasis): ('width' | 'height' | 'depth')[] =>
-  PRICING_BASES.find((b) => b.value === basis)?.needs ?? [];
+  PRICING_BASES.find((b) => b.value === basis)?.needs ?? RETIRED_BASES[basis]?.needs ?? [];
 
 /** كثافات تقريبية (كغ/م³) تُقترح عند اختيار التسعير بالوزن. */
 export const DENSITY_HINTS: { label: string; value: number }[] = [

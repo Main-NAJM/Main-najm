@@ -1,4 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
 import {
@@ -13,7 +14,13 @@ import {
   TextInput,
 } from '@/components/ui';
 import { basisUnit, computeProductPrice, type ProductDimensions } from '@/lib/calc';
-import { DENSITY_HINTS, PRICING_BASES, basisLabel, basisNeeds } from '@/lib/constants';
+import {
+  DENSITY_HINTS,
+  PRICING_BASES,
+  basisLabel,
+  basisNeeds,
+  isRetiredBasis,
+} from '@/lib/constants';
 import { TRADE_CHOICES, craftName } from '@/lib/trades';
 import { formatMoney, formatNumber, percent, toNumber } from '@/lib/format';
 import type { NewRecord } from '@/data/store';
@@ -311,6 +318,14 @@ export default function ProductPricing() {
             {needs.length === 0 ? (
               <div className="notice notice--info">
                 هذا المنتج يُسعَّر بالقطعة، فلا يحتاج مقاسات. غيّر الكمية فقط.
+              </div>
+            ) : null}
+
+            {isRetiredBasis(selected.basis) ? (
+              <div className="notice notice--warn mt-12">
+                هذا القالب يحسب بمحيط الفتحة، وهي طريقة غير دقيقة: نافذة ١×١ فيها ١١ قطعة
+                بروفيل لا أربع. سعّر الأبواب والنوافذ من شاشة{' '}
+                <Link to="/openings">الأبواب والنوافذ</Link>.
               </div>
             ) : null}
 
