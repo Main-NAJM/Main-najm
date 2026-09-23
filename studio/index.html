@@ -140,8 +140,51 @@
     background:var(--bg); border:1.5px solid var(--line-strong);
     border-radius:var(--r);
   }
-  .gate .btn{width:100%; margin-top:12px;}
+  .gate .btn{width:100%; margin-top:6px;}
   .gate-note{font-size:0.78rem; color:var(--ink-faint); margin-top:16px; line-height:1.6;}
+  .gate .field{text-align:start;}
+
+  /* مبدّل طريقة الدخول: ثلاثة أزرار في إطار واحد، والمختار يرتفع بلونه. */
+  .seg{
+    display:flex; gap:3px; padding:3px;
+    background:var(--bg-alt); border:1px solid var(--line);
+    border-radius:var(--r); margin-block-end:18px;
+  }
+  .seg-btn{
+    flex:1; min-height:42px; padding:6px 4px;
+    background:transparent; border:none; border-radius:4px;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.82rem;
+    color:var(--ink-soft); cursor:pointer;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .seg-btn[aria-selected="true"]{background:var(--panel); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.10);}
+  .gate-pane[hidden]{display:none;}
+
+  .linkish{
+    display:block; width:100%;
+    min-height:42px; margin-block-start:4px;
+    background:transparent; border:none; cursor:pointer;
+    font-size:0.82rem; color:var(--flame-deep); text-decoration:underline;
+  }
+  .gate-err{
+    margin-block-start:14px; padding:10px 13px;
+    background:#FDECEA; color:#8A1C13; border:1px solid #F0B7B1;
+    border-radius:var(--r); font-size:0.84rem; line-height:1.6;
+  }
+  @media (prefers-color-scheme: dark){
+    .gate-err{background:#2C100C; color:#FFB4A6; border-color:#5E241B;}
+  }
+  .gate-err[hidden]{display:none;}
+
+  /* حالة المزامنة في الشريط: كلمة واحدة تكفي، والتفصيل في الإعدادات. */
+  .sync{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:0.7rem; opacity:0.75; font-weight:400;
+  }
+  .sync::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:currentColor; flex:none;
+  }
 
   /* ---------- الشريط العلوي ---------- */
   .topbar{
@@ -397,22 +440,70 @@
 </head>
 <body>
 
-<!-- ═══════════ بوّابة الرمز ═══════════ -->
+<!-- ═══════════ بوّابة الدخول ═══════════ -->
 <div class="gate" id="gate">
-  <form class="gate-card" id="gate-form">
+  <div class="gate-card">
     <div class="gate-mark" aria-hidden="true">
       <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.4L19 9.3l-5.1 1.9L12 16.6l-1.9-5.4L5 9.3l5.1-1.9z"/><path d="M19 14.5l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z"/></svg>
     </div>
     <h1>استوديو بوفايدة</h1>
-    <p id="gate-msg">أدخل رمز الدخول</p>
-    <label class="sr-only" for="gate-code">رمز الدخول</label>
-    <input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" required>
-    <button class="btn btn-primary" type="submit">دخول</button>
+    <p id="gate-msg">ادخل إلى حسابك</p>
+
+    <div class="seg" role="tablist" aria-label="طريقة الدخول">
+      <button class="seg-btn" type="button" role="tab" id="seg-email" aria-selected="true" aria-controls="pane-email">بريد إلكتروني</button>
+      <button class="seg-btn" type="button" role="tab" id="seg-phone" aria-selected="false" aria-controls="pane-phone">رقم هاتف</button>
+      <button class="seg-btn" type="button" role="tab" id="seg-code" aria-selected="false" aria-controls="pane-code">رمز الجهاز</button>
+    </div>
+
+    <!-- البريد -->
+    <form id="pane-email" class="gate-pane" role="tabpanel" aria-labelledby="seg-email">
+      <div class="field">
+        <label for="g-email">البريد الإلكتروني</label>
+        <input id="g-email" type="email" inputmode="email" dir="ltr" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="g-pass">كلمة المرور</label>
+        <input id="g-pass" type="password" autocomplete="current-password" minlength="6" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="email-go">دخول</button>
+      <button class="linkish" type="button" id="email-signup">ليس لي حساب — أنشئه بهذا البريد</button>
+      <button class="linkish" type="button" id="email-reset">نسيت كلمة المرور</button>
+    </form>
+
+    <!-- الهاتف -->
+    <form id="pane-phone" class="gate-pane" role="tabpanel" aria-labelledby="seg-phone" hidden>
+      <div class="field">
+        <label for="g-phone">رقم الهاتف</label>
+        <input id="g-phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" placeholder="0673232932">
+        <p class="field-hint">اكتبه كما تكتبه في هاتفك، ويُحوَّل إلى ‎+213‎ تلقائياً.</p>
+      </div>
+      <div class="field" id="code-field" hidden>
+        <label for="g-sms">الرمز الذي وصلك</label>
+        <input id="g-sms" type="text" inputmode="numeric" dir="ltr" maxlength="6" autocomplete="one-time-code">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="phone-go">أرسل الرمز</button>
+      <div id="recaptcha"></div>
+    </form>
+
+    <!-- رمز الجهاز (بديل بلا إنترنت) -->
+    <form id="pane-code" class="gate-pane" role="tabpanel" aria-labelledby="seg-code" hidden>
+      <div class="field">
+        <label for="gate-code">رمز هذا الجهاز</label>
+        <input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">دخول</button>
+      <p class="gate-note">
+        بديل بلا إنترنت: يفتح الأداة على بيانات هذا الجهاز وحدها، بلا مزامنة.
+        وهو <strong>ستار لا قفل</strong> — يخفيها عن المتطفّل، ولا يحمي من يعرف كيف يقرأ صفحة.
+      </p>
+    </form>
+
+    <p class="gate-err" id="gate-err" hidden role="alert"></p>
     <p class="gate-note" id="gate-note">
-      هذا الرمز ستار لا قفل: يخفي الأداة عن المتطفّل، ولا يحمي من يعرف كيف يقرأ صفحة.
-      فلا تكتب هنا ما لا تحتمل أن يُرى.
+      الدخول بالبريد يربط مشاريعك بحسابك، فتتبعك بين الهاتف والحاسوب،
+      ولا يقرؤها غيرك ولو عرف الرابط.
     </p>
-  </form>
+  </div>
 </div>
 
 <!-- ═══════════ التطبيق ═══════════ -->
@@ -421,11 +512,11 @@
     <div class="topbar-inner">
       <div>
         <b>استوديو بوفايدة</b>
-        <small>تجهيز الفيديو قبل توليده</small>
+        <small class="sync" id="sync-state">على هذا الجهاز</small>
       </div>
       <button class="lock-btn" type="button" id="lock">
         <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
-        قفل
+        خروج
       </button>
     </div>
   </header>
@@ -581,13 +672,27 @@
     <!-- ══════ الإعدادات ══════ -->
     <section class="panel-view" id="view-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
       <div class="card">
-        <h2>رمز الدخول</h2>
-        <p>يُحفظ في هذا الجهاز وحده.</p>
+        <h2>رمز هذا الجهاز</h2>
+        <p>بديل الدخول بلا إنترنت. الحماية الحقيقية في حسابك بالبريد — هذا ستار لا قفل.</p>
         <div class="field">
           <label for="s-code">رمز جديد</label>
           <input id="s-code" type="text" inputmode="numeric" maxlength="12" placeholder="أربعة أرقام أو أكثر">
         </div>
         <button class="btn btn-primary" type="button" id="save-code">حفظ الرمز</button>
+      </div>
+
+      <div class="card" id="sync-help" hidden>
+        <h2>المزامنة مغلقة — خطوة واحدة تفتحها</h2>
+        <p>
+          حسابك يعمل، لكن قاعدة الأمان في المشروع لا تعرف بيانات الاستوديو بعد،
+          فتُرفض الكتابة. حتى تفتحها، كل شيء يبقى محفوظاً في هذا الجهاز ولا يضيع.
+        </p>
+        <ol style="padding-inline-start:20px; color:var(--ink-soft); font-size:0.88rem; line-height:2">
+          <li>افتح <a href="https://console.firebase.google.com/project/albacha-metals-fecd8/firestore/rules" target="_blank" rel="noopener">قواعد Firestore</a></li>
+          <li>في قائمة المجموعات المسموحة، أضف سطراً: <code>'studio'</code></li>
+          <li>اضغط <strong>Publish</strong></li>
+          <li>ارجع هنا واخرج ثم ادخل</li>
+        </ol>
       </div>
 
       <div class="card">
@@ -602,7 +707,7 @@
 
       <div class="card">
         <h2>مسح</h2>
-        <p>يمحو المشاريع والأسعار والرمز من هذا الجهاز. لا رجعة فيه.</p>
+        <p>يمحو المشاريع والأسعار والرمز من هذا الجهاز. ما في حسابك السحابي يبقى، ويعود عند الدخول.</p>
         <button class="btn btn-danger" type="button" id="wipe">مسح كل شيء</button>
       </div>
 
@@ -610,7 +715,8 @@
         <h2>عن الأداة</h2>
         <p style="margin-bottom:0">
           تعمل دون إنترنت بعد أول فتح، وتُثبَّت على الشاشة الرئيسية كتطبيق.
-          لا ترسل شيئاً إلى أي خادم — ما تكتبه يبقى في جهازك.
+          بالدخول بالبريد تُحفظ مشاريعك في حسابك فتتبعك بين الأجهزة، ولا يقرؤها غيرك.
+          وبرمز الجهاز تعمل محلياً بلا أي إرسال.
         </p>
       </div>
     </section>
@@ -679,6 +785,7 @@ const defaults = () => ({
   code: '',
   projects: [],
   price: { base: 3000, extra: 800, voice: 500, photo: 300 },
+  updatedAt: 0,
 });
 
 let db = defaults();
@@ -691,12 +798,18 @@ const load = () => {
     toast('تعذّر قراءة المحفوظ — تعمل الأداة بلا حفظ.');
   }
 };
-const save = () => {
+/**
+ * الحفظ. `stamp` يضع ختم الوقت ويجدول الرفع إلى الحساب — ويُطفأ حين يكون
+ * الحفظ نسخًا لِما جاء من السحابة أصلاً، وإلا ارتدّ إليها ما جاء منها.
+ */
+const save = (stamp = true) => {
+  if (stamp) db.updatedAt = Date.now();
   try {
     localStorage.setItem(KEY, JSON.stringify(db));
   } catch (e) {
     toast('تعذّر الحفظ — التخزين ممتلئ أو محجوب.');
   }
+  if (stamp) schedulePush();
 };
 
 let toastTimer = 0;
@@ -1147,34 +1260,292 @@ $('wipe').addEventListener('click', () => {
   toast('مُحي كل شيء.');
 });
 
-/* ---------- البوّابة ---------- */
+/* ═══════════════ البوّابة والحساب ═══════════════
+
+   ثلاث طرق للدخول، ولكلٍّ سببها:
+
+   • البريد الإلكتروني — الحساب الحقيقي. مشاريعك تُحفظ في حسابك فتتبعك بين
+     الهاتف والحاسوب، ولا يقرؤها غيرك ولو عرف الرابط: قواعد Firestore تربط
+     كل وثيقة بصاحبها.
+   • رقم الهاتف — نفس الشيء برسالة نصّية، ويحتاج تفعيل المزوّد في لوحة
+     Firebase. إن لم يُفعَّل بعدُ قالت الأداة ذلك صراحةً بدل أن تصمت.
+   • رمز الجهاز — بديل بلا إنترنت. يفتح بيانات هذا الجهاز وحدها، ولا يحمي
+     شيئاً: ستار لا قفل. وُجد كي لا تُغلق الأداة في وجه صاحبها يوم تنقطع
+     الشبكة أو يسقط تحميل مكتبة Firebase.
+   ═══════════════════════════════════════════════ */
+
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyC91OFvMReKqz5nLwJjVSx0_zEFORZ5eRI',
+  authDomain: 'albacha-metals-fecd8.firebaseapp.com',
+  projectId: 'albacha-metals-fecd8',
+  storageBucket: 'albacha-metals-fecd8.firebasestorage.app',
+  messagingSenderId: '379093155638',
+  appId: '1:379093155638:web:903d928937a71e92c6fd97',
+};
+const SDK = 'https://www.gstatic.com/firebasejs/11.1.0/';
+
+let fb = null;       // { auth, dbF, mods }  — يبقى null إن تعذّر تحميل المكتبة
+let user = null;     // المستخدم الداخل، أو null
+let confirmation = null; // نتيجة إرسال رمز الهاتف
+
+function setSync(text, tone) {
+  const el = $('sync-state');
+  el.textContent = text;
+  el.style.color = tone === 'ok' ? '#5FD19A' : '';
+}
+
+function gateError(message) {
+  const el = $('gate-err');
+  if (!message) { el.hidden = true; return; }
+  el.textContent = message;
+  el.hidden = false;
+}
+
+// رسائل Firebase بالإنجليزية ورموزها لا تعني شيئاً لصاحب الورشة.
+const AUTH_ERRORS = {
+  'auth/invalid-email': 'البريد غير صحيح.',
+  'auth/missing-password': 'اكتب كلمة المرور.',
+  'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+  'auth/email-already-in-use': 'هذا البريد له حساب. ادخل بكلمة مروره.',
+  'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
+  'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+  'auth/user-not-found': 'لا حساب بهذا البريد. أنشئه من الزرّ تحت.',
+  'auth/too-many-requests': 'محاولات كثيرة. انتظر قليلاً ثم أعد.',
+  'auth/network-request-failed': 'لا اتصال بالإنترنت. ادخل برمز الجهاز.',
+  'auth/operation-not-allowed':
+    'الدخول برقم الهاتف غير مفعّل في المشروع بعد. فعّله من لوحة Firebase: ' +
+    'Authentication ← Sign-in method ← Phone ← Enable.',
+  'auth/invalid-phone-number': 'الرقم غير صحيح.',
+  'auth/invalid-verification-code': 'الرمز غير صحيح.',
+  'auth/code-expired': 'انتهت صلاحية الرمز. اطلب رمزاً جديداً.',
+};
+const authMessage = (error) =>
+  AUTH_ERRORS[error && error.code] || 'تعذّر الدخول. جرّب ثانية، أو ادخل برمز الجهاز.';
+
+/** يحمّل Firebase عند الحاجة. يرجع null بلا ضجيج إن تعذّر — والأداة تعمل بدونه. */
+async function firebase() {
+  if (fb) return fb;
+  try {
+    const [appMod, authMod, storeMod] = await Promise.all([
+      import(SDK + 'firebase-app.js'),
+      import(SDK + 'firebase-auth.js'),
+      import(SDK + 'firebase-firestore.js'),
+    ]);
+    const app = appMod.initializeApp(FIREBASE_CONFIG);
+    const auth = authMod.getAuth(app);
+    await authMod.setPersistence(auth, authMod.browserLocalPersistence);
+    fb = { auth, dbF: storeMod.getFirestore(app), A: authMod, F: storeMod };
+    return fb;
+  } catch (e) {
+    return null;
+  }
+}
+
 function unlock() {
   $('gate').hidden = true;
   $('app').hidden = false;
+  gateError('');
 }
 
-$('gate-form').addEventListener('submit', (event) => {
+function lockOut() {
+  $('app').hidden = true;
+  $('gate').hidden = false;
+  $('gate-msg').textContent = 'ادخل إلى حسابك';
+  gateError('');
+}
+
+/* ---------- المزامنة السحابية ---------- */
+const cloudDoc = () => fb.F.doc(fb.dbF, `users/${user.uid}/studio/data`);
+
+/**
+ * الرفض بالصلاحية ليس عطلاً عابراً: معناه أن قاعدة `studio` لم تُنشر بعد في
+ * المشروع. الصمت هنا يجعل صاحبها يظنّ عمله محفوظاً وهو ليس كذلك.
+ */
+let deniedTold = false;
+function handleCloudError(error) {
+  const denied = error && (error.code === 'permission-denied' || String(error).includes('permission-denied'));
+  if (denied) {
+    setSync('حسابك · المزامنة مغلقة');
+    $('sync-help').hidden = false;
+    if (!deniedTold) {
+      deniedTold = true;
+      toast('المزامنة تحتاج نشر قاعدة الأمان — الخطوات في الإعدادات.');
+    }
+  } else {
+    setSync('حسابك · تعذّرت المزامنة');
+  }
+}
+
+async function pullCloud() {
+  if (!fb || !user) return;
+  try {
+    const snap = await fb.F.getDoc(cloudDoc());
+    if (!snap.exists()) { await pushCloud(); return; }
+    const remote = snap.data();
+    // الأحدث يفوز كاملاً: دمج جزئي بين نسختين لمشاريع مختلفة يُنتج
+    // تكراراً صامتاً، والصمت هنا أسوأ من خسارة تعديل يعرف صاحبه أنه ضاع.
+    if ((remote.updatedAt || 0) > (db.updatedAt || 0)) {
+      db = { ...defaults(), ...remote };
+      save(false);
+      fillPriceInputs();
+      renderProjects();
+      renderPrice();
+      toast('جُلبت نسختك من الحساب.');
+    } else if ((db.updatedAt || 0) > (remote.updatedAt || 0)) {
+      await pushCloud();
+    }
+    setSync('حسابك · متزامن', 'ok');
+    $('sync-help').hidden = true;
+  } catch (e) {
+    handleCloudError(e);
+  }
+}
+
+let pushTimer = 0;
+async function pushCloud() {
+  if (!fb || !user) return;
+  try {
+    // الرمز المحلّي لا يُرفع: لا حاجة له في السحابة، ورفعه توسيع بلا سبب.
+    const { code, ...rest } = db;
+    await fb.F.setDoc(cloudDoc(), { ...rest, updatedAt: db.updatedAt || Date.now() });
+    setSync('حسابك · متزامن', 'ok');
+    $('sync-help').hidden = true;
+  } catch (e) {
+    handleCloudError(e);
+  }
+}
+function schedulePush() {
+  if (!user) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 1500);
+}
+
+/* ---------- مبدّل طرق الدخول ---------- */
+const PANES = ['email', 'phone', 'code'];
+PANES.forEach((name) => {
+  $('seg-' + name).addEventListener('click', () => {
+    PANES.forEach((other) => {
+      $('seg-' + other).setAttribute('aria-selected', String(other === name));
+      $('pane-' + other).hidden = other !== name;
+    });
+    gateError('');
+  });
+});
+
+/* ---------- الدخول بالبريد ---------- */
+async function emailAuth(create) {
+  const email = $('g-email').value.trim();
+  const pass = $('g-pass').value;
+  if (!email || pass.length < 6) { gateError('اكتب بريدك وكلمة مرور من ستّة أحرف فأكثر.'); return; }
+  gateError('');
+  $('email-go').disabled = true;
+  const f = await firebase();
+  if (!f) { gateError('تعذّر تحميل المكتبة — لا إنترنت؟ ادخل برمز الجهاز.'); $('email-go').disabled = false; return; }
+  try {
+    if (create) await f.A.createUserWithEmailAndPassword(f.auth, email, pass);
+    else await f.A.signInWithEmailAndPassword(f.auth, email, pass);
+    $('g-pass').value = '';
+  } catch (error) {
+    gateError(authMessage(error));
+  } finally {
+    $('email-go').disabled = false;
+  }
+}
+
+$('pane-email').addEventListener('submit', (event) => { event.preventDefault(); emailAuth(false); });
+$('email-signup').addEventListener('click', () => emailAuth(true));
+$('email-reset').addEventListener('click', async () => {
+  const email = $('g-email').value.trim();
+  if (!email) { gateError('اكتب بريدك أوّلاً.'); return; }
+  const f = await firebase();
+  if (!f) { gateError('لا اتصال بالإنترنت.'); return; }
+  try {
+    await f.A.sendPasswordResetEmail(f.auth, email);
+    gateError('');
+    $('gate-msg').textContent = 'أُرسلت رسالة إلى بريدك لتغيير كلمة المرور.';
+  } catch (error) {
+    gateError(authMessage(error));
+  }
+});
+
+/* ---------- الدخول بالهاتف ---------- */
+// الأرقام الجزائرية تُكتب 0673… ويقبلها Firebase بالصيغة الدولية وحدها.
+function toE164(raw) {
+  const digits = raw.replace(/[^\d+]/g, '');
+  if (digits.startsWith('+')) return digits;
+  if (digits.startsWith('00')) return '+' + digits.slice(2);
+  if (digits.startsWith('0')) return '+213' + digits.slice(1);
+  if (digits.startsWith('213')) return '+' + digits;
+  return '+213' + digits;
+}
+
+$('pane-phone').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  gateError('');
+  const f = await firebase();
+  if (!f) { gateError('تعذّر تحميل المكتبة — لا إنترنت؟ ادخل برمز الجهاز.'); return; }
+
+  // المرحلة الثانية: تأكيد الرمز الواصل.
+  if (confirmation) {
+    const sms = $('g-sms').value.trim();
+    if (sms.length < 4) { gateError('اكتب الرمز الذي وصلك.'); return; }
+    try {
+      await confirmation.confirm(sms);
+      confirmation = null;
+    } catch (error) {
+      gateError(authMessage(error));
+    }
+    return;
+  }
+
+  // المرحلة الأولى: إرسال الرمز.
+  const phone = toE164($('g-phone').value);
+  if (phone.length < 10) { gateError('الرقم غير صحيح.'); return; }
+  $('phone-go').disabled = true;
+  try {
+    if (!window.__recaptcha) {
+      window.__recaptcha = new f.A.RecaptchaVerifier(f.auth, 'recaptcha', { size: 'invisible' });
+    }
+    confirmation = await f.A.signInWithPhoneNumber(f.auth, phone, window.__recaptcha);
+    $('code-field').hidden = false;
+    $('phone-go').textContent = 'تأكيد الرمز';
+    $('g-sms').focus();
+    $('gate-msg').textContent = 'أُرسل رمز إلى ' + phone;
+  } catch (error) {
+    gateError(authMessage(error));
+    // reCAPTCHA المستهلَك لا يُعاد استعماله، فيُرمى ليُبنى جديد في المحاولة التالية.
+    try { window.__recaptcha && window.__recaptcha.clear(); } catch (e) { /* لا يهم */ }
+    window.__recaptcha = null;
+  } finally {
+    $('phone-go').disabled = false;
+  }
+});
+
+/* ---------- الدخول برمز الجهاز ---------- */
+$('pane-code').addEventListener('submit', (event) => {
   event.preventDefault();
   const value = $('gate-code').value.trim();
   if (!db.code) {
-    if (value.length < 4) { $('gate-msg').textContent = 'اجعل الرمز أربعة أرقام على الأقل'; return; }
+    if (value.length < 4) { gateError('اجعل الرمز أربعة أرقام على الأقل.'); return; }
     db.code = value;
     save();
     unlock();
-    toast('حُفظ رمزك. تغيّره من الإعدادات.');
+    toast('حُفظ رمز هذا الجهاز. تغيّره من الإعدادات.');
     return;
   }
   if (value === db.code) { $('gate-code').value = ''; unlock(); return; }
-  $('gate-msg').textContent = 'رمز غير صحيح';
+  gateError('رمز غير صحيح.');
   $('gate-code').value = '';
   $('gate-code').focus();
 });
 
-$('lock').addEventListener('click', () => {
-  $('app').hidden = true;
-  $('gate').hidden = false;
-  $('gate-msg').textContent = 'أدخل رمز الدخول';
-  $('gate-code').focus();
+/* ---------- الخروج ---------- */
+$('lock').addEventListener('click', async () => {
+  if (user && fb) {
+    await pushCloud();
+    try { await fb.A.signOut(fb.auth); } catch (e) { /* يكفي إغلاق الشاشة */ }
+  }
+  lockOut();
 });
 
 /* ---------- التهيئة ---------- */
@@ -1232,11 +1603,24 @@ function init() {
 
   $('generate').addEventListener('click', () => render(build()));
 
-  if (!db.code) {
-    $('gate-msg').textContent = 'اختر رمز دخول (يُحفظ في هذا الجهاز)';
-    $('gate-code').type = 'text';
-  }
-  $('gate-code').focus();
+  if (!db.code) $('gate-code').type = 'text';
+  $('g-email').focus();
+
+  // جلسة Firebase تبقى محفوظة، فمن دخل مرّة يجد الأداة مفتوحة في المرّة
+  // التالية — ولا ينتظر البوّابةَ من يملك حساباً.
+  firebase().then((f) => {
+    if (!f) { setSync('على هذا الجهاز'); return; }
+    f.A.onAuthStateChanged(f.auth, (current) => {
+      user = current;
+      if (current) {
+        setSync('حسابك · جارٍ المزامنة');
+        unlock();
+        pullCloud();
+      } else {
+        setSync('على هذا الجهاز');
+      }
+    });
+  });
 
   // عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
   if ('serviceWorker' in navigator) {
