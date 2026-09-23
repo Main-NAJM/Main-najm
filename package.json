@@ -15,6 +15,7 @@
     "preview": "vite preview",
     "site": "node site/serve.mjs",
     "bofaida": "node bofaida/serve.mjs",
+    "studio": "node studio/serve.mjs",
     "firebase:setup": "node scripts/firebase-setup.mjs",
     "emulators": "npx --yes firebase-tools@13 emulators:start --only auth,firestore",
     "test:rules": "node scripts/test-rules.mjs",
