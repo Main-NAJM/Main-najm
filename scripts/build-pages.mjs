@@ -34,10 +34,14 @@ const run = (cmd, args, env = {}) => {
 
 // ملفات التشغيل والتوثيق لا تُنشر
 const EXCLUDED_EXT = new Set(['.mjs', '.md', '.py']);
+// ومجلّدات تخصّ المطوّر لا الزائر: وسيط fal يُنصَّب على Cloudflare لا هنا.
+const EXCLUDED_DIRS = new Set(['proxy']);
 const copySiteFiles = async (from, to) => {
   await mkdir(to, { recursive: true });
   for (const entry of await readdir(from, { withFileTypes: true })) {
-    if (entry.isDirectory()) {
+    if (entry.isDirectory() && EXCLUDED_DIRS.has(entry.name)) {
+      continue;
+    } else if (entry.isDirectory()) {
       await copySiteFiles(join(from, entry.name), join(to, entry.name));
     } else if (!EXCLUDED_EXT.has(extname(entry.name).toLowerCase())) {
       await cp(join(from, entry.name), join(to, entry.name));
