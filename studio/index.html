@@ -1,0 +1,1253 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>استوديو بوفايدة</title>
+<meta name="description" content="أداة عمل خاصّة: تجهيز الفيديوهات والصور الإعلانية — السيناريو، الموجّهات، المشاريع، والسعر.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FBF8F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0C0B" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="استوديو بوفايدة">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════════════
+     استوديو بوفايدة — أداة عمل خاصّة، لا صفحة عرض.
+     ترث ألوان الموقع كي تبقى العينان في بيت واحد، لكن كثافتها كثافة
+     تطبيق: صفوف قصيرة، أزرار قريبة من الإبهام، ونصّ يُنسخ بضغطة.
+     ═══════════════════════════════════════════════════════════════════ */
+  :root{
+    --bg: #FBF8F5;
+    --bg-alt: #F1ECE6;
+    --panel: #FFFFFF;
+    --ink: #14100D;
+    --ink-soft: #4A433C;
+    --ink-faint: #6E645A;
+
+    --flame: #F04E23;
+    --flame-deep: #C2350F;
+    --flame-tint: #FDEDE7;
+    --on-flame: #FFFFFF;
+
+    --ok: #146C43;
+    --ok-tint: #E4F4EA;
+    --warn: #8A5300;
+    --warn-tint: #FDF1DC;
+
+    --line: #E3DAD0;
+    --line-strong: #CFC3B6;
+
+    --r: 6px;
+    --r-lg: 12px;
+    --wrap: 860px;
+    --gutter: clamp(14px, 3.6vw, 24px);
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --bar-h: 60px;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg: #0E0C0B;
+      --bg-alt: #17130F;
+      --panel: #1D1814;
+      --ink: #F7F2EC;
+      --ink-soft: #B6ABA0;
+      --ink-faint: #8A8077;
+
+      --flame: #FF6A45;
+      --flame-deep: #FF8763;
+      --flame-tint: #2A1409;
+      --on-flame: #1A0A04;
+
+      --ok: #5FD19A;
+      --ok-tint: #0C2A1C;
+      --warn: #F3B64B;
+      --warn-tint: #2E2109;
+
+      --line: #2C241E;
+      --line-strong: #43372E;
+
+      color-scheme: dark;
+    }
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+    }
+  }
+
+  :focus-visible{outline:3px solid var(--flame); outline-offset:2px; border-radius:3px;}
+
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-size:15px; line-height:1.75;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Cairo', sans-serif; font-weight:900; line-height:1.25;}
+  button, input, select, textarea{font:inherit; color:inherit;}
+  a{color:var(--flame-deep);}
+
+  .wrap{
+    max-width:var(--wrap); margin-inline:auto;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+
+  /* ---------- بوّابة الرمز ---------- */
+  .gate{
+    min-height:100dvh;
+    display:grid; place-items:center;
+    padding:var(--gutter);
+    background:var(--bg);
+  }
+  /* ‎display:grid‎ يغلب ‎[hidden]‎ القادم من المتصفّح، فتبقى البوّابة معروضة
+     فوق التطبيق بعد فتحه. الإخفاء يُكتب صراحةً أو لا يقع. */
+  .gate[hidden]{display:none;}
+  .gate-card{
+    width:100%; max-width:380px;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-lg); padding:clamp(22px, 5vw, 32px);
+    text-align:center;
+  }
+  .gate-mark{
+    width:56px; height:56px; margin:0 auto 16px;
+    border-radius:var(--r-lg); background:var(--ink);
+    display:grid; place-items:center;
+  }
+  .gate-mark svg{width:30px; height:30px; color:var(--flame);}
+  .gate h1{font-size:1.4rem; margin-bottom:6px;}
+  .gate p{color:var(--ink-soft); font-size:0.9rem; margin-bottom:20px;}
+  .gate input{
+    width:100%; text-align:center; letter-spacing:0.35em;
+    font-size:1.3rem; font-weight:700;
+    padding:13px; min-height:52px;
+    background:var(--bg); border:1.5px solid var(--line-strong);
+    border-radius:var(--r);
+  }
+  .gate .btn{width:100%; margin-top:12px;}
+  .gate-note{font-size:0.78rem; color:var(--ink-faint); margin-top:16px; line-height:1.6;}
+
+  /* ---------- الشريط العلوي ---------- */
+  .topbar{
+    position:sticky; inset-block-start:0; z-index:50;
+    background:var(--ink); color:var(--bg);
+    padding-block-start:env(safe-area-inset-top);
+  }
+  /* في الوضع الداكن ينقلب الحبر فيصير الشريط لوحاً أبيض يوجع العين ليلاً.
+     فيأخذ لون السطح ويبقى الحبر حبراً. */
+  @media (prefers-color-scheme: dark){
+    .topbar{background:var(--panel); color:var(--ink); border-block-end:1px solid var(--line);}
+    .lock-btn{color:var(--ink); border-color:var(--line-strong);}
+  }
+  .topbar-inner{
+    max-width:var(--wrap); margin-inline:auto;
+    min-height:var(--bar-h);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+  .topbar b{font-family:'Cairo', sans-serif; font-weight:900; font-size:1.05rem;}
+  .topbar small{display:block; font-size:0.72rem; opacity:0.66; font-weight:400;}
+  .lock-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    min-height:44px; padding-inline:13px;
+    background:transparent; color:var(--bg);
+    border:1px solid rgba(255,255,255,0.22); border-radius:999px;
+    font-size:0.8rem; cursor:pointer;
+  }
+  .lock-btn svg{width:15px; height:15px;}
+
+  /* ---------- التبويبات ---------- */
+  .tabs{
+    position:sticky; inset-block-start:calc(var(--bar-h) + env(safe-area-inset-top));
+    z-index:40;
+    background:var(--bg-alt);
+    border-block-end:1px solid var(--line);
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tabs-inner{
+    max-width:var(--wrap); margin-inline:auto;
+    display:flex; gap:2px;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+  .tab{
+    flex:none;
+    min-height:48px; padding-inline:15px;
+    background:transparent; border:none; cursor:pointer;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.9rem;
+    color:var(--ink-soft);
+    border-block-end:3px solid transparent;
+    white-space:nowrap;
+    transition:color .17s var(--ease), border-color .17s var(--ease);
+  }
+  .tab[aria-selected="true"]{color:var(--ink); border-block-end-color:var(--flame);}
+
+  main{padding-block:20px calc(40px + env(safe-area-inset-bottom));}
+  .panel-view[hidden]{display:none;}
+
+  /* ---------- البطاقات والحقول ---------- */
+  .card{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-lg); padding:18px;
+  }
+  .card + .card{margin-block-start:14px;}
+  .card > h2{font-size:1.02rem; margin-bottom:4px;}
+  .card > h2 + p{color:var(--ink-soft); font-size:0.86rem; margin-bottom:14px;}
+
+  .field{margin-block-end:13px;}
+  .field label{
+    display:block; font-size:0.82rem; font-weight:600;
+    color:var(--ink-soft); margin-block-end:5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%; min-height:46px; padding:10px 12px;
+    background:var(--bg); color:var(--ink);
+    border:1.5px solid var(--line); border-radius:var(--r);
+    transition:border-color .17s var(--ease);
+  }
+  .field textarea{min-height:84px; resize:vertical; line-height:1.7;}
+  .field select{appearance:none; padding-inline-end:34px;
+    background-image:linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
+                     linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%);
+    background-position:14px calc(50% - 2px), 19px calc(50% - 2px);
+    background-size:5px 5px, 5px 5px; background-repeat:no-repeat;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--flame);}
+  .field-hint{font-size:0.76rem; color:var(--ink-faint); margin-block-start:4px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:0 12px;}
+  @media (max-width: 380px){ .row2{grid-template-columns:1fr;} }
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px;}
+  .chip{
+    min-height:42px; padding:6px 14px;
+    background:var(--bg); color:var(--ink-soft);
+    border:1.5px solid var(--line); border-radius:999px;
+    font-size:0.86rem; font-weight:600; cursor:pointer;
+    transition:background .16s var(--ease), color .16s var(--ease), border-color .16s var(--ease);
+  }
+  .chip[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+
+  .stepper{display:flex; align-items:stretch; gap:8px;}
+  .stepper button{
+    flex:none; width:46px; min-height:46px;
+    background:var(--bg); border:1.5px solid var(--line); border-radius:var(--r);
+    font-size:21px; line-height:1; cursor:pointer; user-select:none;
+  }
+  .stepper button:disabled{opacity:0.4; cursor:not-allowed;}
+  .stepper input{flex:1; min-width:0; text-align:center;}
+
+  /* ---------- الأزرار ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    min-height:48px; padding:11px 20px;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.93rem;
+    border:1.5px solid transparent; border-radius:var(--r);
+    cursor:pointer;
+    transition:background .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease);
+  }
+  .btn svg{width:17px; height:17px; flex:none;}
+  .btn-primary{background:var(--flame-deep); color:var(--on-flame); border-color:var(--flame-deep);}
+  .btn-ghost{background:var(--bg); color:var(--ink); border-color:var(--line-strong);}
+  .btn-danger{background:transparent; color:#B3261E; border-color:#E6BDBA;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn:active:not(:disabled){transform:translateY(1px);}
+  @media (hover: hover) and (pointer: fine){
+    .btn-primary:hover:not(:disabled){background:var(--flame);}
+    .btn-ghost:hover:not(:disabled){border-color:var(--flame);}
+  }
+  .btn-row{display:flex; flex-wrap:wrap; gap:9px;}
+
+  /* ---------- المخرجات ---------- */
+  .out{
+    border:1px solid var(--line); border-radius:var(--r-lg);
+    background:var(--bg-alt);
+    margin-block-start:12px; overflow:hidden;
+  }
+  .out-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 14px;
+    background:var(--panel); border-block-end:1px solid var(--line);
+  }
+  .out-head h3{font-size:0.9rem; font-weight:700;}
+  .out-head .meta{font-size:0.75rem; color:var(--ink-faint);}
+  .copy{
+    display:inline-flex; align-items:center; gap:6px;
+    min-height:38px; padding-inline:12px;
+    background:var(--bg); border:1.5px solid var(--line); border-radius:var(--r);
+    font-size:0.8rem; font-weight:600; cursor:pointer; flex:none;
+  }
+  .copy svg{width:14px; height:14px;}
+  .copy.is-done{background:var(--ok-tint); border-color:var(--ok); color:var(--ok);}
+  .out-body{
+    padding:14px; font-size:0.92rem; line-height:1.85;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .out-body.ltr{direction:ltr; text-align:start; font-family:ui-monospace, 'SF Mono', Menlo, monospace; font-size:0.82rem; line-height:1.7;}
+
+  .shot{border-block-start:1px solid var(--line);}
+  .shot:first-child{border-block-start:none;}
+  .shot-head{
+    display:flex; align-items:center; gap:9px;
+    padding:10px 14px 0;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.86rem;
+  }
+  .shot-num{
+    display:grid; place-items:center; flex:none;
+    width:26px; height:26px; border-radius:6px;
+    background:var(--flame-deep); color:var(--on-flame); font-size:0.8rem;
+  }
+
+  .notice{
+    padding:11px 14px; border-radius:var(--r);
+    font-size:0.86rem; line-height:1.7;
+    margin-block-start:12px;
+  }
+  .notice-warn{background:var(--warn-tint); color:var(--warn); border:1px solid currentColor;}
+  .notice-ok{background:var(--ok-tint); color:var(--ok); border:1px solid currentColor;}
+  .notice-plain{background:var(--bg-alt); color:var(--ink-soft); border:1px solid var(--line);}
+
+  /* ---------- المشاريع ---------- */
+  .proj{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:14px 0; border-block-end:1px solid var(--line);
+  }
+  .proj:last-child{border-block-end:none;}
+  .proj-main{flex:1; min-width:0;}
+  .proj-main b{display:block; font-family:'Cairo', sans-serif; font-weight:700; font-size:0.97rem;}
+  .proj-main span{display:block; font-size:0.82rem; color:var(--ink-faint);}
+  .badge{
+    flex:none; align-self:center;
+    padding:3px 10px; border-radius:999px;
+    font-size:0.75rem; font-weight:700;
+    background:var(--bg-alt); color:var(--ink-soft); border:1px solid var(--line);
+  }
+  .badge.s-new{background:var(--flame-tint); color:var(--flame-deep); border-color:var(--flame-deep);}
+  .badge.s-done{background:var(--ok-tint); color:var(--ok); border-color:var(--ok);}
+  .icon-btn{
+    flex:none; width:42px; height:42px;
+    display:grid; place-items:center;
+    background:transparent; border:1px solid var(--line); border-radius:var(--r);
+    cursor:pointer; color:var(--ink-soft);
+  }
+  .icon-btn svg{width:17px; height:17px;}
+
+  .empty{text-align:center; padding:34px 14px; color:var(--ink-faint);}
+  .empty svg{width:42px; height:42px; margin:0 auto 12px; display:block; color:var(--line-strong);}
+  .empty b{display:block; font-family:'Cairo', sans-serif; font-size:1rem; color:var(--ink); margin-bottom:5px;}
+
+  /* ---------- الحوار ---------- */
+  dialog{
+    width:min(520px, calc(100vw - 24px));
+    border:1px solid var(--line); border-radius:var(--r-lg);
+    background:var(--panel); color:var(--ink);
+    padding:0; margin:auto;
+  }
+  dialog::backdrop{background:rgba(0,0,0,0.5);}
+  .dlg-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:15px 18px; border-block-end:1px solid var(--line);
+  }
+  .dlg-head h2{font-size:1rem;}
+  .dlg-body{padding:18px; max-height:65dvh; overflow-y:auto;}
+  .dlg-foot{
+    display:flex; gap:9px; justify-content:flex-end;
+    padding:14px 18px; border-block-start:1px solid var(--line);
+  }
+
+  /* ---------- الخبز المحمّص ---------- */
+  .toast{
+    position:fixed; z-index:200;
+    inset-block-end:calc(18px + env(safe-area-inset-bottom));
+    inset-inline:var(--gutter);
+    max-width:420px; margin-inline:auto;
+    background:var(--ink); color:var(--bg);
+    padding:12px 16px; border-radius:var(--r);
+    font-size:0.88rem; text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.28);
+  }
+  .toast[hidden]{display:none;}
+
+  .sr-only{
+    position:absolute; width:1px; height:1px;
+    padding:0; margin:-1px; overflow:hidden;
+    clip-path:inset(50%); white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ بوّابة الرمز ═══════════ -->
+<div class="gate" id="gate">
+  <form class="gate-card" id="gate-form">
+    <div class="gate-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.4L19 9.3l-5.1 1.9L12 16.6l-1.9-5.4L5 9.3l5.1-1.9z"/><path d="M19 14.5l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z"/></svg>
+    </div>
+    <h1>استوديو بوفايدة</h1>
+    <p id="gate-msg">أدخل رمز الدخول</p>
+    <label class="sr-only" for="gate-code">رمز الدخول</label>
+    <input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" required>
+    <button class="btn btn-primary" type="submit">دخول</button>
+    <p class="gate-note" id="gate-note">
+      هذا الرمز ستار لا قفل: يخفي الأداة عن المتطفّل، ولا يحمي من يعرف كيف يقرأ صفحة.
+      فلا تكتب هنا ما لا تحتمل أن يُرى.
+    </p>
+  </form>
+</div>
+
+<!-- ═══════════ التطبيق ═══════════ -->
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <b>استوديو بوفايدة</b>
+        <small>تجهيز الفيديو قبل توليده</small>
+      </div>
+      <button class="lock-btn" type="button" id="lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        قفل
+      </button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tabs-inner" role="tablist" aria-label="أقسام الاستوديو">
+      <button class="tab" role="tab" id="tab-studio" aria-controls="view-studio" aria-selected="true">الاستوديو</button>
+      <button class="tab" role="tab" id="tab-projects" aria-controls="view-projects" aria-selected="false">المشاريع</button>
+      <button class="tab" role="tab" id="tab-price" aria-controls="view-price" aria-selected="false">السعر</button>
+      <button class="tab" role="tab" id="tab-settings" aria-controls="view-settings" aria-selected="false">الإعدادات</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+
+    <!-- ══════ الاستوديو ══════ -->
+    <section class="panel-view" id="view-studio" role="tabpanel" aria-labelledby="tab-studio">
+      <div class="card">
+        <h2>وصف المنتج</h2>
+        <p>املأ ما تعرفه عن السلعة، ويخرج لك السيناريو والموجّهات جاهزة.</p>
+
+        <div class="field">
+          <label for="f-product">المنتج</label>
+          <input id="f-product" type="text" placeholder="مثال: عطر رجالي فاخر">
+        </div>
+
+        <div class="field">
+          <label for="f-category">الفئة</label>
+          <select id="f-category"></select>
+        </div>
+
+        <div class="field">
+          <label for="f-feature">أقوى ميزة فيه</label>
+          <input id="f-feature" type="text" placeholder="مثال: رائحته تدوم يوماً كاملاً">
+          <p class="field-hint">ميزة واحدة تبيع أكثر من خمس. اختر التي يذكرها الزبون لصاحبه.</p>
+        </div>
+
+        <div class="field">
+          <label for="f-audience">لمن تبيعه</label>
+          <input id="f-audience" type="text" placeholder="مثال: شباب من 20 إلى 35 سنة">
+        </div>
+
+        <div class="field">
+          <label for="f-price">السعر المعروض (اختياري)</label>
+          <input id="f-price" type="text" inputmode="numeric" placeholder="مثال: 3500 دج">
+        </div>
+
+        <div class="field">
+          <label id="lbl-tone">النبرة</label>
+          <div class="chips" role="group" aria-labelledby="lbl-tone" id="tone-chips"></div>
+        </div>
+
+        <div class="field">
+          <label id="lbl-format">المقاس</label>
+          <div class="chips" role="group" aria-labelledby="lbl-format" id="format-chips"></div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="f-duration">المدّة</label>
+            <select id="f-duration"></select>
+          </div>
+          <div class="field">
+            <label for="f-shots">عدد المشاهد</label>
+            <div class="stepper">
+              <button type="button" id="shots-minus" aria-label="نقصان عدد المشاهد">−</button>
+              <input id="f-shots" type="number" inputmode="numeric" min="3" max="6" value="4">
+              <button type="button" id="shots-plus" aria-label="زيادة عدد المشاهد">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="generate">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 5.4L19 9.3l-5.1 1.9L12 16.6l-1.9-5.4L5 9.3l5.1-1.9z"/></svg>
+            جهّز الإعلان
+          </button>
+          <button class="btn btn-ghost" type="button" id="save-as-project">احفظه مشروعاً</button>
+        </div>
+      </div>
+
+      <div id="results" hidden></div>
+    </section>
+
+    <!-- ══════ المشاريع ══════ -->
+    <section class="panel-view" id="view-projects" role="tabpanel" aria-labelledby="tab-projects" hidden>
+      <div class="card">
+        <h2>المشاريع</h2>
+        <p>كل طلب زبون ومكانه من العمل.</p>
+        <div class="btn-row" style="margin-bottom:6px">
+          <button class="btn btn-primary" type="button" id="new-project">مشروع جديد</button>
+        </div>
+        <div id="projects-list"></div>
+      </div>
+    </section>
+
+    <!-- ══════ السعر ══════ -->
+    <section class="panel-view" id="view-price" role="tabpanel" aria-labelledby="tab-price" hidden>
+      <div class="card">
+        <h2>حاسبة السعر</h2>
+        <p>ضع أرقامك مرّة، فتحسب لك كل مرّة.</p>
+        <div class="row2">
+          <div class="field">
+            <label for="p-base">سعر الفيديو الأساسي</label>
+            <input id="p-base" type="number" inputmode="numeric" min="0">
+          </div>
+          <div class="field">
+            <label for="p-extra">سعر النسخة الإضافية</label>
+            <input id="p-extra" type="number" inputmode="numeric" min="0">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="p-voice">التعليق الصوتي</label>
+            <input id="p-voice" type="number" inputmode="numeric" min="0">
+          </div>
+          <div class="field">
+            <label for="p-photos">صور المنتج (لكل صورة)</label>
+            <input id="p-photos" type="number" inputmode="numeric" min="0">
+          </div>
+        </div>
+        <hr style="border:none; border-block-start:1px solid var(--line); margin-block:6px 16px">
+        <div class="row2">
+          <div class="field">
+            <label for="p-n-extra">عدد النسخ الإضافية</label>
+            <input id="p-n-extra" type="number" inputmode="numeric" min="0" value="0">
+          </div>
+          <div class="field">
+            <label for="p-n-photos">عدد الصور</label>
+            <input id="p-n-photos" type="number" inputmode="numeric" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-with-voice">التعليق الصوتي</label>
+          <select id="p-with-voice">
+            <option value="0">بدون</option>
+            <option value="1">مع تعليق صوتي</option>
+          </select>
+        </div>
+        <div class="out">
+          <div class="out-head">
+            <h3>الإجمالي</h3>
+            <button class="copy" type="button" data-copy="price-text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              نسخ
+            </button>
+          </div>
+          <div class="out-body" id="price-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ الإعدادات ══════ -->
+    <section class="panel-view" id="view-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+      <div class="card">
+        <h2>رمز الدخول</h2>
+        <p>يُحفظ في هذا الجهاز وحده.</p>
+        <div class="field">
+          <label for="s-code">رمز جديد</label>
+          <input id="s-code" type="text" inputmode="numeric" maxlength="12" placeholder="أربعة أرقام أو أكثر">
+        </div>
+        <button class="btn btn-primary" type="button" id="save-code">حفظ الرمز</button>
+      </div>
+
+      <div class="card">
+        <h2>نسخة احتياطية</h2>
+        <p>كل شيء محفوظ في هذا المتصفّح وحده. مسح بيانات الموقع يمحوه — فخذ نسخة.</p>
+        <div class="btn-row">
+          <button class="btn btn-ghost" type="button" id="export">تصدير نسخة</button>
+          <button class="btn btn-ghost" type="button" id="import-btn">استيراد نسخة</button>
+          <input id="import-file" type="file" accept="application/json,.json" class="sr-only">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>مسح</h2>
+        <p>يمحو المشاريع والأسعار والرمز من هذا الجهاز. لا رجعة فيه.</p>
+        <button class="btn btn-danger" type="button" id="wipe">مسح كل شيء</button>
+      </div>
+
+      <div class="card">
+        <h2>عن الأداة</h2>
+        <p style="margin-bottom:0">
+          تعمل دون إنترنت بعد أول فتح، وتُثبَّت على الشاشة الرئيسية كتطبيق.
+          لا ترسل شيئاً إلى أي خادم — ما تكتبه يبقى في جهازك.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- حوار المشروع -->
+<dialog id="proj-dlg">
+  <form method="dialog" id="proj-form">
+    <div class="dlg-head">
+      <h2 id="proj-dlg-title">مشروع جديد</h2>
+      <button class="icon-btn" type="button" id="proj-close" aria-label="إغلاق">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="dlg-body">
+      <div class="field">
+        <label for="d-client">اسم الزبون</label>
+        <input id="d-client" type="text" required>
+      </div>
+      <div class="field">
+        <label for="d-phone">الهاتف</label>
+        <input id="d-phone" type="tel" inputmode="tel" dir="ltr" placeholder="0673232932">
+      </div>
+      <div class="field">
+        <label for="d-product">المنتج</label>
+        <input id="d-product" type="text">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="d-status">الحالة</label>
+          <select id="d-status"></select>
+        </div>
+        <div class="field">
+          <label for="d-amount">المبلغ</label>
+          <input id="d-amount" type="number" inputmode="numeric" min="0">
+        </div>
+      </div>
+      <div class="field">
+        <label for="d-notes">ملاحظات</label>
+        <textarea id="d-notes"></textarea>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn btn-danger" type="button" id="proj-delete" hidden>حذف</button>
+      <button class="btn btn-ghost" type="button" id="proj-cancel">إلغاء</button>
+      <button class="btn btn-primary" type="submit">حفظ</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   استوديو بوفايدة — كل شيء في هذا الملف، وكل شيء في جهاز صاحبه.
+   لا خادم، لا حساب، لا إرسال. التخزين localStorage، والنسخة الاحتياطية ملف.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const KEY = 'bofaida.studio.v1';
+const $ = (id) => document.getElementById(id);
+
+/* ---------- التخزين: يُحاط بـtry دائماً، فقد يُمنع في التصفّح الخاصّ ---------- */
+const defaults = () => ({
+  code: '',
+  projects: [],
+  price: { base: 3000, extra: 800, voice: 500, photo: 300 },
+});
+
+let db = defaults();
+
+const load = () => {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) db = { ...defaults(), ...JSON.parse(raw) };
+  } catch (e) {
+    toast('تعذّر قراءة المحفوظ — تعمل الأداة بلا حفظ.');
+  }
+};
+const save = () => {
+  try {
+    localStorage.setItem(KEY, JSON.stringify(db));
+  } catch (e) {
+    toast('تعذّر الحفظ — التخزين ممتلئ أو محجوب.');
+  }
+};
+
+let toastTimer = 0;
+function toast(message) {
+  const el = $('toast');
+  el.textContent = message;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+}
+
+/* ---------- الجداول الثابتة ---------- */
+
+// لكل فئة مفرداتها البصرية بالإنجليزية: أدوات التوليد تفهم الإنجليزية أفضل،
+// وهذه الجمل هي ما يفصل صورة منتج مقنعة عن صورة عامّة لا تبيع.
+const CATEGORIES = [
+  { v: 'clothes', ar: 'ملابس وأحذية',
+    look: 'garment neatly styled on a clean surface, soft diffused window light, subtle fabric texture, shallow depth of field',
+    tags: ['ملابس', 'موضة', 'لباس'] },
+  { v: 'food', ar: 'أكل ومشروبات',
+    look: 'fresh appetizing food, visible texture and steam, warm inviting light, macro detail, rustic wooden surface',
+    tags: ['أكل', 'مطعم', 'وصفات'] },
+  { v: 'tech', ar: 'إلكترونيات وهواتف',
+    look: 'sleek product on a matte dark surface, crisp rim lighting, reflective highlights, minimal tech aesthetic',
+    tags: ['تكنولوجيا', 'هواتف', 'إلكترونيات'] },
+  { v: 'beauty', ar: 'عطور ومستحضرات',
+    look: 'elegant glass bottle, silk and soft shadows, golden hour light, luxury still life composition',
+    tags: ['عطور', 'جمال', 'عناية'] },
+  { v: 'furniture', ar: 'أثاث وديكور',
+    look: 'styled interior corner, natural daylight, warm neutral palette, wide architectural framing',
+    tags: ['أثاث', 'ديكور', 'منزل'] },
+  { v: 'restaurant', ar: 'مطعم ومحلّ',
+    look: 'plated dish on a table in a cozy venue, warm ambient lighting, gentle background bokeh',
+    tags: ['مطعم', 'محل', 'توصيل'] },
+  { v: 'service', ar: 'خدمة أو حرفة',
+    look: 'skilled hands at work, real workshop environment, documentary lighting, honest and unstaged',
+    tags: ['خدمة', 'حرفة', 'شغل'] },
+  { v: 'other', ar: 'أخرى',
+    look: 'product centered on a clean seamless backdrop, soft even studio light, neutral background',
+    tags: ['منتج', 'عرض'] },
+];
+
+const TONES = [
+  { v: 'energetic', ar: 'حماسي',
+    look: 'vibrant saturated colors, high energy',
+    move: 'fast push-in, quick snappy cuts',
+    hook: (p) => `${p}… شوف هذا مليح!`,
+    cta: 'اطلبه اليوم — الكمية محدودة.' },
+  { v: 'luxury', ar: 'فاخر هادئ',
+    look: 'cinematic high contrast, refined color grade, deep shadows',
+    move: 'slow dolly, smooth glide, patient timing',
+    hook: (p) => `${p}. لمن يعرف الفرق.`,
+    cta: 'اطلبه الآن، وذُق الفرق بنفسك.' },
+  { v: 'friendly', ar: 'ودّي',
+    look: 'warm natural tones, soft light, homely feel',
+    move: 'gentle handheld motion, natural pacing',
+    hook: (p) => `تبحث عن ${p}؟ وجدته.`,
+    cta: 'راسلنا وسنجهّزه لك.' },
+  { v: 'direct', ar: 'مباشر',
+    look: 'clean neutral lighting, uncluttered composition, product first',
+    move: 'locked-off camera, single clean move',
+    hook: (p) => `${p} — بسعر تقدر عليه.`,
+    cta: 'اتّصل بنا لتحجز نسختك.' },
+];
+
+const FORMATS = [
+  { v: '9:16', ar: '9:16 عمودي', px: '1080×1920', where: 'ريلز · تيك توك · ستوري' },
+  { v: '1:1', ar: '1:1 مربّع', px: '1080×1080', where: 'منشور فيسبوك وإنستغرام' },
+  { v: '16:9', ar: '16:9 أفقي', px: '1920×1080', where: 'يوتيوب · شاشات المحلّات' },
+];
+
+const DURATIONS = [15, 20, 30, 40];
+
+const STATUSES = [
+  { v: 'new', ar: 'جديد', cls: 's-new' },
+  { v: 'script', ar: 'السيناريو' },
+  { v: 'render', ar: 'قيد التوليد' },
+  { v: 'review', ar: 'عند الزبون' },
+  { v: 'done', ar: 'سُلّم', cls: 's-done' },
+];
+
+// أدوار المشاهد بالترتيب الذي يُبقي المشاهد إلى آخر الفيديو: خطّاف، ثم
+// تفصيل، ثم استعمال، ثم فائدة، ثم دعوة. الترتيب ليس زينة — أول ثانيتين
+// تحسمان بقاء المشاهد أو مروره.
+const SHOT_ROLES = [
+  { ar: 'الخطّاف', en: 'extreme close-up reveal of the product, dramatic first frame that stops the scroll' },
+  { ar: 'التفصيل', en: 'slow detail shot showing material, texture and craftsmanship' },
+  { ar: 'الاستعمال', en: 'the product in real use, in the hands of a person, natural setting' },
+  { ar: 'الفائدة', en: 'the result or benefit made visible, satisfied expression or clean outcome' },
+  { ar: 'المقارنة', en: 'side-by-side before and after, clear visual difference' },
+  { ar: 'الدعوة', en: 'final hero shot of the product with clean empty space for text overlay' },
+];
+
+/* ---------- حالة شاشة الاستوديو ---------- */
+const form = { tone: 'friendly', format: '9:16' };
+
+/* ---------- التوليد ---------- */
+
+// الكلام العربي يُنطق نحو 2.3 كلمة في الثانية في الإعلان. أبطأ منه يملّ،
+// وأسرع لا يُفهم. نستعملها لنحذّر حين يطول النصّ عن مدّة الفيديو.
+const WORDS_PER_SECOND = 2.3;
+
+const countWords = (text) => text.trim().split(/\s+/).filter(Boolean).length;
+
+function build() {
+  const product = $('f-product').value.trim() || 'المنتج';
+  const cat = CATEGORIES.find((c) => c.v === $('f-category').value) || CATEGORIES[7];
+  const tone = TONES.find((t) => t.v === form.tone) || TONES[2];
+  const fmt = FORMATS.find((f) => f.v === form.format) || FORMATS[0];
+  const duration = Number($('f-duration').value) || 20;
+  const shots = Math.min(6, Math.max(3, Number($('f-shots').value) || 4));
+  const feature = $('f-feature').value.trim();
+  const audience = $('f-audience').value.trim();
+  const price = $('f-price').value.trim();
+
+  /* السيناريو العربي */
+  const lines = [];
+  lines.push(`الخطّاف (0–3 ثوانٍ):`);
+  lines.push(tone.hook(product));
+  lines.push('');
+  lines.push(`المتن (3–${duration - 5} ثانية):`);
+  if (feature) lines.push(`${feature}.`);
+  if (audience) lines.push(`مصنوع لـ${audience}.`);
+  if (price) lines.push(`وبـ${price} فقط.`);
+  if (!feature && !audience && !price) lines.push('اكتب الميزة والجمهور في الأعلى ليمتلئ هذا الموضع.');
+  lines.push('');
+  lines.push(`الدعوة (آخر 5 ثوانٍ):`);
+  lines.push(tone.cta);
+  const script = lines.join('\n');
+
+  /* نصّ التعليق الصوتي: السيناريو بلا عناوين المراحل */
+  const voice = [
+    tone.hook(product),
+    feature ? `${feature}.` : '',
+    audience ? `مصنوع لـ${audience}.` : '',
+    price ? `وبـ${price} فقط.` : '',
+    tone.cta,
+  ].filter(Boolean).join(' ');
+
+  const words = countWords(voice);
+  const spoken = Math.round((words / WORDS_PER_SECOND) * 10) / 10;
+
+  /* موجّهات المشاهد بالإنجليزية */
+  const roles = shots <= 4
+    ? [SHOT_ROLES[0], SHOT_ROLES[1], SHOT_ROLES[2], SHOT_ROLES[5]].slice(0, shots)
+    : SHOT_ROLES.slice(0, shots - 1).concat([SHOT_ROLES[5]]);
+
+  const perShot = Math.round((duration / roles.length) * 10) / 10;
+  const en = product; // يُترك كما كتبه صاحبه؛ أداة التوليد تتعامل مع العربية
+
+  const shotList = roles.map((role, i) => ({
+    ar: role.ar,
+    seconds: perShot,
+    image: `${role.en}. Subject: ${en}. ${cat.look}. ${tone.look}. ${fmt.v} aspect ratio, ${fmt.px}, photorealistic, commercial advertising photography, sharp focus, no text, no watermark, no logo.`,
+    motion: `${tone.move}, ${perShot}s, subtle natural movement, consistent lighting and color with previous shot, no camera shake, no morphing artifacts.`,
+  }));
+
+  /* نصّ المنشور */
+  const tags = ['#برج_باجي_مختار', '#الجزائر', ...cat.tags.map((t) => '#' + t.replace(/\s+/g, '_'))];
+  const caption = [
+    tone.hook(product),
+    feature ? `✔ ${feature}` : '',
+    price ? `💰 ${price}` : '',
+    '📞 0673 23 29 32',
+    '',
+    tags.join(' '),
+  ].filter((l) => l !== '').join('\n');
+
+  return { product, script, voice, words, spoken, duration, shotList, caption, fmt };
+}
+
+/* ---------- عرض النتائج ---------- */
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const copyIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>`;
+
+function outBlock(id, title, meta, body, ltr) {
+  return `
+    <div class="out">
+      <div class="out-head">
+        <div><h3>${esc(title)}</h3>${meta ? `<span class="meta">${esc(meta)}</span>` : ''}</div>
+        <button class="copy" type="button" data-copy="${id}">${copyIcon} نسخ</button>
+      </div>
+      <div class="out-body${ltr ? ' ltr' : ''}" id="${id}">${esc(body)}</div>
+    </div>`;
+}
+
+function render(r) {
+  const box = $('results');
+  const over = r.spoken > r.duration;
+
+  let html = '';
+
+  html += outBlock('o-script', 'السيناريو', `${r.fmt.ar} · ${r.duration} ثانية`, r.script, false);
+
+  html += outBlock('o-voice', 'نصّ التعليق الصوتي',
+    `${r.words} كلمة ≈ ${r.spoken} ثانية نُطقاً`, r.voice, false);
+
+  if (over) {
+    html += `<div class="notice notice-warn">
+      النصّ أطول من الفيديو: ${r.spoken} ثانية من الكلام في ${r.duration} ثانية.
+      احذف جملة، أو ارفع المدّة، وإلا خرج الصوت مسرعاً ولا يُفهم.
+    </div>`;
+  } else {
+    html += `<div class="notice notice-ok">
+      النصّ يسع المدّة: ${r.spoken} ثانية كلاماً من ${r.duration} ثانية.
+    </div>`;
+  }
+
+  html += `<div class="out"><div class="out-head"><div>
+      <h3>موجّهات المشاهد</h3>
+      <span class="meta">${r.shotList.length} مشاهد · ${r.fmt.px} · تُلصق في أداة التوليد كما هي</span>
+    </div></div>`;
+  r.shotList.forEach((s, i) => {
+    html += `<div class="shot">
+      <div class="shot-head"><span class="shot-num">${i + 1}</span> ${esc(s.ar)} — ${s.seconds} ثانية</div>
+      ${outBlock('o-img-' + i, 'موجّه الصورة', '', s.image, true)}
+      ${outBlock('o-mov-' + i, 'موجّه الحركة', '', s.motion, true)}
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += outBlock('o-caption', 'نصّ المنشور', 'مع الهاشتاغات', r.caption, false);
+
+  html += `<div class="notice notice-plain">
+    الموجّهات بالإنجليزية عمداً: أدوات التوليد تفهمها أدقّ من العربية، والنتيجة أقرب
+    إلى ما في رأسك. انسخ الموجّه، ألصقه في الأداة، وأرفق صورة منتجك مرجعاً.
+  </div>`;
+
+  box.innerHTML = html;
+  box.hidden = false;
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ---------- النسخ ---------- */
+document.addEventListener('click', async (event) => {
+  const btn = event.target.closest('[data-copy]');
+  if (!btn) return;
+  const src = $(btn.dataset.copy);
+  if (!src) return;
+  const text = src.textContent;
+  try {
+    // الحافظة الحديثة تحتاج سياقاً آمناً؛ وإلا نرجع إلى الطريقة القديمة.
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.insetInlineStart = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    const label = btn.innerHTML;
+    btn.classList.add('is-done');
+    btn.innerHTML = copyIcon + ' نُسخ';
+    setTimeout(() => { btn.classList.remove('is-done'); btn.innerHTML = label; }, 1500);
+  } catch (e) {
+    toast('تعذّر النسخ — حدّد النصّ وانسخه يدوياً.');
+  }
+});
+
+/* ---------- التبويبات ---------- */
+const TABS = ['studio', 'projects', 'price', 'settings'];
+function showTab(name) {
+  TABS.forEach((t) => {
+    $('tab-' + t).setAttribute('aria-selected', String(t === name));
+    $('view-' + t).hidden = t !== name;
+  });
+  window.scrollTo({ top: 0 });
+}
+TABS.forEach((t) => $('tab-' + t).addEventListener('click', () => showTab(t)));
+
+/* ---------- المشاريع ---------- */
+const statusLabel = (v) => (STATUSES.find((s) => s.v === v) || {}).ar || v;
+const statusCls = (v) => (STATUSES.find((s) => s.v === v) || {}).cls || '';
+
+function renderProjects() {
+  const box = $('projects-list');
+  if (!db.projects.length) {
+    box.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <b>لا مشروع بعد</b>
+      حين يطلب زبون فيديو، سجّله هنا فلا يضيع بين الرسائل.
+    </div>`;
+    return;
+  }
+  box.innerHTML = db.projects.map((p) => `
+    <div class="proj">
+      <div class="proj-main">
+        <b>${esc(p.client || 'بلا اسم')}</b>
+        <span>${esc(p.product || '—')}${p.amount ? ' · ' + Number(p.amount).toLocaleString('ar-DZ') + ' دج' : ''}</span>
+      </div>
+      <span class="badge ${statusCls(p.status)}">${esc(statusLabel(p.status))}</span>
+      <button class="icon-btn" type="button" data-edit="${esc(p.id)}" aria-label="تعديل ${esc(p.client || '')}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16z"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+let editingId = null;
+const dlg = $('proj-dlg');
+
+function openProject(id) {
+  editingId = id;
+  const p = db.projects.find((x) => x.id === id) || {};
+  $('proj-dlg-title').textContent = id ? 'تعديل المشروع' : 'مشروع جديد';
+  $('d-client').value = p.client || '';
+  $('d-phone').value = p.phone || '';
+  $('d-product').value = p.product || '';
+  $('d-status').value = p.status || 'new';
+  $('d-amount').value = p.amount || '';
+  $('d-notes').value = p.notes || '';
+  $('proj-delete').hidden = !id;
+  dlg.showModal();
+  $('d-client').focus();
+}
+
+$('new-project').addEventListener('click', () => openProject(null));
+$('projects-list').addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-edit]');
+  if (btn) openProject(btn.dataset.edit);
+});
+$('proj-close').addEventListener('click', () => dlg.close());
+$('proj-cancel').addEventListener('click', () => dlg.close());
+
+$('proj-form').addEventListener('submit', () => {
+  const data = {
+    client: $('d-client').value.trim(),
+    phone: $('d-phone').value.trim(),
+    product: $('d-product').value.trim(),
+    status: $('d-status').value,
+    amount: Number($('d-amount').value) || 0,
+    notes: $('d-notes').value.trim(),
+  };
+  if (editingId) {
+    const p = db.projects.find((x) => x.id === editingId);
+    if (p) Object.assign(p, data);
+  } else {
+    db.projects.unshift({ id: String(Date.now()), createdAt: Date.now(), ...data });
+  }
+  save();
+  renderProjects();
+  toast('حُفظ المشروع.');
+});
+
+$('proj-delete').addEventListener('click', () => {
+  if (!editingId) return;
+  db.projects = db.projects.filter((x) => x.id !== editingId);
+  save();
+  renderProjects();
+  dlg.close();
+  toast('حُذف المشروع.');
+});
+
+$('save-as-project').addEventListener('click', () => {
+  const product = $('f-product').value.trim();
+  if (!product) { toast('اكتب اسم المنتج أوّلاً.'); return; }
+  db.projects.unshift({
+    id: String(Date.now()), createdAt: Date.now(),
+    client: '', phone: '', product, status: 'new', amount: 0,
+    notes: [$('f-feature').value.trim(), $('f-audience').value.trim()].filter(Boolean).join(' · '),
+  });
+  save();
+  renderProjects();
+  toast('حُفظ مشروعاً — أكمل اسم الزبون في تبويب المشاريع.');
+});
+
+/* ---------- السعر ---------- */
+function renderPrice() {
+  const p = db.price;
+  const nExtra = Number($('p-n-extra').value) || 0;
+  const nPhotos = Number($('p-n-photos').value) || 0;
+  const withVoice = $('p-with-voice').value === '1';
+
+  const rows = [[`الفيديو الأساسي`, p.base]];
+  if (nExtra) rows.push([`${nExtra} نسخة إضافية × ${p.extra}`, nExtra * p.extra]);
+  if (withVoice) rows.push([`التعليق الصوتي`, p.voice]);
+  if (nPhotos) rows.push([`${nPhotos} صورة × ${p.photo}`, nPhotos * p.photo]);
+  const total = rows.reduce((sum, r) => sum + r[1], 0);
+
+  $('price-text').textContent =
+    rows.map((r) => `${r[0]}: ${r[1].toLocaleString('ar-DZ')} دج`).join('\n') +
+    `\n———\nالإجمالي: ${total.toLocaleString('ar-DZ')} دج`;
+}
+
+// مفتاح السعر واسم حقله ليسا واحدًا دائمًا (photo ↔ p-photos)، فالربط صريح.
+const PRICE_FIELDS = { base: 'p-base', extra: 'p-extra', voice: 'p-voice', photo: 'p-photos' };
+Object.entries(PRICE_FIELDS).forEach(([key, id]) => {
+  $(id).addEventListener('input', () => {
+    db.price[key] = Number($(id).value) || 0;
+    save();
+    renderPrice();
+  });
+});
+['p-n-extra', 'p-n-photos', 'p-with-voice'].forEach((id) => {
+  $(id).addEventListener('input', renderPrice);
+});
+
+/* ---------- الإعدادات ---------- */
+$('save-code').addEventListener('click', () => {
+  const code = $('s-code').value.trim();
+  if (code.length < 4) { toast('اجعل الرمز أربعة أرقام على الأقل.'); return; }
+  db.code = code;
+  save();
+  $('s-code').value = '';
+  toast('حُفظ الرمز الجديد.');
+});
+
+$('export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bofaida-studio-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('import-btn').addEventListener('click', () => $('import-file').click());
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  try {
+    const parsed = JSON.parse(await file.text());
+    if (!parsed || !Array.isArray(parsed.projects)) throw new Error('bad');
+    db = { ...defaults(), ...parsed };
+    save();
+    fillPriceInputs();
+    renderProjects();
+    renderPrice();
+    toast('استُوردت النسخة.');
+  } catch (e) {
+    toast('الملف غير صالح.');
+  }
+  event.target.value = '';
+});
+
+$('wipe').addEventListener('click', () => {
+  if (!confirm('سيُمحى كل شيء من هذا الجهاز: المشاريع والأسعار والرمز. متأكّد؟')) return;
+  try { localStorage.removeItem(KEY); } catch (e) { /* محجوب أصلاً */ }
+  db = defaults();
+  fillPriceInputs();
+  renderProjects();
+  renderPrice();
+  toast('مُحي كل شيء.');
+});
+
+/* ---------- البوّابة ---------- */
+function unlock() {
+  $('gate').hidden = true;
+  $('app').hidden = false;
+}
+
+$('gate-form').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const value = $('gate-code').value.trim();
+  if (!db.code) {
+    if (value.length < 4) { $('gate-msg').textContent = 'اجعل الرمز أربعة أرقام على الأقل'; return; }
+    db.code = value;
+    save();
+    unlock();
+    toast('حُفظ رمزك. تغيّره من الإعدادات.');
+    return;
+  }
+  if (value === db.code) { $('gate-code').value = ''; unlock(); return; }
+  $('gate-msg').textContent = 'رمز غير صحيح';
+  $('gate-code').value = '';
+  $('gate-code').focus();
+});
+
+$('lock').addEventListener('click', () => {
+  $('app').hidden = true;
+  $('gate').hidden = false;
+  $('gate-msg').textContent = 'أدخل رمز الدخول';
+  $('gate-code').focus();
+});
+
+/* ---------- التهيئة ---------- */
+function fillSelect(el, items, valueKey, labelKey) {
+  el.innerHTML = items.map((i) => `<option value="${esc(i[valueKey])}">${esc(i[labelKey])}</option>`).join('');
+}
+
+function fillChips(el, items, current, onPick) {
+  el.innerHTML = items.map((i) => `
+    <button class="chip" type="button" data-v="${esc(i.v)}" aria-pressed="${i.v === current}">${esc(i.ar)}</button>
+  `).join('');
+  el.addEventListener('click', (event) => {
+    const btn = event.target.closest('.chip');
+    if (!btn) return;
+    onPick(btn.dataset.v);
+    [...el.querySelectorAll('.chip')].forEach((c) => {
+      c.setAttribute('aria-pressed', String(c.dataset.v === btn.dataset.v));
+    });
+  });
+}
+
+function fillPriceInputs() {
+  Object.entries(PRICE_FIELDS).forEach(([key, id]) => { $(id).value = db.price[key]; });
+}
+
+function initShots() {
+  const input = $('f-shots');
+  const clamp = (n) => Math.min(6, Math.max(3, n));
+  const sync = () => {
+    input.value = clamp(Number(input.value) || 4);
+    $('shots-minus').disabled = Number(input.value) <= 3;
+    $('shots-plus').disabled = Number(input.value) >= 6;
+  };
+  $('shots-minus').addEventListener('click', () => { input.value = clamp(Number(input.value) - 1); sync(); });
+  $('shots-plus').addEventListener('click', () => { input.value = clamp(Number(input.value) + 1); sync(); });
+  input.addEventListener('change', sync);
+  sync();
+}
+
+function init() {
+  load();
+
+  fillSelect($('f-category'), CATEGORIES, 'v', 'ar');
+  fillSelect($('d-status'), STATUSES, 'v', 'ar');
+  $('f-duration').innerHTML = DURATIONS
+    .map((d) => `<option value="${d}"${d === 20 ? ' selected' : ''}>${d} ثانية</option>`).join('');
+
+  fillChips($('tone-chips'), TONES, form.tone, (v) => { form.tone = v; });
+  fillChips($('format-chips'), FORMATS, form.format, (v) => { form.format = v; });
+
+  initShots();
+  fillPriceInputs();
+  renderProjects();
+  renderPrice();
+
+  $('generate').addEventListener('click', () => render(build()));
+
+  if (!db.code) {
+    $('gate-msg').textContent = 'اختر رمز دخول (يُحفظ في هذا الجهاز)';
+    $('gate-code').type = 'text';
+  }
+  $('gate-code').focus();
+
+  // عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>
