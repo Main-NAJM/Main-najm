@@ -1,6 +1,6 @@
 /* عامل الخدمة لتطبيق استوديو بوفايدة — يجعل الموقع يعمل دون إنترنت بعد أول زيارة. */
 
-const VERSION = 'bofaida-studio-v1';
+const VERSION = 'bofaida-studio-v2';
 const CACHE = `${VERSION}-assets`;
 
 // نطاق العمل مشتقّ من موقع هذا الملف، فيعمل في الجذر وعلى مسار فرعي مثل ‎/studio/‎.
@@ -48,7 +48,10 @@ self.addEventListener('fetch', (event) => {
 
   // خطوط Google: من الذاكرة أولاً حتى تظهر بخطوطها الصحيحة دون إنترنت.
   if (!sameOrigin) {
-    if (url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
+    // خطوط Google ومكتبة Firebase: تُخزَّن كي تفتح الأداة دون إنترنت بخطّها
+    // الصحيح، وكي تبقى جلسة الحساب قابلة للقراءة بلا شبكة.
+    const isFirebaseSdk = url.hostname === 'www.gstatic.com' && url.pathname.startsWith('/firebasejs/');
+    if (isFirebaseSdk || url.hostname === 'fonts.googleapis.com' || url.hostname === 'fonts.gstatic.com') {
       event.respondWith(
         caches.match(request).then(
           (cached) =>

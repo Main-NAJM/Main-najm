@@ -85,11 +85,16 @@ await check(
   'يكتب في مجموعات تطبيق الباشة',
   assertSucceeds(setDoc(doc(alice, `users/${ALICE}/albachaCustomers/c1`), { name: 'زبون' })),
 );
+await check(
+  'يكتب وثيقة الاستوديو',
+  assertSucceeds(setDoc(doc(alice, `users/${ALICE}/studio/data`), { projects: [], updatedAt: Date.now() })),
+);
 
 console.log('\nمستخدم آخر:');
 await check('لا يقرأ بيانات غيره', assertFails(getDoc(doc(bob, `users/${ALICE}/orders/o1`))));
 await check('لا يكتب في بيانات غيره', assertFails(setDoc(doc(bob, `users/${ALICE}/orders/o2`), order)));
 await check('لا يقرأ ملفّ غيره الشخصي', assertFails(getDoc(doc(bob, `users/${ALICE}`))));
+await check('لا يقرأ استوديو غيره', assertFails(getDoc(doc(bob, `users/${ALICE}/studio/data`))));
 await check('لا يحذف بالكتابة فوق مستند غيره', assertFails(setDoc(doc(bob, `users/${ALICE}`), {})));
 
 console.log('\nزائر بلا تسجيل دخول:');
