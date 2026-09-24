@@ -83,6 +83,23 @@ create_or_exists "مجمّع الهويات" gcloud iam workload-identity-pools 
   --location=global \
   --display-name="GitHub"
 
+# إنشاء المجمّع في Google ليس فوريًّا: يعود الأمر قبل أن يصير المجمّع مرئيًّا
+# للقراءة. وكان ما يليه يسأل عنه فورًا فيأتيه NOT_FOUND على مجمّع أُنشئ لتوّه —
+# وهو ما وقع فعلًا في أول تشغيل. فيُنتظر ظهوره قبل المضيّ.
+echo "    في انتظار ظهور المجمّع…"
+POOL_PATH=""
+for _ in $(seq 1 30); do
+  if POOL_PATH="$(gcloud iam workload-identity-pools describe "$POOL" \
+    --location=global --format='value(name)' 2>/dev/null)" && [ -n "$POOL_PATH" ]; then
+    break
+  fi
+  sleep 2
+done
+if [ -z "$POOL_PATH" ]; then
+  echo "لم يظهر المجمّع بعد دقيقة. أعد تشغيل السكربت — تكراره غير ضار." >&2
+  exit 1
+fi
+
 # شرط النطاق هو صمّام الأمان: لا تُقبل هوية إلا إن جاءت من هذا المستودع بعينه.
 create_or_exists "مزوّد الهوية" gcloud iam workload-identity-pools providers create-oidc "$PROVIDER" \
   --location=global \
@@ -93,8 +110,6 @@ create_or_exists "مزوّد الهوية" gcloud iam workload-identity-pools pr
   --attribute-condition="assertion.repository=='$REPO'"
 
 echo "٥/٥ ربط المستودع بحساب الخدمة…"
-POOL_PATH="$(gcloud iam workload-identity-pools describe "$POOL" \
-  --location=global --format='value(name)')"
 
 gcloud iam service-accounts add-iam-policy-binding "$SA_EMAIL" \
   --role=roles/iam.workloadIdentityUser \
