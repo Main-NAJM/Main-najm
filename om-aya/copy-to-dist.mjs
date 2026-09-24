@@ -1,4 +1,4 @@
-// ينسخ متجر أم آية إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
+// ينسخ متجر أم عمر إلى مجلد البناء ليُنشر مع التطبيق على Firebase Hosting.
 //
 // المصدر: om-aya/          (ملفات الموقع فقط — تُستثنى السكربتات والتوثيق)
 // الهدف:  dist/om-aya/     ← يصبح الرابط https://<project>.web.app/om-aya
@@ -46,4 +46,4 @@ if (!copied.includes('index.html')) {
   process.exit(1);
 }
 
-console.log(`نُسخ متجر أم آية إلى dist/${DEST_DIR || ''} (${copied.join('، ')})`);
+console.log(`نُسخ متجر أم عمر إلى dist/${DEST_DIR || ''} (${copied.join('، ')})`);

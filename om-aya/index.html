@@ -3,12 +3,21 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>أم آية | بيجامات واكسسوارات الهواتف</title>
-<meta name="description" content="أم آية — بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، الدفع عند الاستلام، والطلب مباشرة عبر واتساب.">
+<title>أم عمر | بيجامات واكسسوارات الهواتف</title>
+<meta name="description" content="أم عمر — بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، الدفع عند الاستلام، والطلب مباشرة عبر واتساب.">
 <meta name="theme-color" content="#1A0512">
-<meta property="og:title" content="أم آية | بيجامات واكسسوارات الهواتف">
+<meta property="og:title" content="أم عمر | بيجامات واكسسوارات الهواتف">
 <meta property="og:description" content="راحتك واكسسوارات هاتفك في مكان واحد. توصيل لكل الولايات والدفع عند الاستلام.">
 <meta property="og:type" content="website">
+
+<!-- التثبيت على الشاشة الرئيسية. الملفّ المربوط يتبدّل وقت التشغيل: الرابط
+     العادي يثبّت المتجر، و‎?panel=1‎ يثبّت لوحة التحكّم بأيقونتها واسمها. -->
+<link rel="manifest" href="./manifest.webmanifest" id="app-manifest">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" id="app-touch-icon">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="أم عمر" id="app-ios-title">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
@@ -619,7 +628,7 @@
       <a class="brand" href="#top">
         <span class="brand-mark" id="brand-mark" aria-hidden="true">أ</span>
         <span>
-          <b id="brand-name">أم آية</b>
+          <b id="brand-name">أم عمر</b>
           <!-- dir=ltr وإلا نقلت المحاذاة العربية علامة @ إلى آخر المعرّف -->
           <i id="brand-handle" dir="ltr"></i>
         </span>
@@ -679,7 +688,7 @@
           <svg viewBox="0 0 100 100" xmlns:xlink="http://www.w3.org/1999/xlink">
             <defs><path id="ring" fill="none" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0"/></defs>
             <!-- textLength = محيط الدائرة (2π×37 ≈ 232) فتلتفّ العبارة دورة واحدة بلا تداخل -->
-            <text><textPath href="#ring" xlink:href="#ring" textLength="232" lengthAdjust="spacing">OM AYA · SLEEPWEAR &amp; TECH ·</textPath></text>
+            <text><textPath href="#ring" xlink:href="#ring" textLength="232" lengthAdjust="spacing">OM OMAR · SLEEPWEAR &amp; TECH ·</textPath></text>
           </svg>
           <span class="seal-core" id="seal-core"></span>
         </div>
@@ -779,7 +788,7 @@
       <div class="foot-brand">
         <span class="brand">
           <span class="brand-mark" id="foot-mark" aria-hidden="true">أ</span>
-          <span><b id="foot-brand-name">أم آية</b> <i id="foot-handle" dir="ltr"></i></span>
+          <span><b id="foot-brand-name">أم عمر</b> <i id="foot-handle" dir="ltr"></i></span>
         </span>
         <p id="foot-text">بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
         <div class="foot-social" id="foot-social"></div>
@@ -801,7 +810,7 @@
       </div>
     </div>
     <div class="foot-base">
-      <span>&copy; <span id="year"></span> <span id="foot-copy-name">أم آية</span> — جميع الحقوق محفوظة</span>
+      <span>&copy; <span id="year"></span> <span id="foot-copy-name">أم عمر</span> — جميع الحقوق محفوظة</span>
       <span>
         <span id="foot-handle-2" dir="ltr"></span>
         <button class="admin-link" id="admin-open">لوحة التحكّم</button>
@@ -1072,7 +1081,7 @@
 <noscript>
   <div class="wrap" style="padding:48px 20px; text-align:center;">
     <p>لعرض المنتجات وإرسال الطلبات يلزم تفعيل جافاسكربت. للتواصل المباشر راسلينا على واتساب
-    (‎+213 696 847 079‎) أو تابعينا على انستقرام وتيك توك <strong dir="ltr">@am_aya_x</strong>
+    (‎+213 696 847 079‎) أو تابعينا على انستقرام <strong dir="ltr">@am_aya_x</strong>
     وعلى سناب شات <strong dir="ltr">aichocha2005</strong>.</p>
   </div>
 </noscript>
@@ -1087,12 +1096,14 @@
      ========================================================================== */
 
   const STORE = {
-    brand: 'أم آية',
+    brand: 'أم عمر',
     // رقم الواتساب بالصيغة الدولية، أرقاماً فقط بدون + ولا مسافات.
     phone: '213696847079',
     instagram: 'https://www.instagram.com/am_aya_x',
-    tiktok: 'https://www.tiktok.com/@am_aya_x',
-    // معرّف سناب شات مختلف عن معرّف المنصّتين الأخريين، فلكلٍّ رابطه.
+    // تيك توك مُزال بطلب صاحبة المتجر. الخانة باقية في لوحة التحكّم، فإن
+    // عادت ألصقت الرابط هناك وعاد الزرّ وحده.
+    tiktok: '',
+    // معرّف سناب شات مختلف عن معرّف انستقرام، فلكلٍّ رابطه.
     snapchat: 'https://www.snapchat.com/add/aichocha2005',
     facebook: '',
     handle: '@am_aya_x',
@@ -1101,7 +1112,7 @@
 
   // نصوص الصفحة التي تُحرَّر من اللوحة. مفاتيحها هي معرّفات العناصر في الصفحة.
   const TEXTS = {
-    'hero-kicker':  'Om Aya · راحتك وهاتفك',
+    'hero-kicker':  'Om Omar · راحتك وهاتفك',
     'hero-title':   'راحتكِ في البيت {وأناقتكِ}\nفي مكان واحد.',
     'hero-text':    'بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.',
     'sleep-title':  'بيجامات وملابس نوم',
@@ -1148,9 +1159,9 @@
      url     : رابط الفيديو كاملاً لزر «شاهدي على…». إن تُرك فارغاً يفتح الزرّ حسابكِ.
      اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد بلون الموقع بدل إطار معطوب.        */
   let VIDEOS = [
-    { platform:'tiktok',    embedId:'', url:'', title:'طقم بيجامة صيفي — القماش على الطبيعة', text:'قطن خفيف، ألوان هادئة، ومقاسات لكل القياسات.' },
+    { platform:'instagram', embedId:'', url:'', title:'طقم بيجامة صيفي — القماش على الطبيعة', text:'قطن خفيف، ألوان هادئة، ومقاسات لكل القياسات.' },
     { platform:'instagram', embedId:'', url:'', title:'كيف تختارين مقاسكِ من البيت',            text:'قياسان فقط بشريط القياس، وتعرفين مقاسكِ.' },
-    { platform:'tiktok',    embedId:'', url:'', title:'اكسسوارات هاتف تغيّر شكله كلياً',        text:'غطاء وحامل وخيط — تركيبة واحدة أنيقة.' },
+    { platform:'instagram', embedId:'', url:'', title:'اكسسوارات هاتف تغيّر شكله كلياً',        text:'غطاء وحامل وخيط — تركيبة واحدة أنيقة.' },
   ];
 
   /* ==========================================================================
@@ -1338,6 +1349,25 @@
       .replace(/\n/g, '<br>');
   }
 
+  /* ---------- التثبيت على الشاشة الرئيسية ---------- */
+
+  // ‎?panel=1‎ يفتح لوحة التحكّم مباشرة، وهو أيضاً ما يُثبَّت أيقونةً مستقلّة:
+  // فتُبدَّل بيانات التثبيت كلّها لتصير أيقونة اللوحة واسمها لا أيقونة المتجر.
+  const PANEL_MODE = new URLSearchParams(location.search).get('panel') === '1';
+
+  function applyAppIdentity() {
+    const manifest = $('#app-manifest');
+    const icon = $('#app-touch-icon');
+    const iosTitle = $('#app-ios-title');
+    if (manifest) manifest.href = PANEL_MODE ? './admin.webmanifest' : './manifest.webmanifest';
+    if (icon) icon.href = PANEL_MODE ? './icons/admin-apple-touch-icon.png' : './icons/apple-touch-icon.png';
+    // الاسم تحت الأيقونة على الآيفون — يُقصَر إلى ١٢ محرفاً وإلا قُطع بثلاث نقاط.
+    if (iosTitle) {
+      const brand = (STORE.brand || 'المتجر').trim();
+      iosTitle.content = (PANEL_MODE ? `لوحة ${brand}` : brand).slice(0, 12).trim();
+    }
+  }
+
   function renderTexts() {
     Object.entries(TEXTS).forEach(([id, text]) => {
       const el = document.getElementById(id);
@@ -1366,7 +1396,10 @@
     const cta = $('#hero-cta-1');
     if (cta) cta.textContent = `تصفّحي ${sleep}`;
 
-    document.title = `${brand} | ${sleep} واكسسوارات الهواتف`;
+    document.title = PANEL_MODE
+      ? `لوحة تحكّم ${brand}`
+      : `${brand} | ${sleep} واكسسوارات الهواتف`;
+    applyAppIdentity();
   }
 
   /* ---------- شريط الضمانات ---------- */
@@ -1763,6 +1796,7 @@
     setSignedIn(yes) {
       DB.signedIn = !!yes;
     },
+    panelMode: PANEL_MODE,
     // كل ما تحفظه اللوحة من غير المنتجات يمرّ من هنا: بيانات المتجر ونصوصه
     // وشريطه وفيديوهاته. القيم المفقودة تبقى على ما كانت.
     setSettings(data) {
@@ -1806,6 +1840,14 @@
   // مرّة واحدة: عناصر الظهور التدريجي ثابتة في الصفحة، ولا يعيد رسمُ الشبكات إنشاءها.
   observeRise();
   $('#year').textContent = new Date().getFullYear();
+
+  // عامل الخدمة: يجعل المتجر يفتح دون إنترنت بعد أول زيارة، وهو شرط تثبيته
+  // تطبيقاً على أندرويد. يفشل بهدوء داخل المعاينة أو من ملفّ محلّي — وهذا متوقّع.
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
 
   // رابط لا يشير إلى صورة (أو صورة حُذفت) يترك أيقونة مكسورة في البطاقة.
   // يُستبدل بالرسم بهدوء. وحدث error لا يتصاعد، فيُلتقط في مرحلة الالتقاط.
@@ -2240,6 +2282,11 @@
       UI.setSignedIn(backend.canEdit);
     }
     applyBackend();
+
+    // الرابط ‎?panel=1‎ هو ما يُثبَّت تطبيقاً للوحة، فيفتحها عند الإقلاع بدل
+    // أن تُفتح الصفحة على المتجر ثم يُبحث عن الرابط في أسفلها. ومن ليست له
+    // صلاحية يرى المتجر كأي زائرة، فالوضع لا يمنح شيئاً.
+    if (UI.panelMode && backend.canEdit) openPanel();
   })();
 
   /* ---------- صورة المنتج ---------- */

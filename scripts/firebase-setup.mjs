@@ -130,7 +130,7 @@ const lines = [
 ];
 writeFileSync(ENV_FILE, lines.join('\n'), 'utf8');
 
-// 4) متجر أم آية ملفّ ثابت لا يمرّ على Vite، فلا يقرأ متغيّرات البيئة.
+// 4) متجر أم عمر ملفّ ثابت لا يمرّ على Vite، فلا يقرأ متغيّرات البيئة.
 //    تُكتب له نفس المفاتيح في ملفّ سكربت يقرأه المتصفّح مباشرة.
 const SHOP_CONFIG = `${ROOT}om-aya/firebase-config.js`;
 writeFileSync(SHOP_CONFIG, `// مولَّد بأمر: npm run firebase:setup — لا تُعدّله يدوياً.
