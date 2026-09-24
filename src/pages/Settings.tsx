@@ -2,22 +2,36 @@ import { useEffect, useRef, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
-import { ConfirmDialog, NumberInput, SectionTitle, Select, TextInput } from '@/components/ui';
+import {
+  ConfirmDialog,
+  Modal,
+  NumberInput,
+  SectionTitle,
+  Select,
+  TextInput,
+} from '@/components/ui';
 import { usePwaInstall } from '@/hooks/usePwaInstall';
+import { useTheme } from '@/hooks/useTheme';
+import { THEME_CHOICES } from '@/lib/theme';
+import { changePassword } from '@/data/accounts';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
-import { APP_NAME, CRAFTS, CURRENCIES, USER_TYPES } from '@/lib/constants';
+import { isUsingEmulators } from '@/lib/firebase';
+import { TRADE_CHOICES, tradeLabel } from '@/lib/trades';
+import { APP_NAME, CURRENCIES, PRICING_BASES, USER_TYPES } from '@/lib/constants';
 import { formatDateTime, toNumber } from '@/lib/format';
-import type { Craft, Profile, UserType } from '@/lib/types';
+import type { Craft, PricingBasis, Profile, UserType } from '@/lib/types';
 
 export default function Settings() {
   const { profile, saveProfile, storeKind, seedDemoData, orders, debts } = useData();
-  const { user, signOut, firebaseAvailable } = useAuth();
+  const { user, signOut, firebaseAvailable, updateLocalAccount } = useAuth();
   const { notify, notifyError } = useToast();
   const { canInstall, installed, install } = usePwaInstall();
+  const { theme, setTheme } = useTheme();
 
   const [draft, setDraft] = useState<Profile>(profile);
   const [saving, setSaving] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
+  const [changingPassword, setChangingPassword] = useState(false);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -31,12 +45,24 @@ export default function Settings() {
   const save = async () => {
     setSaving(true);
     try {
+      const businessName = draft.businessName.trim() || 'ورشتي';
       await saveProfile({
         ...draft,
-        businessName: draft.businessName.trim() || 'ورشتي',
+        businessName,
         ownerName: draft.ownerName.trim(),
         phone: draft.phone.trim(),
         address: draft.address.trim(),
+        customCraft: draft.customCraft.trim(),
+        customMaterial: draft.customMaterial.trim(),
+      });
+      // الحساب على الجهاز يحمل نسخته من الاسم والمهنة (تُعرض في شاشة الدخول).
+      updateLocalAccount({
+        displayName: businessName,
+        userType: draft.userType,
+        craft: draft.craft,
+        customCraft: draft.customCraft.trim(),
+        customMaterial: draft.customMaterial.trim(),
+        customBasis: draft.customBasis,
       });
       notify('حُفظت الإعدادات.');
     } catch (error) {
@@ -141,14 +167,53 @@ export default function Settings() {
               }}
             />
             <Select
-              label="الحرفة"
+              label={draft.userType === 'merchant' ? 'مجال التجارة' : 'الحرفة'}
+              hint="يقرّر أسعار المواد المقترحة والقوالب التي يبدأ بها التسعير"
               value={draft.craft}
-              options={CRAFTS.map((c) => ({ value: c.value, label: c.label }))}
+              options={TRADE_CHOICES.map((choice) => ({
+                value: choice.craft,
+                label: draft.userType === 'merchant' ? choice.merchantLabel : choice.craftLabel,
+              }))}
               onChange={(value) => {
                 patch({ craft: value as Craft });
               }}
             />
           </div>
+          {draft.craft === 'other' ? (
+            <>
+              <TextInput
+                label={draft.userType === 'merchant' ? 'بماذا تتاجر؟' : 'اسم مهنتك'}
+                value={draft.customCraft}
+                onChange={(value) => {
+                  patch({ customCraft: value });
+                }}
+                placeholder={draft.userType === 'merchant' ? 'تاجر جلود' : 'صانع أحذية'}
+                hint="يظهر في رأس الصفحات وفي عروض الأسعار المطبوعة"
+              />
+              <div className="grid-2">
+                <TextInput
+                  label="المادة الأساسية"
+                  value={draft.customMaterial}
+                  onChange={(value) => {
+                    patch({ customMaterial: value });
+                  }}
+                  placeholder="جلد"
+                  hint="اسم صنفك في مؤشّر الأسعار"
+                />
+                <Select
+                  label="طريقة التسعير المعتادة"
+                  value={draft.customBasis}
+                  options={PRICING_BASES.map((basis) => ({
+                    value: basis.value,
+                    label: basis.label,
+                  }))}
+                  onChange={(value) => {
+                    patch({ customBasis: value as PricingBasis });
+                  }}
+                />
+              </div>
+            </>
+          ) : null}
           <Select
             label="العملة"
             value={draft.currency}
@@ -193,14 +258,48 @@ export default function Settings() {
       </div>
 
       <div className="card">
+        <SectionTitle>المظهر</SectionTitle>
+        <p className="small muted">
+          يُحفظ في هذا الجهاز وحده — فلهاتفك مظهر ولحاسوب الورشة آخر إن شئت.
+        </p>
+        <div className="chips mt-12" role="group" aria-label="مظهر التطبيق">
+          {THEME_CHOICES.map((option) => (
+            <button
+              key={option.value}
+              type="button"
+              className={`chip${theme === option.value ? ' is-active' : ''}`}
+              aria-pressed={theme === option.value}
+              onClick={() => {
+                setTheme(option.value);
+              }}
+            >
+              {option.label}
+            </button>
+          ))}
+        </div>
+        <p className="small muted mt-12">
+          {THEME_CHOICES.find((option) => option.value === theme)?.hint}
+        </p>
+      </div>
+
+      <div className="card">
         <SectionTitle>الحساب والمزامنة</SectionTitle>
         {storeKind === 'local' ? (
           <div className="notice notice--warn">
-            التطبيق يعمل الآن في <strong>الوضع المحلي</strong>: كل البيانات محفوظة داخل هذا
-            المتصفّح فقط ولا تتزامن بين الأجهزة.
+            {user?.isGuest ? (
+              <>
+                تعمل الآن <strong>بدون حساب</strong>. البيانات محفوظة في هذا المتصفّح وحده. أنشئ
+                حساباً لتفصل بياناتك عن غيرك على نفس الجهاز وتحميها بكلمة مرور.
+              </>
+            ) : (
+              <>
+                حسابك محفوظ على <strong>هذا الجهاز</strong> فقط: البيانات لا تتزامن بين الأجهزة،
+                وحذف بيانات المتصفّح يمحوها.
+              </>
+            )}
             {firebaseAvailable
-              ? ' سجّل الدخول بحساب لمزامنة بياناتك.'
-              : ' أضف إعدادات Firebase في ملف .env.local لتفعيل المزامنة (التفاصيل في README).'}
+              ? ' للمزامنة بين الأجهزة استعمل حساباً سحابياً من شاشة الدخول.'
+              : ' خذ نسخة احتياطية من الأسفل بين حين وآخر.'}
           </div>
         ) : (
           <div className="notice notice--info">
@@ -219,20 +318,44 @@ export default function Settings() {
               الهاتف <strong dir="ltr">{user.phoneNumber}</strong>
             </span>
           ) : null}
+          {user?.displayName ? (
+            <span>
+              الحساب <strong>{user.displayName}</strong>
+            </span>
+          ) : null}
           <span>
-            التخزين <strong>{storeKind === 'local' ? 'محلي' : 'Firebase'}</strong>
+            المهنة <strong>{tradeLabel(profile)}</strong>
+          </span>
+          <span>
+            التخزين{' '}
+            <strong>
+              {storeKind === 'local'
+                ? 'على الجهاز'
+                : isUsingEmulators
+                  ? 'محاكي Firebase (على هذا الجهاز)'
+                  : 'Firebase'}
+            </strong>
           </span>
         </div>
         <div className="card__actions">
-          {firebaseAvailable ? (
+          <button
+            type="button"
+            className="btn btn--ghost btn--sm"
+            onClick={() => {
+              void signOut();
+            }}
+          >
+            {user?.isGuest ? 'إنشاء حساب أو تسجيل دخول' : 'تسجيل الخروج'}
+          </button>
+          {user?.isLocal && !user.isGuest ? (
             <button
               type="button"
-              className="btn btn--ghost btn--sm"
+              className="btn btn--soft btn--sm"
               onClick={() => {
-                void signOut();
+                setChangingPassword(true);
               }}
             >
-              {user?.isLocal ? 'الانتقال لتسجيل الدخول' : 'تسجيل الخروج'}
+              تغيير كلمة المرور
             </button>
           ) : null}
           {canInstall ? (
@@ -317,6 +440,99 @@ export default function Settings() {
         }}
         onConfirm={doClear}
       />
+
+      {user && changingPassword ? (
+        <PasswordDialog
+          uid={user.uid}
+          onClose={() => {
+            setChangingPassword(false);
+          }}
+          onDone={() => {
+            setChangingPassword(false);
+            notify('غُيّرت كلمة المرور.');
+          }}
+        />
+      ) : null}
     </>
+  );
+}
+
+/** تغيير كلمة مرور حساب الجهاز — يتطلّب كلمة المرور الحالية. */
+function PasswordDialog({
+  uid,
+  onClose,
+  onDone,
+}: {
+  uid: string;
+  onClose: () => void;
+  onDone: () => void;
+}) {
+  const [current, setCurrent] = useState('');
+  const [next, setNext] = useState('');
+  const [confirm, setConfirm] = useState('');
+  const [error, setError] = useState<string | null>(null);
+  const [busy, setBusy] = useState(false);
+
+  const submit = async () => {
+    if (next !== confirm) {
+      setError('كلمتا المرور الجديدتان غير متطابقتين.');
+      return;
+    }
+    setError(null);
+    setBusy(true);
+    try {
+      await changePassword(uid, current, next);
+      onDone();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'تعذّر تغيير كلمة المرور.');
+    } finally {
+      setBusy(false);
+    }
+  };
+
+  return (
+    <Modal
+      open
+      title="تغيير كلمة المرور"
+      onClose={onClose}
+      footer={
+        <>
+          <button type="button" className="btn btn--ghost" onClick={onClose}>
+            إلغاء
+          </button>
+          <button
+            type="button"
+            className="btn"
+            disabled={busy}
+            onClick={() => {
+              void submit();
+            }}
+          >
+            {busy ? 'جارٍ…' : 'حفظ'}
+          </button>
+        </>
+      }
+    >
+      {error ? <div className="auth__error">{error}</div> : null}
+      <TextInput
+        label="كلمة المرور الحالية"
+        type="password"
+        value={current}
+        onChange={setCurrent}
+      />
+      <TextInput
+        label="كلمة المرور الجديدة"
+        type="password"
+        value={next}
+        onChange={setNext}
+        hint="٤ خانات على الأقل"
+      />
+      <TextInput
+        label="تأكيد كلمة المرور الجديدة"
+        type="password"
+        value={confirm}
+        onChange={setConfirm}
+      />
+    </Modal>
   );
 }

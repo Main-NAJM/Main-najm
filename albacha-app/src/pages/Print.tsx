@@ -50,7 +50,7 @@ export default function Print() {
               {profile.phone}
             </div>
           </div>
-          <div style={{ textAlign: 'left' }}>
+          <div className="text-end">
             <strong>{isQuote ? 'عرض سعر' : 'فاتورة'}</strong>
             <div className="small">رقم: {order.id.slice(-6)}</div>
             <div className="small">التاريخ: {formatDate(order.createdAt)}</div>
@@ -60,9 +60,9 @@ export default function Print() {
         <table>
           <tbody>
             <tr>
-              <th style={{ width: '25%' }}>الزبون</th>
+              <th className="col-25">الزبون</th>
               <td>{order.customerName}</td>
-              <th style={{ width: '20%' }}>الهاتف</th>
+              <th className="col-20">الهاتف</th>
               <td dir="ltr">{order.customerPhone || '—'}</td>
             </tr>
             <tr>
@@ -83,7 +83,7 @@ export default function Print() {
         <table>
           <thead>
             <tr>
-              <th style={{ width: '34%' }}>البند</th>
+              <th className="col-34">البند</th>
               <th>القياس</th>
               <th>العدد</th>
               <th>المساحة</th>
@@ -149,14 +149,14 @@ export default function Print() {
         </table>
 
         {order.note ? (
-          <p className="small" style={{ marginTop: 12 }}>
+          <p className="small mt-12">
             <strong>ملاحظات: </strong>
             {order.note}
           </p>
         ) : null}
 
         {isQuote && profile.quoteNote ? (
-          <p className="small" style={{ marginTop: 8 }}>
+          <p className="small mt-8">
             {profile.quoteNote}
           </p>
         ) : null}

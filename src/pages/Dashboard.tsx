@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Badge, EmptyState, SectionTitle, StatCard } from '@/components/ui';
-import { debtTotals, orderTotals } from '@/lib/calc';
+import { debtTotals, inventoryTotals, orderTotals, stockLevel } from '@/lib/calc';
 import { orderStatusLabel, orderStatusTone } from '@/lib/constants';
 import {
   daysFromToday,
@@ -17,7 +17,8 @@ import {
 } from '@/lib/format';
 
 export default function Dashboard() {
-  const { orders, appointments, debts, marketPrices, profile, seedDemoData } = useData();
+  const { orders, appointments, debts, marketPrices, inventory, profile, seedDemoData } =
+    useData();
   const { user } = useAuth();
   const today = todayIso();
 
@@ -39,6 +40,13 @@ export default function Dashboard() {
       overdueCount: overdueDebts.length,
     };
   }, [orders, debts]);
+
+  // ما نفد أو نزل إلى حدّ التنبيه — أول ما يحتاج صاحب الورشة معرفته صباحاً.
+  const stock = useMemo(() => inventoryTotals(inventory), [inventory]);
+  const lowStock = useMemo(
+    () => inventory.filter((item) => stockLevel(item) !== 'ok').slice(0, 4),
+    [inventory],
+  );
 
   const todayAppointments = useMemo(
     () =>
@@ -99,6 +107,15 @@ export default function Dashboard() {
 
   return (
     <>
+      {stock.needsRestock > 0 ? (
+        <Link className="notice notice--warn notice--link" to="/inventory">
+          <strong>{formatInt(stock.needsRestock)}</strong> سلعة تحتاج تموين
+          {stock.outOfStock > 0 ? ` (منها ${formatInt(stock.outOfStock)} نفدت)` : ''}:{' '}
+          {lowStock.map((item) => item.name).join('، ')}
+          {stock.needsRestock > lowStock.length ? '…' : ''}
+        </Link>
+      ) : null}
+
       <div className="stat-grid">
         <StatCard
           label="طلبيات نشِطة"
@@ -210,25 +227,25 @@ export default function Dashboard() {
       <div className="stat-grid">
         <Link className="stat" to="/calculator">
           <span className="stat__label">حاسبة</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             التكلفة والربح
           </strong>
         </Link>
         <Link className="stat" to="/prices">
           <span className="stat__label">مؤشرات</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             أسعار السوق
           </strong>
         </Link>
         <Link className="stat" to="/debts">
           <span className="stat__label">سجل</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             الديون
           </strong>
         </Link>
         <Link className="stat" to="/print">
           <span className="stat__label">طباعة</span>
-          <strong className="stat__value" style={{ fontSize: 15 }}>
+          <strong className="stat__value stat__value--text">
             الفواتير والكشوف
           </strong>
         </Link>

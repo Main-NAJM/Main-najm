@@ -5,7 +5,8 @@ import {
   type ProductDimensions,
   type ProductPriceResult,
 } from '@/lib/calc';
-import { basisLabel, craftLabel, orderStatusLabel } from '@/lib/constants';
+import { basisLabel, orderStatusLabel } from '@/lib/constants';
+import { craftName } from '@/lib/trades';
 import { formatDate, formatMoney, formatNumber, todayIso } from '@/lib/format';
 import { shortRef } from '@/lib/id';
 import type { Calculation, Debt, Order, Profile, ProductTemplate } from '@/lib/types';
@@ -414,7 +415,7 @@ export const buildProductQuote = (
     <div class="block">
       <p class="block__title">${escapeHtml(product.name)}</p>
       <div class="kv">
-        <div><span>الحرفة:</span><span>${escapeHtml(craftLabel(product.craft))}</span></div>
+        <div><span>الحرفة:</span><span>${escapeHtml(craftName(product.craft, profile.customCraft))}</span></div>
         <div><span>التسعير:</span><span>${escapeHtml(basisLabel(product.basis))}</span></div>
         ${dimText ? `<div><span>المقاس:</span><span>${escapeHtml(dimText)}</span></div>` : ''}
         ${
@@ -439,10 +440,17 @@ export const buildProductQuote = (
             <td>${
               product.basis === 'unit'
                 ? 'قيمة المادة'
-                : `قيمة المادة (${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} × ${money(product.unitPrice, profile)})`
+                : product.basis === 'frame'
+                  ? `البروفيل — المحيط (${escapeHtml(formatNumber(result.measure))} م.ط × ${money(product.unitPrice, profile)})`
+                  : `قيمة المادة (${escapeHtml(formatNumber(result.measure))} ${escapeHtml(result.measureUnit)} × ${money(product.unitPrice, profile)})`
             }</td>
             <td class="num">${money(result.materialCost, profile)}</td>
           </tr>
+          ${
+            result.sheetCost > 0
+              ? `<tr><td>${escapeHtml(product.sheetName || 'الصفيحة')} (${escapeHtml(formatNumber(result.sheetArea))} م² × ${money(product.sheetPrice, profile)})</td><td class="num">${money(result.sheetCost, profile)}</td></tr>`
+              : ''
+          }
           ${
             result.wasteCost > 0
               ? `<tr><td>الهالك (${escapeHtml(formatNumber(product.wastePct))}٪)</td><td class="num">${money(result.wasteCost, profile)}</td></tr>`

@@ -1,0 +1,2152 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>استوديو بوفايدة</title>
+<meta name="description" content="أداة عمل خاصّة: تجهيز الفيديوهات والصور الإعلانية — السيناريو، الموجّهات، المشاريع، والسعر.">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#FBF8F5" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0E0C0B" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" type="image/png" sizes="192x192" href="./icons/icon-192.png">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="استوديو بوفايدة">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;900&family=IBM+Plex+Sans+Arabic:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ═══════════════════════════════════════════════════════════════════
+     استوديو بوفايدة — أداة عمل خاصّة، لا صفحة عرض.
+     ترث ألوان الموقع كي تبقى العينان في بيت واحد، لكن كثافتها كثافة
+     تطبيق: صفوف قصيرة، أزرار قريبة من الإبهام، ونصّ يُنسخ بضغطة.
+     ═══════════════════════════════════════════════════════════════════ */
+  :root{
+    --bg: #FBF8F5;
+    --bg-alt: #F1ECE6;
+    --panel: #FFFFFF;
+    --ink: #14100D;
+    --ink-soft: #4A433C;
+    --ink-faint: #6E645A;
+
+    --flame: #F04E23;
+    --flame-deep: #C2350F;
+    --flame-tint: #FDEDE7;
+    --on-flame: #FFFFFF;
+
+    --ok: #146C43;
+    --ok-tint: #E4F4EA;
+    --warn: #8A5300;
+    --warn-tint: #FDF1DC;
+
+    --line: #E3DAD0;
+    --line-strong: #CFC3B6;
+
+    --r: 6px;
+    --r-lg: 12px;
+    --wrap: 860px;
+    --gutter: clamp(14px, 3.6vw, 24px);
+    --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+    --bar-h: 60px;
+
+    color-scheme: light;
+  }
+
+  @media (prefers-color-scheme: dark){
+    :root{
+      --bg: #0E0C0B;
+      --bg-alt: #17130F;
+      --panel: #1D1814;
+      --ink: #F7F2EC;
+      --ink-soft: #B6ABA0;
+      --ink-faint: #8A8077;
+
+      --flame: #FF6A45;
+      --flame-deep: #FF8763;
+      --flame-tint: #2A1409;
+      --on-flame: #1A0A04;
+
+      --ok: #5FD19A;
+      --ok-tint: #0C2A1C;
+      --warn: #F3B64B;
+      --warn-tint: #2E2109;
+
+      --line: #2C241E;
+      --line-strong: #43372E;
+
+      color-scheme: dark;
+    }
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+
+  @media (prefers-reduced-motion: reduce){
+    *,*::before,*::after{
+      animation-duration:0.01ms !important;
+      animation-iteration-count:1 !important;
+      transition-duration:0.01ms !important;
+    }
+  }
+
+  :focus-visible{outline:3px solid var(--flame); outline-offset:2px; border-radius:3px;}
+
+  body{
+    background:var(--bg); color:var(--ink);
+    font-family:'IBM Plex Sans Arabic', system-ui, sans-serif;
+    font-size:15px; line-height:1.75;
+    overflow-x:hidden;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3{font-family:'Cairo', sans-serif; font-weight:900; line-height:1.25;}
+  button, input, select, textarea{font:inherit; color:inherit;}
+  a{color:var(--flame-deep);}
+
+  .wrap{
+    max-width:var(--wrap); margin-inline:auto;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+
+  /* ---------- بوّابة الرمز ---------- */
+  .gate{
+    min-height:100dvh;
+    display:grid; place-items:center;
+    padding:var(--gutter);
+    background:var(--bg);
+  }
+  /* ‎display:grid‎ يغلب ‎[hidden]‎ القادم من المتصفّح، فتبقى البوّابة معروضة
+     فوق التطبيق بعد فتحه. الإخفاء يُكتب صراحةً أو لا يقع. */
+  .gate[hidden]{display:none;}
+  .gate-card{
+    width:100%; max-width:380px;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-lg); padding:clamp(22px, 5vw, 32px);
+    text-align:center;
+  }
+  .gate-mark{
+    width:56px; height:56px; margin:0 auto 16px;
+    border-radius:var(--r-lg); background:var(--ink);
+    display:grid; place-items:center;
+  }
+  .gate-mark svg{width:30px; height:30px; color:var(--flame);}
+  .gate h1{font-size:1.4rem; margin-bottom:6px;}
+  .gate p{color:var(--ink-soft); font-size:0.9rem; margin-bottom:20px;}
+  .gate input{
+    width:100%; text-align:center; letter-spacing:0.35em;
+    font-size:1.3rem; font-weight:700;
+    padding:13px; min-height:52px;
+    background:var(--bg); border:1.5px solid var(--line-strong);
+    border-radius:var(--r);
+  }
+  .gate .btn{width:100%; margin-top:6px;}
+  .gate-note{font-size:0.78rem; color:var(--ink-faint); margin-top:16px; line-height:1.6;}
+  .gate .field{text-align:start;}
+
+  /* مبدّل طريقة الدخول: ثلاثة أزرار في إطار واحد، والمختار يرتفع بلونه. */
+  .seg{
+    display:flex; gap:3px; padding:3px;
+    background:var(--bg-alt); border:1px solid var(--line);
+    border-radius:var(--r); margin-block-end:18px;
+  }
+  .seg-btn{
+    flex:1; min-height:42px; padding:6px 4px;
+    background:transparent; border:none; border-radius:4px;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.82rem;
+    color:var(--ink-soft); cursor:pointer;
+    transition:background .16s var(--ease), color .16s var(--ease);
+  }
+  .seg-btn[aria-selected="true"]{background:var(--panel); color:var(--ink); box-shadow:0 1px 3px rgba(0,0,0,0.10);}
+  .gate-pane[hidden]{display:none;}
+
+  .linkish{
+    display:block; width:100%;
+    min-height:42px; margin-block-start:4px;
+    background:transparent; border:none; cursor:pointer;
+    font-size:0.82rem; color:var(--flame-deep); text-decoration:underline;
+  }
+  .gate-err{
+    margin-block-start:14px; padding:10px 13px;
+    background:#FDECEA; color:#8A1C13; border:1px solid #F0B7B1;
+    border-radius:var(--r); font-size:0.84rem; line-height:1.6;
+  }
+  @media (prefers-color-scheme: dark){
+    .gate-err{background:#2C100C; color:#FFB4A6; border-color:#5E241B;}
+  }
+  .gate-err[hidden]{display:none;}
+
+  /* حالة المزامنة في الشريط: كلمة واحدة تكفي، والتفصيل في الإعدادات. */
+  .sync{
+    display:inline-flex; align-items:center; gap:5px;
+    font-size:0.7rem; opacity:0.75; font-weight:400;
+  }
+  .sync::before{
+    content:''; width:7px; height:7px; border-radius:50%;
+    background:currentColor; flex:none;
+  }
+
+  /* ---------- الشريط العلوي ---------- */
+  .topbar{
+    position:sticky; inset-block-start:0; z-index:50;
+    background:var(--ink); color:var(--bg);
+    padding-block-start:env(safe-area-inset-top);
+  }
+  /* في الوضع الداكن ينقلب الحبر فيصير الشريط لوحاً أبيض يوجع العين ليلاً.
+     فيأخذ لون السطح ويبقى الحبر حبراً. */
+  @media (prefers-color-scheme: dark){
+    .topbar{background:var(--panel); color:var(--ink); border-block-end:1px solid var(--line);}
+    .lock-btn{color:var(--ink); border-color:var(--line-strong);}
+  }
+  .topbar-inner{
+    max-width:var(--wrap); margin-inline:auto;
+    min-height:var(--bar-h);
+    display:flex; align-items:center; justify-content:space-between; gap:12px;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+  .topbar b{font-family:'Cairo', sans-serif; font-weight:900; font-size:1.05rem;}
+  .topbar small{display:block; font-size:0.72rem; opacity:0.66; font-weight:400;}
+  .lock-btn{
+    display:inline-flex; align-items:center; gap:6px;
+    min-height:44px; padding-inline:13px;
+    background:transparent; color:var(--bg);
+    border:1px solid rgba(255,255,255,0.22); border-radius:999px;
+    font-size:0.8rem; cursor:pointer;
+  }
+  .lock-btn svg{width:15px; height:15px;}
+
+  /* ---------- التبويبات ---------- */
+  .tabs{
+    position:sticky; inset-block-start:calc(var(--bar-h) + env(safe-area-inset-top));
+    z-index:40;
+    background:var(--bg-alt);
+    border-block-end:1px solid var(--line);
+    overflow-x:auto; -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+  }
+  .tabs::-webkit-scrollbar{display:none;}
+  .tabs-inner{
+    max-width:var(--wrap); margin-inline:auto;
+    display:flex; gap:2px;
+    padding-inline:
+      calc(var(--gutter) + env(safe-area-inset-right))
+      calc(var(--gutter) + env(safe-area-inset-left));
+  }
+  .tab{
+    flex:none;
+    min-height:48px; padding-inline:15px;
+    background:transparent; border:none; cursor:pointer;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.9rem;
+    color:var(--ink-soft);
+    border-block-end:3px solid transparent;
+    white-space:nowrap;
+    transition:color .17s var(--ease), border-color .17s var(--ease);
+  }
+  .tab[aria-selected="true"]{color:var(--ink); border-block-end-color:var(--flame);}
+
+  main{padding-block:20px calc(40px + env(safe-area-inset-bottom));}
+  .panel-view[hidden]{display:none;}
+
+  /* ---------- البطاقات والحقول ---------- */
+  .card{
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-lg); padding:18px;
+  }
+  .card + .card{margin-block-start:14px;}
+  .card > h2{font-size:1.02rem; margin-bottom:4px;}
+  .card > h2 + p{color:var(--ink-soft); font-size:0.86rem; margin-bottom:14px;}
+
+  .field{margin-block-end:13px;}
+  .field label{
+    display:block; font-size:0.82rem; font-weight:600;
+    color:var(--ink-soft); margin-block-end:5px;
+  }
+  .field input, .field select, .field textarea{
+    width:100%; min-height:46px; padding:10px 12px;
+    background:var(--bg); color:var(--ink);
+    border:1.5px solid var(--line); border-radius:var(--r);
+    transition:border-color .17s var(--ease);
+  }
+  .field textarea{min-height:84px; resize:vertical; line-height:1.7;}
+  .field select{appearance:none; padding-inline-end:34px;
+    background-image:linear-gradient(45deg, transparent 50%, var(--ink-faint) 50%),
+                     linear-gradient(135deg, var(--ink-faint) 50%, transparent 50%);
+    background-position:14px calc(50% - 2px), 19px calc(50% - 2px);
+    background-size:5px 5px, 5px 5px; background-repeat:no-repeat;}
+  .field input:focus, .field select:focus, .field textarea:focus{border-color:var(--flame);}
+  .field-hint{font-size:0.76rem; color:var(--ink-faint); margin-block-start:4px;}
+  .row2{display:grid; grid-template-columns:1fr 1fr; gap:0 12px;}
+  @media (max-width: 380px){ .row2{grid-template-columns:1fr;} }
+
+  .chips{display:flex; flex-wrap:wrap; gap:7px;}
+  .chip{
+    min-height:42px; padding:6px 14px;
+    background:var(--bg); color:var(--ink-soft);
+    border:1.5px solid var(--line); border-radius:999px;
+    font-size:0.86rem; font-weight:600; cursor:pointer;
+    transition:background .16s var(--ease), color .16s var(--ease), border-color .16s var(--ease);
+  }
+  .chip[aria-pressed="true"]{background:var(--ink); color:var(--bg); border-color:var(--ink);}
+
+  .stepper{display:flex; align-items:stretch; gap:8px;}
+  .stepper button{
+    flex:none; width:46px; min-height:46px;
+    background:var(--bg); border:1.5px solid var(--line); border-radius:var(--r);
+    font-size:21px; line-height:1; cursor:pointer; user-select:none;
+  }
+  .stepper button:disabled{opacity:0.4; cursor:not-allowed;}
+  .stepper input{flex:1; min-width:0; text-align:center;}
+
+  /* ---------- الأزرار ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:8px;
+    min-height:48px; padding:11px 20px;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.93rem;
+    border:1.5px solid transparent; border-radius:var(--r);
+    cursor:pointer;
+    transition:background .16s var(--ease), border-color .16s var(--ease), transform .16s var(--ease);
+  }
+  .btn svg{width:17px; height:17px; flex:none;}
+  .btn-primary{background:var(--flame-deep); color:var(--on-flame); border-color:var(--flame-deep);}
+  .btn-ghost{background:var(--bg); color:var(--ink); border-color:var(--line-strong);}
+  .btn-danger{background:transparent; color:#B3261E; border-color:#E6BDBA;}
+  .btn-block{width:100%;}
+  .btn:disabled{opacity:0.5; cursor:not-allowed;}
+  .btn:active:not(:disabled){transform:translateY(1px);}
+  @media (hover: hover) and (pointer: fine){
+    .btn-primary:hover:not(:disabled){background:var(--flame);}
+    .btn-ghost:hover:not(:disabled){border-color:var(--flame);}
+  }
+  .btn-row{display:flex; flex-wrap:wrap; gap:9px;}
+
+  /* ---------- المخرجات ---------- */
+  .out{
+    border:1px solid var(--line); border-radius:var(--r-lg);
+    background:var(--bg-alt);
+    margin-block-start:12px; overflow:hidden;
+  }
+  .out-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:10px 14px;
+    background:var(--panel); border-block-end:1px solid var(--line);
+  }
+  .out-head h3{font-size:0.9rem; font-weight:700;}
+  .out-head .meta{font-size:0.75rem; color:var(--ink-faint);}
+  .copy{
+    display:inline-flex; align-items:center; gap:6px;
+    min-height:38px; padding-inline:12px;
+    background:var(--bg); border:1.5px solid var(--line); border-radius:var(--r);
+    font-size:0.8rem; font-weight:600; cursor:pointer; flex:none;
+  }
+  .copy svg{width:14px; height:14px;}
+  .copy.is-done{background:var(--ok-tint); border-color:var(--ok); color:var(--ok);}
+  .out-body{
+    padding:14px; font-size:0.92rem; line-height:1.85;
+    white-space:pre-wrap; word-break:break-word;
+  }
+  .out-body.ltr{direction:ltr; text-align:start; font-family:ui-monospace, 'SF Mono', Menlo, monospace; font-size:0.82rem; line-height:1.7;}
+
+  .shot{border-block-start:1px solid var(--line);}
+  .shot:first-child{border-block-start:none;}
+  .shot-head{
+    display:flex; align-items:center; gap:9px;
+    padding:10px 14px 0;
+    font-family:'Cairo', sans-serif; font-weight:700; font-size:0.86rem;
+  }
+  .shot-num{
+    display:grid; place-items:center; flex:none;
+    width:26px; height:26px; border-radius:6px;
+    background:var(--flame-deep); color:var(--on-flame); font-size:0.8rem;
+  }
+
+  .notice{
+    padding:11px 14px; border-radius:var(--r);
+    font-size:0.86rem; line-height:1.7;
+    margin-block-start:12px;
+  }
+  .notice-warn{background:var(--warn-tint); color:var(--warn); border:1px solid currentColor;}
+  .notice-ok{background:var(--ok-tint); color:var(--ok); border:1px solid currentColor;}
+  .notice-plain{background:var(--bg-alt); color:var(--ink-soft); border:1px solid var(--line);}
+
+  /* ---------- المشاريع ---------- */
+  .proj{
+    display:flex; align-items:flex-start; gap:12px;
+    padding:14px 0; border-block-end:1px solid var(--line);
+  }
+  .proj:last-child{border-block-end:none;}
+  .proj-main{flex:1; min-width:0;}
+  .proj-main b{display:block; font-family:'Cairo', sans-serif; font-weight:700; font-size:0.97rem;}
+  .proj-main span{display:block; font-size:0.82rem; color:var(--ink-faint);}
+  .badge{
+    flex:none; align-self:center;
+    padding:3px 10px; border-radius:999px;
+    font-size:0.75rem; font-weight:700;
+    background:var(--bg-alt); color:var(--ink-soft); border:1px solid var(--line);
+  }
+  .badge.s-new{background:var(--flame-tint); color:var(--flame-deep); border-color:var(--flame-deep);}
+  .badge.s-done{background:var(--ok-tint); color:var(--ok); border-color:var(--ok);}
+  .icon-btn{
+    flex:none; width:42px; height:42px;
+    display:grid; place-items:center;
+    background:transparent; border:1px solid var(--line); border-radius:var(--r);
+    cursor:pointer; color:var(--ink-soft);
+  }
+  .icon-btn svg{width:17px; height:17px;}
+
+  .empty{text-align:center; padding:34px 14px; color:var(--ink-faint);}
+  .empty svg{width:42px; height:42px; margin:0 auto 12px; display:block; color:var(--line-strong);}
+  .empty b{display:block; font-family:'Cairo', sans-serif; font-size:1rem; color:var(--ink); margin-bottom:5px;}
+
+  /* ---------- الحوار ---------- */
+  dialog{
+    width:min(520px, calc(100vw - 24px));
+    border:1px solid var(--line); border-radius:var(--r-lg);
+    background:var(--panel); color:var(--ink);
+    padding:0; margin:auto;
+  }
+  dialog::backdrop{background:rgba(0,0,0,0.5);}
+  .dlg-head{
+    display:flex; align-items:center; justify-content:space-between; gap:10px;
+    padding:15px 18px; border-block-end:1px solid var(--line);
+  }
+  .dlg-head h2{font-size:1rem;}
+  .dlg-body{padding:18px; max-height:65dvh; overflow-y:auto;}
+  .dlg-foot{
+    display:flex; gap:9px; justify-content:flex-end;
+    padding:14px 18px; border-block-start:1px solid var(--line);
+  }
+
+  /* ---------- الخبز المحمّص ---------- */
+  .toast{
+    position:fixed; z-index:200;
+    inset-block-end:calc(18px + env(safe-area-inset-bottom));
+    inset-inline:var(--gutter);
+    max-width:420px; margin-inline:auto;
+    background:var(--ink); color:var(--bg);
+    padding:12px 16px; border-radius:var(--r);
+    font-size:0.88rem; text-align:center;
+    box-shadow:0 10px 30px rgba(0,0,0,0.28);
+  }
+  .toast[hidden]{display:none;}
+
+  .mt{margin-block-start:12px;}
+
+  .sr-only{
+    position:absolute; width:1px; height:1px;
+    padding:0; margin:-1px; overflow:hidden;
+    clip-path:inset(50%); white-space:nowrap;
+  }
+</style>
+</head>
+<body>
+
+<!-- ═══════════ بوّابة الدخول ═══════════ -->
+<div class="gate" id="gate">
+  <div class="gate-card">
+    <div class="gate-mark" aria-hidden="true">
+      <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2l1.9 5.4L19 9.3l-5.1 1.9L12 16.6l-1.9-5.4L5 9.3l5.1-1.9z"/><path d="M19 14.5l.9 2.4 2.4.9-2.4.9-.9 2.4-.9-2.4-2.4-.9 2.4-.9z"/></svg>
+    </div>
+    <h1>استوديو بوفايدة</h1>
+    <p id="gate-msg">ادخل إلى حسابك</p>
+
+    <div class="seg" role="tablist" aria-label="طريقة الدخول">
+      <button class="seg-btn" type="button" role="tab" id="seg-email" aria-selected="true" aria-controls="pane-email">بريد إلكتروني</button>
+      <button class="seg-btn" type="button" role="tab" id="seg-phone" aria-selected="false" aria-controls="pane-phone">رقم هاتف</button>
+      <button class="seg-btn" type="button" role="tab" id="seg-code" aria-selected="false" aria-controls="pane-code">رمز الجهاز</button>
+    </div>
+
+    <!-- البريد -->
+    <form id="pane-email" class="gate-pane" role="tabpanel" aria-labelledby="seg-email">
+      <div class="field">
+        <label for="g-email">البريد الإلكتروني</label>
+        <input id="g-email" type="email" inputmode="email" dir="ltr" autocomplete="username" required>
+      </div>
+      <div class="field">
+        <label for="g-pass">كلمة المرور</label>
+        <input id="g-pass" type="password" autocomplete="current-password" minlength="6" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="email-go">دخول</button>
+      <button class="linkish" type="button" id="email-signup">ليس لي حساب — أنشئه بهذا البريد</button>
+      <button class="linkish" type="button" id="email-reset">نسيت كلمة المرور</button>
+    </form>
+
+    <!-- الهاتف -->
+    <form id="pane-phone" class="gate-pane" role="tabpanel" aria-labelledby="seg-phone" hidden>
+      <div class="field">
+        <label for="g-phone">رقم الهاتف</label>
+        <input id="g-phone" type="tel" inputmode="tel" dir="ltr" autocomplete="tel" placeholder="0673232932">
+        <p class="field-hint">اكتبه كما تكتبه في هاتفك، ويُحوَّل إلى ‎+213‎ تلقائياً.</p>
+      </div>
+      <div class="field" id="code-field" hidden>
+        <label for="g-sms">الرمز الذي وصلك</label>
+        <input id="g-sms" type="text" inputmode="numeric" dir="ltr" maxlength="6" autocomplete="one-time-code">
+      </div>
+      <button class="btn btn-primary btn-block" type="submit" id="phone-go">أرسل الرمز</button>
+      <div id="recaptcha"></div>
+    </form>
+
+    <!-- رمز الجهاز (بديل بلا إنترنت) -->
+    <form id="pane-code" class="gate-pane" role="tabpanel" aria-labelledby="seg-code" hidden>
+      <div class="field">
+        <label for="gate-code">رمز هذا الجهاز</label>
+        <input id="gate-code" type="password" inputmode="numeric" autocomplete="off" maxlength="12" required>
+      </div>
+      <button class="btn btn-primary btn-block" type="submit">دخول</button>
+      <p class="gate-note">
+        بديل بلا إنترنت: يفتح الأداة على بيانات هذا الجهاز وحدها، بلا مزامنة.
+        وهو <strong>ستار لا قفل</strong> — يخفيها عن المتطفّل، ولا يحمي من يعرف كيف يقرأ صفحة.
+      </p>
+    </form>
+
+    <p class="gate-err" id="gate-err" hidden role="alert"></p>
+    <p class="gate-note" id="gate-note">
+      الدخول بالبريد يربط مشاريعك بحسابك، فتتبعك بين الهاتف والحاسوب،
+      ولا يقرؤها غيرك ولو عرف الرابط.
+    </p>
+  </div>
+</div>
+
+<!-- ═══════════ التطبيق ═══════════ -->
+<div id="app" hidden>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div>
+        <b>استوديو بوفايدة</b>
+        <small class="sync" id="sync-state">على هذا الجهاز</small>
+      </div>
+      <button class="lock-btn" type="button" id="lock">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="4" y="10" width="16" height="11" rx="2"/><path d="M8 10V7a4 4 0 0 1 8 0v3"/></svg>
+        خروج
+      </button>
+    </div>
+  </header>
+
+  <div class="tabs">
+    <div class="tabs-inner" role="tablist" aria-label="أقسام الاستوديو">
+      <button class="tab" role="tab" id="tab-studio" aria-controls="view-studio" aria-selected="true">الاستوديو</button>
+      <button class="tab" role="tab" id="tab-projects" aria-controls="view-projects" aria-selected="false">المشاريع</button>
+      <button class="tab" role="tab" id="tab-price" aria-controls="view-price" aria-selected="false">السعر</button>
+      <button class="tab" role="tab" id="tab-settings" aria-controls="view-settings" aria-selected="false">الإعدادات</button>
+    </div>
+  </div>
+
+  <main class="wrap">
+
+    <!-- ══════ الاستوديو ══════ -->
+    <section class="panel-view" id="view-studio" role="tabpanel" aria-labelledby="tab-studio">
+      <div class="card">
+        <h2>وصف المنتج</h2>
+        <p>املأ ما تعرفه عن السلعة، ويخرج لك السيناريو والموجّهات جاهزة.</p>
+
+        <div class="field">
+          <label for="f-product">المنتج</label>
+          <input id="f-product" type="text" placeholder="مثال: عطر رجالي فاخر">
+        </div>
+
+        <div class="field">
+          <label for="f-category">الفئة</label>
+          <select id="f-category"></select>
+        </div>
+
+        <div class="field">
+          <label for="f-feature">أقوى ميزة فيه</label>
+          <input id="f-feature" type="text" placeholder="مثال: رائحته تدوم يوماً كاملاً">
+          <p class="field-hint">ميزة واحدة تبيع أكثر من خمس. اختر التي يذكرها الزبون لصاحبه.</p>
+        </div>
+
+        <div class="field">
+          <label for="f-audience">لمن تبيعه</label>
+          <input id="f-audience" type="text" placeholder="مثال: شباب من 20 إلى 35 سنة">
+        </div>
+
+        <div class="field">
+          <label for="f-price">السعر المعروض (اختياري)</label>
+          <input id="f-price" type="text" inputmode="numeric" placeholder="مثال: 3500 دج">
+        </div>
+
+        <div class="field">
+          <label id="lbl-tone">النبرة</label>
+          <div class="chips" role="group" aria-labelledby="lbl-tone" id="tone-chips"></div>
+        </div>
+
+        <div class="field">
+          <label id="lbl-format">المقاس</label>
+          <div class="chips" role="group" aria-labelledby="lbl-format" id="format-chips"></div>
+        </div>
+
+        <div class="row2">
+          <div class="field">
+            <label for="f-duration">المدّة</label>
+            <select id="f-duration"></select>
+          </div>
+          <div class="field">
+            <label for="f-shots">عدد المشاهد</label>
+            <div class="stepper">
+              <button type="button" id="shots-minus" aria-label="نقصان عدد المشاهد">−</button>
+              <input id="f-shots" type="number" inputmode="numeric" min="3" max="6" value="4">
+              <button type="button" id="shots-plus" aria-label="زيادة عدد المشاهد">+</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="generate">
+            <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M12 2l1.9 5.4L19 9.3l-5.1 1.9L12 16.6l-1.9-5.4L5 9.3l5.1-1.9z"/></svg>
+            جهّز الإعلان
+          </button>
+          <button class="btn btn-ghost" type="button" id="save-as-project">احفظه مشروعاً</button>
+        </div>
+      </div>
+
+      <div id="results" hidden></div>
+    </section>
+
+    <!-- ══════ المشاريع ══════ -->
+    <section class="panel-view" id="view-projects" role="tabpanel" aria-labelledby="tab-projects" hidden>
+      <div class="card">
+        <h2>المشاريع</h2>
+        <p>كل طلب زبون ومكانه من العمل.</p>
+        <div class="btn-row" style="margin-bottom:6px">
+          <button class="btn btn-primary" type="button" id="new-project">مشروع جديد</button>
+        </div>
+        <div id="projects-list"></div>
+      </div>
+    </section>
+
+    <!-- ══════ السعر ══════ -->
+    <section class="panel-view" id="view-price" role="tabpanel" aria-labelledby="tab-price" hidden>
+      <div class="card">
+        <h2>حاسبة السعر</h2>
+        <p>ضع أرقامك مرّة، فتحسب لك كل مرّة.</p>
+        <div class="row2">
+          <div class="field">
+            <label for="p-base">سعر الفيديو الأساسي</label>
+            <input id="p-base" type="number" inputmode="numeric" min="0">
+          </div>
+          <div class="field">
+            <label for="p-extra">سعر النسخة الإضافية</label>
+            <input id="p-extra" type="number" inputmode="numeric" min="0">
+          </div>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="p-voice">التعليق الصوتي</label>
+            <input id="p-voice" type="number" inputmode="numeric" min="0">
+          </div>
+          <div class="field">
+            <label for="p-photos">صور المنتج (لكل صورة)</label>
+            <input id="p-photos" type="number" inputmode="numeric" min="0">
+          </div>
+        </div>
+        <hr style="border:none; border-block-start:1px solid var(--line); margin-block:6px 16px">
+        <div class="row2">
+          <div class="field">
+            <label for="p-n-extra">عدد النسخ الإضافية</label>
+            <input id="p-n-extra" type="number" inputmode="numeric" min="0" value="0">
+          </div>
+          <div class="field">
+            <label for="p-n-photos">عدد الصور</label>
+            <input id="p-n-photos" type="number" inputmode="numeric" min="0" value="0">
+          </div>
+        </div>
+        <div class="field">
+          <label for="p-with-voice">التعليق الصوتي</label>
+          <select id="p-with-voice">
+            <option value="0">بدون</option>
+            <option value="1">مع تعليق صوتي</option>
+          </select>
+        </div>
+        <div class="out">
+          <div class="out-head">
+            <h3>الإجمالي</h3>
+            <button class="copy" type="button" data-copy="price-text">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>
+              نسخ
+            </button>
+          </div>
+          <div class="out-body" id="price-text"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ══════ الإعدادات ══════ -->
+    <section class="panel-view" id="view-settings" role="tabpanel" aria-labelledby="tab-settings" hidden>
+      <div class="card">
+        <h2>رمز هذا الجهاز</h2>
+        <p>بديل الدخول بلا إنترنت. الحماية الحقيقية في حسابك بالبريد — هذا ستار لا قفل.</p>
+        <div class="field">
+          <label for="s-code">رمز جديد</label>
+          <input id="s-code" type="text" inputmode="numeric" maxlength="12" placeholder="أربعة أرقام أو أكثر">
+        </div>
+        <button class="btn btn-primary" type="button" id="save-code">حفظ الرمز</button>
+      </div>
+
+      <div class="card">
+        <h2>التوليد بالذكاء الاصطناعي (fal.ai)</h2>
+        <p>
+          مفتاحك يبقى في هذا الجهاز ولا يُرفع إلى حسابك ولا إلى أي مكان.
+          من يفتح الصفحة بلا مفتاحه لا يولّد شيئاً ولا يصرف من مالك.
+        </p>
+
+        <div class="field">
+          <label for="fal-key">مفتاح fal.ai</label>
+          <input id="fal-key" type="password" dir="ltr" autocomplete="off" placeholder="key_id:key_secret">
+          <p class="field-hint">من fal.ai ← Dashboard ← Keys.</p>
+        </div>
+
+        <div class="field">
+          <label for="fal-proxy">وسيط (اختياري)</label>
+          <input id="fal-proxy" type="url" dir="ltr" placeholder="https://xxx.workers.dev">
+          <p class="field-hint">
+            اتركه فارغاً أوّلاً. إن قال الفحص «المتصفّح يمنع الاتصال» فهذا موضعه —
+            <a href="https://github.com/Main-NAJM/Main-najm/blob/main/studio/proxy/README.md" target="_blank" rel="noopener">الخطوات هنا</a>
+            (خمس دقائق، ويبقى مفتاحك خارج المتصفّح).
+          </p>
+          <div class="notice notice-warn" id="proxy-warn" hidden>
+            هذه ليست رابطاً. الخانة تنتظر عنواناً مثل <code dir="ltr">https://xxx.workers.dev</code> —
+            وإن لم يكن لك وسيط فأفرغها تماماً.
+          </div>
+        </div>
+
+        <div class="btn-row">
+          <button class="btn btn-primary" type="button" id="fal-test">افحص المفتاح</button>
+        </div>
+        <div id="fal-test-out"></div>
+
+        <details style="margin-block-start:16px">
+          <summary style="cursor:pointer; font-weight:600; font-size:0.88rem; min-height:44px; display:flex; align-items:center">إعدادات متقدّمة — النماذج والسعر</summary>
+          <div class="field" style="margin-block-start:12px">
+            <label for="fal-video-model">نموذج الفيديو</label>
+            <input id="fal-video-model" type="text" dir="ltr">
+          </div>
+          <div class="field">
+            <label for="fal-image-model">نموذج الصورة</label>
+            <input id="fal-image-model" type="text" dir="ltr">
+          </div>
+          <div class="field">
+            <label for="fal-image-field">اسم حقل الصورة في النموذج</label>
+            <input id="fal-image-field" type="text" dir="ltr">
+            <p class="field-hint">‎image_url‎ في أغلب النماذج، و‎start_image_url‎ في بعضها. إن ردّ fal بخطأ في المدخلات فغيّره هنا.</p>
+          </div>
+          <div class="row2">
+            <div class="field">
+              <label for="fal-usd">دولار لكل ثانية</label>
+              <input id="fal-usd" type="number" inputmode="decimal" step="0.01" min="0">
+            </div>
+            <div class="field">
+              <label for="fal-dzd">دينار لكل دولار</label>
+              <input id="fal-dzd" type="number" inputmode="numeric" min="1">
+            </div>
+          </div>
+        </details>
+      </div>
+
+      <div class="card" id="sync-help" hidden>
+        <h2>المزامنة متوقّفة مؤقّتاً</h2>
+        <p style="margin-bottom:0">
+          حسابك يعمل، لكن الحفظ في السحابة رُفض. <strong>لا شيء يضيع</strong> — كل شيء
+          محفوظ في هذا الجهاز، ويُرفع وحده حين يعود الطريق. وإن طال الأمر، خذ نسخة
+          احتياطية من الأسفل وأخبرني بما تراه هنا.
+        </p>
+      </div>
+
+      <div class="card">
+        <h2>نسخة احتياطية</h2>
+        <p>كل شيء محفوظ في هذا المتصفّح وحده. مسح بيانات الموقع يمحوه — فخذ نسخة.</p>
+        <div class="btn-row">
+          <button class="btn btn-ghost" type="button" id="export">تصدير نسخة</button>
+          <button class="btn btn-ghost" type="button" id="import-btn">استيراد نسخة</button>
+          <input id="import-file" type="file" accept="application/json,.json" class="sr-only">
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>مسح</h2>
+        <p>يمحو المشاريع والأسعار والرمز من هذا الجهاز. ما في حسابك السحابي يبقى، ويعود عند الدخول.</p>
+        <button class="btn btn-danger" type="button" id="wipe">مسح كل شيء</button>
+      </div>
+
+      <div class="card">
+        <h2>عن الأداة</h2>
+        <p style="margin-bottom:0">
+          تعمل دون إنترنت بعد أول فتح، وتُثبَّت على الشاشة الرئيسية كتطبيق.
+          بالدخول بالبريد تُحفظ مشاريعك في حسابك فتتبعك بين الأجهزة، ولا يقرؤها غيرك.
+          وبرمز الجهاز تعمل محلياً بلا أي إرسال.
+        </p>
+      </div>
+    </section>
+
+  </main>
+</div>
+
+<!-- حوار المشروع -->
+<dialog id="proj-dlg">
+  <form method="dialog" id="proj-form">
+    <div class="dlg-head">
+      <h2 id="proj-dlg-title">مشروع جديد</h2>
+      <button class="icon-btn" type="button" id="proj-close" aria-label="إغلاق">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+    <div class="dlg-body">
+      <div class="field">
+        <label for="d-client">اسم الزبون</label>
+        <input id="d-client" type="text" required>
+      </div>
+      <div class="field">
+        <label for="d-phone">الهاتف</label>
+        <input id="d-phone" type="tel" inputmode="tel" dir="ltr" placeholder="0673232932">
+      </div>
+      <div class="field">
+        <label for="d-product">المنتج</label>
+        <input id="d-product" type="text">
+      </div>
+      <div class="row2">
+        <div class="field">
+          <label for="d-status">الحالة</label>
+          <select id="d-status"></select>
+        </div>
+        <div class="field">
+          <label for="d-amount">المبلغ</label>
+          <input id="d-amount" type="number" inputmode="numeric" min="0">
+        </div>
+      </div>
+      <div class="field">
+        <label for="d-notes">ملاحظات</label>
+        <textarea id="d-notes"></textarea>
+      </div>
+    </div>
+    <div class="dlg-foot">
+      <button class="btn btn-danger" type="button" id="proj-delete" hidden>حذف</button>
+      <button class="btn btn-ghost" type="button" id="proj-cancel">إلغاء</button>
+      <button class="btn btn-primary" type="submit">حفظ</button>
+    </div>
+  </form>
+</dialog>
+
+<div class="toast" id="toast" role="status" aria-live="polite" hidden></div>
+
+<script>
+/* ═══════════════════════════════════════════════════════════════════════
+   استوديو بوفايدة — كل شيء في هذا الملف، وكل شيء في جهاز صاحبه.
+   لا خادم، لا حساب، لا إرسال. التخزين localStorage، والنسخة الاحتياطية ملف.
+   ═══════════════════════════════════════════════════════════════════════ */
+
+const KEY = 'bofaida.studio.v1';
+const $ = (id) => document.getElementById(id);
+
+/* ---------- التخزين: يُحاط بـtry دائماً، فقد يُمنع في التصفّح الخاصّ ---------- */
+const defaults = () => ({
+  code: '',
+  projects: [],
+  price: { base: 3000, extra: 800, voice: 500, photo: 300 },
+  // إعدادات التوليد. أسماء النماذج والحقول قابلة للتحرير عن قصد: fal تبدّل
+  // نماذجها وأسماء مدخلاتها بين إصدار وإصدار، فتصحيحها خانةٌ تُملأ لا كود يُعاد.
+  fal: {
+    key: '',
+    proxy: '',
+    videoModel: 'fal-ai/kling-video/v2.1/standard/image-to-video',
+    imageModel: 'fal-ai/flux/dev',
+    imageField: 'image_url',
+    usdPerSecond: 0.10,
+    dzdPerUsd: 250,
+  },
+  spent: [],
+  updatedAt: 0,
+});
+
+let db = defaults();
+
+const load = () => {
+  try {
+    const raw = localStorage.getItem(KEY);
+    if (raw) db = { ...defaults(), ...JSON.parse(raw) };
+  } catch (e) {
+    toast('تعذّر قراءة المحفوظ — تعمل الأداة بلا حفظ.');
+  }
+};
+/**
+ * الحفظ. `stamp` يضع ختم الوقت ويجدول الرفع إلى الحساب — ويُطفأ حين يكون
+ * الحفظ نسخًا لِما جاء من السحابة أصلاً، وإلا ارتدّ إليها ما جاء منها.
+ */
+const save = (stamp = true) => {
+  if (stamp) db.updatedAt = Date.now();
+  try {
+    localStorage.setItem(KEY, JSON.stringify(db));
+  } catch (e) {
+    toast('تعذّر الحفظ — التخزين ممتلئ أو محجوب.');
+  }
+  if (stamp) schedulePush();
+};
+
+let toastTimer = 0;
+function toast(message) {
+  const el = $('toast');
+  el.textContent = message;
+  el.hidden = false;
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => { el.hidden = true; }, 2600);
+}
+
+/* ---------- الجداول الثابتة ---------- */
+
+// لكل فئة مفرداتها البصرية بالإنجليزية: أدوات التوليد تفهم الإنجليزية أفضل،
+// وهذه الجمل هي ما يفصل صورة منتج مقنعة عن صورة عامّة لا تبيع.
+const CATEGORIES = [
+  { v: 'clothes', ar: 'ملابس وأحذية',
+    look: 'garment neatly styled on a clean surface, soft diffused window light, subtle fabric texture, shallow depth of field',
+    tags: ['ملابس', 'موضة', 'لباس'] },
+  { v: 'food', ar: 'أكل ومشروبات',
+    look: 'fresh appetizing food, visible texture and steam, warm inviting light, macro detail, rustic wooden surface',
+    tags: ['أكل', 'مطعم', 'وصفات'] },
+  { v: 'tech', ar: 'إلكترونيات وهواتف',
+    look: 'sleek product on a matte dark surface, crisp rim lighting, reflective highlights, minimal tech aesthetic',
+    tags: ['تكنولوجيا', 'هواتف', 'إلكترونيات'] },
+  { v: 'beauty', ar: 'عطور ومستحضرات',
+    look: 'elegant glass bottle, silk and soft shadows, golden hour light, luxury still life composition',
+    tags: ['عطور', 'جمال', 'عناية'] },
+  { v: 'furniture', ar: 'أثاث وديكور',
+    look: 'styled interior corner, natural daylight, warm neutral palette, wide architectural framing',
+    tags: ['أثاث', 'ديكور', 'منزل'] },
+  { v: 'restaurant', ar: 'مطعم ومحلّ',
+    look: 'plated dish on a table in a cozy venue, warm ambient lighting, gentle background bokeh',
+    tags: ['مطعم', 'محل', 'توصيل'] },
+  { v: 'service', ar: 'خدمة أو حرفة',
+    look: 'skilled hands at work, real workshop environment, documentary lighting, honest and unstaged',
+    tags: ['خدمة', 'حرفة', 'شغل'] },
+  { v: 'other', ar: 'أخرى',
+    look: 'product centered on a clean seamless backdrop, soft even studio light, neutral background',
+    tags: ['منتج', 'عرض'] },
+];
+
+const TONES = [
+  { v: 'energetic', ar: 'حماسي',
+    look: 'vibrant saturated colors, high energy',
+    move: 'fast push-in, quick snappy cuts',
+    hook: (p) => `${p}… شوف هذا مليح!`,
+    cta: 'اطلبه اليوم — الكمية محدودة.' },
+  { v: 'luxury', ar: 'فاخر هادئ',
+    look: 'cinematic high contrast, refined color grade, deep shadows',
+    move: 'slow dolly, smooth glide, patient timing',
+    hook: (p) => `${p}. لمن يعرف الفرق.`,
+    cta: 'اطلبه الآن، وذُق الفرق بنفسك.' },
+  { v: 'friendly', ar: 'ودّي',
+    look: 'warm natural tones, soft light, homely feel',
+    move: 'gentle handheld motion, natural pacing',
+    hook: (p) => `تبحث عن ${p}؟ وجدته.`,
+    cta: 'راسلنا وسنجهّزه لك.' },
+  { v: 'direct', ar: 'مباشر',
+    look: 'clean neutral lighting, uncluttered composition, product first',
+    move: 'locked-off camera, single clean move',
+    hook: (p) => `${p} — بسعر تقدر عليه.`,
+    cta: 'اتّصل بنا لتحجز نسختك.' },
+];
+
+const FORMATS = [
+  { v: '9:16', ar: '9:16 عمودي', px: '1080×1920', where: 'ريلز · تيك توك · ستوري' },
+  { v: '1:1', ar: '1:1 مربّع', px: '1080×1080', where: 'منشور فيسبوك وإنستغرام' },
+  { v: '16:9', ar: '16:9 أفقي', px: '1920×1080', where: 'يوتيوب · شاشات المحلّات' },
+];
+
+const DURATIONS = [15, 20, 30, 40];
+
+const STATUSES = [
+  { v: 'new', ar: 'جديد', cls: 's-new' },
+  { v: 'script', ar: 'السيناريو' },
+  { v: 'render', ar: 'قيد التوليد' },
+  { v: 'review', ar: 'عند الزبون' },
+  { v: 'done', ar: 'سُلّم', cls: 's-done' },
+];
+
+// أدوار المشاهد بالترتيب الذي يُبقي المشاهد إلى آخر الفيديو: خطّاف، ثم
+// تفصيل، ثم استعمال، ثم فائدة، ثم دعوة. الترتيب ليس زينة — أول ثانيتين
+// تحسمان بقاء المشاهد أو مروره.
+const SHOT_ROLES = [
+  { ar: 'الخطّاف', en: 'extreme close-up reveal of the product, dramatic first frame that stops the scroll' },
+  { ar: 'التفصيل', en: 'slow detail shot showing material, texture and craftsmanship' },
+  { ar: 'الاستعمال', en: 'the product in real use, in the hands of a person, natural setting' },
+  { ar: 'الفائدة', en: 'the result or benefit made visible, satisfied expression or clean outcome' },
+  { ar: 'المقارنة', en: 'side-by-side before and after, clear visual difference' },
+  { ar: 'الدعوة', en: 'final hero shot of the product with clean empty space for text overlay' },
+];
+
+/* ---------- حالة شاشة الاستوديو ---------- */
+const form = { tone: 'friendly', format: '9:16' };
+
+/* ---------- التوليد ---------- */
+
+// الكلام العربي يُنطق نحو 2.3 كلمة في الثانية في الإعلان. أبطأ منه يملّ،
+// وأسرع لا يُفهم. نستعملها لنحذّر حين يطول النصّ عن مدّة الفيديو.
+const WORDS_PER_SECOND = 2.3;
+
+const countWords = (text) => text.trim().split(/\s+/).filter(Boolean).length;
+
+function build() {
+  const product = $('f-product').value.trim() || 'المنتج';
+  const cat = CATEGORIES.find((c) => c.v === $('f-category').value) || CATEGORIES[7];
+  const tone = TONES.find((t) => t.v === form.tone) || TONES[2];
+  const fmt = FORMATS.find((f) => f.v === form.format) || FORMATS[0];
+  const duration = Number($('f-duration').value) || 20;
+  const shots = Math.min(6, Math.max(3, Number($('f-shots').value) || 4));
+  const feature = $('f-feature').value.trim();
+  const audience = $('f-audience').value.trim();
+  const price = $('f-price').value.trim();
+
+  /* السيناريو العربي */
+  const lines = [];
+  lines.push(`الخطّاف (0–3 ثوانٍ):`);
+  lines.push(tone.hook(product));
+  lines.push('');
+  lines.push(`المتن (3–${duration - 5} ثانية):`);
+  if (feature) lines.push(`${feature}.`);
+  if (audience) lines.push(`مصنوع لـ${audience}.`);
+  if (price) lines.push(`وبـ${price} فقط.`);
+  if (!feature && !audience && !price) lines.push('اكتب الميزة والجمهور في الأعلى ليمتلئ هذا الموضع.');
+  lines.push('');
+  lines.push(`الدعوة (آخر 5 ثوانٍ):`);
+  lines.push(tone.cta);
+  const script = lines.join('\n');
+
+  /* نصّ التعليق الصوتي: السيناريو بلا عناوين المراحل */
+  const voice = [
+    tone.hook(product),
+    feature ? `${feature}.` : '',
+    audience ? `مصنوع لـ${audience}.` : '',
+    price ? `وبـ${price} فقط.` : '',
+    tone.cta,
+  ].filter(Boolean).join(' ');
+
+  const words = countWords(voice);
+  const spoken = Math.round((words / WORDS_PER_SECOND) * 10) / 10;
+
+  /* موجّهات المشاهد بالإنجليزية */
+  const roles = shots <= 4
+    ? [SHOT_ROLES[0], SHOT_ROLES[1], SHOT_ROLES[2], SHOT_ROLES[5]].slice(0, shots)
+    : SHOT_ROLES.slice(0, shots - 1).concat([SHOT_ROLES[5]]);
+
+  const perShot = Math.round((duration / roles.length) * 10) / 10;
+  const en = product; // يُترك كما كتبه صاحبه؛ أداة التوليد تتعامل مع العربية
+
+  const shotList = roles.map((role, i) => ({
+    ar: role.ar,
+    seconds: perShot,
+    image: `${role.en}. Subject: ${en}. ${cat.look}. ${tone.look}. ${fmt.v} aspect ratio, ${fmt.px}, photorealistic, commercial advertising photography, sharp focus, no text, no watermark, no logo.`,
+    motion: `${tone.move}, ${perShot}s, subtle natural movement, consistent lighting and color with previous shot, no camera shake, no morphing artifacts.`,
+  }));
+
+  /* نصّ المنشور */
+  const tags = ['#برج_باجي_مختار', '#الجزائر', ...cat.tags.map((t) => '#' + t.replace(/\s+/g, '_'))];
+  const caption = [
+    tone.hook(product),
+    feature ? `✔ ${feature}` : '',
+    price ? `💰 ${price}` : '',
+    '📞 0673 23 29 32',
+    '',
+    tags.join(' '),
+  ].filter((l) => l !== '').join('\n');
+
+  return { product, script, voice, words, spoken, duration, shotList, caption, fmt };
+}
+
+/* ---------- عرض النتائج ---------- */
+
+const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;' })[c]);
+
+const copyIcon = `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><rect x="9" y="9" width="12" height="12" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>`;
+
+function outBlock(id, title, meta, body, ltr) {
+  return `
+    <div class="out">
+      <div class="out-head">
+        <div><h3>${esc(title)}</h3>${meta ? `<span class="meta">${esc(meta)}</span>` : ''}</div>
+        <button class="copy" type="button" data-copy="${id}">${copyIcon} نسخ</button>
+      </div>
+      <div class="out-body${ltr ? ' ltr' : ''}" id="${id}">${esc(body)}</div>
+    </div>`;
+}
+
+function render(r) {
+  const box = $('results');
+  const over = r.spoken > r.duration;
+
+  let html = '';
+
+  html += outBlock('o-script', 'السيناريو', `${r.fmt.ar} · ${r.duration} ثانية`, r.script, false);
+
+  html += outBlock('o-voice', 'نصّ التعليق الصوتي',
+    `${r.words} كلمة ≈ ${r.spoken} ثانية نُطقاً`, r.voice, false);
+
+  if (over) {
+    html += `<div class="notice notice-warn">
+      النصّ أطول من الفيديو: ${r.spoken} ثانية من الكلام في ${r.duration} ثانية.
+      احذف جملة، أو ارفع المدّة، وإلا خرج الصوت مسرعاً ولا يُفهم.
+    </div>`;
+  } else {
+    html += `<div class="notice notice-ok">
+      النصّ يسع المدّة: ${r.spoken} ثانية كلاماً من ${r.duration} ثانية.
+    </div>`;
+  }
+
+  html += `
+    <div class="out">
+      <div class="out-head"><div>
+        <h3>صورة المنتج</h3>
+        <span class="meta">منها يُبنى الفيديو، فتخرج سلعتك هي لا سلعة تشبهها</span>
+      </div></div>
+      <div class="out-body">
+        <div class="btn-row">
+          <button class="btn btn-ghost" type="button" id="pick-photo">اختر صورة من الجهاز</button>
+          <input id="photo-file" type="file" accept="image/*" class="sr-only">
+          <button class="btn btn-ghost" type="button" id="gen-photo">ولّدها بالذكاء الاصطناعي</button>
+        </div>
+        <div id="photo-slot" class="mt"></div>
+      </div>
+    </div>`;
+
+  html += `<div class="out"><div class="out-head"><div>
+      <h3>موجّهات المشاهد</h3>
+      <span class="meta">${r.shotList.length} مشاهد · ${r.fmt.px} · انسخها، أو ولّدها من هنا</span>
+    </div></div>`;
+  r.shotList.forEach((s, i) => {
+    html += `<div class="shot">
+      <div class="shot-head"><span class="shot-num">${i + 1}</span> ${esc(s.ar)} — ${s.seconds} ثانية</div>
+      ${outBlock('o-img-' + i, 'موجّه الصورة', '', s.image, true)}
+      ${outBlock('o-mov-' + i, 'موجّه الحركة', '', s.motion, true)}
+      <div class="out-body" style="padding-block-start:0">
+        <button class="btn btn-primary" type="button" data-shot="${i}" data-sec="${s.seconds}">
+          ولّد هذا المشهد
+        </button>
+        <div id="shot-out-${i}" class="mt"></div>
+      </div>
+    </div>`;
+  });
+  html += `</div>`;
+
+  html += outBlock('o-caption', 'نصّ المنشور', 'مع الهاشتاغات', r.caption, false);
+
+  html += `<div class="notice notice-plain">
+    الموجّهات بالإنجليزية عمداً: أدوات التوليد تفهمها أدقّ من العربية، والنتيجة أقرب
+    إلى ما في رأسك. تولّدها من هنا بزرّ «ولّد»، أو تنسخها إلى أي أداة أخرى.
+  </div>`;
+
+  lastResult = r;
+  box.innerHTML = html;
+  box.hidden = false;
+  box.scrollIntoView({ behavior: 'smooth', block: 'start' });
+}
+
+/* ═══════════════ توليد الصور والفيديو من الشاشة ═══════════════ */
+
+let lastResult = null;   // آخر ما جهّزته الشاشة
+let productImage = '';   // صورة المنتج: data: أو رابط
+
+/**
+ * الصورة تُصغَّر قبل الإرسال. صورة هاتف حديث تتجاوز 5 ميغابايت، وإرسالها
+ * كما هي داخل الطلب يرفضه الخادم أو يبطّئه دقائق بلا فائدة — والنموذج
+ * لا يستفيد من دقّة تفوق 1280 بكسل أصلاً.
+ */
+function shrinkImage(file, max = 1280) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onerror = () => reject(new Error('تعذّر قراءة الصورة.'));
+    reader.onload = () => {
+      const img = new Image();
+      img.onerror = () => reject(new Error('الملف ليس صورة.'));
+      img.onload = () => {
+        const scale = Math.min(1, max / Math.max(img.width, img.height));
+        const canvas = document.createElement('canvas');
+        canvas.width = Math.round(img.width * scale);
+        canvas.height = Math.round(img.height * scale);
+        canvas.getContext('2d').drawImage(img, 0, 0, canvas.width, canvas.height);
+        resolve(canvas.toDataURL('image/jpeg', 0.85));
+      };
+      img.src = reader.result;
+    };
+    reader.readAsDataURL(file);
+  });
+}
+
+/** fal تسمّي مخرجاتها بأسماء مختلفة بين نموذج وآخر، فيُبحث عن أوّل رابط. */
+function firstUrl(data, kind) {
+  if (!data || typeof data !== 'object') return '';
+  const direct = data[kind] && data[kind].url;
+  if (direct) return direct;
+  const list = data[kind + 's'];
+  if (Array.isArray(list) && list[0] && list[0].url) return list[0].url;
+  for (const value of Object.values(data)) {
+    if (value && typeof value === 'object') {
+      const found = firstUrl(value, kind);
+      if (found) return found;
+    }
+  }
+  return '';
+}
+
+function showPhoto(url) {
+  productImage = url;
+  $('photo-slot').innerHTML =
+    `<img src="${esc(url)}" alt="صورة المنتج" style="max-height:180px; border-radius:8px; border:1px solid var(--line)">`;
+}
+
+function readyToGenerate() {
+  const cfg = falCfg();
+  if (!cfg.key && !cfg.proxy) {
+    toast('ضع مفتاح fal.ai في الإعدادات أوّلاً.');
+    showTab('settings');
+    return false;
+  }
+  return true;
+}
+
+document.addEventListener('click', async (event) => {
+  /* اختيار صورة من الجهاز */
+  if (event.target.closest('#pick-photo')) { $('photo-file').click(); return; }
+
+  /* توليد صورة منتج */
+  if (event.target.closest('#gen-photo')) {
+    if (!readyToGenerate() || !lastResult) return;
+    const btn = event.target.closest('#gen-photo');
+    btn.disabled = true;
+    const slot = $('photo-slot');
+    slot.innerHTML = '<div class="notice notice-plain">جارٍ توليد الصورة…</div>';
+    try {
+      const data = await falRun(falCfg().imageModel, {
+        prompt: lastResult.shotList[0].image,
+        image_size: lastResult.fmt.v === '9:16' ? 'portrait_16_9'
+          : lastResult.fmt.v === '1:1' ? 'square_hd' : 'landscape_16_9',
+      });
+      const url = firstUrl(data, 'image');
+      if (!url) throw new Error('لم يُرجع النموذج صورة.');
+      showPhoto(url);
+      toast('جاهزة. تُستعمل الآن أساساً للمشاهد.');
+    } catch (error) {
+      slot.innerHTML = `<div class="notice notice-warn">${esc(String(error.message || error))}</div>`;
+    } finally {
+      btn.disabled = false;
+    }
+    return;
+  }
+
+  /* توليد مشهد */
+  const shotBtn = event.target.closest('[data-shot]');
+  if (shotBtn) {
+    if (!readyToGenerate() || !lastResult) return;
+    const index = Number(shotBtn.dataset.shot);
+    const seconds = Number(shotBtn.dataset.sec) || 5;
+    if (!productImage) { toast('اختر صورة المنتج أوّلاً، أو ولّدها.'); return; }
+    const shot = lastResult.shotList[index];
+    const slot = $('shot-out-' + index);
+    shotBtn.disabled = true;
+    slot.innerHTML = '<div class="notice notice-plain">أُرسل إلى fal… قد يستغرق دقائق.</div>';
+    try {
+      const cfg = falCfg();
+      const input = {
+        prompt: `${shot.image} ${shot.motion}`,
+        // الطول يُقرَّب إلى 5 أو 10 ثوانٍ: أغلب النماذج لا تقبل غيرهما.
+        duration: String(seconds > 7 ? 10 : 5),
+      };
+      input[cfg.imageField || 'image_url'] = productImage;
+
+      const data = await falRun(cfg.videoModel, input, (state, elapsed) => {
+        slot.innerHTML = `<div class="notice notice-plain">${esc(state || 'جارٍ')} — مضت ${elapsed} ثانية…</div>`;
+      });
+      const url = firstUrl(data, 'video');
+      if (!url) throw new Error('لم يُرجع النموذج فيديو: ' + JSON.stringify(data).slice(0, 200));
+      const usd = recordSpend(seconds > 7 ? 10 : 5, `مشهد ${index + 1}`);
+      slot.innerHTML =
+        `<video src="${esc(url)}" controls playsinline style="width:100%; border-radius:8px; border:1px solid var(--line)"></video>
+         <div class="notice notice-ok">جاهز · كلفته ${esc(money(usd))}
+           — <a href="${esc(url)}" download target="_blank" rel="noopener">نزّله</a></div>`;
+    } catch (error) {
+      slot.innerHTML = `<div class="notice notice-warn">${esc(String(error.message || error))}</div>`;
+    } finally {
+      shotBtn.disabled = false;
+    }
+  }
+});
+
+document.addEventListener('change', async (event) => {
+  if (event.target.id !== 'photo-file') return;
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  try {
+    showPhoto(await shrinkImage(file));
+  } catch (error) {
+    toast(String(error.message || error));
+  }
+  event.target.value = '';
+});
+
+/* ---------- النسخ ---------- */
+document.addEventListener('click', async (event) => {
+  const btn = event.target.closest('[data-copy]');
+  if (!btn) return;
+  const src = $(btn.dataset.copy);
+  if (!src) return;
+  const text = src.textContent;
+  try {
+    // الحافظة الحديثة تحتاج سياقاً آمناً؛ وإلا نرجع إلى الطريقة القديمة.
+    if (navigator.clipboard && window.isSecureContext) await navigator.clipboard.writeText(text);
+    else {
+      const ta = document.createElement('textarea');
+      ta.value = text;
+      ta.style.position = 'fixed';
+      ta.style.insetInlineStart = '-9999px';
+      document.body.appendChild(ta);
+      ta.select();
+      document.execCommand('copy');
+      ta.remove();
+    }
+    const label = btn.innerHTML;
+    btn.classList.add('is-done');
+    btn.innerHTML = copyIcon + ' نُسخ';
+    setTimeout(() => { btn.classList.remove('is-done'); btn.innerHTML = label; }, 1500);
+  } catch (e) {
+    toast('تعذّر النسخ — حدّد النصّ وانسخه يدوياً.');
+  }
+});
+
+/* ---------- التبويبات ---------- */
+const TABS = ['studio', 'projects', 'price', 'settings'];
+function showTab(name) {
+  TABS.forEach((t) => {
+    $('tab-' + t).setAttribute('aria-selected', String(t === name));
+    $('view-' + t).hidden = t !== name;
+  });
+  window.scrollTo({ top: 0 });
+}
+TABS.forEach((t) => $('tab-' + t).addEventListener('click', () => showTab(t)));
+
+/* ---------- المشاريع ---------- */
+const statusLabel = (v) => (STATUSES.find((s) => s.v === v) || {}).ar || v;
+const statusCls = (v) => (STATUSES.find((s) => s.v === v) || {}).cls || '';
+
+function renderProjects() {
+  const box = $('projects-list');
+  if (!db.projects.length) {
+    box.innerHTML = `<div class="empty">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" aria-hidden="true"><path d="M3 7a2 2 0 0 1 2-2h4l2 2h8a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/></svg>
+      <b>لا مشروع بعد</b>
+      حين يطلب زبون فيديو، سجّله هنا فلا يضيع بين الرسائل.
+    </div>`;
+    return;
+  }
+  box.innerHTML = db.projects.map((p) => `
+    <div class="proj">
+      <div class="proj-main">
+        <b>${esc(p.client || 'بلا اسم')}</b>
+        <span>${esc(p.product || '—')}${p.amount ? ' · ' + Number(p.amount).toLocaleString('ar-DZ') + ' دج' : ''}</span>
+      </div>
+      <span class="badge ${statusCls(p.status)}">${esc(statusLabel(p.status))}</span>
+      <button class="icon-btn" type="button" data-edit="${esc(p.id)}" aria-label="تعديل ${esc(p.client || '')}">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 20h4L20 8l-4-4L4 16z"/></svg>
+      </button>
+    </div>`).join('');
+}
+
+let editingId = null;
+const dlg = $('proj-dlg');
+
+function openProject(id) {
+  editingId = id;
+  const p = db.projects.find((x) => x.id === id) || {};
+  $('proj-dlg-title').textContent = id ? 'تعديل المشروع' : 'مشروع جديد';
+  $('d-client').value = p.client || '';
+  $('d-phone').value = p.phone || '';
+  $('d-product').value = p.product || '';
+  $('d-status').value = p.status || 'new';
+  $('d-amount').value = p.amount || '';
+  $('d-notes').value = p.notes || '';
+  $('proj-delete').hidden = !id;
+  dlg.showModal();
+  $('d-client').focus();
+}
+
+$('new-project').addEventListener('click', () => openProject(null));
+$('projects-list').addEventListener('click', (event) => {
+  const btn = event.target.closest('[data-edit]');
+  if (btn) openProject(btn.dataset.edit);
+});
+$('proj-close').addEventListener('click', () => dlg.close());
+$('proj-cancel').addEventListener('click', () => dlg.close());
+
+$('proj-form').addEventListener('submit', () => {
+  const data = {
+    client: $('d-client').value.trim(),
+    phone: $('d-phone').value.trim(),
+    product: $('d-product').value.trim(),
+    status: $('d-status').value,
+    amount: Number($('d-amount').value) || 0,
+    notes: $('d-notes').value.trim(),
+  };
+  if (editingId) {
+    const p = db.projects.find((x) => x.id === editingId);
+    if (p) Object.assign(p, data);
+  } else {
+    db.projects.unshift({ id: String(Date.now()), createdAt: Date.now(), ...data });
+  }
+  save();
+  renderProjects();
+  toast('حُفظ المشروع.');
+});
+
+$('proj-delete').addEventListener('click', () => {
+  if (!editingId) return;
+  db.projects = db.projects.filter((x) => x.id !== editingId);
+  save();
+  renderProjects();
+  dlg.close();
+  toast('حُذف المشروع.');
+});
+
+$('save-as-project').addEventListener('click', () => {
+  const product = $('f-product').value.trim();
+  if (!product) { toast('اكتب اسم المنتج أوّلاً.'); return; }
+  db.projects.unshift({
+    id: String(Date.now()), createdAt: Date.now(),
+    client: '', phone: '', product, status: 'new', amount: 0,
+    notes: [$('f-feature').value.trim(), $('f-audience').value.trim()].filter(Boolean).join(' · '),
+  });
+  save();
+  renderProjects();
+  toast('حُفظ مشروعاً — أكمل اسم الزبون في تبويب المشاريع.');
+});
+
+/* ---------- السعر ---------- */
+function renderPrice() {
+  const p = db.price;
+  const nExtra = Number($('p-n-extra').value) || 0;
+  const nPhotos = Number($('p-n-photos').value) || 0;
+  const withVoice = $('p-with-voice').value === '1';
+
+  const rows = [[`الفيديو الأساسي`, p.base]];
+  if (nExtra) rows.push([`${nExtra} نسخة إضافية × ${p.extra}`, nExtra * p.extra]);
+  if (withVoice) rows.push([`التعليق الصوتي`, p.voice]);
+  if (nPhotos) rows.push([`${nPhotos} صورة × ${p.photo}`, nPhotos * p.photo]);
+  const total = rows.reduce((sum, r) => sum + r[1], 0);
+
+  $('price-text').textContent =
+    rows.map((r) => `${r[0]}: ${r[1].toLocaleString('ar-DZ')} دج`).join('\n') +
+    `\n———\nالإجمالي: ${total.toLocaleString('ar-DZ')} دج`;
+}
+
+// مفتاح السعر واسم حقله ليسا واحدًا دائمًا (photo ↔ p-photos)، فالربط صريح.
+const PRICE_FIELDS = { base: 'p-base', extra: 'p-extra', voice: 'p-voice', photo: 'p-photos' };
+Object.entries(PRICE_FIELDS).forEach(([key, id]) => {
+  $(id).addEventListener('input', () => {
+    db.price[key] = Number($(id).value) || 0;
+    save();
+    renderPrice();
+  });
+});
+['p-n-extra', 'p-n-photos', 'p-with-voice'].forEach((id) => {
+  $(id).addEventListener('input', renderPrice);
+});
+
+/* ═══════════════ التوليد عبر fal.ai ═══════════════
+
+   الطلب يمرّ في ثلاث خطوات: يُرسَل إلى الطابور، ثم يُسأل عن حاله حتى
+   يكتمل، ثم تُقرأ نتيجته. هذا ما تفرضه fal، ولا مفرّ منه: توليد الفيديو
+   يستغرق دقائق لا ثواني، فلا يُنتظر في اتصال واحد.
+
+   والمفتاح يعيش في هذا الجهاز وحده. من أراد ألّا يمرّ مفتاحه في المتصفّح
+   أصلاً يضع «وسيطاً» — وملفّه جاهز في studio/proxy/.
+   ═══════════════════════════════════════════════ */
+
+const FAL_BASE = 'https://queue.fal.run';
+
+const falCfg = () => db.fal || defaults().fal;
+
+const isUrl = (value) => /^https?:\/\/[^\s]+$/i.test(value);
+
+/**
+ * عنوان الطلب: عبر الوسيط إن وُجد، وإلا إلى fal مباشرة.
+ *
+ * ويُرفض الوسيط الذي ليس رابطاً قبل الإرسال لا بعده: النصّ العادي في هذه
+ * الخانة يُحسب مساراً داخل هذا الموقع، فيذهب الطلب إلى خادم الصفحات
+ * ويعود بـ405 غامض لا علاقة له بـfal ولا بالمفتاح.
+ */
+function falUrl(path) {
+  const proxy = (falCfg().proxy || '').trim().replace(/\/+$/, '');
+  if (proxy && !isUrl(proxy)) {
+    throw new Error(
+      `«${proxy}» ليس رابطاً. خانة «الوسيط» تنتظر عنواناً يبدأ بـhttps:// — ` +
+      'وإن لم يكن لك وسيط فأفرغها تماماً ليذهب الطلب إلى fal مباشرة.',
+    );
+  }
+  return proxy ? `${proxy}/${path}` : `${FAL_BASE}/${path}`;
+}
+
+function falHeaders() {
+  const headers = { 'Content-Type': 'application/json' };
+  // مع الوسيط لا يُرسل المفتاح: الوسيط يحمله، وهذا سبب وجوده.
+  if (!falCfg().proxy && falCfg().key) headers.Authorization = 'Key ' + falCfg().key;
+  return headers;
+}
+
+/**
+ * يترجم فشل الشبكة إلى سبب مفهوم. المتصفّح لا يقول «CORS» في جسم الخطأ —
+ * يرمي TypeError عامّاً — وهذا بالضبط ما يحيّر صاحب الأداة ساعةً كاملة.
+ */
+function falFailure(error) {
+  if (error && error.name === 'TypeError') {
+    return 'المتصفّح يمنع الاتصال المباشر بـfal (حماية CORS)، أو لا إنترنت. ' +
+           'الحلّ: ضع وسيطاً في خانة «وسيط» بالإعدادات — ورابط الخطوات تحتها.';
+  }
+  return String((error && error.message) || error);
+}
+
+async function falFetch(path, options) {
+  const url = falUrl(path); // يرمي رسالةً مفهومة إن كان الوسيط ليس رابطاً
+  let response;
+  try {
+    response = await fetch(url, options);
+  } catch (error) {
+    throw new Error(falFailure(error));
+  }
+  const text = await response.text();
+  let body = null;
+  try { body = text ? JSON.parse(text) : null; } catch (e) { body = { raw: text }; }
+
+  // ردٌّ بصفحة HTML معناه أن الطلب لم يصل fal أصلاً: ذهب إلى خادم آخر —
+  // غالباً لأن خانة «الوسيط» فيها نصّ ليس رابطاً، فحُسب مساراً في هذا الموقع.
+  if (/^\s*</.test(text)) {
+    const proxy = falCfg().proxy;
+    throw new Error(
+      proxy
+        ? `الردّ جاء من خادم آخر لا من fal (${response.status}). خانة «الوسيط» فيها «${proxy}» — ` +
+          'إن لم يكن لك وسيط فأفرغها تماماً، وإن كان فضع رابطه كاملاً بادئاً بـhttps://'
+        : `الردّ جاء صفحةَ HTML لا بيانات (${response.status}). راجع اسم النموذج.`,
+    );
+  }
+
+  if (!response.ok) {
+    // رسالة fal نفسها أنفع من أي صياغة عندنا: تسمّي الحقل الناقص بالاسم.
+    const detail = body && (body.detail || body.error || body.message);
+    throw new Error(
+      `fal ردّ ${response.status}: ` +
+      (typeof detail === 'string' ? detail : JSON.stringify(detail || body).slice(0, 300)),
+    );
+  }
+  return body;
+}
+
+/** يرسل ثم ينتظر حتى تكتمل النتيجة أو يُلغى الانتظار. */
+async function falRun(model, input, onProgress) {
+  const submitted = await falFetch(model, {
+    method: 'POST', headers: falHeaders(), body: JSON.stringify(input),
+  });
+  const id = submitted && submitted.request_id;
+  if (!id) throw new Error('fal لم يُرجع رقم طلب. راجع اسم النموذج.');
+
+  const started = Date.now();
+  // حدّ أقصى عشر دقائق: أطول من أبطأ فيديو، وأقصر من أن تُترك الصفحة معلّقة.
+  while (Date.now() - started < 10 * 60 * 1000) {
+    await new Promise((r) => setTimeout(r, 3000));
+    const status = await falFetch(`${model}/requests/${id}/status`, { headers: falHeaders() });
+    const state = status && status.status;
+    if (onProgress) onProgress(state, Math.round((Date.now() - started) / 1000));
+    if (state === 'COMPLETED') {
+      return falFetch(`${model}/requests/${id}`, { headers: falHeaders() });
+    }
+    if (state === 'FAILED' || state === 'CANCELLED') {
+      throw new Error('فشل التوليد عند fal: ' + JSON.stringify(status).slice(0, 240));
+    }
+  }
+  throw new Error('طال الانتظار أكثر من عشر دقائق. راجع لوحة fal.');
+}
+
+/* ---------- تسجيل الكلفة ---------- */
+function recordSpend(seconds, label) {
+  const cfg = falCfg();
+  const usd = seconds * (Number(cfg.usdPerSecond) || 0);
+  db.spent = db.spent || [];
+  db.spent.unshift({ at: Date.now(), seconds, usd, label });
+  db.spent = db.spent.slice(0, 200);
+  save();
+  return usd;
+}
+
+const money = (usd) => {
+  const dzd = usd * (Number(falCfg().dzdPerUsd) || 0);
+  return `${usd.toFixed(2)}$ ≈ ${Math.round(dzd).toLocaleString('ar-DZ')} دج`;
+};
+
+/* ---------- فحص المفتاح: تشخيص كامل يُنسخ بضغطة ----------
+
+   لا أرى شاشة صاحب الأداة، وشبكةُ من بناها لا تصل إلى fal أصلاً. فبدل أن
+   يُسأل «ماذا ظهر لك؟» مرّة بعد مرّة، تكتب الأداة تقريرها بنفسها: ما جُرّب،
+   وماذا ردّ، وما الحكم — ويُنسخ كلّه بزرّ. ولا يدخل التقريرَ المفتاحُ ولا
+   جزءٌ منه. */
+
+let lastReport = '';
+
+async function probe(label, url, options) {
+  const started = Date.now();
+  try {
+    const response = await fetch(url, options);
+    const text = (await response.text()).slice(0, 180).replace(/\s+/g, ' ');
+    return { label, ok: true, status: response.status, ms: Date.now() - started, text };
+  } catch (error) {
+    return { label, ok: false, name: error.name, message: String(error.message || error), ms: Date.now() - started };
+  }
+}
+
+$('fal-test').addEventListener('click', async () => {
+  const out = $('fal-test-out');
+  const cfg = falCfg();
+  const proxy = (cfg.proxy || '').trim();
+
+  if (!cfg.key && !proxy) {
+    out.innerHTML = '<div class="notice notice-warn">اكتب المفتاح أوّلاً.</div>';
+    return;
+  }
+  if (proxy && !isUrl(proxy)) {
+    out.innerHTML = '<div class="notice notice-warn">خانة «الوسيط» ليست رابطاً. أفرغها أو ضع عنواناً يبدأ بـhttps://</div>';
+    return;
+  }
+
+  out.innerHTML = '<div class="notice notice-plain">جارٍ الفحص…</div>';
+
+  const target = proxy ? proxy.replace(/\/+$/, '') : FAL_BASE;
+  const headers = { 'Content-Type': 'application/json' };
+  if (!proxy && cfg.key) headers.Authorization = 'Key ' + cfg.key;
+
+  const results = [];
+  // ١) هل تصل الشبكة إلى الخادم أصلاً؟ طلب بلا مفتاح يفرّق بين المنع
+  //    والرفض: المنع لا يُرجع رقمًا، والرفض يُرجع 401.
+  results.push(await probe('بلا مفتاح', `${target}/${cfg.imageModel}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }));
+  // ٢) وبالمفتاح
+  results.push(await probe('بالمفتاح', `${target}/${cfg.imageModel}`,
+    { method: 'POST', headers, body: '{}' }));
+
+  const withKey = results[1];
+  const noKey = results[0];
+
+  let verdict = '';
+  let tone = 'warn';
+
+  const says = (needle) => (withKey.text || '').toLowerCase().includes(needle);
+
+  if (!withKey.ok && withKey.name === 'TypeError') {
+    if (!noKey.ok) {
+      verdict = 'لم يصل الطلب إلى fal إطلاقاً. إمّا لا إنترنت الآن، وإمّا أن الشبكة ' +
+        'تحجب fal.ai، وإمّا أن المتصفّح يمنع الاتصال المباشر (CORS). ' +
+        'الحلّ في الحالات الثلاث واحد: وسيط.';
+    } else {
+      verdict = 'المتصفّح يمنع الاتصال المباشر بـfal (CORS). الحلّ: وسيط.';
+    }
+  // الرصيد يُفحص قبل الهوية: fal تردّ على نفاد الرصيد بـ403 كما تردّ على
+  // المفتاح المرفوض، فمن قرأ الرقم وحده اتّهم مفتاحاً سليماً — وأرسل صاحبه
+  // ينسخه من جديد بلا فائدة. والرسالة تفرّق بينهما، لا الرقم.
+  } else if (withKey.status === 402 || says('balance') || says('locked')) {
+    verdict = 'مفتاحك سليم والطريق مفتوح — لكن رصيدك في fal فارغ. اشحنه من ' +
+      'fal.ai/dashboard/billing وارجع، فكل شيء جاهز بعده.';
+  } else if (withKey.status === 401 || withKey.status === 403) {
+    verdict = 'الطريق مفتوح، لكن fal رفض المفتاح. انسخه كاملاً من fal.ai ← Dashboard ← Keys ' +
+      '(صيغته ‎id:secret‎ بنقطتين في وسطه).';
+  } else if (withKey.status === 422 || withKey.status === 400) {
+    verdict = 'كل شيء سليم: الطريق مفتوح والمفتاح مقبول. (ردّ fal بنقص في المدخلات، ' +
+      'وهذا هو المتوقَّع من فحصٍ فارغ.) اذهب إلى الاستوديو وولّد.';
+    tone = 'ok';
+  } else if (withKey.ok && withKey.status < 300) {
+    verdict = 'الاتصال يعمل والمفتاح مقبول. اذهب إلى الاستوديو وولّد.';
+    tone = 'ok';
+  } else {
+    verdict = `ردّ غير متوقّع (${withKey.status || withKey.name}). التقرير تحت — أرسله كما هو.`;
+  }
+
+  lastReport = [
+    'تقرير فحص fal',
+    '· الوجهة: ' + (proxy ? 'وسيط ' + target : 'fal مباشرة'),
+    '· النموذج: ' + cfg.imageModel,
+    '· المفتاح مكتوب؟ ' + (cfg.key ? 'نعم (' + cfg.key.length + ' حرفاً)' : 'لا'),
+    ...results.map((r) => r.ok
+      ? `· ${r.label}: ${r.status} خلال ${r.ms}ms — ${r.text}`
+      : `· ${r.label}: فشل (${r.name}) خلال ${r.ms}ms — ${r.message}`),
+    '· المتصفّح: ' + navigator.userAgent.slice(0, 110),
+  ].join('\n');
+
+  out.innerHTML = `
+    <div class="notice notice-${tone === 'ok' ? 'ok' : 'warn'}">${esc(verdict)}</div>
+    <div class="out">
+      <div class="out-head">
+        <h3>تقرير الفحص</h3>
+        <button class="copy" type="button" data-copy="fal-report">${copyIcon} نسخ</button>
+      </div>
+      <div class="out-body ltr" id="fal-report">${esc(lastReport)}</div>
+    </div>`;
+});
+
+/* ---------- ربط حقول الإعدادات ---------- */
+const FAL_FIELDS = {
+  key: 'fal-key', proxy: 'fal-proxy', videoModel: 'fal-video-model',
+  imageModel: 'fal-image-model', imageField: 'fal-image-field',
+  usdPerSecond: 'fal-usd', dzdPerUsd: 'fal-dzd',
+};
+function fillFalInputs() {
+  const cfg = falCfg();
+  Object.entries(FAL_FIELDS).forEach(([key, id]) => { $(id).value = cfg[key] ?? ''; });
+}
+Object.entries(FAL_FIELDS).forEach(([key, id]) => {
+  $(id).addEventListener('input', () => {
+    const numeric = key === 'usdPerSecond' || key === 'dzdPerUsd';
+    db.fal = { ...falCfg(), [key]: numeric ? Number($(id).value) || 0 : $(id).value.trim() };
+    save();
+    if (key === 'proxy') checkProxyField();
+  });
+});
+
+/** يقول للخانة إن كان ما فيها رابطاً، وقت الكتابة لا وقت الفشل. */
+function checkProxyField() {
+  const value = $('fal-proxy').value.trim();
+  const bad = value && !isUrl(value);
+  $('fal-proxy').style.borderColor = bad ? '#C2350F' : '';
+  $('proxy-warn').hidden = !bad;
+}
+
+/* ---------- الإعدادات ---------- */
+$('save-code').addEventListener('click', () => {
+  const code = $('s-code').value.trim();
+  if (code.length < 4) { toast('اجعل الرمز أربعة أرقام على الأقل.'); return; }
+  db.code = code;
+  save();
+  $('s-code').value = '';
+  toast('حُفظ الرمز الجديد.');
+});
+
+$('export').addEventListener('click', () => {
+  const blob = new Blob([JSON.stringify(db, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `bofaida-studio-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+});
+
+$('import-btn').addEventListener('click', () => $('import-file').click());
+$('import-file').addEventListener('change', async (event) => {
+  const file = event.target.files && event.target.files[0];
+  if (!file) return;
+  try {
+    const parsed = JSON.parse(await file.text());
+    if (!parsed || !Array.isArray(parsed.projects)) throw new Error('bad');
+    db = { ...defaults(), ...parsed };
+    save();
+    fillPriceInputs();
+    renderProjects();
+    renderPrice();
+    toast('استُوردت النسخة.');
+  } catch (e) {
+    toast('الملف غير صالح.');
+  }
+  event.target.value = '';
+});
+
+$('wipe').addEventListener('click', () => {
+  if (!confirm('سيُمحى كل شيء من هذا الجهاز: المشاريع والأسعار والرمز. متأكّد؟')) return;
+  try { localStorage.removeItem(KEY); } catch (e) { /* محجوب أصلاً */ }
+  db = defaults();
+  fillPriceInputs();
+  renderProjects();
+  renderPrice();
+  toast('مُحي كل شيء.');
+});
+
+/* ═══════════════ البوّابة والحساب ═══════════════
+
+   ثلاث طرق للدخول، ولكلٍّ سببها:
+
+   • البريد الإلكتروني — الحساب الحقيقي. مشاريعك تُحفظ في حسابك فتتبعك بين
+     الهاتف والحاسوب، ولا يقرؤها غيرك ولو عرف الرابط: قواعد Firestore تربط
+     كل وثيقة بصاحبها.
+   • رقم الهاتف — نفس الشيء برسالة نصّية، ويحتاج تفعيل المزوّد في لوحة
+     Firebase. إن لم يُفعَّل بعدُ قالت الأداة ذلك صراحةً بدل أن تصمت.
+   • رمز الجهاز — بديل بلا إنترنت. يفتح بيانات هذا الجهاز وحدها، ولا يحمي
+     شيئاً: ستار لا قفل. وُجد كي لا تُغلق الأداة في وجه صاحبها يوم تنقطع
+     الشبكة أو يسقط تحميل مكتبة Firebase.
+   ═══════════════════════════════════════════════ */
+
+const FIREBASE_CONFIG = {
+  apiKey: 'AIzaSyC91OFvMReKqz5nLwJjVSx0_zEFORZ5eRI',
+  authDomain: 'albacha-metals-fecd8.firebaseapp.com',
+  projectId: 'albacha-metals-fecd8',
+  storageBucket: 'albacha-metals-fecd8.firebasestorage.app',
+  messagingSenderId: '379093155638',
+  appId: '1:379093155638:web:903d928937a71e92c6fd97',
+};
+const SDK = 'https://www.gstatic.com/firebasejs/11.1.0/';
+
+let fb = null;       // { auth, dbF, mods }  — يبقى null إن تعذّر تحميل المكتبة
+let user = null;     // المستخدم الداخل، أو null
+let confirmation = null; // نتيجة إرسال رمز الهاتف
+
+function setSync(text, tone) {
+  const el = $('sync-state');
+  el.textContent = text;
+  el.style.color = tone === 'ok' ? '#5FD19A' : '';
+}
+
+function gateError(message) {
+  const el = $('gate-err');
+  if (!message) { el.hidden = true; return; }
+  el.textContent = message;
+  el.hidden = false;
+}
+
+// رسائل Firebase بالإنجليزية ورموزها لا تعني شيئاً لصاحب الورشة.
+const AUTH_ERRORS = {
+  'auth/invalid-email': 'البريد غير صحيح.',
+  'auth/missing-password': 'اكتب كلمة المرور.',
+  'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+  'auth/email-already-in-use': 'هذا البريد له حساب. ادخل بكلمة مروره.',
+  'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
+  'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+  'auth/user-not-found': 'لا حساب بهذا البريد. أنشئه من الزرّ تحت.',
+  'auth/too-many-requests': 'محاولات كثيرة. انتظر قليلاً ثم أعد.',
+  'auth/network-request-failed': 'لا اتصال بالإنترنت. ادخل برمز الجهاز.',
+  'auth/operation-not-allowed':
+    'الدخول برقم الهاتف غير مفعّل في المشروع بعد. فعّله من لوحة Firebase: ' +
+    'Authentication ← Sign-in method ← Phone ← Enable.',
+  'auth/invalid-phone-number': 'الرقم غير صحيح.',
+  'auth/invalid-verification-code': 'الرمز غير صحيح.',
+  'auth/code-expired': 'انتهت صلاحية الرمز. اطلب رمزاً جديداً.',
+};
+const authMessage = (error) =>
+  AUTH_ERRORS[error && error.code] || 'تعذّر الدخول. جرّب ثانية، أو ادخل برمز الجهاز.';
+
+/** يحمّل Firebase عند الحاجة. يرجع null بلا ضجيج إن تعذّر — والأداة تعمل بدونه. */
+async function firebase() {
+  if (fb) return fb;
+  try {
+    const [appMod, authMod, storeMod] = await Promise.all([
+      import(SDK + 'firebase-app.js'),
+      import(SDK + 'firebase-auth.js'),
+      import(SDK + 'firebase-firestore.js'),
+    ]);
+    const app = appMod.initializeApp(FIREBASE_CONFIG);
+    const auth = authMod.getAuth(app);
+    await authMod.setPersistence(auth, authMod.browserLocalPersistence);
+    fb = { auth, dbF: storeMod.getFirestore(app), A: authMod, F: storeMod };
+    return fb;
+  } catch (e) {
+    return null;
+  }
+}
+
+function unlock() {
+  $('gate').hidden = true;
+  $('app').hidden = false;
+  gateError('');
+}
+
+function lockOut() {
+  $('app').hidden = true;
+  $('gate').hidden = false;
+  $('gate-msg').textContent = 'ادخل إلى حسابك';
+  gateError('');
+}
+
+/* ---------- المزامنة السحابية ----------
+
+   تُحفظ في حقل ‎studio‎ على وثيقة المستخدم نفسها ‎users/{uid}‎، لا في
+   مجموعة مستقلّة تحتها. السبب عملي لا جمالي: القاعدة التي تسمح لصاحب
+   الحساب بوثيقته منشورة في المشروع منذ البداية، أمّا إضافة مجموعة جديدة
+   فتحتاج نشر قواعد من لوحة Firebase — خطوة تعثّر فيها صاحب الأداة مرّتين
+   على هاتفه. فما دام الموضع المسموح يفي بالغرض، فهو الموضع.
+
+   والكتابة بالدمج ‎merge‎: تطبيق حرفة برو يكتب حقل ‎profile‎ على الوثيقة
+   نفسها، فلولا الدمج لمحا كلٌّ منهما بيانات الآخر. وختم الوقت يعيش داخل
+   ‎studio‎ لا في جذر الوثيقة، لأن الجذر لحرفة برو. */
+const cloudDoc = () => fb.F.doc(fb.dbF, `users/${user.uid}`);
+
+/**
+ * الرفض بالصلاحية ليس عطلاً عابراً: معناه أن قاعدة `studio` لم تُنشر بعد في
+ * المشروع. الصمت هنا يجعل صاحبها يظنّ عمله محفوظاً وهو ليس كذلك.
+ */
+let deniedTold = false;
+function handleCloudError(error) {
+  const denied = error && (error.code === 'permission-denied' || String(error).includes('permission-denied'));
+  if (denied) {
+    setSync('حسابك · المزامنة مغلقة');
+    $('sync-help').hidden = false;
+    if (!deniedTold) {
+      deniedTold = true;
+      toast('المزامنة تحتاج نشر قاعدة الأمان — الخطوات في الإعدادات.');
+    }
+  } else {
+    setSync('حسابك · تعذّرت المزامنة');
+  }
+}
+
+async function pullCloud() {
+  if (!fb || !user) return;
+  try {
+    const snap = await fb.F.getDoc(cloudDoc());
+    const remote = snap.exists() ? snap.data().studio : null;
+    if (!remote) { await pushCloud(); return; }
+    // الأحدث يفوز كاملاً: دمج جزئي بين نسختين لمشاريع مختلفة يُنتج
+    // تكراراً صامتاً، والصمت هنا أسوأ من خسارة تعديل يعرف صاحبه أنه ضاع.
+    if ((remote.updatedAt || 0) > (db.updatedAt || 0)) {
+      db = { ...defaults(), ...remote };
+      save(false);
+      fillPriceInputs();
+      renderProjects();
+      renderPrice();
+      toast('جُلبت نسختك من الحساب.');
+    } else if ((db.updatedAt || 0) > (remote.updatedAt || 0)) {
+      await pushCloud();
+    }
+    setSync('حسابك · متزامن', 'ok');
+    $('sync-help').hidden = true;
+  } catch (e) {
+    handleCloudError(e);
+  }
+}
+
+let pushTimer = 0;
+async function pushCloud() {
+  if (!fb || !user) return;
+  try {
+    // لا يُرفع الرمز المحلّي ولا مفتاح fal: المفتاح مال، ومكانه جهاز صاحبه
+    // وحده. ما عداهما من إعدادات التوليد يُرفع كي تتبعه بين أجهزته.
+    const { code, fal, ...rest } = db;
+    rest.fal = { ...fal, key: '' };
+    await fb.F.setDoc(
+      cloudDoc(),
+      { studio: { ...rest, updatedAt: db.updatedAt || Date.now() } },
+      { merge: true },
+    );
+    setSync('حسابك · متزامن', 'ok');
+    $('sync-help').hidden = true;
+  } catch (e) {
+    handleCloudError(e);
+  }
+}
+function schedulePush() {
+  if (!user) return;
+  clearTimeout(pushTimer);
+  pushTimer = setTimeout(pushCloud, 1500);
+}
+
+/* ---------- مبدّل طرق الدخول ---------- */
+const PANES = ['email', 'phone', 'code'];
+PANES.forEach((name) => {
+  $('seg-' + name).addEventListener('click', () => {
+    PANES.forEach((other) => {
+      $('seg-' + other).setAttribute('aria-selected', String(other === name));
+      $('pane-' + other).hidden = other !== name;
+    });
+    gateError('');
+  });
+});
+
+/* ---------- الدخول بالبريد ---------- */
+async function emailAuth(create) {
+  const email = $('g-email').value.trim();
+  const pass = $('g-pass').value;
+  if (!email || pass.length < 6) { gateError('اكتب بريدك وكلمة مرور من ستّة أحرف فأكثر.'); return; }
+  gateError('');
+  $('email-go').disabled = true;
+  const f = await firebase();
+  if (!f) { gateError('تعذّر تحميل المكتبة — لا إنترنت؟ ادخل برمز الجهاز.'); $('email-go').disabled = false; return; }
+  try {
+    if (create) await f.A.createUserWithEmailAndPassword(f.auth, email, pass);
+    else await f.A.signInWithEmailAndPassword(f.auth, email, pass);
+    $('g-pass').value = '';
+  } catch (error) {
+    gateError(authMessage(error));
+  } finally {
+    $('email-go').disabled = false;
+  }
+}
+
+$('pane-email').addEventListener('submit', (event) => { event.preventDefault(); emailAuth(false); });
+$('email-signup').addEventListener('click', () => emailAuth(true));
+$('email-reset').addEventListener('click', async () => {
+  const email = $('g-email').value.trim();
+  if (!email) { gateError('اكتب بريدك أوّلاً.'); return; }
+  const f = await firebase();
+  if (!f) { gateError('لا اتصال بالإنترنت.'); return; }
+  try {
+    await f.A.sendPasswordResetEmail(f.auth, email);
+    gateError('');
+    $('gate-msg').textContent = 'أُرسلت رسالة إلى بريدك لتغيير كلمة المرور.';
+  } catch (error) {
+    gateError(authMessage(error));
+  }
+});
+
+/* ---------- الدخول بالهاتف ---------- */
+// الأرقام الجزائرية تُكتب 0673… ويقبلها Firebase بالصيغة الدولية وحدها.
+function toE164(raw) {
+  const digits = raw.replace(/[^\d+]/g, '');
+  if (digits.startsWith('+')) return digits;
+  if (digits.startsWith('00')) return '+' + digits.slice(2);
+  if (digits.startsWith('0')) return '+213' + digits.slice(1);
+  if (digits.startsWith('213')) return '+' + digits;
+  return '+213' + digits;
+}
+
+$('pane-phone').addEventListener('submit', async (event) => {
+  event.preventDefault();
+  gateError('');
+  const f = await firebase();
+  if (!f) { gateError('تعذّر تحميل المكتبة — لا إنترنت؟ ادخل برمز الجهاز.'); return; }
+
+  // المرحلة الثانية: تأكيد الرمز الواصل.
+  if (confirmation) {
+    const sms = $('g-sms').value.trim();
+    if (sms.length < 4) { gateError('اكتب الرمز الذي وصلك.'); return; }
+    try {
+      await confirmation.confirm(sms);
+      confirmation = null;
+    } catch (error) {
+      gateError(authMessage(error));
+    }
+    return;
+  }
+
+  // المرحلة الأولى: إرسال الرمز.
+  const phone = toE164($('g-phone').value);
+  if (phone.length < 10) { gateError('الرقم غير صحيح.'); return; }
+  $('phone-go').disabled = true;
+  try {
+    if (!window.__recaptcha) {
+      window.__recaptcha = new f.A.RecaptchaVerifier(f.auth, 'recaptcha', { size: 'invisible' });
+    }
+    confirmation = await f.A.signInWithPhoneNumber(f.auth, phone, window.__recaptcha);
+    $('code-field').hidden = false;
+    $('phone-go').textContent = 'تأكيد الرمز';
+    $('g-sms').focus();
+    $('gate-msg').textContent = 'أُرسل رمز إلى ' + phone;
+  } catch (error) {
+    gateError(authMessage(error));
+    // reCAPTCHA المستهلَك لا يُعاد استعماله، فيُرمى ليُبنى جديد في المحاولة التالية.
+    try { window.__recaptcha && window.__recaptcha.clear(); } catch (e) { /* لا يهم */ }
+    window.__recaptcha = null;
+  } finally {
+    $('phone-go').disabled = false;
+  }
+});
+
+/* ---------- الدخول برمز الجهاز ---------- */
+$('pane-code').addEventListener('submit', (event) => {
+  event.preventDefault();
+  const value = $('gate-code').value.trim();
+  if (!db.code) {
+    if (value.length < 4) { gateError('اجعل الرمز أربعة أرقام على الأقل.'); return; }
+    db.code = value;
+    save();
+    unlock();
+    toast('حُفظ رمز هذا الجهاز. تغيّره من الإعدادات.');
+    return;
+  }
+  if (value === db.code) { $('gate-code').value = ''; unlock(); return; }
+  gateError('رمز غير صحيح.');
+  $('gate-code').value = '';
+  $('gate-code').focus();
+});
+
+/* ---------- الخروج ---------- */
+$('lock').addEventListener('click', async () => {
+  if (user && fb) {
+    await pushCloud();
+    try { await fb.A.signOut(fb.auth); } catch (e) { /* يكفي إغلاق الشاشة */ }
+  }
+  lockOut();
+});
+
+/* ---------- التهيئة ---------- */
+function fillSelect(el, items, valueKey, labelKey) {
+  el.innerHTML = items.map((i) => `<option value="${esc(i[valueKey])}">${esc(i[labelKey])}</option>`).join('');
+}
+
+function fillChips(el, items, current, onPick) {
+  el.innerHTML = items.map((i) => `
+    <button class="chip" type="button" data-v="${esc(i.v)}" aria-pressed="${i.v === current}">${esc(i.ar)}</button>
+  `).join('');
+  el.addEventListener('click', (event) => {
+    const btn = event.target.closest('.chip');
+    if (!btn) return;
+    onPick(btn.dataset.v);
+    [...el.querySelectorAll('.chip')].forEach((c) => {
+      c.setAttribute('aria-pressed', String(c.dataset.v === btn.dataset.v));
+    });
+  });
+}
+
+function fillPriceInputs() {
+  Object.entries(PRICE_FIELDS).forEach(([key, id]) => { $(id).value = db.price[key]; });
+}
+
+function initShots() {
+  const input = $('f-shots');
+  const clamp = (n) => Math.min(6, Math.max(3, n));
+  const sync = () => {
+    input.value = clamp(Number(input.value) || 4);
+    $('shots-minus').disabled = Number(input.value) <= 3;
+    $('shots-plus').disabled = Number(input.value) >= 6;
+  };
+  $('shots-minus').addEventListener('click', () => { input.value = clamp(Number(input.value) - 1); sync(); });
+  $('shots-plus').addEventListener('click', () => { input.value = clamp(Number(input.value) + 1); sync(); });
+  input.addEventListener('change', sync);
+  sync();
+}
+
+function init() {
+  load();
+
+  fillSelect($('f-category'), CATEGORIES, 'v', 'ar');
+  fillSelect($('d-status'), STATUSES, 'v', 'ar');
+  $('f-duration').innerHTML = DURATIONS
+    .map((d) => `<option value="${d}"${d === 20 ? ' selected' : ''}>${d} ثانية</option>`).join('');
+
+  fillChips($('tone-chips'), TONES, form.tone, (v) => { form.tone = v; });
+  fillChips($('format-chips'), FORMATS, form.format, (v) => { form.format = v; });
+
+  initShots();
+  fillPriceInputs();
+  fillFalInputs();
+  checkProxyField();
+  renderProjects();
+  renderPrice();
+
+  $('generate').addEventListener('click', () => render(build()));
+
+  if (!db.code) $('gate-code').type = 'text';
+  $('g-email').focus();
+
+  // جلسة Firebase تبقى محفوظة، فمن دخل مرّة يجد الأداة مفتوحة في المرّة
+  // التالية — ولا ينتظر البوّابةَ من يملك حساباً.
+  firebase().then((f) => {
+    if (!f) { setSync('على هذا الجهاز'); return; }
+    f.A.onAuthStateChanged(f.auth, (current) => {
+      user = current;
+      if (current) {
+        setSync('حسابك · جارٍ المزامنة');
+        unlock();
+        pullCloud();
+      } else {
+        setSync('على هذا الجهاز');
+      }
+    });
+  });
+
+  // عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
+  if ('serviceWorker' in navigator) {
+    window.addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+}
+
+init();
+</script>
+
+</body>
+</html>

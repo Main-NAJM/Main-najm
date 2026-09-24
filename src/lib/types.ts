@@ -2,11 +2,31 @@
 
 export type UserType = 'craftsman' | 'merchant';
 
-export type Craft = 'carpenter' | 'blacksmith' | 'tailor' | 'other';
+/**
+ * المهنة. 'other' ليست حرفة بعينها بل بابٌ مفتوح: يكتب صاحبها اسم مهنته ومادّته
+ * وطريقة تسعيره في ‎Profile.customCraft/customMaterial/customBasis‎، فيعمل التطبيق
+ * بها كما يعمل بالحرف المعروفة.
+ */
+export type Craft =
+  | 'carpenter'
+  | 'blacksmith'
+  | 'aluminium'
+  | 'mechanic'
+  | 'builder'
+  | 'tailor'
+  | 'other';
 
 export type OrderStatus = 'in_progress' | 'pending' | 'completed';
 
-export type MaterialKind = 'wood' | 'iron' | 'fabric' | 'other';
+export type MaterialKind =
+  | 'wood'
+  | 'iron'
+  | 'aluminium'
+  | 'glass'
+  | 'fabric'
+  | 'building'
+  | 'parts'
+  | 'other';
 
 /**
  * أساس تسعير المنتج: ما الذي يُضرب فيه سعر الوحدة.
@@ -16,7 +36,7 @@ export type MaterialKind = 'wood' | 'iron' | 'fabric' | 'other';
  * weight — الكيلوغرام (يُحسب من الحجم × كثافة المادة): حديد بالوزن.
  * unit  — القطعة: تسعير ثابت لا يتبع المقاس.
  */
-export type PricingBasis = 'area' | 'length' | 'volume' | 'weight' | 'unit';
+export type PricingBasis = 'area' | 'length' | 'frame' | 'volume' | 'weight' | 'unit';
 
 /** حقول مشتركة لكل السجلات المخزّنة. */
 export interface BaseRecord {
@@ -120,6 +140,26 @@ export interface Debt extends BaseRecord {
   notes: string;
 }
 
+/**
+ * سلعة في المخزون: كميّتها الحالية وحدّ التنبيه الذي إذا نزلت إليه أو دونه
+ * عُدّت منخفضة. تختلف عن ProductTemplate: ذاك قالب تسعير لا رصيد له.
+ */
+export interface InventoryItem extends BaseRecord {
+  name: string;
+  /** وحدة العدّ: قطعة، متر، كيس، لتر… */
+  unit: string;
+  /** الكمية الحالية — تُزاد بالإدخال وتُنقص بالإخراج. */
+  qty: number;
+  /** حدّ التنبيه: qty <= lowAt يعني «مخزون منخفض». */
+  lowAt: number;
+  /** سعر شراء الوحدة — منه تُحسب قيمة المخزون. */
+  costPrice: number;
+  /** سعر بيع الوحدة، اختياري. */
+  salePrice: number;
+  supplier: string;
+  notes: string;
+}
+
 /** قالب منتج: نوعه وأساس تسعيره وسعر وحدته، تُشتقّ منه الأسعار بالمقاسات. */
 export interface ProductTemplate extends BaseRecord {
   name: string;
@@ -129,6 +169,14 @@ export interface ProductTemplate extends BaseRecord {
   unitPrice: number;
   /** كثافة المادة كغ/م³ — تُستعمل مع أساس الوزن فقط. */
   density: number;
+  /**
+   * سعر المتر المربّع للصفيحة التي تملأ الإطار: زجاج، لوح، بانو…
+   * صفر يعني بلا صفيحة. يُضاف فوق أساس التسعير، ولا يحلّ محلّه —
+   * فباب الألمنيوم إطارُه بالمتر الطولي وزجاجُه بالمتر المربّع معاً.
+   */
+  sheetPrice: number;
+  /** اسم الصفيحة كما يظهر في عرض السعر: «زجاج 4 مم» مثلاً. */
+  sheetName: string;
   /** نسبة الهالك من قيمة المادة. */
   wastePct: number;
   /** إضافات ثابتة لكل قطعة: إكسسوارات، أقفال، تركيب. */
@@ -151,17 +199,41 @@ export interface Profile {
   address: string;
   userType: UserType;
   craft: Craft;
+  /** اسم المهنة كما كتبه صاحبها — يُستعمل متى كانت craft === 'other'. */
+  customCraft: string;
+  /** اسم المادة الأساسية (جلد، رخام، بلاستيك…) — يسمّي صنف «مواد أخرى». */
+  customMaterial: string;
+  /** طريقة التسعير المعتادة في هذه المهنة — أساس القالب الأوّل. */
+  customBasis: PricingBasis;
   currency: string;
   /** أجرة الساعة الافتراضية في الحاسبة. */
   defaultLaborRate: number;
   /** نسبة الربح الافتراضية في الحاسبة. */
   defaultMarginPct: number;
+  /**
+   * سعرا حاسبة الفتحات (طاقة، نافذة، باب): المتر الطولي للبروفيل،
+   * والمتر المربّع للزجاج أو الصفيحة. يُدخلهما صاحب الورشة مرّة فيثبتان.
+   */
+  openingRate: number;
+  openingSheetRate: number;
+  /**
+   * عدد قطع البروفيل في كل نوع. نافذة ١×١ فيها ١١ قطعة لا أربع:
+   * الإطار الخارجي وضلفتاه وقضبانه. العدد يختلف بين ورشة وأخرى
+   * وبين تصميم وآخر، فيضبطه صاحب الورشة مرّة لكل نوع.
+   */
+  openingPiecesFanlight: number;
+  openingPiecesWindow: number;
+  openingPiecesDoor: number;
   updatedAt: number;
 }
+
+/** نوع الفتحة في حاسبة الأبواب والنوافذ. */
+export type OpeningKind = 'fanlight' | 'window' | 'door';
 
 export type CollectionName =
   | 'orders'
   | 'products'
+  | 'inventory'
   | 'appointments'
   | 'calculations'
   | 'marketPrices'
@@ -170,6 +242,7 @@ export type CollectionName =
 export interface CollectionMap {
   orders: Order;
   products: ProductTemplate;
+  inventory: InventoryItem;
   appointments: Appointment;
   calculations: Calculation;
   marketPrices: MarketPrice;
@@ -185,4 +258,12 @@ export interface AppUser {
   isAnonymous: boolean;
   /** true عندما يعمل التطبيق محلياً بدون Firebase. */
   isLocal: boolean;
+  /** المهنة المسجّلة وقت إنشاء الحساب — يبني عليها التطبيق محتواه الأوّل. */
+  userType?: UserType;
+  craft?: Craft;
+  customCraft?: string;
+  customMaterial?: string;
+  customBasis?: PricingBasis;
+  /** true لجلسة «بدون حساب» على هذا الجهاز. */
+  isGuest?: boolean;
 }

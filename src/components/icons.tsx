@@ -95,3 +95,65 @@ export const ProductIcon = (props: IconProps) => (
     <path d="M4 7.4 12 11.6l8-4.2M12 11.6v9.2" />
   </svg>
 );
+
+/** المخزون: صناديق مرصوصة. */
+export const StockIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <rect x="3.5" y="12.5" width="7.5" height="7" rx="1" />
+    <rect x="13" y="12.5" width="7.5" height="7" rx="1" />
+    <rect x="8.2" y="4.5" width="7.5" height="7" rx="1" />
+  </svg>
+);
+
+/* ------------------------------------------------------------ أيقونات المهن */
+
+/** نجّار: منشار يد — نصل بأسنان ومقبض. */
+export const CarpenterIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M3 7.5h12v4H3z" />
+    <path d="M3 11.5l1.5 1.7 1.5-1.7 1.5 1.7 1.5-1.7 1.5 1.7 1.5-1.7 1.5 1.7 1.5-1.7" />
+    <path d="M15 7.5h2.6a2.4 2.4 0 0 1 2.4 2.4v1.2a2.4 2.4 0 0 1-2.4 2.4H15" />
+  </svg>
+);
+
+/** حدّاد: سندان. */
+export const BlacksmithIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M3.5 7h10l3 2.2H20l-2.6 3.3H9.6" />
+    <path d="M3.5 7v2.3a3.2 3.2 0 0 0 3.2 3.2h2.9l-1.4 3.6h2.3V20H7.6" />
+    <path d="M10.5 16.1h3.2V20h3" />
+  </svg>
+);
+
+/** خيّاط: مقصّ. */
+export const TailorIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <circle cx="7" cy="18" r="2.4" />
+    <circle cx="17" cy="18" r="2.4" />
+    <path d="M8.6 16.2 18.5 4M15.4 16.2 5.5 4" />
+  </svg>
+);
+
+/** ألمنيوم وزجاج: إطار نافذة بمصراعين. */
+export const AluminiumIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <rect x="3.5" y="4" width="17" height="16" rx="1.6" />
+    <path d="M12 4v16M3.5 12h17" />
+    <path d="M9 8.2v-.01M15 15.8v-.01" />
+  </svg>
+);
+
+/** ميكانيكي: مفتاح ربط. */
+export const MechanicIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M15.5 3.5a5 5 0 0 0-5.9 6.6L3.5 16.2a2 2 0 1 0 2.8 2.8l6.1-6.1a5 5 0 0 0 6.6-5.9l-2.8 2.8-2.6-.6-.6-2.6Z" />
+  </svg>
+);
+
+/** بنّاء: جدار آجر. */
+export const BuilderIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M3.5 6.5h17v11h-17z" />
+    <path d="M3.5 10.2h17M3.5 13.8h17M9 6.5v3.7M15 6.5v3.7M6 10.2v3.6M12 10.2v3.6M18 10.2v3.6M9 13.8v3.7M15 13.8v3.7" />
+  </svg>
+);

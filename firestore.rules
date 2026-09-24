@@ -19,11 +19,14 @@ service cloud.firestore {
             'marketPrices',
             'debts',
             'products',
+            'inventory',
             // تطبيق مؤسسة الباشة (مجموعات مستقلّة حتى لا تختلط البيانات)
             'albachaCustomers',
             'albachaOrders',
             'albachaMaterials',
-            'albachaPhotos'
+            'albachaPhotos',
+            // استوديو بوفايدة (وثيقة واحدة تحمل المشاريع والأسعار)
+            'studio'
           ];
       }
     }

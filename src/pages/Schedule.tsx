@@ -20,7 +20,9 @@ import {
   telHref,
   toNumber,
   todayIso,
+  whatsappHref,
 } from '@/lib/format';
+import { appointmentReminder } from '@/lib/messages';
 import type { NewRecord } from '@/data/store';
 import type { Appointment } from '@/lib/types';
 
@@ -45,7 +47,7 @@ const sortByDateTime = (a: Appointment, b: Appointment): number => {
 };
 
 export default function Schedule() {
-  const { appointments, orders, create, update, remove } = useData();
+  const { appointments, orders, profile, create, update, remove } = useData();
   const { notify, notifyError } = useToast();
 
   const [range, setRange] = useState<Range>('today');
@@ -212,7 +214,7 @@ export default function Schedule() {
             <strong>{formatDate(today)}</strong>
             <p className="small muted">{formatWeekday(today)}</p>
           </div>
-          <div style={{ display: 'flex', gap: 8 }}>
+          <div className="cluster">
             <button
               type="button"
               className="btn btn--soft btn--sm"
@@ -265,6 +267,10 @@ export default function Schedule() {
             <div className="list">
               {items.map((item) => {
                 const tel = telHref(item.phone);
+                // تذكير جاهز في واتساب — يُفتح مكتوباً ولا يُرسل حتى يضغط صاحبه إرسال.
+                const wa = item.done
+                  ? null
+                  : whatsappHref(item.phone, appointmentReminder(item, profile));
                 const linkedOrder = item.orderId
                   ? orders.find((order) => order.id === item.orderId)
                   : null;
@@ -310,6 +316,16 @@ export default function Schedule() {
                       >
                         {item.done ? 'إرجاع' : 'تم الإنجاز'}
                       </button>
+                      {wa ? (
+                        <a
+                          className="btn btn--ghost btn--sm"
+                          href={wa}
+                          target="_blank"
+                          rel="noreferrer noopener"
+                        >
+                          تذكير بواتساب
+                        </a>
+                      ) : null}
                       <button
                         type="button"
                         className="btn btn--ghost btn--sm"
