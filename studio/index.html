@@ -744,17 +744,12 @@
       </div>
 
       <div class="card" id="sync-help" hidden>
-        <h2>المزامنة مغلقة — خطوة واحدة تفتحها</h2>
-        <p>
-          حسابك يعمل، لكن قاعدة الأمان في المشروع لا تعرف بيانات الاستوديو بعد،
-          فتُرفض الكتابة. حتى تفتحها، كل شيء يبقى محفوظاً في هذا الجهاز ولا يضيع.
+        <h2>المزامنة متوقّفة مؤقّتاً</h2>
+        <p style="margin-bottom:0">
+          حسابك يعمل، لكن الحفظ في السحابة رُفض. <strong>لا شيء يضيع</strong> — كل شيء
+          محفوظ في هذا الجهاز، ويُرفع وحده حين يعود الطريق. وإن طال الأمر، خذ نسخة
+          احتياطية من الأسفل وأخبرني بما تراه هنا.
         </p>
-        <ol style="padding-inline-start:20px; color:var(--ink-soft); font-size:0.88rem; line-height:2">
-          <li>افتح <a href="https://console.firebase.google.com/project/albacha-metals-fecd8/firestore/rules" target="_blank" rel="noopener">قواعد Firestore</a></li>
-          <li>في قائمة المجموعات المسموحة، أضف سطراً: <code>'studio'</code></li>
-          <li>اضغط <strong>Publish</strong></li>
-          <li>ارجع هنا واخرج ثم ادخل</li>
-        </ol>
       </div>
 
       <div class="card">
@@ -1778,8 +1773,18 @@ function lockOut() {
   gateError('');
 }
 
-/* ---------- المزامنة السحابية ---------- */
-const cloudDoc = () => fb.F.doc(fb.dbF, `users/${user.uid}/studio/data`);
+/* ---------- المزامنة السحابية ----------
+
+   تُحفظ في حقل ‎studio‎ على وثيقة المستخدم نفسها ‎users/{uid}‎، لا في
+   مجموعة مستقلّة تحتها. السبب عملي لا جمالي: القاعدة التي تسمح لصاحب
+   الحساب بوثيقته منشورة في المشروع منذ البداية، أمّا إضافة مجموعة جديدة
+   فتحتاج نشر قواعد من لوحة Firebase — خطوة تعثّر فيها صاحب الأداة مرّتين
+   على هاتفه. فما دام الموضع المسموح يفي بالغرض، فهو الموضع.
+
+   والكتابة بالدمج ‎merge‎: تطبيق حرفة برو يكتب حقل ‎profile‎ على الوثيقة
+   نفسها، فلولا الدمج لمحا كلٌّ منهما بيانات الآخر. وختم الوقت يعيش داخل
+   ‎studio‎ لا في جذر الوثيقة، لأن الجذر لحرفة برو. */
+const cloudDoc = () => fb.F.doc(fb.dbF, `users/${user.uid}`);
 
 /**
  * الرفض بالصلاحية ليس عطلاً عابراً: معناه أن قاعدة `studio` لم تُنشر بعد في
@@ -1804,8 +1809,8 @@ async function pullCloud() {
   if (!fb || !user) return;
   try {
     const snap = await fb.F.getDoc(cloudDoc());
-    if (!snap.exists()) { await pushCloud(); return; }
-    const remote = snap.data();
+    const remote = snap.exists() ? snap.data().studio : null;
+    if (!remote) { await pushCloud(); return; }
     // الأحدث يفوز كاملاً: دمج جزئي بين نسختين لمشاريع مختلفة يُنتج
     // تكراراً صامتاً، والصمت هنا أسوأ من خسارة تعديل يعرف صاحبه أنه ضاع.
     if ((remote.updatedAt || 0) > (db.updatedAt || 0)) {
@@ -1833,7 +1838,11 @@ async function pushCloud() {
     // وحده. ما عداهما من إعدادات التوليد يُرفع كي تتبعه بين أجهزته.
     const { code, fal, ...rest } = db;
     rest.fal = { ...fal, key: '' };
-    await fb.F.setDoc(cloudDoc(), { ...rest, updatedAt: db.updatedAt || Date.now() });
+    await fb.F.setDoc(
+      cloudDoc(),
+      { studio: { ...rest, updatedAt: db.updatedAt || Date.now() } },
+      { merge: true },
+    );
     setSync('حسابك · متزامن', 'ok');
     $('sync-help').hidden = true;
   } catch (e) {
