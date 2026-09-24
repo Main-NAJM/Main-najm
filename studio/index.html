@@ -1574,33 +1574,105 @@ const money = (usd) => {
   return `${usd.toFixed(2)}$ ≈ ${Math.round(dzd).toLocaleString('ar-DZ')} دج`;
 };
 
-/* ---------- فحص المفتاح ---------- */
+/* ---------- فحص المفتاح: تشخيص كامل يُنسخ بضغطة ----------
+
+   لا أرى شاشة صاحب الأداة، وشبكةُ من بناها لا تصل إلى fal أصلاً. فبدل أن
+   يُسأل «ماذا ظهر لك؟» مرّة بعد مرّة، تكتب الأداة تقريرها بنفسها: ما جُرّب،
+   وماذا ردّ، وما الحكم — ويُنسخ كلّه بزرّ. ولا يدخل التقريرَ المفتاحُ ولا
+   جزءٌ منه. */
+
+let lastReport = '';
+
+async function probe(label, url, options) {
+  const started = Date.now();
+  try {
+    const response = await fetch(url, options);
+    const text = (await response.text()).slice(0, 180).replace(/\s+/g, ' ');
+    return { label, ok: true, status: response.status, ms: Date.now() - started, text };
+  } catch (error) {
+    return { label, ok: false, name: error.name, message: String(error.message || error), ms: Date.now() - started };
+  }
+}
+
 $('fal-test').addEventListener('click', async () => {
   const out = $('fal-test-out');
   const cfg = falCfg();
-  if (!cfg.key && !cfg.proxy) {
+  const proxy = (cfg.proxy || '').trim();
+
+  if (!cfg.key && !proxy) {
     out.innerHTML = '<div class="notice notice-warn">اكتب المفتاح أوّلاً.</div>';
     return;
   }
-  out.innerHTML = '<div class="notice notice-plain">جارٍ الفحص…</div>';
-  try {
-    // طلب مُدخلاته ناقصة عمداً: يكفي أن يردّ fal بخطأ في المدخلات لنعرف أن
-    // المفتاح مقبول والطريق مفتوح — بلا صرف فلس واحد.
-    await falFetch(cfg.imageModel, { method: 'POST', headers: falHeaders(), body: '{}' });
-    out.innerHTML = '<div class="notice notice-ok">الاتصال يعمل ✓</div>';
-  } catch (error) {
-    const message = String(error.message || error);
-    const unauthorized = message.includes('401') || message.includes('403');
-    const inputError = message.includes('422') || message.includes('400');
-    if (inputError) {
-      out.innerHTML = '<div class="notice notice-ok">المفتاح مقبول والطريق مفتوح ✓ ' +
-        '<br><span class="small">(ردّ fal بنقص في المدخلات، وهذا هو المتوقَّع من فحصٍ فارغ.)</span></div>';
-    } else if (unauthorized) {
-      out.innerHTML = '<div class="notice notice-warn">المفتاح مرفوض. راجع نسخه من لوحة fal.</div>';
-    } else {
-      out.innerHTML = `<div class="notice notice-warn">${esc(message)}</div>`;
-    }
+  if (proxy && !isUrl(proxy)) {
+    out.innerHTML = '<div class="notice notice-warn">خانة «الوسيط» ليست رابطاً. أفرغها أو ضع عنواناً يبدأ بـhttps://</div>';
+    return;
   }
+
+  out.innerHTML = '<div class="notice notice-plain">جارٍ الفحص…</div>';
+
+  const target = proxy ? proxy.replace(/\/+$/, '') : FAL_BASE;
+  const headers = { 'Content-Type': 'application/json' };
+  if (!proxy && cfg.key) headers.Authorization = 'Key ' + cfg.key;
+
+  const results = [];
+  // ١) هل تصل الشبكة إلى الخادم أصلاً؟ طلب بلا مفتاح يفرّق بين المنع
+  //    والرفض: المنع لا يُرجع رقمًا، والرفض يُرجع 401.
+  results.push(await probe('بلا مفتاح', `${target}/${cfg.imageModel}`,
+    { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: '{}' }));
+  // ٢) وبالمفتاح
+  results.push(await probe('بالمفتاح', `${target}/${cfg.imageModel}`,
+    { method: 'POST', headers, body: '{}' }));
+
+  const withKey = results[1];
+  const noKey = results[0];
+
+  let verdict = '';
+  let tone = 'warn';
+
+  if (!withKey.ok && withKey.name === 'TypeError') {
+    if (!noKey.ok) {
+      verdict = 'لم يصل الطلب إلى fal إطلاقاً. إمّا لا إنترنت الآن، وإمّا أن الشبكة ' +
+        'تحجب fal.ai، وإمّا أن المتصفّح يمنع الاتصال المباشر (CORS). ' +
+        'الحلّ في الحالات الثلاث واحد: وسيط.';
+    } else {
+      verdict = 'المتصفّح يمنع الاتصال المباشر بـfal (CORS). الحلّ: وسيط.';
+    }
+  } else if (withKey.status === 401 || withKey.status === 403) {
+    verdict = 'الطريق مفتوح، لكن fal رفض المفتاح. انسخه كاملاً من fal.ai ← Dashboard ← Keys ' +
+      '(صيغته ‎id:secret‎ بنقطتين في وسطه).';
+  } else if (withKey.status === 422 || withKey.status === 400) {
+    verdict = 'كل شيء سليم: الطريق مفتوح والمفتاح مقبول. (ردّ fal بنقص في المدخلات، ' +
+      'وهذا هو المتوقَّع من فحصٍ فارغ.) اذهب إلى الاستوديو وولّد.';
+    tone = 'ok';
+  } else if (withKey.ok && withKey.status < 300) {
+    verdict = 'الاتصال يعمل والمفتاح مقبول. اذهب إلى الاستوديو وولّد.';
+    tone = 'ok';
+  } else if (withKey.status === 402 || (withKey.text || '').includes('balance')) {
+    verdict = 'المفتاح سليم لكن رصيد حسابك في fal فارغ. اشحنه من لوحة fal.';
+  } else {
+    verdict = `ردّ غير متوقّع (${withKey.status || withKey.name}). التقرير تحت — أرسله كما هو.`;
+  }
+
+  lastReport = [
+    'تقرير فحص fal',
+    '· الوجهة: ' + (proxy ? 'وسيط ' + target : 'fal مباشرة'),
+    '· النموذج: ' + cfg.imageModel,
+    '· المفتاح مكتوب؟ ' + (cfg.key ? 'نعم (' + cfg.key.length + ' حرفاً)' : 'لا'),
+    ...results.map((r) => r.ok
+      ? `· ${r.label}: ${r.status} خلال ${r.ms}ms — ${r.text}`
+      : `· ${r.label}: فشل (${r.name}) خلال ${r.ms}ms — ${r.message}`),
+    '· المتصفّح: ' + navigator.userAgent.slice(0, 110),
+  ].join('\n');
+
+  out.innerHTML = `
+    <div class="notice notice-${tone === 'ok' ? 'ok' : 'warn'}">${esc(verdict)}</div>
+    <div class="out">
+      <div class="out-head">
+        <h3>تقرير الفحص</h3>
+        <button class="copy" type="button" data-copy="fal-report">${copyIcon} نسخ</button>
+      </div>
+      <div class="out-body ltr" id="fal-report">${esc(lastReport)}</div>
+    </div>`;
 });
 
 /* ---------- ربط حقول الإعدادات ---------- */
