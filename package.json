@@ -28,7 +28,7 @@
     "build:pages": "node scripts/build-pages.mjs"
   },
   "dependencies": {
-    "firebase": "^11.1.0",
+    "firebase": "^11.10.0",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
     "react-router-dom": "^6.28.0"
