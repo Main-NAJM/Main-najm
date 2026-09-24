@@ -409,6 +409,43 @@
   footer p{font-size:0.9rem; opacity:0.78;}
   footer p + p{margin-block-start:5px;}
 
+  /* ---------- شريط التثبيت ---------- */
+  /* يظهر فقط حين يقول المتصفّح إن التثبيت ممكن — ولا يشغل مكانًا قبل ذلك. */
+  .install{
+    position:fixed; z-index:95;
+    inset-block-end:calc(18px + env(safe-area-inset-bottom));
+    inset-inline-start:calc(84px + env(safe-area-inset-left));
+    inset-inline-end:calc(18px + env(safe-area-inset-right));
+    max-width:440px; margin-inline:auto;
+    display:flex; align-items:center; gap:12px;
+    background:var(--ink); color:var(--bg);
+    border-radius:var(--r-lg);
+    padding:12px 14px;
+    box-shadow:0 12px 34px rgba(0,0,0,0.3);
+  }
+  .install[hidden]{display:none;}
+  .install-ico{
+    width:38px; height:38px; flex:none; border-radius:9px;
+    background:var(--flame-deep); display:grid; place-items:center;
+  }
+  .install-ico svg{width:21px; height:21px; color:#fff;}
+  .install-text{flex:1; min-width:0; font-size:0.84rem; line-height:1.45;}
+  .install-text b{display:block; font-family:'Cairo',sans-serif; font-size:0.92rem;}
+  .install button{
+    flex:none; min-height:42px; padding-inline:15px;
+    background:var(--flame-deep); color:#fff;
+    border:none; border-radius:var(--r);
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:0.86rem;
+    cursor:pointer;
+  }
+  .install .close{
+    background:transparent; color:inherit; opacity:0.6;
+    min-height:42px; width:34px; padding:0; font-size:1.2rem;
+  }
+  @media (max-width: 420px){
+    .install{inset-inline-start:calc(18px + env(safe-area-inset-left)); inset-block-end:calc(84px + env(safe-area-inset-bottom));}
+  }
+
   /* ---------- زرّ واتساب العائم ---------- */
   .wa-float{
     position:fixed;
@@ -701,6 +738,18 @@
   </div>
 </footer>
 
+<div class="install" id="install" hidden role="region" aria-label="تثبيت التطبيق">
+  <span class="install-ico" aria-hidden="true">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 3v12M8 11l4 4 4-4"/><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2"/></svg>
+  </span>
+  <span class="install-text" id="install-text">
+    <b>ثبّته على شاشتك</b>
+    يفتح كتطبيق بأيقونته، ويعمل دون إنترنت.
+  </span>
+  <button type="button" id="install-go">تثبيت</button>
+  <button type="button" class="close" id="install-no" aria-label="إغلاق">✕</button>
+</div>
+
 <a class="wa-float" href="https://wa.me/213673232932" target="_blank" rel="noopener" aria-label="تواصل معنا عبر واتساب">
   <svg viewBox="0 0 32 32" fill="currentColor" aria-hidden="true"><path d="M16.001 2.667c-7.364 0-13.333 5.97-13.333 13.333 0 2.353.616 4.56 1.694 6.475L2.667 29.333l7.03-1.845a13.26 13.26 0 0 0 6.304 1.605h.006c7.363 0 13.332-5.97 13.332-13.333 0-3.562-1.387-6.911-3.905-9.428a13.245 13.245 0 0 0-9.433-3.665zm0 24.4h-.005a11.06 11.06 0 0 1-5.634-1.543l-.404-.24-4.173 1.095 1.115-4.068-.264-.418a11.05 11.05 0 0 1-1.694-5.893c0-6.114 4.977-11.09 11.096-11.09 2.964 0 5.751 1.155 7.845 3.252a11.02 11.02 0 0 1 3.245 7.848c-.001 6.114-4.977 11.058-11.127 11.058zm6.086-8.293c-.334-.167-1.97-.972-2.275-1.083-.305-.111-.527-.167-.75.167s-.86 1.083-1.055 1.305c-.194.222-.389.25-.723.083-.334-.167-1.408-.519-2.681-1.652-.991-.884-1.661-1.977-1.855-2.31-.194-.334-.021-.514.146-.68.15-.15.334-.389.5-.583.167-.194.222-.334.334-.556.111-.222.055-.417-.028-.583-.083-.167-.75-1.806-1.028-2.472-.271-.65-.546-.562-.75-.573-.194-.01-.417-.012-.639-.012-.222 0-.583.083-.889.417-.305.334-1.166 1.14-1.166 2.778 0 1.639 1.194 3.222 1.361 3.445.167.222 2.352 3.591 5.696 5.036.796.344 1.417.549 1.901.702.799.254 1.526.218 2.101.132.641-.096 1.97-.805 2.248-1.583.278-.778.278-1.444.194-1.583-.083-.14-.305-.222-.639-.389z"/></svg>
 </a>
@@ -736,6 +785,51 @@
   window.matchMedia('(min-width: 901px)').addEventListener('change', (event) => {
     if (event.matches) setMenu(false);
   });
+
+  /* ---------- التثبيت على الشاشة الرئيسية ----------
+     التثبيت من هذا الزرّ يمرّ ببيان هذه الصفحة وحده، فيأخذ اسمها وأيقونتها.
+     أمّا «إضافة إلى الشاشة الرئيسية» من قائمة المتصفّح فقد تلتقط هوية تطبيق
+     آخر مثبَّت يشمل نطاقه هذا العنوان — وهذا ما يجعل أيقونة موقع آخر تظهر
+     على اختصار هذه الصفحة. */
+  const installBar = document.getElementById('install');
+  const DISMISSED = 'bofaida.install.dismissed';
+  let deferredPrompt = null;
+
+  const alreadyApp = window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true;
+
+  let dismissed = false;
+  try { dismissed = localStorage.getItem(DISMISSED) === '1'; } catch (e) { /* محجوب */ }
+
+  window.addEventListener('beforeinstallprompt', (event) => {
+    event.preventDefault();
+    deferredPrompt = event;
+    if (!alreadyApp && !dismissed) installBar.hidden = false;
+  });
+
+  document.getElementById('install-go').addEventListener('click', async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    await deferredPrompt.userChoice;
+    deferredPrompt = null;
+    installBar.hidden = true;
+  });
+
+  document.getElementById('install-no').addEventListener('click', () => {
+    installBar.hidden = true;
+    try { localStorage.setItem(DISMISSED, '1'); } catch (e) { /* محجوب */ }
+  });
+
+  window.addEventListener('appinstalled', () => { installBar.hidden = true; });
+
+  // آيفون لا يعرف beforeinstallprompt، وطريقته يدوية — فتُشرح بدل أن يُخفى الشريط.
+  const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  if (isIOS && !alreadyApp && !dismissed) {
+    document.getElementById('install-text').innerHTML =
+      '<b>ثبّته على شاشتك</b>اضغط زرّ المشاركة ثم «إضافة إلى الشاشة الرئيسية».';
+    document.getElementById('install-go').hidden = true;
+    installBar.hidden = false;
+  }
 
   // عامل الخدمة: يعمل على https وعلى localhost فقط (شرط المتصفّحات).
   if ('serviceWorker' in navigator) {
