@@ -1629,6 +1629,8 @@ $('fal-test').addEventListener('click', async () => {
   let verdict = '';
   let tone = 'warn';
 
+  const says = (needle) => (withKey.text || '').toLowerCase().includes(needle);
+
   if (!withKey.ok && withKey.name === 'TypeError') {
     if (!noKey.ok) {
       verdict = 'لم يصل الطلب إلى fal إطلاقاً. إمّا لا إنترنت الآن، وإمّا أن الشبكة ' +
@@ -1637,6 +1639,12 @@ $('fal-test').addEventListener('click', async () => {
     } else {
       verdict = 'المتصفّح يمنع الاتصال المباشر بـfal (CORS). الحلّ: وسيط.';
     }
+  // الرصيد يُفحص قبل الهوية: fal تردّ على نفاد الرصيد بـ403 كما تردّ على
+  // المفتاح المرفوض، فمن قرأ الرقم وحده اتّهم مفتاحاً سليماً — وأرسل صاحبه
+  // ينسخه من جديد بلا فائدة. والرسالة تفرّق بينهما، لا الرقم.
+  } else if (withKey.status === 402 || says('balance') || says('locked')) {
+    verdict = 'مفتاحك سليم والطريق مفتوح — لكن رصيدك في fal فارغ. اشحنه من ' +
+      'fal.ai/dashboard/billing وارجع، فكل شيء جاهز بعده.';
   } else if (withKey.status === 401 || withKey.status === 403) {
     verdict = 'الطريق مفتوح، لكن fal رفض المفتاح. انسخه كاملاً من fal.ai ← Dashboard ← Keys ' +
       '(صيغته ‎id:secret‎ بنقطتين في وسطه).';
@@ -1647,8 +1655,6 @@ $('fal-test').addEventListener('click', async () => {
   } else if (withKey.ok && withKey.status < 300) {
     verdict = 'الاتصال يعمل والمفتاح مقبول. اذهب إلى الاستوديو وولّد.';
     tone = 'ok';
-  } else if (withKey.status === 402 || (withKey.text || '').includes('balance')) {
-    verdict = 'المفتاح سليم لكن رصيد حسابك في fal فارغ. اشحنه من لوحة fal.';
   } else {
     verdict = `ردّ غير متوقّع (${withKey.status || withKey.name}). التقرير تحت — أرسله كما هو.`;
   }
