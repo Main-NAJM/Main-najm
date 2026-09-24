@@ -10,6 +10,7 @@
  *   /app/        تطبيق الباشة        (قاعدة /Main-najm/app/)
  *   /bofaida/    موقع BOFAIDA ADS
  *   /studio/     استوديو بوفايدة — أداة خاصّة برمز دخول، لا تُربط من أي صفحة
+ *   /bofaida/app/bofaida-ads.apk   تطبيق أندرويد للوكالة (إن كان مبنيًّا)
  *   /albacha/    تحويل قديم إلى /    (يُبقى كي لا تنكسر روابط منشورة)
  *   /404.html    تحويل المسارات العميقة إلى التطبيق المناسب
  *   /.nojekyll   يمنع Jekyll من ابتلاع مجلّدات تبدأ بـ _
@@ -82,7 +83,17 @@ await copySiteFiles(join(ROOT, 'bofaida'), join(OUT, 'bofaida'));
 console.log('\nاستوديو بوفايدة → /studio/');
 await copySiteFiles(join(ROOT, 'studio'), join(OUT, 'studio'));
 
-// 6) /albacha/ → تحويل إلى الجذر (روابط قديمة منشورة)
+// 6) ملفّ APK للوكالة إن كان مبنيًّا → /bofaida/app/
+const apk = join(ROOT, 'build-apk-bofaida', 'bofaida-ads.apk');
+if (existsSync(apk)) {
+  console.log('\nAPK الوكالة → /bofaida/app/');
+  await mkdir(join(OUT, 'bofaida', 'app'), { recursive: true });
+  await cp(apk, join(OUT, 'bofaida', 'app', 'bofaida-ads.apk'));
+} else {
+  console.log('\n(لا APK مبنيّ — يُبنى بـ bash scripts/build-bofaida-apk.sh)');
+}
+
+// 7) /albacha/ → تحويل إلى الجذر (روابط قديمة منشورة)
 await mkdir(join(OUT, 'albacha'), { recursive: true });
 await writeFile(
   join(OUT, 'albacha', 'index.html'),
@@ -100,7 +111,7 @@ await writeFile(
   'utf8',
 );
 
-// 7) 404 — يحوّل المسارات العميقة إلى التطبيق المناسب.
+// 8) 404 — يحوّل المسارات العميقة إلى التطبيق المناسب.
 //    Pages لا يعرف توجيه SPA، فأي رابط عميق يصل إلى 404.html أولًا.
 await writeFile(
   join(OUT, '404.html'),
