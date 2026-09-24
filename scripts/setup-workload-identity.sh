@@ -22,6 +22,31 @@ PROVIDER="${PROVIDER:-github-oidc}"
 SA_NAME="${SA_NAME:-github-deployer}"
 SA_EMAIL="$SA_NAME@$PROJECT_ID.iam.gserviceaccount.com"
 
+# يُنشئ المورد، ويتسامح مع وجوده مسبقًا وحده لا غير.
+#
+# كان هنا ‎>/dev/null 2>&1 || echo "موجود مسبقًا"‎: يبتلع الخطأ أيًّا كان ويقول
+# «موجود مسبقًا» — فيمضي السكربت كأن شيئًا لم يكن، ويظهر العطل بعد خطوتين في
+# موضع لا يدلّ عليه. الآن لا يُبتلع إلا ALREADY_EXISTS، وما عداه يُطبع ويوقف.
+create_or_exists() {
+  local what="$1"
+  shift
+  local out
+  if out="$("$@" 2>&1)"; then
+    return 0
+  fi
+  if printf '%s' "$out" | grep -qiE 'already exists|ALREADY_EXISTS'; then
+    echo "    $what موجود مسبقًا."
+    return 0
+  fi
+  echo >&2
+  echo "تعذّر إنشاء $what. الخطأ كما جاء من Google:" >&2
+  echo >&2
+  printf '%s\n' "$out" >&2
+  echo >&2
+  echo "أرسل هذا الخطأ كما هو — هو وحده يدلّ على الصلاحية الناقصة." >&2
+  exit 1
+}
+
 echo "المشروع: $PROJECT_ID"
 echo "المستودع المسموح له وحده: $REPO"
 echo
@@ -37,8 +62,8 @@ gcloud services enable \
   firebaserules.googleapis.com >/dev/null
 
 echo "٢/٥ حساب خدمة للنشر…"
-gcloud iam service-accounts create "$SA_NAME" \
-  --display-name="ناشر GitHub Actions" >/dev/null 2>&1 || echo "    موجود مسبقًا."
+create_or_exists "حساب الخدمة" gcloud iam service-accounts create "$SA_NAME" \
+  --display-name="ناشر GitHub Actions"
 
 echo "٣/٥ صلاحيات النشر — النشر وقواعد الأمان وقراءة إعدادات التطبيق فقط…"
 for role in \
@@ -54,18 +79,18 @@ do
 done
 
 echo "٤/٥ مجمّع الهويات ومزوّده…"
-gcloud iam workload-identity-pools create "$POOL" \
+create_or_exists "مجمّع الهويات" gcloud iam workload-identity-pools create "$POOL" \
   --location=global \
-  --display-name="GitHub" >/dev/null 2>&1 || echo "    المجمّع موجود مسبقًا."
+  --display-name="GitHub"
 
 # شرط النطاق هو صمّام الأمان: لا تُقبل هوية إلا إن جاءت من هذا المستودع بعينه.
-gcloud iam workload-identity-pools providers create-oidc "$PROVIDER" \
+create_or_exists "مزوّد الهوية" gcloud iam workload-identity-pools providers create-oidc "$PROVIDER" \
   --location=global \
   --workload-identity-pool="$POOL" \
   --display-name="GitHub OIDC" \
   --issuer-uri="https://token.actions.githubusercontent.com" \
   --attribute-mapping="google.subject=assertion.sub,attribute.repository=assertion.repository" \
-  --attribute-condition="assertion.repository=='$REPO'" >/dev/null 2>&1 || echo "    المزوّد موجود مسبقًا."
+  --attribute-condition="assertion.repository=='$REPO'"
 
 echo "٥/٥ ربط المستودع بحساب الخدمة…"
 POOL_PATH="$(gcloud iam workload-identity-pools describe "$POOL" \
