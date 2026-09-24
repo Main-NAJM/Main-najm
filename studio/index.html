@@ -704,6 +704,10 @@
             <a href="https://github.com/Main-NAJM/Main-najm/blob/main/studio/proxy/README.md" target="_blank" rel="noopener">الخطوات هنا</a>
             (خمس دقائق، ويبقى مفتاحك خارج المتصفّح).
           </p>
+          <div class="notice notice-warn" id="proxy-warn" hidden>
+            هذه ليست رابطاً. الخانة تنتظر عنواناً مثل <code dir="ltr">https://xxx.workers.dev</code> —
+            وإن لم يكن لك وسيط فأفرغها تماماً.
+          </div>
         </div>
 
         <div class="btn-row">
@@ -1460,9 +1464,23 @@ const FAL_BASE = 'https://queue.fal.run';
 
 const falCfg = () => db.fal || defaults().fal;
 
-/** عنوان الطلب: عبر الوسيط إن وُجد، وإلا إلى fal مباشرة. */
+const isUrl = (value) => /^https?:\/\/[^\s]+$/i.test(value);
+
+/**
+ * عنوان الطلب: عبر الوسيط إن وُجد، وإلا إلى fal مباشرة.
+ *
+ * ويُرفض الوسيط الذي ليس رابطاً قبل الإرسال لا بعده: النصّ العادي في هذه
+ * الخانة يُحسب مساراً داخل هذا الموقع، فيذهب الطلب إلى خادم الصفحات
+ * ويعود بـ405 غامض لا علاقة له بـfal ولا بالمفتاح.
+ */
 function falUrl(path) {
-  const proxy = (falCfg().proxy || '').replace(/\/+$/, '');
+  const proxy = (falCfg().proxy || '').trim().replace(/\/+$/, '');
+  if (proxy && !isUrl(proxy)) {
+    throw new Error(
+      `«${proxy}» ليس رابطاً. خانة «الوسيط» تنتظر عنواناً يبدأ بـhttps:// — ` +
+      'وإن لم يكن لك وسيط فأفرغها تماماً ليذهب الطلب إلى fal مباشرة.',
+    );
+  }
   return proxy ? `${proxy}/${path}` : `${FAL_BASE}/${path}`;
 }
 
@@ -1486,15 +1504,29 @@ function falFailure(error) {
 }
 
 async function falFetch(path, options) {
+  const url = falUrl(path); // يرمي رسالةً مفهومة إن كان الوسيط ليس رابطاً
   let response;
   try {
-    response = await fetch(falUrl(path), options);
+    response = await fetch(url, options);
   } catch (error) {
     throw new Error(falFailure(error));
   }
   const text = await response.text();
   let body = null;
   try { body = text ? JSON.parse(text) : null; } catch (e) { body = { raw: text }; }
+
+  // ردٌّ بصفحة HTML معناه أن الطلب لم يصل fal أصلاً: ذهب إلى خادم آخر —
+  // غالباً لأن خانة «الوسيط» فيها نصّ ليس رابطاً، فحُسب مساراً في هذا الموقع.
+  if (/^\s*</.test(text)) {
+    const proxy = falCfg().proxy;
+    throw new Error(
+      proxy
+        ? `الردّ جاء من خادم آخر لا من fal (${response.status}). خانة «الوسيط» فيها «${proxy}» — ` +
+          'إن لم يكن لك وسيط فأفرغها تماماً، وإن كان فضع رابطه كاملاً بادئاً بـhttps://'
+        : `الردّ جاء صفحةَ HTML لا بيانات (${response.status}). راجع اسم النموذج.`,
+    );
+  }
+
   if (!response.ok) {
     // رسالة fal نفسها أنفع من أي صياغة عندنا: تسمّي الحقل الناقص بالاسم.
     const detail = body && (body.detail || body.error || body.message);
@@ -1591,8 +1623,17 @@ Object.entries(FAL_FIELDS).forEach(([key, id]) => {
     const numeric = key === 'usdPerSecond' || key === 'dzdPerUsd';
     db.fal = { ...falCfg(), [key]: numeric ? Number($(id).value) || 0 : $(id).value.trim() };
     save();
+    if (key === 'proxy') checkProxyField();
   });
 });
+
+/** يقول للخانة إن كان ما فيها رابطاً، وقت الكتابة لا وقت الفشل. */
+function checkProxyField() {
+  const value = $('fal-proxy').value.trim();
+  const bad = value && !isUrl(value);
+  $('fal-proxy').style.borderColor = bad ? '#C2350F' : '';
+  $('proxy-warn').hidden = !bad;
+}
 
 /* ---------- الإعدادات ---------- */
 $('save-code').addEventListener('click', () => {
@@ -1984,6 +2025,7 @@ function init() {
   initShots();
   fillPriceInputs();
   fillFalInputs();
+  checkProxyField();
   renderProjects();
   renderPrice();
 
