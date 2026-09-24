@@ -7,7 +7,7 @@
 // واحذف قسم hosting.rewrites الخاص بـ /om-aya من firebase.json.
 
 import { cp, mkdir, readdir } from 'node:fs/promises';
-import { extname, join } from 'node:path';
+import { basename, extname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
 const SITE_DIR = fileURLToPath(new URL('.', import.meta.url));
@@ -16,7 +16,13 @@ const DEST_DIR = 'om-aya';
 
 // ملفات التشغيل والتوثيق والتوليد لا تُنشر — في المجلد وفي مجلداته الفرعية.
 const EXCLUDED = new Set(['.mjs', '.md', '.py']);
-const isExcluded = (path) => EXCLUDED.has(extname(path).toLowerCase());
+
+// صورة المصدر التي تُبنى منها الأيقونات: تبقى في المستودع ليُعاد توليدها منها،
+// ولا يشير إليها شيء في الصفحة — فنشرها ميغابايت بلا طالب.
+const EXCLUDED_NAMES = new Set(['source-store.png']);
+
+const isExcluded = (path) =>
+  EXCLUDED.has(extname(path).toLowerCase()) || EXCLUDED_NAMES.has(basename(path));
 
 const target = DEST_DIR ? join(DIST_DIR, DEST_DIR) : DIST_DIR;
 
