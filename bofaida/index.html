@@ -438,6 +438,15 @@
     font-family:'Cairo',sans-serif; font-weight:700; font-size:0.86rem;
     cursor:pointer;
   }
+  .install-apk{
+    flex:none; min-height:42px; padding-inline:15px;
+    display:inline-flex; align-items:center;
+    background:transparent; color:var(--bg);
+    border:1.5px solid currentColor; border-radius:var(--r);
+    font-family:'Cairo',sans-serif; font-weight:700; font-size:0.86rem;
+    text-decoration:none;
+  }
+  .install-apk[hidden]{display:none;}
   .install .close{
     background:transparent; color:inherit; opacity:0.6;
     min-height:42px; width:34px; padding:0; font-size:1.2rem;
@@ -742,7 +751,8 @@
     <b>ثبّته على شاشتك</b>
     يفتح كتطبيق بأيقونته، ويعمل دون إنترنت.
   </span>
-  <button type="button" id="install-go">تثبيت</button>
+  <button type="button" id="install-go" hidden>تثبيت</button>
+  <a class="install-apk" id="install-apk" href="./app/bofaida-ads.apk" download hidden>تنزيل APK</a>
   <button type="button" class="close" id="install-no" aria-label="إغلاق">✕</button>
 </div>
 
@@ -797,10 +807,15 @@
   let dismissed = false;
   try { dismissed = localStorage.getItem(DISMISSED) === '1'; } catch (e) { /* محجوب */ }
 
+  // زرّ «تثبيت» يبقى مخفيًّا حتى يأذن المتصفّح فعلاً: زرٌّ يُضغط ولا يحدث شيء
+  // أسوأ من زرٍّ غائب.
   window.addEventListener('beforeinstallprompt', (event) => {
     event.preventDefault();
     deferredPrompt = event;
-    if (!alreadyApp && !dismissed) installBar.hidden = false;
+    if (!alreadyApp && !dismissed) {
+      document.getElementById('install-go').hidden = false;
+      installBar.hidden = false;
+    }
   });
 
   document.getElementById('install-go').addEventListener('click', async () => {
@@ -823,7 +838,15 @@
   if (isIOS && !alreadyApp && !dismissed) {
     document.getElementById('install-text').innerHTML =
       '<b>ثبّته على شاشتك</b>اضغط زرّ المشاركة ثم «إضافة إلى الشاشة الرئيسية».';
-    document.getElementById('install-go').hidden = true;
+    installBar.hidden = false;
+  }
+
+  /* أندرويد: ملفّ APK حقيقي يُنزَّل ويُرسَل في واتساب كأي ملفّ. وهو ما يفهمه
+     الزبون هنا أكثر من «إضافة إلى الشاشة الرئيسية». فيُعرض الزرّ ولو لم يعلن
+     المتصفّح إمكان التثبيت — لأنه لا يعتمد عليه أصلاً. */
+  const isAndroid = /Android/i.test(navigator.userAgent);
+  if (isAndroid && !alreadyApp && !dismissed) {
+    document.getElementById('install-apk').hidden = false;
     installBar.hidden = false;
   }
 

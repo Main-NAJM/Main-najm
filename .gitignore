@@ -54,3 +54,6 @@ dist-herfah/
 build-apk/
 *.keystore
 *.jks
+
+# مخرجات بناء APK: الملفّ يُبنى من المصدر، ومفتاح التوقيع لا يُرفع أبداً
+build-apk-bofaida/
