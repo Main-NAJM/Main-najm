@@ -7,6 +7,7 @@ import { useEffect, useState } from 'react';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { SectionTitle, TextInput } from '@/components/ui';
+import InstallCard from '@/components/InstallCard';
 import type { WorkshopProfile } from '@/lib/types';
 
 export default function Account() {
@@ -34,6 +35,9 @@ export default function Account() {
 
   return (
     <>
+      <SectionTitle>التثبيت على الهاتف</SectionTitle>
+      <InstallCard />
+
       <SectionTitle>بيانات المؤسسة</SectionTitle>
       <div className="card">
         <TextInput

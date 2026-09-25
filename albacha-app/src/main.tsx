@@ -2,6 +2,8 @@ import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import App from './App';
 import './styles/global.css';
+// يلتقط حدث التثبيت فور تحميل الصفحة، وقد يسبق إقلاع React.
+import '@/lib/install';
 
 createRoot(document.getElementById('root') as HTMLElement).render(
   <StrictMode>

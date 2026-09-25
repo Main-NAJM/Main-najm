@@ -9,6 +9,7 @@ import { useAuth } from '@/context/AuthContext';
 import { formatDate, waNumber } from '@/lib/format';
 import { deleteRequest, loadRequests, markRequestDone } from '@/data/siteStore';
 import { Badge, ConfirmDialog, EmptyState, SectionTitle, Spinner } from '@/components/ui';
+import InstallCard from '@/components/InstallCard';
 import type { RequestKind, SiteRequest } from '@/lib/types';
 
 const KIND_LABEL: Record<RequestKind, string> = {
@@ -106,6 +107,8 @@ export default function Requests() {
           <strong className="stat__value">{list.length}</strong>
         </div>
       </div>
+
+      <InstallCard compact />
 
       <SectionTitle>الطلبات الواردة</SectionTitle>
 
