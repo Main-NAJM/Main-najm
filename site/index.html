@@ -73,7 +73,11 @@
     overflow-x:hidden;
   }
 
-  h1,h2,h3,h4{font-weight:800; line-height:1.14; letter-spacing:-0.02em; color:var(--ink);}
+  h1,h2,h3,h4{
+    font-weight:800; line-height:1.14; letter-spacing:-0.02em; color:var(--ink);
+    /* يوزّع الكلمات على السطور بالتساوي فلا تبقى كلمة يتيمة في سطر */
+    text-wrap:balance;
+  }
   a{color:inherit; text-decoration:none;}
   ul{list-style:none;}
   img{max-width:100%; display:block;}
@@ -142,7 +146,7 @@
   .hero h1{
     font-size:clamp(2.3rem, 6.6vw, 4.4rem);
     font-weight:900; letter-spacing:-0.035em; line-height:1.06;
-    max-width:17ch; margin-bottom:22px;
+    max-width:20ch; margin-bottom:22px;
   }
   .hero p.lead{
     color:var(--ink-faint); font-size:clamp(1.05rem, 2vw, 1.3rem);
@@ -168,6 +172,15 @@
     box-shadow:var(--shadow-sm);
   }
   .hero-art svg{width:auto; height:72%; max-width:80%;}
+  /* حين يضيف صاحب المؤسسة صوراً من التطبيق، تحلّ أحدثها محلّ الرسم. */
+  .hero-art.has-photo{padding:0; overflow:hidden; background:var(--bg-alt);}
+  .hero-art.has-photo img{width:100%; height:100%; object-fit:cover; display:block;}
+  .hero-art figcaption{
+    position:absolute; inset-inline:0; bottom:0;
+    padding:26px 24px 18px; font-size:0.92rem; color:#fff; text-align:start;
+    background:linear-gradient(to top, rgba(0,0,0,0.62), rgba(0,0,0,0));
+  }
+  .hero-art{position:relative;}
 
   /* ---------- أساسيات الأقسام ---------- */
   section{padding:104px 0;}
@@ -746,6 +759,25 @@
 
     const grid = document.getElementById('gallery-grid');
     const list = (photos || []).slice().sort((a, b) => (b.createdAt || 0) - (a.createdAt || 0));
+
+    // أعلى الصفحة: أحدث عمل مضاف بدل الرسم الخطّي. الصورة فوق الطيّة فتُحمَّل
+    // فوراً لا كسولاً، ووصفها يصير نصّها البديل.
+    const art = document.querySelector('.hero-art');
+    if (art && list.length) {
+      const newest = list[0];
+      art.innerHTML = '';
+      const img = document.createElement('img');
+      img.src = newest.dataUrl;
+      img.alt = newest.caption || 'من أعمال مؤسسة الباشة للمعادن';
+      img.decoding = 'async';
+      art.appendChild(img);
+      if (newest.caption) {
+        const cap = document.createElement('figcaption');
+        cap.textContent = newest.caption;
+        art.appendChild(cap);
+      }
+      art.classList.add('has-photo');
+    }
     if (grid && list.length) {
       grid.innerHTML = '';
       for (const photo of list) {
