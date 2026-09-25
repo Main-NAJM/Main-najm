@@ -1,7 +1,7 @@
 /* عامل الخدمة لتطبيق الباشة — قوقعة التطبيق تعمل دون إنترنت، والبيانات تتكفّل بها
    ذاكرة Firestore الدائمة. النطاق مشتقّ من موقع الملف فيعمل على ‎/‎ وعلى ‎/app/‎. */
 
-const VERSION = 'albacha-app-v1';
+const VERSION = 'albacha-app-v2';
 const CACHE = `${VERSION}-shell`;
 
 const BASE = new URL('./', self.location).pathname;
