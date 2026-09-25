@@ -1,20 +1,12 @@
 import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { AuthProvider, useAuth } from '@/context/AuthContext';
+import Requests from '@/pages/Requests';
+import Site from '@/pages/Site';
+import Account from '@/pages/Account';
 import { DataProvider } from '@/context/DataContext';
 import Layout from '@/components/Layout';
 import { Spinner } from '@/components/ui';
 import Login from '@/pages/Login';
-import Dashboard from '@/pages/Dashboard';
-import Customers from '@/pages/Customers';
-import Orders from '@/pages/Orders';
-import Receivables from '@/pages/Receivables';
-import Materials from '@/pages/Materials';
-import Reports from '@/pages/Reports';
-import More from '@/pages/More';
-import Site from '@/pages/Site';
-import Requests from '@/pages/Requests';
-import Settings from '@/pages/Settings';
-import Print from '@/pages/Print';
 
 function Gate() {
   const { user, loading } = useAuth();
@@ -26,17 +18,9 @@ function Gate() {
     <DataProvider>
       <Routes>
         <Route element={<Layout />}>
-          <Route index element={<Dashboard />} />
-          <Route path="customers" element={<Customers />} />
-          <Route path="orders" element={<Orders />} />
-          <Route path="receivables" element={<Receivables />} />
-          <Route path="materials" element={<Materials />} />
-          <Route path="reports" element={<Reports />} />
-          <Route path="more" element={<More />} />
+          <Route index element={<Requests />} />
           <Route path="site" element={<Site />} />
-          <Route path="requests" element={<Requests />} />
-          <Route path="settings" element={<Settings />} />
-          <Route path="print/:orderId" element={<Print />} />
+          <Route path="settings" element={<Account />} />
           <Route path="*" element={<Navigate to="/" replace />} />
         </Route>
       </Routes>

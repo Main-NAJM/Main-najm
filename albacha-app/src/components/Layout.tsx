@@ -1,52 +1,35 @@
-import { NavLink, Outlet, useLocation } from 'react-router-dom';
+import { NavLink, Outlet } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { APP_SHORT } from '@/lib/format';
 
 const NAV = [
   {
     to: '/',
-    label: 'الرئيسية',
-    icon: <path d="M3 10.5 12 4l9 6.5V20a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z" />,
-  },
-  {
-    to: '/customers',
-    label: 'الزبائن',
-    icon: (
-      <>
-        <circle cx="9" cy="8" r="3.2" />
-        <path d="M3.5 20c.6-3.4 2.8-5.2 5.5-5.2S13.9 16.6 14.5 20" />
-        <path d="M16 11.2a2.8 2.8 0 1 0-1.6-5.1M17 14.6c2 .5 3.2 2.2 3.5 5.4" />
-      </>
-    ),
-  },
-  {
-    to: '/orders',
     label: 'الطلبات',
     icon: (
       <>
-        <rect x="4" y="4" width="16" height="16" rx="2" />
-        <path d="M4 9h16M12 9v11" />
+        <path d="M5 4h14a1 1 0 0 1 1 1v15l-4-2.5L12 20l-4-2.5L4 20V5a1 1 0 0 1 1-1z" />
+        <path d="M8.5 9h7M8.5 12.5h4.5" />
       </>
     ),
   },
   {
-    to: '/receivables',
-    label: 'المستحقّات',
+    to: '/site',
+    label: 'الموقع',
     icon: (
       <>
-        <path d="M3 7h18v10H3z" />
-        <circle cx="12" cy="12" r="2.4" />
+        <circle cx="12" cy="12" r="8.5" />
+        <path d="M3.5 12h17M12 3.5c2.4 2.4 3.6 5.3 3.6 8.5s-1.2 6.1-3.6 8.5c-2.4-2.4-3.6-5.3-3.6-8.5S9.6 5.9 12 3.5z" />
       </>
     ),
   },
   {
-    to: '/more',
-    label: 'المزيد',
+    to: '/settings',
+    label: 'الإعدادات',
     icon: (
       <>
-        <circle cx="5" cy="12" r="1.4" />
-        <circle cx="12" cy="12" r="1.4" />
-        <circle cx="19" cy="12" r="1.4" />
+        <circle cx="12" cy="12" r="3.2" />
+        <path d="M12 2.8v2.6M12 18.6v2.6M21.2 12h-2.6M5.4 12H2.8M18.5 5.5l-1.8 1.8M7.3 16.7l-1.8 1.8M18.5 18.5l-1.8-1.8M7.3 7.3 5.5 5.5" />
       </>
     ),
   },
@@ -54,50 +37,44 @@ const NAV = [
 
 export default function Layout() {
   const { user, signOut } = useAuth();
-  const location = useLocation();
-  const printing = location.pathname.startsWith('/print');
 
   return (
     <div className="shell">
-      {printing ? null : (
-        <header className="topbar">
-          <div className="topbar__title">
-            <strong>{APP_SHORT}</strong>
-            <span>إدارة الزبائن والطلبات</span>
-          </div>
-          <button
-            type="button"
-            className="topbar__action"
-            onClick={() => {
-              void signOut();
-            }}
-          >
-            {user?.isLocal ? 'تسجيل الدخول' : 'خروج'}
-          </button>
-        </header>
-      )}
+      <header className="topbar">
+        <div className="topbar__title">
+          <strong>{APP_SHORT}</strong>
+          <span>لوحة تحكّم الموقع</span>
+        </div>
+        <button
+          type="button"
+          className="topbar__action"
+          onClick={() => {
+            void signOut();
+          }}
+        >
+          {user?.isLocal ? 'تسجيل الدخول' : 'خروج'}
+        </button>
+      </header>
 
       <main className="page">
         <Outlet />
       </main>
 
-      {printing ? null : (
-        <nav className="navbar">
-          {NAV.map((item) => (
-            <NavLink
-              key={item.to}
-              to={item.to}
-              end={item.to === '/'}
-              className={({ isActive }) => (isActive ? 'is-active' : undefined)}
-            >
-              <svg viewBox="0 0 24 24" aria-hidden="true">
-                {item.icon}
-              </svg>
-              {item.label}
-            </NavLink>
-          ))}
-        </nav>
-      )}
+      <nav className="navbar">
+        {NAV.map((item) => (
+          <NavLink
+            key={item.to}
+            to={item.to}
+            end={item.to === '/'}
+            className={({ isActive }) => (isActive ? 'is-active' : undefined)}
+          >
+            <svg viewBox="0 0 24 24" aria-hidden="true">
+              {item.icon}
+            </svg>
+            {item.label}
+          </NavLink>
+        ))}
+      </nav>
     </div>
   );
 }
