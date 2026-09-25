@@ -1,0 +1,52 @@
+name: نشر موقع المتجر على GitHub Pages
+
+# ينشر محتوى مجلد albasha-market فقط — تطبيق حرفة برو في الجذر لا يُنشر من هنا،
+# فله سير العمل الخاص به على Firebase Hosting.
+on:
+  push:
+    branches:
+      - claude/herfah-pro-app-le726o
+      - main
+    paths:
+      - 'albasha-market/**'
+      - '.github/workflows/deploy-pages.yml'
+  # يسمح بتشغيل النشر يدوياً من تبويب Actions.
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# نشر واحد في كل مرة، بلا إلغاء نشرة جارية.
+concurrency:
+  group: github-pages
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: بناء ونشر
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: جلب الشيفرة
+        uses: actions/checkout@v4
+
+      # enablement: true يفعّل GitHub Pages تلقائياً في أول تشغيل ناجح،
+      # فلا حاجة لتفعيلها يدوياً من إعدادات المستودع.
+      - name: تهيئة GitHub Pages
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      # الموقع ملفات ثابتة بلا خطوة بناء — يُرفع المجلد كما هو.
+      - name: رفع مجلد الموقع
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: albasha-market
+
+      - name: النشر
+        id: deployment
+        uses: actions/deploy-pages@v4
