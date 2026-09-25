@@ -77,8 +77,10 @@ service cloud.firestore {
         && d.phone is string && d.phone.size() >= 6 && d.phone.size() <= 20
         && d.kind in ['aluminium', 'iron', 'kitchen', 'railing', 'other']
         && (!('note' in d) || (d.note is string && d.note.size() <= 500))
-        && (!('width' in d) || (d.width is number && d.width >= 0 && d.width <= 2000))
-        && (!('height' in d) || (d.height is number && d.height >= 0 && d.height <= 2000))
+        // المخزَّن بالمتر (النموذج يقسم ما يكتبه الزائر بالسنتيمتر على ١٠٠)،
+        // فحدّ ١٠٠ متر يسع أي عمل ويردّ الرقم الخيالي.
+        && (!('width' in d) || (d.width is number && d.width >= 0 && d.width <= 100))
+        && (!('height' in d) || (d.height is number && d.height >= 0 && d.height <= 100))
         && (!('qty' in d) || (d.qty is number && d.qty >= 0 && d.qty <= 1000))
         && d.status == 'new'
         && d.createdAt is number;

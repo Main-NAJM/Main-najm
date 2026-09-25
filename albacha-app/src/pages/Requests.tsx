@@ -121,9 +121,11 @@ export default function Requests() {
       <div className="list">
         {list.map((request) => {
           const number = waNumber(request.phone);
+          // مخزَّنة بالمتر وتُعرض بالسنتيمتر، فهي وحدة من كتبها ومن يقرأها.
+          const cm = (metres: number) => Math.round(metres * 100);
           const size =
             request.width > 0 && request.height > 0
-              ? `${request.width} سم × ${request.height} سم${
+              ? `${cm(request.width)} سم × ${cm(request.height)} سم${
                   request.qty > 1 ? ` × ${request.qty}` : ''
                 }`
               : '';
