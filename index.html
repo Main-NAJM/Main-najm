@@ -894,8 +894,9 @@
       name: name.slice(0, 60),
       phone: phone.slice(0, 20),
       kind: field('kind').value,
-      width: w,
-      height: h,
+      // الزائر يكتب بالسنتيمتر لأنها وحدته، ويُخزَّن بالمتر لأنه وحدة التسعير.
+      width: Math.round(w) / 100,
+      height: Math.round(h) / 100,
       qty: num(field('qty').value),
       note: field('note').value.trim().slice(0, 500),
       status: 'new',
