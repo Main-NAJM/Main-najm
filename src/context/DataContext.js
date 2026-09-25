@@ -1,0 +1,196 @@
+import { jsx as _jsx } from "react/jsx-runtime";
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, } from 'react';
+import { useAuth } from './AuthContext';
+import { firestoreStore } from '@/data/firestoreStore';
+import { hasLocalData, isLocalInitialized, localStore, markLocalInitialized, readLocalProfile, seedLocalCollection, } from '@/data/localStore';
+import { defaultProfile, seedAppointments, seedCalculations, seedDebts, seedCustomProduct, seedInventory, seedMarketPrices, seedOrders, seedProducts, } from '@/data/seed';
+const DataContext = createContext(null);
+const emptyState = {
+    orders: [],
+    appointments: [],
+    calculations: [],
+    marketPrices: [],
+    products: [],
+    inventory: [],
+    debts: [],
+};
+export function DataProvider({ children }) {
+    const { user } = useAuth();
+    const uid = user?.uid ?? null;
+    const store = user?.isLocal ? localStore : firestoreStore;
+    const [collections, setCollections] = useState(emptyState);
+    const [profile, setProfile] = useState(() => defaultProfile());
+    const [profileLoaded, setProfileLoaded] = useState(false);
+    const [loadedCount, setLoadedCount] = useState(0);
+    const [error, setError] = useState(null);
+    const seedDemoData = useCallback(() => {
+        if (!uid || !user?.isLocal)
+            return;
+        seedLocalCollection(uid, 'orders', seedOrders());
+        seedLocalCollection(uid, 'appointments', seedAppointments());
+        seedLocalCollection(uid, 'calculations', seedCalculations());
+        seedLocalCollection(uid, 'marketPrices', seedMarketPrices());
+        seedLocalCollection(uid, 'products', seedProducts());
+        seedLocalCollection(uid, 'inventory', seedInventory());
+        seedLocalCollection(uid, 'debts', seedDebts());
+    }, [uid, user?.isLocal]);
+    /**
+     * أوّل فتح لحساب جديد: يُكتب ملف العمل من بيانات التسجيل، ويُزرع المحتوى
+     * المرجعي الذي يخصّ مهنته (قوالب التسعير وأسعار مادته). لا تُزرع طلبيات ولا
+     * ديون تجريبية لحساب حقيقي — البيانات الوهمية في تطبيق عمل مضلّلة.
+     */
+    useEffect(() => {
+        if (!uid || !user?.isLocal || user.isGuest || !user.craft)
+            return;
+        if (isLocalInitialized(uid))
+            return;
+        const craft = user.craft;
+        const userType = user.userType ?? 'craftsman';
+        const customCraft = user.customCraft ?? '';
+        const customMaterial = user.customMaterial ?? '';
+        const customBasis = user.customBasis ?? 'unit';
+        markLocalInitialized(uid);
+        // حساب ورث بيانات مستخدم محلي سابق يحتفظ بها وبملف عمله كما هما.
+        if (!hasLocalData(uid)) {
+            // المهنة المكتوبة لا قوالب جاهزة لها، فتُزرع لها بداية باسمها وبأساس تسعيرها.
+            const products = craft === 'other'
+                ? userType === 'merchant'
+                    ? []
+                    : seedCustomProduct(customCraft, customBasis, defaultProfile({ craft }).defaultMarginPct)
+                : seedProducts(craft);
+            seedLocalCollection(uid, 'products', products);
+            seedLocalCollection(uid, 'marketPrices', seedMarketPrices(craft, customMaterial));
+        }
+        const existing = readLocalProfile(uid);
+        void localStore.saveProfile(uid, {
+            ...defaultProfile({
+                businessName: user.displayName ?? '',
+                phone: user.phoneNumber ?? '',
+                userType,
+                craft,
+                customCraft,
+                customMaterial,
+                customBasis,
+            }),
+            // ما سبق أن ضبطه صاحبه يبقى، والمهنة تُحدَّث لما اختاره الآن.
+            ...(existing ?? {}),
+            userType,
+            craft,
+            customCraft,
+            customMaterial,
+            customBasis,
+        });
+    }, [
+        uid,
+        user?.isLocal,
+        user?.isGuest,
+        user?.craft,
+        user?.userType,
+        user?.customCraft,
+        user?.customMaterial,
+        user?.customBasis,
+        user?.displayName,
+        user?.phoneNumber,
+    ]);
+    useEffect(() => {
+        if (!uid) {
+            setCollections(emptyState);
+            setProfile(defaultProfile());
+            setProfileLoaded(false);
+            setLoadedCount(0);
+            return;
+        }
+        setCollections(emptyState);
+        setLoadedCount(0);
+        setProfileLoaded(false);
+        setError(null);
+        const seen = new Set();
+        const markLoaded = (name) => {
+            if (seen.has(name))
+                return;
+            seen.add(name);
+            setLoadedCount((count) => count + 1);
+        };
+        const handleError = (err) => {
+            setError(err.message || 'تعذّر تحميل البيانات.');
+        };
+        const names = [
+            'orders',
+            'appointments',
+            'calculations',
+            'marketPrices',
+            'debts',
+            'products',
+            'inventory',
+        ];
+        const unsubscribes = names.map((name) => store.watch(uid, name, (rows) => {
+            setCollections((current) => ({ ...current, [name]: rows }));
+            markLoaded(name);
+        }, handleError));
+        const unsubProfile = store.watchProfile(uid, (saved) => {
+            setProfile(saved ? { ...defaultProfile(), ...saved } : defaultProfile());
+            setProfileLoaded(true);
+        }, handleError);
+        return () => {
+            unsubscribes.forEach((fn) => {
+                fn();
+            });
+            unsubProfile();
+        };
+    }, [uid, store]);
+    const create = useCallback(async (name, data) => {
+        if (!uid)
+            throw new Error('لا يوجد مستخدم مسجّل.');
+        return store.create(uid, name, data);
+    }, [uid, store]);
+    const update = useCallback(async (name, id, patch) => {
+        if (!uid)
+            throw new Error('لا يوجد مستخدم مسجّل.');
+        await store.update(uid, name, id, patch);
+    }, [uid, store]);
+    const remove = useCallback(async (name, id) => {
+        if (!uid)
+            throw new Error('لا يوجد مستخدم مسجّل.');
+        await store.remove(uid, name, id);
+    }, [uid, store]);
+    const saveProfile = useCallback(async (next) => {
+        if (!uid)
+            throw new Error('لا يوجد مستخدم مسجّل.');
+        await store.saveProfile(uid, { ...next, updatedAt: Date.now() });
+        setProfile(next);
+    }, [uid, store]);
+    const value = useMemo(() => ({
+        ready: loadedCount >= 7,
+        error,
+        storeKind: store.kind,
+        ...collections,
+        profile,
+        profileLoaded,
+        create,
+        update,
+        remove,
+        saveProfile,
+        seedDemoData,
+    }), [
+        loadedCount,
+        error,
+        store.kind,
+        collections,
+        profile,
+        profileLoaded,
+        create,
+        update,
+        remove,
+        saveProfile,
+        seedDemoData,
+    ]);
+    return _jsx(DataContext.Provider, { value: value, children: children });
+}
+export const useData = () => {
+    const context = useContext(DataContext);
+    if (!context)
+        throw new Error('useData يجب أن يُستخدم داخل DataProvider.');
+    return context;
+};
+/** يتحقّق ما إذا كان الجهاز يحتاج زرع بيانات تجريبية (الوضع المحلي فقط). */
+export const shouldOfferSeed = (uid, isLocal) => Boolean(uid) && isLocal && !hasLocalData(uid);

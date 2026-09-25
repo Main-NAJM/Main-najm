@@ -101,6 +101,32 @@ console.log('\nزائر بلا تسجيل دخول:');
 await check('لا يقرأ شيئًا', assertFails(getDoc(doc(anon, `users/${ALICE}/orders/o1`))));
 await check('لا يكتب شيئًا', assertFails(setDoc(doc(anon, `users/${ALICE}/orders/o3`), order)));
 
+// متجر أم عمر واجهة عامّة، وهي الاستثناء الوحيد من «لا قراءة بلا تسجيل دخول».
+// فالمهمّ هنا عكس ما سبق: أن تُقرأ المنتجات بلا حساب، وألّا يكتبها أحد — لا زائر
+// ولا مستخدم مسجَّل ليس صاحبة المتجر. وما دام المعرّف النموذجي في القواعد فلا
+// حساب يكتب أصلًا، وهو الوضع الآمن المقصود قبل وضع المعرّف الحقيقي.
+console.log('\nمتجر أم عمر (واجهة عامّة):');
+await check(
+  'الزائر يقرأ المنتجات بلا تسجيل دخول',
+  assertSucceeds(getDoc(doc(anon, 'shop/omAya/products/p1'))),
+);
+await check(
+  'الزائر يقرأ إعدادات المتجر',
+  assertSucceeds(getDoc(doc(anon, 'shop/omAya'))),
+);
+await check(
+  'الزائر لا يكتب منتجًا',
+  assertFails(setDoc(doc(anon, 'shop/omAya/products/p1'), { name: 'منتج' })),
+);
+await check(
+  'مستخدم مسجَّل ليس صاحبة المتجر لا يكتب منتجًا',
+  assertFails(setDoc(doc(bob, 'shop/omAya/products/p2'), { name: 'منتج' })),
+);
+await check(
+  'مستخدم مسجَّل ليس صاحبة المتجر لا يكتب الإعدادات',
+  assertFails(setDoc(doc(bob, 'shop/omAya'), { settings: {} })),
+);
+
 console.log('\nمسارات خارج القائمة المسموحة:');
 await check(
   'مجموعة غير معروفة تحت حسابه مرفوضة',
