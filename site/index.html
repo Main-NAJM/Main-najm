@@ -251,6 +251,31 @@
   .why-item p{color:var(--ink-soft); font-size:0.92rem;}
 
   /* ---------- Contact ---------- */
+  .req-form{display:grid; gap:14px; margin-top:22px;}
+  .req-form label{display:block; font-size:0.85rem; color:#B9B2A5; margin-bottom:6px;}
+  .req-form input, .req-form select, .req-form textarea{
+    width:100%; padding:12px 14px; font:inherit; font-size:0.95rem;
+    color:var(--bg); background:rgba(255,255,255,0.06);
+    border:1px solid rgba(255,255,255,0.18); border-radius:4px;
+  }
+  .req-form input:focus, .req-form select:focus, .req-form textarea:focus{
+    outline:none; border-color:var(--accent);
+  }
+  .req-form select option{color:var(--ink); background:var(--panel);}
+  .req-form textarea{resize:vertical; min-height:72px;}
+  .req-row{display:grid; grid-template-columns:repeat(3,1fr); gap:10px;}
+  .req-send{
+    width:100%; padding:15px; font:inherit; font-size:0.98rem; cursor:pointer;
+    background:var(--accent); color:#FBF9F4; border:none; border-radius:4px;
+    transition:background .25s ease;
+  }
+  .req-send:hover:not(:disabled){background:var(--accent-deep);}
+  .req-send:disabled{opacity:0.6; cursor:default;}
+  .req-msg{font-size:0.9rem; padding:12px 14px; border-radius:4px; display:none;}
+  .req-msg.ok{display:block; background:rgba(150,112,60,0.22); color:var(--bg);}
+  .req-msg.bad{display:block; background:rgba(190,80,60,0.25); color:#FFD9D2;}
+  .req-alt{font-size:0.85rem; color:#B9B2A5; text-align:center; margin-top:4px;}
+
   .contact{background:var(--bg-alt);}
   .contact .wrap{display:grid; grid-template-columns:1fr 1fr; gap:1px; background:var(--line); border:1px solid var(--line);}
   .contact-col{background:var(--bg-alt); padding:48px;}
@@ -534,14 +559,44 @@
     </div>
 
     <div class="contact-col dark">
-      <h2>راسلنا مباشرة عبر واتساب</h2>
-      <p>أرسل لنا مقاسات مشروعك أو استفسارك، وسنرد عليك بأقرب وقت.</p>
-      <div class="wa-block">
-        <p>أرسل رسالة مباشرة وسنتابع طلبك خطوة بخطوة، من التصميم حتى التركيب.</p>
-        <a class="btn btn-primary" href="https://wa.me/213673232932?text=مرحباً، أرغب في الاستفسار عن خدمات مؤسسة الباشة للمعادن" target="_blank" rel="noopener">
-          فتح محادثة واتساب
-        </a>
-      </div>
+      <h2>اطلب عرض سعر</h2>
+      <p>املأ ما تعرفه من تفاصيل مشروعك، ونرد عليك بعرض سعر في أقرب وقت.</p>
+
+      <form class="req-form" id="req-form" novalidate>
+        <div>
+          <label for="req-name">الاسم الكامل *</label>
+          <input id="req-name" name="name" type="text" maxlength="60" required autocomplete="name" placeholder="مثال: محمد بن عمر">
+        </div>
+        <div>
+          <label for="req-phone">رقم الهاتف أو الواتساب *</label>
+          <input id="req-phone" name="phone" type="tel" inputmode="tel" maxlength="20" required autocomplete="tel" dir="ltr" placeholder="0673232932">
+        </div>
+        <div>
+          <label for="req-kind">نوع العمل</label>
+          <select id="req-kind" name="kind">
+            <option value="aluminium">أبواب ونوافذ ألمنيوم</option>
+            <option value="iron">أبواب وبوابات حديد</option>
+            <option value="kitchen">مطبخ ألمنيوم</option>
+            <option value="railing">درج ودرابزين حديد</option>
+            <option value="other">عمل آخر</option>
+          </select>
+        </div>
+        <div>
+          <label>المقاس التقريبي (اختياري)</label>
+          <div class="req-row">
+            <input id="req-width" name="width" type="text" inputmode="decimal" maxlength="6" placeholder="العرض م">
+            <input id="req-height" name="height" type="text" inputmode="decimal" maxlength="6" placeholder="الارتفاع م">
+            <input id="req-qty" name="qty" type="text" inputmode="numeric" maxlength="4" placeholder="العدد">
+          </div>
+        </div>
+        <div>
+          <label for="req-note">ملاحظات</label>
+          <textarea id="req-note" name="note" maxlength="500" placeholder="اللون، نوع الزجاج، مكان التركيب، أو أي تفصيل يهمّك."></textarea>
+        </div>
+        <div class="req-msg" id="req-msg" role="status"></div>
+        <button class="req-send" id="req-send" type="submit">أرسل الطلب</button>
+        <p class="req-alt">أو <a href="https://wa.me/213673232932?text=مرحباً، أرغب في الاستفسار عن خدمات مؤسسة الباشة للمعادن" target="_blank" rel="noopener" style="color:var(--accent); text-decoration:underline;">راسلنا مباشرة عبر واتساب</a></p>
+      </form>
     </div>
   </div>
 </section>
@@ -633,10 +688,11 @@
   const config = window.__ALBACHA_FIREBASE__;
   if (config && config.apiKey && config.projectId) {
     try {
-      const [{ initializeApp }, { getFirestore, collection, doc, getDoc, getDocs }] = await Promise.all([
-        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js'),
-        import('https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js'),
-      ]);
+      const [{ initializeApp }, { getFirestore, collection, doc, getDoc, getDocs, setDoc }] =
+        await Promise.all([
+          import('https://www.gstatic.com/firebasejs/11.1.0/firebase-app.js'),
+          import('https://www.gstatic.com/firebasejs/11.1.0/firebase-firestore.js'),
+        ]);
 
       const db = getFirestore(initializeApp(config));
       const [settings, gallery] = await Promise.all([
@@ -648,10 +704,101 @@
         settings && settings.exists() ? settings.data() : null,
         gallery ? gallery.docs.map((entry) => entry.data()) : [],
       );
+
+      // نموذج طلب عرض السعر: يكتب مباشرة في قاعدة البيانات، فيصل صاحب
+      // المؤسسة في تطبيقه بلا وسيط. قواعد الأمان تحصر ما يُكتب وتمنع قراءته.
+      window.__albachaSendRequest = async (payload) => {
+        const id = Date.now().toString(36) + Math.random().toString(36).slice(2, 8);
+        await setDoc(doc(collection(db, 'siteRequests'), id), { ...payload, id });
+      };
     } catch {
       /* تعذّر الجلب (انقطاع مثلاً) — تبقى الصفحة بمحتواها المكتوب */
     }
   }
+</script>
+
+<script>
+(() => {
+  const form = document.getElementById('req-form');
+  if (!form) return;
+  const msg = document.getElementById('req-msg');
+  const send = document.getElementById('req-send');
+  // بالمعرّفات لا بـ form.<name>: خاصيّة form.name تعني اسم النموذج نفسه،
+  // فقراءة الحقل المسمّى name منها تعطي شيئاً آخر.
+  const field = (id) => document.getElementById('req-' + id);
+
+  const KIND_LABEL = {
+    aluminium: 'أبواب ونوافذ ألمنيوم',
+    iron: 'أبواب وبوابات حديد',
+    kitchen: 'مطبخ ألمنيوم',
+    railing: 'درج ودرابزين حديد',
+    other: 'عمل آخر',
+  };
+
+  /** الأرقام العربية والفارسية إلى لاتينية — لوحة المفاتيح العربية تكتب بها. */
+  const latin = (raw) => String(raw || '')
+    .replace(/[٠-٩]/g, (d) => String(d.charCodeAt(0) - 0x0660))
+    .replace(/[۰-۹]/g, (d) => String(d.charCodeAt(0) - 0x06f0));
+
+  const num = (raw) => {
+    const value = Number(latin(raw).replace(/[،٫,]/g, '.').replace(/[^\d.]/g, ''));
+    return Number.isFinite(value) && value >= 0 ? value : 0;
+  };
+
+  const show = (text, ok) => {
+    msg.textContent = text;
+    msg.className = 'req-msg ' + (ok ? 'ok' : 'bad');
+  };
+
+  /** الرجوع إلى واتساب حين يتعذّر الحفظ — لا يضيع الطلب على الزبون. */
+  const viaWhatsApp = (data) => {
+    const link = document.querySelector('a[href*="wa.me/"]');
+    const number = link ? (link.href.match(/wa\.me\/(\d+)/) || [])[1] : '213673232932';
+    const size = data.width && data.height
+      ? `\nالمقاس: ${data.width} م × ${data.height} م` + (data.qty > 1 ? ` × ${data.qty}` : '')
+      : '';
+    const text =
+      `طلب عرض سعر من الموقع\nالاسم: ${data.name}\nالهاتف: ${data.phone}\n` +
+      `نوع العمل: ${KIND_LABEL[data.kind]}${size}` + (data.note ? `\nملاحظات: ${data.note}` : '');
+    window.open('https://wa.me/' + number + '?text=' + encodeURIComponent(text), '_blank', 'noopener');
+  };
+
+  form.addEventListener('submit', async (event) => {
+    event.preventDefault();
+    const name = field('name').value.trim();
+    const phone = latin(field('phone').value).trim();
+
+    if (name.length < 2) return show('اكتب اسمك من فضلك.', false);
+    if (phone.replace(/\D/g, '').length < 6) return show('اكتب رقم هاتف صحيحاً نتواصل به معك.', false);
+
+    const data = {
+      name: name.slice(0, 60),
+      phone: phone.slice(0, 20),
+      kind: field('kind').value,
+      width: num(field('width').value),
+      height: num(field('height').value),
+      qty: num(field('qty').value),
+      note: field('note').value.trim().slice(0, 500),
+      status: 'new',
+      createdAt: Date.now(),
+    };
+
+    send.disabled = true;
+    send.textContent = 'جارٍ الإرسال…';
+    try {
+      if (!window.__albachaSendRequest) throw new Error('offline');
+      await window.__albachaSendRequest(data);
+      form.reset();
+      show('وصلنا طلبك. سنتواصل معك على الرقم الذي كتبته بأقرب وقت.', true);
+    } catch {
+      show('تعذّر الإرسال عبر الموقع — يُفتح واتساب الآن بطلبك جاهزاً.', false);
+      viaWhatsApp(data);
+    } finally {
+      send.disabled = false;
+      send.textContent = 'أرسل الطلب';
+    }
+  });
+})();
 </script>
 
 </body>

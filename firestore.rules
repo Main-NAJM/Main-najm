@@ -59,6 +59,36 @@ service cloud.firestore {
       allow write: if isSiteOwner();
     }
 
+    // ---------------------------------------------------------------
+    // طلبات عروض الأسعار الواردة من نموذج الموقع.
+    //
+    // يكتبها أي زائر بلا حساب — وهذا مقصود، فالزبون لا يسجّل دخولاً. ولأنها
+    // مفتوحة للكتابة، تحصر القاعدة ما يُكتب: حقول بعينها لا غير، بأنواع وأطوال
+    // محدودة، وبحالة 'new' دائماً. ولا يقرأها أحد سوى المالك، فلا يرى زائرٌ
+    // أرقامَ هواتف غيره.
+    // ---------------------------------------------------------------
+    function validRequest() {
+      let d = request.resource.data;
+      return d.keys().hasOnly(
+               ['id', 'name', 'phone', 'kind', 'width', 'height', 'qty', 'note', 'status', 'createdAt']
+             )
+        && d.keys().hasAll(['name', 'phone', 'kind', 'status', 'createdAt'])
+        && d.name is string && d.name.size() >= 2 && d.name.size() <= 60
+        && d.phone is string && d.phone.size() >= 6 && d.phone.size() <= 20
+        && d.kind in ['aluminium', 'iron', 'kitchen', 'railing', 'other']
+        && (!('note' in d) || (d.note is string && d.note.size() <= 500))
+        && (!('width' in d) || (d.width is number && d.width >= 0 && d.width <= 100))
+        && (!('height' in d) || (d.height is number && d.height >= 0 && d.height <= 100))
+        && (!('qty' in d) || (d.qty is number && d.qty >= 0 && d.qty <= 1000))
+        && d.status == 'new'
+        && d.createdAt is number;
+    }
+
+    match /siteRequests/{requestId} {
+      allow create: if validRequest();
+      allow read, update, delete: if isSiteOwner();
+    }
+
     // منع الوصول إلى أي مسار آخر.
     match /{document=**} {
       allow read, write: if false;

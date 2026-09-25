@@ -1,9 +1,17 @@
+import { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
+import { countNewRequests } from '@/data/siteStore';
 import { money } from '@/lib/format';
 import { SectionTitle } from '@/components/ui';
 
 const LINKS = [
+  {
+    to: '/requests',
+    title: 'الطلبات الواردة',
+    hint: 'طلبات عروض الأسعار التي يرسلها الزوّار من الموقع — حوّلها إلى زبون وطلب بضغطة.',
+  },
   {
     to: '/materials',
     title: 'المخزون',
@@ -28,6 +36,22 @@ const LINKS = [
 
 export default function More() {
   const { materials, orders, profile } = useData();
+  const { user, firebaseAvailable } = useAuth();
+  const [newRequests, setNewRequests] = useState(0);
+
+  // عدّاد الطلبات الواردة: قراءة واحدة خفيفة، وتُتجاهل بهدوء لمن ليس مالك الموقع.
+  useEffect(() => {
+    if (!firebaseAvailable || user?.isLocal) return;
+    let alive = true;
+    countNewRequests()
+      .then((count) => {
+        if (alive) setNewRequests(count);
+      })
+      .catch(() => undefined);
+    return () => {
+      alive = false;
+    };
+  }, [firebaseAvailable, user?.isLocal]);
   const lowStock = materials.filter(
     (material) => material.minQuantity > 0 && material.quantity <= material.minQuantity,
   ).length;
@@ -50,6 +74,9 @@ export default function More() {
                 <div className="card__title">{link.title}</div>
                 <p className="small muted">{link.hint}</p>
               </div>
+              {link.to === '/requests' && newRequests ? (
+                <span className="badge badge--warn">{newRequests} جديد</span>
+              ) : null}
               {link.to === '/materials' && lowStock ? (
                 <span className="badge badge--danger">{lowStock} تحت الحدّ</span>
               ) : null}

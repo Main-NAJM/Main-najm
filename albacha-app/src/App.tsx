@@ -12,6 +12,7 @@ import Materials from '@/pages/Materials';
 import Reports from '@/pages/Reports';
 import More from '@/pages/More';
 import Site from '@/pages/Site';
+import Requests from '@/pages/Requests';
 import Settings from '@/pages/Settings';
 import Print from '@/pages/Print';
 
@@ -33,6 +34,7 @@ function Gate() {
           <Route path="reports" element={<Reports />} />
           <Route path="more" element={<More />} />
           <Route path="site" element={<Site />} />
+          <Route path="requests" element={<Requests />} />
           <Route path="settings" element={<Settings />} />
           <Route path="print/:orderId" element={<Print />} />
           <Route path="*" element={<Navigate to="/" replace />} />

@@ -66,6 +66,29 @@ export interface Order {
   updatedAt: number;
 }
 
+/** نوع العمل كما يختاره الزائر في نموذج الموقع. */
+export type RequestKind = 'aluminium' | 'iron' | 'kitchen' | 'railing' | 'other';
+
+/**
+ * طلب وارد من نموذج الموقع، يملؤه الزائر بلا حساب ولا تطبيق.
+ *
+ * يكتبه أي زائر (قواعد الأمان تحصر ما يكتبه في هذه الحقول وبأطوال محدودة)،
+ * ولا يقرأه إلا مالك الموقع. يُحوَّل من التطبيق إلى زبون وطلب بضغطة.
+ */
+export interface SiteRequest {
+  id: string;
+  name: string;
+  phone: string;
+  kind: RequestKind;
+  /** مقاسات تقريبية بالمتر — صفر يعني أن الزائر لم يذكرها. */
+  width: number;
+  height: number;
+  qty: number;
+  note: string;
+  status: 'new' | 'done';
+  createdAt: number;
+}
+
 export type MaterialUnit = 'meter' | 'kg' | 'piece' | 'sheet' | 'bar';
 
 /** حركة على المخزون: استلام (+) أو صرف (−). */
