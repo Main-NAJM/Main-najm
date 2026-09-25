@@ -93,7 +93,10 @@ export default function Requests() {
         await saveCustomer(customer);
       }
 
+      // الزائر يكتب بالسنتيمتر، وبنود الطلب تُسعَّر بالمتر المربّع.
       const hasSize = request.width > 0 && request.height > 0;
+      const widthM = request.width / 100;
+      const heightM = request.height / 100;
       const now = Date.now();
       const order: Order = {
         id: newId(),
@@ -108,8 +111,8 @@ export default function Requests() {
             id: newId(),
             label: KIND_LABEL[request.kind],
             unit: hasSize ? 'm2' : 'piece',
-            width: request.width,
-            height: request.height,
+            width: widthM,
+            height: heightM,
             qty: request.qty > 0 ? request.qty : 1,
             unitPrice: 0,
           },
@@ -215,7 +218,7 @@ export default function Requests() {
 
               {request.width > 0 && request.height > 0 ? (
                 <p className="small">
-                  المقاس المطلوب: {request.width} م × {request.height} م
+                  المقاس المطلوب: {request.width} سم × {request.height} سم
                   {request.qty > 1 ? ` × ${request.qty}` : ''}
                 </p>
               ) : null}

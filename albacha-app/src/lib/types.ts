@@ -80,7 +80,7 @@ export interface SiteRequest {
   name: string;
   phone: string;
   kind: RequestKind;
-  /** مقاسات تقريبية بالمتر — صفر يعني أن الزائر لم يذكرها. */
+  /** مقاسات تقريبية بالسنتيمتر — وهي وحدة الزبون. صفر يعني أنه لم يذكرها. */
   width: number;
   height: number;
   qty: number;
