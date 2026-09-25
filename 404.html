@@ -10,7 +10,7 @@
   var path = loc.pathname;
   var rest = path.indexOf(BASE) === 0 ? path.slice(BASE.length) : path.replace(/^\//, '');
 
-  var statics = ["albacha/", "bofaida/", "studio/"];
+  var statics = ["albacha/"];
   for (var i = 0; i < statics.length; i++) {
     var dir = statics[i];
     var name = dir.slice(0, -1);
@@ -21,7 +21,7 @@
   }
 
   var app = '';
-  var apps = ["app/", "herfah/"];
+  var apps = ["app/"];
   for (var j = 0; j < apps.length; j++) {
     var a = apps[j];
     var an = a.slice(0, -1);
