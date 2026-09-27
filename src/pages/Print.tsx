@@ -2,7 +2,7 @@ import { useMemo, useState } from 'react';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
 import { EmptyState, Select } from '@/components/ui';
-import { debtTotals, orderTotals } from '@/lib/calc';
+import { debtTotals, orderTotals, workerTotals } from '@/lib/calc';
 import { ORDER_STATUSES } from '@/lib/constants';
 import { daysFromToday, formatInt, formatMoney } from '@/lib/format';
 import { downloadHtml, printHtml } from '@/print/print';
@@ -11,21 +11,23 @@ import {
   buildDebtsReport,
   buildInvoice,
   buildOrdersReport,
+  buildWorkerStatement,
 } from '@/print/templates';
 import type { OrderStatus } from '@/lib/types';
 
-type DocKind = 'invoice' | 'orders' | 'debts' | 'calculations';
+type DocKind = 'invoice' | 'orders' | 'debts' | 'calculations' | 'worker';
 type OrderFilter = OrderStatus | 'all' | 'unpaid';
 type DebtFilter = 'all' | 'open' | 'overdue' | 'settled';
 
 export default function Print() {
-  const { orders, debts, calculations, profile } = useData();
+  const { orders, debts, calculations, workers, profile } = useData();
   const { notify } = useToast();
 
   const [kind, setKind] = useState<DocKind>('orders');
   const [orderId, setOrderId] = useState<string>('');
   const [orderFilter, setOrderFilter] = useState<OrderFilter>('all');
   const [debtFilter, setDebtFilter] = useState<DebtFilter>('open');
+  const [workerId, setWorkerId] = useState<string>('');
 
   const filteredOrders = useMemo(() => {
     if (orderFilter === 'all') return orders;
@@ -63,6 +65,7 @@ export default function Print() {
           : 'الديون المسدّدة';
 
   const selectedOrder = orders.find((order) => order.id === orderId) ?? null;
+  const selectedWorker = workers.find((worker) => worker.id === workerId) ?? null;
 
   const build = (): { title: string; body: string; file: string } | null => {
     switch (kind) {
@@ -95,6 +98,17 @@ export default function Print() {
           body: buildCalculationsReport(calculations, profile),
           file: 'pricing-report',
         };
+      case 'worker': {
+        if (!selectedWorker) {
+          notify('اختر العامل المطلوب كشف حسابه.', 'error');
+          return null;
+        }
+        return {
+          title: `كشف ${selectedWorker.name}`,
+          body: buildWorkerStatement(selectedWorker, profile),
+          file: `worker-${selectedWorker.id.slice(-6)}`,
+        };
+      }
       default:
         return null;
     }
@@ -130,13 +144,18 @@ export default function Print() {
       }
       case 'calculations':
         return `${formatInt(calculations.length)} حساب محفوظ`;
+      case 'worker': {
+        if (!selectedWorker) return 'لم يُختر عامل بعد.';
+        const t = workerTotals(selectedWorker);
+        return `${formatInt(t.jobsCount)} عمل · الأجور ${formatMoney(t.earned, profile.currency)} · المستحقّ ${formatMoney(t.due, profile.currency)}`;
+      }
       default:
         return '';
     }
   })();
 
   const hasData =
-    orders.length > 0 || debts.length > 0 || calculations.length > 0;
+    orders.length > 0 || debts.length > 0 || calculations.length > 0 || workers.length > 0;
 
   if (!hasData) {
     return (
@@ -158,6 +177,7 @@ export default function Print() {
             { value: 'orders', label: 'كشف الطلبيات' },
             { value: 'debts', label: 'سجل الديون' },
             { value: 'calculations', label: 'سجل التسعير' },
+            { value: 'worker', label: 'كشف حساب عامل' },
           ]}
           onChange={(value) => {
             setKind(value as DocKind);
@@ -176,6 +196,21 @@ export default function Print() {
               })),
             ]}
             onChange={setOrderId}
+          />
+        ) : null}
+
+        {kind === 'worker' ? (
+          <Select
+            label="العامل"
+            value={workerId}
+            options={[
+              { value: '', label: 'اختر عاملاً…' },
+              ...workers.map((worker) => ({
+                value: worker.id,
+                label: `${worker.name}${worker.role ? ` — ${worker.role}` : ''}`,
+              })),
+            ]}
+            onChange={setWorkerId}
           />
         ) : null}
 

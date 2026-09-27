@@ -43,7 +43,7 @@ const emptyExpense = (month: string): NewRecord<Expense> => ({
 });
 
 export default function Expenses() {
-  const { orders, debts, expenses, profile, create, update, remove } = useData();
+  const { orders, debts, expenses, workers, profile, create, update, remove } = useData();
   const { notify, notifyError } = useToast();
 
   const [month, setMonth] = useState<string>(currentMonth);
@@ -56,16 +56,16 @@ export default function Expenses() {
   const money = (value: number) => formatMoney(value, profile.currency);
 
   const books = useMemo(
-    () => monthlyBooks(month, orders, debts, expenses),
-    [month, orders, debts, expenses],
+    () => monthlyBooks(month, orders, debts, expenses, workers),
+    [month, orders, debts, expenses, workers],
   );
   const previous = useMemo(
-    () => monthlyBooks(addMonths(month, -1), orders, debts, expenses),
-    [month, orders, debts, expenses],
+    () => monthlyBooks(addMonths(month, -1), orders, debts, expenses, workers),
+    [month, orders, debts, expenses, workers],
   );
   const months = useMemo(
-    () => activeMonths(orders, debts, expenses, currentMonth()),
-    [orders, debts, expenses],
+    () => activeMonths(orders, debts, expenses, currentMonth(), workers),
+    [orders, debts, expenses, workers],
   );
 
   const monthExpenses = useMemo(
@@ -245,7 +245,11 @@ export default function Expenses() {
           label="مصاريف الشهر"
           value={money(books.expenses)}
           tone="warn"
-          sub={`${formatInt(books.expensesCount)} مصروف`}
+          sub={
+            books.wagesPaid > 0
+              ? `${formatInt(books.expensesCount)} مصروف · أجور ${money(books.wagesPaid)}`
+              : `${formatInt(books.expensesCount)} مصروف`
+          }
         />
       </div>
 
@@ -260,6 +264,13 @@ export default function Expenses() {
       <p className="small muted">
         الربح هنا نقديّ: ما دخل جيبك ناقص ما خرج منه. فليكن صحيحاً، سجّل مشترياتك من المواد
         هنا في المصاريف — وإلا ظهر ربحك أكبر مما هو.
+        {books.wagesPaid > 0 ? (
+          <>
+            {' '}
+            أمّا ما سلّمته للعمّال هذا الشهر (<strong>{money(books.wagesPaid)}</strong>) فمحسوب
+            تلقائياً من سجل العمّال في باب الأجور — لا تسجّله هنا مرّة ثانية.
+          </>
+        ) : null}
       </p>
 
       {books.byCategory.length > 0 ? (

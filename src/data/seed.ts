@@ -18,6 +18,7 @@ import type {
   Debt,
   Expense,
   InventoryItem,
+  Worker,
   MarketPrice,
   Order,
   PricingBasis,
@@ -293,6 +294,37 @@ const ALL_MARKET_PRICES = (): NewRecord<MarketPrice>[] => [
     priceDate: todayIso(),
   },
 ];
+
+/** عمّال تجريبيون — للتجربة فقط، لا يُزرعون لحساب حقيقي. */
+export const seedWorkers = (): NewRecord<Worker>[] => {
+  const month = todayIso().slice(0, 7);
+  return [
+    {
+      name: 'كريم بن عمر',
+      phone: '0551234567',
+      role: 'نجّار مساعد',
+      jobs: [
+        { id: newId(), title: 'قصّ وتجميع خزانة', date: `${month}-04`, wage: 12000, orderId: null, notes: '' },
+        { id: newId(), title: 'تركيب باب في بيت الزبون', date: `${month}-09`, wage: 8000, orderId: null, notes: '' },
+        { id: newId(), title: 'دهن وتلميع', date: `${month}-14`, wage: 6000, orderId: null, notes: '' },
+      ],
+      payments: [{ id: newId(), amount: 15000, date: `${month}-10`, note: 'دفعة أولى' }],
+      active: true,
+      notes: '',
+    },
+    {
+      name: 'يوسف الطيب',
+      phone: '',
+      role: 'متمرّن',
+      jobs: [
+        { id: newId(), title: 'مساعدة في التركيب', date: `${month}-09`, wage: 4000, orderId: null, notes: '' },
+      ],
+      payments: [{ id: newId(), amount: 4000, date: `${month}-09`, note: 'نقداً' }],
+      active: true,
+      notes: 'يعمل نصف يوم.',
+    },
+  ];
+};
 
 /** مصاريف تجريبية — للتجربة فقط، لا تُزرع لحساب حقيقي. */
 export const seedExpenses = (): NewRecord<Expense>[] => {

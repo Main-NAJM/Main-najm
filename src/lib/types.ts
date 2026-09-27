@@ -140,6 +140,45 @@ export interface Debt extends BaseRecord {
   notes: string;
 }
 
+/** عملٌ قام به عامل، وأجرته عليه. */
+export interface WorkerJob {
+  id: string;
+  /** ما قام به: «تركيب باب»، «قصّ ألواح»، «دهن غرفة». */
+  title: string;
+  /** YYYY-MM-DD */
+  date: string;
+  /** أجرته على هذا العمل وحده. */
+  wage: number;
+  /** ربطٌ اختياري بطلبية، ليُعرف على أيّ شغل كان. */
+  orderId: string | null;
+  notes: string;
+}
+
+/** دفعة سُلّمت للعامل من مستحقّاته. */
+export interface WorkerPayment {
+  id: string;
+  amount: number;
+  /** YYYY-MM-DD */
+  date: string;
+  note: string;
+}
+
+/**
+ * عامل في الورشة: أعماله وأجرة كل عمل، وما سُلّم له.
+ * المستحقّ عليك = مجموع الأجور ناقص مجموع الدفعات.
+ */
+export interface Worker extends BaseRecord {
+  name: string;
+  phone: string;
+  /** صفته: نجّار مساعد، لحّام، متمرّن… */
+  role: string;
+  jobs: WorkerJob[];
+  payments: WorkerPayment[];
+  /** يعمل معك الآن، أم توقّف ويبقى سجلّه للمراجعة. */
+  active: boolean;
+  notes: string;
+}
+
 /** بابُ المصروف — تُجمَع المصاريف عليه في التقرير الشهري. */
 export type ExpenseCategory =
   | 'rent'
@@ -257,6 +296,7 @@ export type CollectionName =
   | 'products'
   | 'inventory'
   | 'expenses'
+  | 'workers'
   | 'appointments'
   | 'calculations'
   | 'marketPrices'
@@ -267,6 +307,7 @@ export interface CollectionMap {
   products: ProductTemplate;
   inventory: InventoryItem;
   expenses: Expense;
+  workers: Worker;
   appointments: Appointment;
   calculations: Calculation;
   marketPrices: MarketPrice;

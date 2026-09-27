@@ -13,6 +13,7 @@ const Calculator = lazy(() => import('@/pages/Calculator'));
 const ProductPricing = lazy(() => import('@/pages/ProductPricing'));
 const Openings = lazy(() => import('@/pages/Openings'));
 const Inventory = lazy(() => import('@/pages/Inventory'));
+const Workers = lazy(() => import('@/pages/Workers'));
 const Expenses = lazy(() => import('@/pages/Expenses'));
 const MarketPrices = lazy(() => import('@/pages/MarketPrices'));
 const Debts = lazy(() => import('@/pages/Debts'));
@@ -44,6 +45,7 @@ export default function App() {
             <Route path="/products" element={<ProductPricing />} />
             <Route path="/openings" element={<Openings />} />
             <Route path="/inventory" element={<Inventory />} />
+            <Route path="/workers" element={<Workers />} />
             <Route path="/expenses" element={<Expenses />} />
             <Route path="/prices" element={<MarketPrices />} />
             <Route path="/debts" element={<Debts />} />

@@ -9,6 +9,7 @@ import type {
   Order,
   PricingBasis,
   ProductTemplate,
+  Worker,
 } from './types';
 
 export interface OrderTotals {
@@ -270,6 +271,36 @@ export const inventoryTotals = (
   return { items: items.length, needsRestock, outOfStock, value: round2(value) };
 };
 
+/* ------------------------------------------------------------- العمّال */
+
+export interface WorkerTotals {
+  /** مجموع أجور أعماله كلّها. */
+  earned: number;
+  /** ما سُلّم له. */
+  paid: number;
+  /** المستحقّ عليك له. */
+  due: number;
+  jobsCount: number;
+  isSettled: boolean;
+}
+
+export const workerTotals = (worker: Worker): WorkerTotals => {
+  const earned = (worker.jobs ?? []).reduce((sum, job) => sum + (job.wage || 0), 0);
+  const paid = (worker.payments ?? []).reduce((sum, pay) => sum + (pay.amount || 0), 0);
+  return {
+    earned: round2(earned),
+    paid: round2(paid),
+    due: round2(Math.max(0, earned - paid)),
+    jobsCount: (worker.jobs ?? []).length,
+    // كسور المليم لا تُبقي عاملاً في قائمة المستحقّين.
+    isSettled: earned - paid <= 0.009,
+  };
+};
+
+/** مجموع ما على الورشة لعمّالها. */
+export const workersDue = (workers: Worker[]): number =>
+  round2(workers.reduce((sum, worker) => sum + workerTotals(worker).due, 0));
+
 /* ------------------------------------------------- دفتر الشهر: الدخل والصرف */
 
 /**
@@ -282,6 +313,9 @@ export const inventoryTotals = (
  *
  * والربح هنا نقديّ: ما دخل الجيب ناقص ما خرج منه. فهو لا يصحّ إلا إذا سجّل
  * صاحبه مشترياته في المصاريف — وهذا ما تقوله الصفحة له صراحةً.
+ *
+ * ودفعات العمّال مالٌ خرج من الجيب فعلاً، فتُضاف إلى مصاريف الشهر من سجلّ
+ * العمّال نفسه — بلا أن يعيد صاحبها كتابتها مصروفاً، فيُحسب مرّتين.
  */
 export interface MonthlyBooks {
   month: string;
@@ -294,6 +328,8 @@ export interface MonthlyBooks {
   /** fromOrders + fromDebts */
   income: number;
   expenses: number;
+  /** ما سُلّم للعمّال في هذا الشهر — جزء من expenses. */
+  wagesPaid: number;
   /** income − expenses */
   net: number;
   /** ما بقي على طلبيات هذا الشهر. */
@@ -310,6 +346,7 @@ export const monthlyBooks = (
   orders: Order[],
   debts: Debt[],
   expenses: Expense[],
+  workers: Worker[] = [],
 ): MonthlyBooks => {
   let billed = 0;
   let fromOrders = 0;
@@ -341,6 +378,18 @@ export const monthlyBooks = (
     totals.set(expense.category, (totals.get(expense.category) ?? 0) + amount);
   });
 
+  // دفعات العمّال مصروفٌ في باب الأجور، تُجمع من سجلّهم لا من دفتر المصاريف.
+  let wagesPaid = 0;
+  workers.forEach((worker) => {
+    (worker.payments ?? []).forEach((payment) => {
+      if (inMonth(payment.date, month)) wagesPaid += payment.amount || 0;
+    });
+  });
+  if (wagesPaid > 0) {
+    spent += wagesPaid;
+    totals.set('wages', (totals.get('wages') ?? 0) + wagesPaid);
+  }
+
   const income = fromOrders + fromDebts;
   return {
     month,
@@ -349,6 +398,7 @@ export const monthlyBooks = (
     fromDebts: round2(fromDebts),
     income: round2(income),
     expenses: round2(spent),
+    wagesPaid: round2(wagesPaid),
     net: round2(income - spent),
     unpaid: round2(Math.max(0, billed - fromOrders)),
     ordersCount,
@@ -365,6 +415,7 @@ export const activeMonths = (
   debts: Debt[],
   expenses: Expense[],
   include: string,
+  workers: Worker[] = [],
 ): string[] => {
   const months = new Set<string>([include]);
   orders.forEach((order) => months.add(toIsoDate(new Date(order.createdAt)).slice(0, 7)));
@@ -376,6 +427,11 @@ export const activeMonths = (
   expenses.forEach((expense) => {
     if (expense.date) months.add(expense.date.slice(0, 7));
   });
+  workers.forEach((worker) =>
+    (worker.payments ?? []).forEach((payment) => {
+      if (payment.date) months.add(payment.date.slice(0, 7));
+    }),
+  );
   return [...months].filter(Boolean).sort().reverse();
 };
 

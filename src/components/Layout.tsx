@@ -18,6 +18,7 @@ import {
   SettingsIcon,
   StockIcon,
   WalletIcon,
+  WorkersIcon,
 } from './icons';
 
 const primaryLinks = [
@@ -29,6 +30,7 @@ const primaryLinks = [
 
 const moreLinks = [
   { to: '/expenses', label: 'المصاريف', Icon: WalletIcon },
+  { to: '/workers', label: 'العمّال', Icon: WorkersIcon },
   { to: '/inventory', label: 'المخزون', Icon: StockIcon },
   { to: '/openings', label: 'الأبواب والنوافذ', Icon: ProductIcon },
   { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
@@ -48,6 +50,7 @@ const pageTitles: Record<string, string> = {
   '/openings': 'الأبواب والنوافذ',
   '/inventory': 'المخزون والسلع',
   '/expenses': 'المصاريف والأرباح',
+  '/workers': 'سجل العمّال',
   '/prices': 'مؤشرات أسعار السوق',
   '/print': 'الطباعة والتقارير',
   '/settings': 'الإعدادات',

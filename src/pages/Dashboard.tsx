@@ -18,8 +18,17 @@ import {
 } from '@/lib/format';
 
 export default function Dashboard() {
-  const { orders, appointments, debts, marketPrices, inventory, expenses, profile, seedDemoData } =
-    useData();
+  const {
+    orders,
+    appointments,
+    debts,
+    marketPrices,
+    inventory,
+    expenses,
+    workers,
+    profile,
+    seedDemoData,
+  } = useData();
   const { user } = useAuth();
   const today = todayIso();
 
@@ -44,8 +53,8 @@ export default function Dashboard() {
 
   // ربح الشهر الجاري: ما قُبض ناقص ما صُرف.
   const books = useMemo(
-    () => monthlyBooks(currentMonth(), orders, debts, expenses),
-    [orders, debts, expenses],
+    () => monthlyBooks(currentMonth(), orders, debts, expenses, workers),
+    [orders, debts, expenses, workers],
   );
 
   // ما نفد أو نزل إلى حدّ التنبيه — أول ما يحتاج صاحب الورشة معرفته صباحاً.

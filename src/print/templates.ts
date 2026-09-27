@@ -2,6 +2,7 @@
 import {
   debtTotals,
   orderTotals,
+  workerTotals,
   type MonthlyBooks,
   type ProductDimensions,
   type ProductPriceResult,
@@ -17,6 +18,7 @@ import type {
   Order,
   Profile,
   ProductTemplate,
+  Worker,
 } from '@/lib/types';
 import { escapeHtml } from './print';
 
@@ -536,6 +538,11 @@ export const buildMonthlyReport = (
         <div><span>دفعات الديون في الشهر:</span><span>${money(books.fromDebts, profile)}</span></div>
         <div><span>جملة الدخل:</span><span>${money(books.income, profile)}</span></div>
         <div><span>جملة المصاريف:</span><span>${money(books.expenses, profile)}</span></div>
+        ${
+          books.wagesPaid > 0
+            ? `<div><span>منها أجور عمّال:</span><span>${money(books.wagesPaid, profile)}</span></div>`
+            : ''
+        }
       </div>
       <div class="total-row">
         <span>${books.net < 0 ? 'خسارة الشهر' : 'ربح الشهر الصافي'}</span>
@@ -566,7 +573,106 @@ export const buildMonthlyReport = (
         </thead>
         <tbody>${rows}</tbody>
       </table>
+      ${
+        books.wagesPaid > 0
+          ? `<p class="note">أجور العمّال (${money(books.wagesPaid, profile)}) مأخوذة من سجل
+             العمّال، وتفصيلها في كشف كلّ عامل على حدة.</p>`
+          : ''
+      }
     </div>
 
     ${foot(profile, 'الربح نقديّ: ما قُبض ناقص ما صُرف')}`;
+};
+
+/* ------------------------------------------------------- كشف حساب عامل */
+
+/** كشف عامل: أعماله وأجرة كلّ عمل، ثم ما سُلّم له، ثم المتبقّي في ذمّتك. */
+export const buildWorkerStatement = (worker: Worker, profile: Profile): string => {
+  const t = workerTotals(worker);
+  const jobs = [...(worker.jobs ?? [])].sort((a, b) => a.date.localeCompare(b.date));
+  const payments = [...(worker.payments ?? [])].sort((a, b) => a.date.localeCompare(b.date));
+
+  const jobRows = jobs.length
+    ? jobs
+        .map(
+          (job, index) => `
+        <tr>
+          <td class="num">${index + 1}</td>
+          <td class="num">${escapeHtml(formatDate(job.date))}</td>
+          <td>${escapeHtml(job.title || '—')}${
+            job.notes ? `<div style="color:#6b7280;font-size:11px">${escapeHtml(job.notes)}</div>` : ''
+          }</td>
+          <td class="num">${money(job.wage, profile)}</td>
+        </tr>`,
+        )
+        .join('')
+    : `<tr><td colspan="4" style="text-align:center;color:#6b7280">لا أعمال مسجّلة</td></tr>`;
+
+  const paymentRows = payments.length
+    ? payments
+        .map(
+          (payment, index) => `
+        <tr>
+          <td class="num">${index + 1}</td>
+          <td class="num">${escapeHtml(formatDate(payment.date))}</td>
+          <td>${escapeHtml(payment.note || '—')}</td>
+          <td class="num">${money(payment.amount, profile)}</td>
+        </tr>`,
+        )
+        .join('')
+    : `<tr><td colspan="4" style="text-align:center;color:#6b7280">لم يُسلَّم له شيء بعد</td></tr>`;
+
+  return `
+    ${head(profile, 'كشف حساب عامل', shortRef(worker.id))}
+
+    <div class="block">
+      <p class="block__title">بيانات العامل</p>
+      <div class="kv">
+        <div><span>الاسم:</span><span>${escapeHtml(worker.name || '—')}</span></div>
+        <div><span>الصفة:</span><span>${escapeHtml(worker.role || 'عامل')}</span></div>
+        <div><span>الهاتف:</span><span>${escapeHtml(worker.phone || '—')}</span></div>
+        <div><span>الحالة:</span><span>${worker.active ? 'يعمل' : 'متوقّف'}</span></div>
+      </div>
+    </div>
+
+    <div class="block">
+      <p class="block__title">الأعمال وأجرة كلّ عمل</p>
+      <table>
+        <thead>
+          <tr>
+            <th class="num" style="width:34px">#</th>
+            <th class="num" style="width:120px">التاريخ</th>
+            <th>العمل</th>
+            <th class="num" style="width:130px">الأجرة</th>
+          </tr>
+        </thead>
+        <tbody>${jobRows}</tbody>
+      </table>
+    </div>
+
+    <div class="block">
+      <p class="block__title">ما سُلّم له</p>
+      <table>
+        <thead>
+          <tr>
+            <th class="num" style="width:34px">#</th>
+            <th class="num" style="width:120px">التاريخ</th>
+            <th>ملاحظة</th>
+            <th class="num" style="width:130px">المبلغ</th>
+          </tr>
+        </thead>
+        <tbody>${paymentRows}</tbody>
+      </table>
+      <table class="totals">
+        <tbody>
+          <tr><td>مجموع الأجور (${escapeHtml(formatNumber(t.jobsCount))} عمل)</td><td>${money(t.earned, profile)}</td></tr>
+          <tr><td>المُسلَّم</td><td>${money(t.paid, profile)}</td></tr>
+          <tr class="grand"><td>المستحقّ له</td><td>${money(t.due, profile)}</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    ${worker.notes ? `<div class="block"><div class="note">${escapeHtml(worker.notes)}</div></div>` : ''}
+    <div class="sign"><div>توقيع العامل</div><div>توقيع صاحب العمل</div></div>
+    ${foot(profile, 'كشف حساب عامل')}`;
 };
