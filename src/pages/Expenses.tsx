@@ -298,7 +298,7 @@ export default function Expenses() {
 
       <SectionTitle
         action={
-          <div className="card__actions" style={{ margin: 0 }}>
+          <div className="card__actions card__actions--inline">
             {books.expensesCount > 0 || books.income > 0 ? (
               <button type="button" className="btn btn--ghost btn--sm" onClick={print}>
                 طباعة الكشف
@@ -334,8 +334,8 @@ export default function Expenses() {
                     {expenseCategoryLabel(expense.category)} · {formatDate(expense.date)}
                   </p>
                 </div>
-                <div style={{ textAlign: 'left' }}>
-                  <strong style={{ fontSize: 17 }}>{money(expense.amount)}</strong>
+                <div className="card__amount">
+                  <strong>{money(expense.amount)}</strong>
                   {expense.recurring ? (
                     <div>
                       <Badge tone="muted">شهري</Badge>

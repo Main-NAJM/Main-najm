@@ -2420,8 +2420,10 @@ table.data th.num {
   transition: background var(--fast) var(--ease);
 }
 
-.month-bar__step:hover:not(:disabled) {
-  background: var(--surface-3);
+@media (hover: hover) {
+  .month-bar__step:hover:not(:disabled) {
+    background: var(--surface-3);
+  }
 }
 
 .month-bar__step:disabled {
@@ -2432,4 +2434,19 @@ table.data th.num {
 /* البطاقة الرئيسية تمتدّ على الشبكة كلّها. */
 .stat--wide {
   grid-column: 1 / -1;
+}
+
+/* المبلغ في رأس البطاقة: بارز ومحاذٍ للطرف المقابل للعنوان. */
+.card__amount {
+  text-align: end;
+}
+
+.card__amount strong {
+  font-size: 17px;
+  font-variant-numeric: tabular-nums;
+}
+
+/* صفّ أزرار داخل عنوان قسم — لا هامش علوي له هناك. */
+.card__actions--inline {
+  margin: 0;
 }
