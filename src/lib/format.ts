@@ -149,3 +149,30 @@ export const whatsappHref = (phone: string, message?: string): string | null => 
 };
 
 export const percent = (value: number): string => `${formatNumber(round2(value))}٪`;
+
+/* ------------------------------------------------------------ الأشهر */
+
+/** مفتاح الشهر من تاريخ ISO: ‎2026-09-18‎ ← ‎2026-09‎. */
+export const monthKey = (iso: string): string => (iso ?? '').slice(0, 7);
+
+export const currentMonth = (): string => monthKey(todayIso());
+
+const MONTH_FORMATTER = new Intl.DateTimeFormat('ar-EG-u-nu-latn', {
+  month: 'long',
+  year: 'numeric',
+});
+
+/** اسم الشهر مقروءاً: ‎2026-09‎ ← «سبتمبر 2026». */
+export const monthLabel = (key: string): string => {
+  const [year, month] = (key ?? '').split('-').map(Number);
+  if (!year || !month) return key;
+  return MONTH_FORMATTER.format(new Date(year, month - 1, 1));
+};
+
+/** يزيح مفتاح الشهر بعدد أشهر (سالب للخلف). */
+export const addMonths = (key: string, months: number): string => {
+  const [year, month] = (key ?? '').split('-').map(Number);
+  if (!year || !month) return key;
+  const shifted = new Date(year, month - 1 + months, 1);
+  return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}`;
+};

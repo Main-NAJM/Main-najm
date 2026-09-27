@@ -403,14 +403,17 @@ export function StatCard({
   value,
   tone = 'default',
   sub,
+  wide,
 }: {
   label: string;
   value: string;
   tone?: string;
   sub?: string;
+  /** يمتدّ على عرض الشبكة — للرقم الرئيسي الذي تتفرّع عنه بقيّة البطاقات. */
+  wide?: boolean;
 }) {
   return (
-    <div className={`stat stat--${tone}`}>
+    <div className={`stat stat--${tone}${wide ? ' stat--wide' : ''}`}>
       <span className="stat__label">{label}</span>
       <strong className="stat__value">{value}</strong>
       {sub ? <span className="stat__sub">{sub}</span> : null}

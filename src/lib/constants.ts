@@ -1,4 +1,4 @@
-import type { MaterialKind, OrderStatus, PricingBasis, UserType } from './types';
+import type { ExpenseCategory, MaterialKind, OrderStatus, PricingBasis, UserType } from './types';
 
 export const APP_NAME = 'حرفة برو';
 
@@ -23,6 +23,19 @@ export const MATERIAL_KINDS: { value: MaterialKind; label: string; unit: string 
   { value: 'parts', label: 'قطع غيار', unit: 'قطعة' },
   { value: 'other', label: 'مواد أخرى', unit: 'وحدة' },
 ];
+
+export const EXPENSE_CATEGORIES: { value: ExpenseCategory; label: string }[] = [
+  { value: 'purchases', label: 'مواد وشراء' },
+  { value: 'wages', label: 'أجور عمّال' },
+  { value: 'rent', label: 'كراء' },
+  { value: 'utilities', label: 'كهرباء وماء' },
+  { value: 'transport', label: 'نقل ووقود' },
+  { value: 'tools', label: 'أدوات وصيانة' },
+  { value: 'other', label: 'مصاريف أخرى' },
+];
+
+export const expenseCategoryLabel = (category: ExpenseCategory): string =>
+  EXPENSE_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 
 export const CURRENCIES = [
   { code: 'د.ع', label: 'دينار عراقي (د.ع)' },

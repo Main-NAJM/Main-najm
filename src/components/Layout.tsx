@@ -17,6 +17,7 @@ import {
   ProductIcon,
   SettingsIcon,
   StockIcon,
+  WalletIcon,
 } from './icons';
 
 const primaryLinks = [
@@ -27,6 +28,7 @@ const primaryLinks = [
 ];
 
 const moreLinks = [
+  { to: '/expenses', label: 'المصاريف', Icon: WalletIcon },
   { to: '/inventory', label: 'المخزون', Icon: StockIcon },
   { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
   { to: '/calculator', label: 'حاسبة التكلفة', Icon: CalculatorIcon },
@@ -43,6 +45,7 @@ const pageTitles: Record<string, string> = {
   '/calculator': 'حاسبة التكلفة والربح',
   '/products': 'حاسبة سعر المنتج',
   '/inventory': 'المخزون والسلع',
+  '/expenses': 'المصاريف والأرباح',
   '/prices': 'مؤشرات أسعار السوق',
   '/print': 'الطباعة والتقارير',
   '/settings': 'الإعدادات',

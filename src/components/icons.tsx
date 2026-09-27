@@ -96,6 +96,15 @@ export const ProductIcon = (props: IconProps) => (
   </svg>
 );
 
+/** المصاريف والأرباح: محفظة مفتوحة. */
+export const WalletIcon = (props: IconProps) => (
+  <svg {...base(props)}>
+    <path d="M3.5 7.5a2 2 0 0 1 2-2H16v2" />
+    <rect x="3.5" y="7.5" width="17" height="12" rx="2" />
+    <path d="M20.5 11.5h-4a2 2 0 0 0 0 4h4" />
+  </svg>
+);
+
 /** المخزون: صناديق مرصوصة. */
 export const StockIcon = (props: IconProps) => (
   <svg {...base(props)}>

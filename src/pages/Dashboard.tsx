@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { Badge, EmptyState, SectionTitle, StatCard } from '@/components/ui';
-import { debtTotals, inventoryTotals, orderTotals, stockLevel } from '@/lib/calc';
+import { debtTotals, inventoryTotals, monthlyBooks, orderTotals, stockLevel } from '@/lib/calc';
 import { orderStatusLabel, orderStatusTone } from '@/lib/constants';
 import {
   daysFromToday,
@@ -12,12 +12,13 @@ import {
   formatMoney,
   formatTime,
   formatWeekday,
+  currentMonth,
   relativeDayLabel,
   todayIso,
 } from '@/lib/format';
 
 export default function Dashboard() {
-  const { orders, appointments, debts, marketPrices, inventory, profile, seedDemoData } =
+  const { orders, appointments, debts, marketPrices, inventory, expenses, profile, seedDemoData } =
     useData();
   const { user } = useAuth();
   const today = todayIso();
@@ -40,6 +41,12 @@ export default function Dashboard() {
       overdueCount: overdueDebts.length,
     };
   }, [orders, debts]);
+
+  // ربح الشهر الجاري: ما قُبض ناقص ما صُرف.
+  const books = useMemo(
+    () => monthlyBooks(currentMonth(), orders, debts, expenses),
+    [orders, debts, expenses],
+  );
 
   // ما نفد أو نزل إلى حدّ التنبيه — أول ما يحتاج صاحب الورشة معرفته صباحاً.
   const stock = useMemo(() => inventoryTotals(inventory), [inventory]);
@@ -123,7 +130,12 @@ export default function Dashboard() {
           sub={`جاري ${formatInt(stats.inProgress)} · معلّق ${formatInt(stats.pending)}`}
           tone="info"
         />
-        <StatCard label="طلبيات مكتملة" value={formatInt(stats.completed)} tone="ok" />
+        <StatCard
+          label={books.net < 0 ? 'خسارة هذا الشهر' : 'ربح هذا الشهر'}
+          value={money(Math.abs(books.net))}
+          sub={`دخل ${money(books.income)} · صرف ${money(books.expenses)}`}
+          tone={books.net < 0 ? 'danger' : 'ok'}
+        />
         <StatCard label="مستحقات الطلبيات" value={money(stats.receivable)} tone="warn" />
         <StatCard
           label="ديون غير مسدّدة"

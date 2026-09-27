@@ -16,6 +16,7 @@ import type {
   Calculation,
   Craft,
   Debt,
+  Expense,
   InventoryItem,
   MarketPrice,
   Order,
@@ -287,6 +288,45 @@ const ALL_MARKET_PRICES = (): NewRecord<MarketPrice>[] => [
     priceDate: todayIso(),
   },
 ];
+
+/** مصاريف تجريبية — للتجربة فقط، لا تُزرع لحساب حقيقي. */
+export const seedExpenses = (): NewRecord<Expense>[] => {
+  const month = todayIso().slice(0, 7);
+  return [
+    {
+      title: 'كراء الورشة',
+      category: 'rent',
+      amount: 45000,
+      date: `${month}-01`,
+      recurring: true,
+      notes: '',
+    },
+    {
+      title: 'فاتورة الكهرباء',
+      category: 'utilities',
+      amount: 12000,
+      date: `${month}-05`,
+      recurring: true,
+      notes: '',
+    },
+    {
+      title: 'ألواح MDF — عشرة ألواح',
+      category: 'purchases',
+      amount: 350000,
+      date: `${month}-08`,
+      recurring: false,
+      notes: 'من سوق المواد الإنشائية.',
+    },
+    {
+      title: 'بنزين النقل',
+      category: 'transport',
+      amount: 8000,
+      date: `${month}-12`,
+      recurring: false,
+      notes: '',
+    },
+  ];
+};
 
 /** سلع تجريبية للمخزون — للتجربة فقط، لا تُزرع لحساب حقيقي. */
 export const seedInventory = (): NewRecord<InventoryItem>[] => [

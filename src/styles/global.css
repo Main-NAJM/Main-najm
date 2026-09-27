@@ -1996,3 +1996,134 @@ table.data th.num {
   color: var(--on-bar-2);
   flex: none;
 }
+
+/* ---------------------------------------------- أبواب المصاريف: أشرطة النسبة */
+
+.spend-bars {
+  display: grid;
+  gap: 13px;
+}
+
+.spend-bar {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 10px;
+  align-items: center;
+}
+
+.spend-bar__head {
+  grid-column: 1 / -1;
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  font-size: 13.5px;
+}
+
+.spend-bar__head strong {
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.spend-bar__track {
+  height: 8px;
+  border-radius: var(--r-full);
+  background: var(--surface-3);
+  overflow: hidden;
+}
+
+.spend-bar__fill {
+  height: 100%;
+  border-radius: var(--r-full);
+  background: linear-gradient(90deg, var(--gold) 0%, var(--gold-bright) 100%);
+  min-width: 3px;
+}
+
+.spend-bar__share {
+  font-size: 12px;
+  color: var(--ink-3);
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+/* ------------------------------------------------------ مربّع اختيار بشرح */
+
+.check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 11px 13px;
+  margin-bottom: 13px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+}
+
+.check input {
+  width: 19px;
+  height: 19px;
+  margin: 1px 0 0;
+  accent-color: var(--gold);
+  flex: none;
+}
+
+.check span {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.check em {
+  font-style: normal;
+  font-size: 12px;
+  font-weight: 400;
+  color: var(--ink-3);
+  line-height: 1.55;
+}
+
+/* -------------------------------------------------------- شريط اختيار الشهر */
+
+.month-bar {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.month-bar__pick {
+  flex: 1;
+  min-width: 0;
+  text-align: center;
+  font-weight: 500;
+}
+
+.month-bar__step {
+  flex: none;
+  background: var(--surface);
+  border: 1px solid var(--line-strong);
+  border-radius: var(--r-sm);
+  color: var(--ink-2);
+  padding: 9px 12px;
+  font-size: 12.5px;
+  font-weight: 500;
+  white-space: nowrap;
+  min-height: 42px;
+  transition: background var(--fast) var(--ease);
+}
+
+.month-bar__step:hover:not(:disabled) {
+  background: var(--surface-3);
+}
+
+.month-bar__step:disabled {
+  opacity: 0.4;
+  cursor: default;
+}
+
+/* البطاقة الرئيسية تمتدّ على الشبكة كلّها. */
+.stat--wide {
+  grid-column: 1 / -1;
+}

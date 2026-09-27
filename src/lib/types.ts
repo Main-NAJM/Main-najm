@@ -140,6 +140,28 @@ export interface Debt extends BaseRecord {
   notes: string;
 }
 
+/** بابُ المصروف — تُجمَع المصاريف عليه في التقرير الشهري. */
+export type ExpenseCategory =
+  | 'rent'
+  | 'utilities'
+  | 'purchases'
+  | 'wages'
+  | 'transport'
+  | 'tools'
+  | 'other';
+
+/** مصروف على الورشة: ما يخرج من الجيب، مقابل ما يدخله من الطلبيات والديون. */
+export interface Expense extends BaseRecord {
+  title: string;
+  category: ExpenseCategory;
+  amount: number;
+  /** YYYY-MM-DD — عليه يقع المصروف في شهره. */
+  date: string;
+  /** مصروف يتكرّر كل شهر (كراء، اشتراك) — يُنسَخ لشهر جديد بضغطة. */
+  recurring: boolean;
+  notes: string;
+}
+
 /**
  * سلعة في المخزون: كميّتها الحالية وحدّ التنبيه الذي إذا نزلت إليه أو دونه
  * عُدّت منخفضة. تختلف عن ProductTemplate: ذاك قالب تسعير لا رصيد له.
@@ -209,6 +231,7 @@ export type CollectionName =
   | 'orders'
   | 'products'
   | 'inventory'
+  | 'expenses'
   | 'appointments'
   | 'calculations'
   | 'marketPrices'
@@ -218,6 +241,7 @@ export interface CollectionMap {
   orders: Order;
   products: ProductTemplate;
   inventory: InventoryItem;
+  expenses: Expense;
   appointments: Appointment;
   calculations: Calculation;
   marketPrices: MarketPrice;

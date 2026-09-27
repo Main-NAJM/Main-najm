@@ -1,8 +1,10 @@
 /** حسابات الطلبيات والديون وحاسبة التكلفة. */
-import { round2 } from './format';
+import { round2, toIsoDate } from './format';
 import type {
   Calculation,
   Debt,
+  Expense,
+  ExpenseCategory,
   Order,
   PricingBasis,
   ProductTemplate,
@@ -240,4 +242,113 @@ export const inventoryTotals = (
     value += Math.max(0, item.qty || 0) * Math.max(0, item.costPrice || 0);
   });
   return { items: items.length, needsRestock, outOfStock, value: round2(value) };
+};
+
+/* ------------------------------------------------- دفتر الشهر: الدخل والصرف */
+
+/**
+ * حساب شهر واحد.
+ *
+ * ما الذي يُعدّ دخلاً؟ ‎order.paid‎ رقمٌ تراكمي بلا تاريخ، فلا سبيل إلى معرفة
+ * متى قُبض. فيُنسَب إلى شهر إنشاء الطلبية، ويُسمّى في الواجهة باسمه الصحيح:
+ * «المقبوض من طلبيات هذا الشهر» لا «المقبوض هذا الشهر». أما دفعات الديون
+ * فمؤرَّخة واحدةً واحدة، فتُحسب في شهرها بالضبط.
+ *
+ * والربح هنا نقديّ: ما دخل الجيب ناقص ما خرج منه. فهو لا يصحّ إلا إذا سجّل
+ * صاحبه مشترياته في المصاريف — وهذا ما تقوله الصفحة له صراحةً.
+ */
+export interface MonthlyBooks {
+  month: string;
+  /** إجمالي الطلبيات المُنشأة في الشهر، قُبضت أو لم تُقبض. */
+  billed: number;
+  /** المقبوض من طلبيات هذا الشهر. */
+  fromOrders: number;
+  /** دفعات ديون مؤرَّخة في هذا الشهر. */
+  fromDebts: number;
+  /** fromOrders + fromDebts */
+  income: number;
+  expenses: number;
+  /** income − expenses */
+  net: number;
+  /** ما بقي على طلبيات هذا الشهر. */
+  unpaid: number;
+  ordersCount: number;
+  expensesCount: number;
+  byCategory: { category: ExpenseCategory; amount: number }[];
+}
+
+const inMonth = (iso: string, month: string): boolean => (iso ?? '').slice(0, 7) === month;
+
+export const monthlyBooks = (
+  month: string,
+  orders: Order[],
+  debts: Debt[],
+  expenses: Expense[],
+): MonthlyBooks => {
+  let billed = 0;
+  let fromOrders = 0;
+  let ordersCount = 0;
+  orders.forEach((order) => {
+    // الطلبية تقع في شهر إنشائها. createdAt رقم زمني، فيُحوَّل إلى تاريخ محلّي.
+    if (!inMonth(toIsoDate(new Date(order.createdAt)), month)) return;
+    const totals = orderTotals(order);
+    billed += totals.total;
+    fromOrders += totals.paid;
+    ordersCount += 1;
+  });
+
+  let fromDebts = 0;
+  debts.forEach((debt) => {
+    (debt.payments ?? []).forEach((payment) => {
+      if (inMonth(payment.date, month)) fromDebts += payment.amount || 0;
+    });
+  });
+
+  const totals = new Map<ExpenseCategory, number>();
+  let spent = 0;
+  let expensesCount = 0;
+  expenses.forEach((expense) => {
+    if (!inMonth(expense.date, month)) return;
+    const amount = Math.max(0, expense.amount || 0);
+    spent += amount;
+    expensesCount += 1;
+    totals.set(expense.category, (totals.get(expense.category) ?? 0) + amount);
+  });
+
+  const income = fromOrders + fromDebts;
+  return {
+    month,
+    billed: round2(billed),
+    fromOrders: round2(fromOrders),
+    fromDebts: round2(fromDebts),
+    income: round2(income),
+    expenses: round2(spent),
+    net: round2(income - spent),
+    unpaid: round2(Math.max(0, billed - fromOrders)),
+    ordersCount,
+    expensesCount,
+    byCategory: [...totals.entries()]
+      .map(([category, amount]) => ({ category, amount: round2(amount) }))
+      .sort((a, b) => b.amount - a.amount),
+  };
+};
+
+/** الأشهر التي فيها حركة (طلبية أو دفعة دين أو مصروف)، من الأحدث. */
+export const activeMonths = (
+  orders: Order[],
+  debts: Debt[],
+  expenses: Expense[],
+  include: string,
+): string[] => {
+  const months = new Set<string>([include]);
+  orders.forEach((order) => months.add(toIsoDate(new Date(order.createdAt)).slice(0, 7)));
+  debts.forEach((debt) =>
+    (debt.payments ?? []).forEach((payment) => {
+      if (payment.date) months.add(payment.date.slice(0, 7));
+    }),
+  );
+  expenses.forEach((expense) => {
+    if (expense.date) months.add(expense.date.slice(0, 7));
+  });
+  return [...months].filter(Boolean).sort().reverse();
 };

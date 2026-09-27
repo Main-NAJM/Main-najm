@@ -39,6 +39,7 @@ export const COLLECTIONS: CollectionName[] = [
   'orders',
   'products',
   'inventory',
+  'expenses',
   'appointments',
   'calculations',
   'marketPrices',

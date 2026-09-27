@@ -2,14 +2,22 @@
 import {
   debtTotals,
   orderTotals,
+  type MonthlyBooks,
   type ProductDimensions,
   type ProductPriceResult,
 } from '@/lib/calc';
-import { basisLabel, orderStatusLabel } from '@/lib/constants';
+import { basisLabel, expenseCategoryLabel, orderStatusLabel } from '@/lib/constants';
 import { craftName } from '@/lib/trades';
-import { formatDate, formatMoney, formatNumber, todayIso } from '@/lib/format';
+import { formatDate, formatMoney, formatNumber, monthLabel, todayIso } from '@/lib/format';
 import { shortRef } from '@/lib/id';
-import type { Calculation, Debt, Order, Profile, ProductTemplate } from '@/lib/types';
+import type {
+  Calculation,
+  Debt,
+  Expense,
+  Order,
+  Profile,
+  ProductTemplate,
+} from '@/lib/types';
 import { escapeHtml } from './print';
 
 const head = (profile: Profile, title: string, ref: string): string => `
@@ -477,4 +485,81 @@ export const buildProductQuote = (
     }
     <div class="sign"><div>توقيع الزبون</div><div>توقيع صاحب العمل</div></div>
     ${foot(profile, 'عرض سعر — صالح حسب أسعار المواد وقت إصداره')}`;
+};
+
+/* ---------------------------------------------------- الكشف الشهري */
+
+/** كشف شهر واحد: ما دخل، وما خرج، والصافي، ثم تفصيل المصاريف. */
+export const buildMonthlyReport = (
+  books: MonthlyBooks,
+  expenses: Expense[],
+  profile: Profile,
+): string => {
+  const rows = expenses.length
+    ? [...expenses]
+        .sort((a, b) => a.date.localeCompare(b.date))
+        .map(
+          (expense, index) => `
+          <tr>
+            <td class="num">${index + 1}</td>
+            <td class="num">${escapeHtml(formatDate(expense.date))}</td>
+            <td>${escapeHtml(expense.title || '—')}</td>
+            <td>${escapeHtml(expenseCategoryLabel(expense.category))}</td>
+            <td class="num">${money(expense.amount, profile)}</td>
+          </tr>`,
+        )
+        .join('')
+    : `<tr><td colspan="5" style="text-align:center;color:#6b7280">لا مصاريف في هذا الشهر</td></tr>`;
+
+  const byCategory = books.byCategory
+    .map(
+      (row) => `
+      <div><span>${escapeHtml(expenseCategoryLabel(row.category))}:</span>
+      <span>${money(row.amount, profile)}</span></div>`,
+    )
+    .join('');
+
+  return `
+    ${head(profile, `كشف ${monthLabel(books.month)}`, '')}
+
+    <div class="block">
+      <h2 class="block__title">الخلاصة</h2>
+      <div class="kv">
+        <div><span>المقبوض من طلبيات الشهر:</span><span>${money(books.fromOrders, profile)}</span></div>
+        <div><span>دفعات الديون في الشهر:</span><span>${money(books.fromDebts, profile)}</span></div>
+        <div><span>جملة الدخل:</span><span>${money(books.income, profile)}</span></div>
+        <div><span>جملة المصاريف:</span><span>${money(books.expenses, profile)}</span></div>
+      </div>
+      <div class="total-row">
+        <span>${books.net < 0 ? 'خسارة الشهر' : 'ربح الشهر الصافي'}</span>
+        <strong>${money(Math.abs(books.net), profile)}</strong>
+      </div>
+      ${
+        books.unpaid > 0
+          ? `<p class="note">طلبيات الشهر مجموعها ${money(books.billed, profile)}، بقي منها
+             ${money(books.unpaid, profile)} عند الزبائن لم يُقبض بعد، فلا يدخل في الصافي.</p>`
+          : ''
+      }
+    </div>
+
+    ${
+      byCategory
+        ? `<div class="block">
+             <h2 class="block__title">أبواب المصاريف</h2>
+             <div class="kv">${byCategory}</div>
+           </div>`
+        : ''
+    }
+
+    <div class="block">
+      <h2 class="block__title">تفصيل المصاريف</h2>
+      <table>
+        <thead>
+          <tr><th>#</th><th>التاريخ</th><th>الوصف</th><th>الباب</th><th>المبلغ</th></tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>
+    </div>
+
+    ${foot(profile, 'الربح نقديّ: ما قُبض ناقص ما صُرف')}`;
 };
