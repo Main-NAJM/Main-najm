@@ -1,9 +1,9 @@
-/* عامل الخدمة لتطبيق مؤسسة الباشة للمعادن — يجعل الموقع يعمل دون إنترنت بعد أول زيارة. */
+/* عامل الخدمة لتطبيق BOFAIDA ADS — يجعل الموقع يعمل دون إنترنت بعد أول زيارة. */
 
-const VERSION = 'albacha-v1';
+const VERSION = 'bofaida-v1';
 const CACHE = `${VERSION}-assets`;
 
-// نطاق العمل مشتقّ من موقع هذا الملف، فيعمل في الجذر وعلى مسار فرعي مثل ‎/albacha/‎.
+// نطاق العمل مشتقّ من موقع هذا الملف، فيعمل في الجذر وعلى مسار فرعي مثل ‎/bofaida/‎.
 const BASE = new URL('./', self.location).pathname;
 const INDEX = `${BASE}index.html`;
 
@@ -33,7 +33,7 @@ self.addEventListener('activate', (event) => {
     caches
       .keys()
       .then((keys) =>
-        Promise.all(keys.filter((key) => key.startsWith('albacha-') && key !== CACHE).map((key) => caches.delete(key))),
+        Promise.all(keys.filter((key) => key.startsWith('bofaida-') && key !== CACHE).map((key) => caches.delete(key))),
       )
       .then(() => self.clients.claim()),
   );
