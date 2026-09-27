@@ -39,7 +39,7 @@ export default function More() {
 
       <div className="list">
         {LINKS.map((link) => (
-          <Link key={link.to} className="card" to={link.to} style={{ textDecoration: 'none' }}>
+          <Link key={link.to} className="card" to={link.to}>
             <div className="card__head">
               <div>
                 <div className="card__title">{link.title}</div>

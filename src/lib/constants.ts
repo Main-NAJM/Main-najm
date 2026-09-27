@@ -38,6 +38,8 @@ export const expenseCategoryLabel = (category: ExpenseCategory): string =>
   EXPENSE_CATEGORIES.find((c) => c.value === category)?.label ?? category;
 
 export const CURRENCIES = [
+  // الجزائر أولاً: رمز الهاتف الافتراضي في التطبيق ‎+213‎، فتتبعه العملة.
+  { code: 'د.ج', label: 'دينار جزائري (د.ج)' },
   { code: 'د.ع', label: 'دينار عراقي (د.ع)' },
   { code: 'ر.س', label: 'ريال سعودي (ر.س)' },
   { code: 'د.إ', label: 'درهم إماراتي (د.إ)' },
@@ -47,7 +49,6 @@ export const CURRENCIES = [
   { code: 'د.ك', label: 'دينار كويتي (د.ك)' },
   { code: 'ر.ي', label: 'ريال يمني (ر.ي)' },
   { code: 'د.ت', label: 'دينار تونسي (د.ت)' },
-  { code: 'د.ج', label: 'دينار جزائري (د.ج)' },
   { code: 'د.ل', label: 'دينار ليبي (د.ل)' },
   { code: 'د.م', label: 'درهم مغربي (د.م)' },
   { code: 'ر.ع', label: 'ريال عُماني (ر.ع)' },
@@ -122,11 +123,26 @@ export const PRICING_BASES: {
   },
 ];
 
+/**
+ * «المحيط» (frame) لم يعد يُعرض في قائمة إنشاء القوالب: الفتحة ليست إطاراً
+ * واحداً حول محيطها — نافذة ١×١ فيها ١١ قطعة بروفيل لا أربع — فالحساب
+ * بالمحيط يضعها عند أقلّ من نصف ثمنها. الأبواب والنوافذ لها شاشتها التي
+ * تحسب بعدد القطع.
+ *
+ * لكنّه يبقى مفهوماً هنا كي تظل القوالب التي أُنشئت قبل التصحيح تعرض
+ * مقاساتها واسمها بدل أن تنهار أو تفقد حقولها.
+ */
+const RETIRED_BASES: Record<string, { label: string; needs: ('width' | 'height' | 'depth')[] }> = {
+  frame: { label: 'إطار بالمحيط (طريقة قديمة)', needs: ['width', 'height'] },
+};
+
+export const isRetiredBasis = (basis: PricingBasis): boolean => basis in RETIRED_BASES;
+
 export const basisLabel = (basis: PricingBasis): string =>
-  PRICING_BASES.find((b) => b.value === basis)?.label ?? basis;
+  PRICING_BASES.find((b) => b.value === basis)?.label ?? RETIRED_BASES[basis]?.label ?? basis;
 
 export const basisNeeds = (basis: PricingBasis): ('width' | 'height' | 'depth')[] =>
-  PRICING_BASES.find((b) => b.value === basis)?.needs ?? [];
+  PRICING_BASES.find((b) => b.value === basis)?.needs ?? RETIRED_BASES[basis]?.needs ?? [];
 
 /** كثافات تقريبية (كغ/م³) تُقترح عند اختيار التسعير بالوزن. */
 export const DENSITY_HINTS: { label: string; value: number }[] = [

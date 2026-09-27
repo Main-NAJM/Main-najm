@@ -1,4 +1,4 @@
-import { useEffect, useId, type ChangeEvent, type ReactNode } from 'react';
+import { useEffect, useId, useRef, type ChangeEvent, type ReactNode } from 'react';
 
 interface FieldProps {
   label: string;
@@ -169,16 +169,58 @@ interface ModalProps {
 }
 
 export function Modal({ open, title, onClose, children, footer, wide }: ModalProps) {
+  const panelRef = useRef<HTMLDivElement>(null);
+
   useEffect(() => {
     if (!open) return;
+
+    // العنصر الذي فتح النافذة — يُعاد إليه التركيز عند الإغلاق
+    const opener = document.activeElement as HTMLElement | null;
+
     const onKey = (event: KeyboardEvent) => {
-      if (event.key === 'Escape') onClose();
+      if (event.key === 'Escape') {
+        onClose();
+        return;
+      }
+      if (event.key !== 'Tab') return;
+
+      // حبس التركيز داخل النافذة: بدونه يخرج Tab إلى صفحة معطّلة بصريًا
+      const panel = panelRef.current;
+      if (!panel) return;
+      const items = Array.from(
+        panel.querySelectorAll<HTMLElement>(
+          'a[href], button:not([disabled]), input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+        ),
+      ).filter((el) => el.getClientRects().length > 0);
+
+      if (items.length === 0) {
+        event.preventDefault();
+        panel.focus();
+        return;
+      }
+
+      const first = items[0];
+      const last = items[items.length - 1];
+      const active = document.activeElement;
+
+      if (event.shiftKey && (active === first || active === panel)) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && active === last) {
+        event.preventDefault();
+        first.focus();
+      }
     };
+
     window.addEventListener('keydown', onKey);
+    const previousOverflow = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
+    panelRef.current?.focus();
+
     return () => {
       window.removeEventListener('keydown', onKey);
-      document.body.style.overflow = '';
+      document.body.style.overflow = previousOverflow;
+      opener?.focus();
     };
   }, [open, onClose]);
 
@@ -187,7 +229,11 @@ export function Modal({ open, title, onClose, children, footer, wide }: ModalPro
   return (
     <div className="modal" role="dialog" aria-modal="true" aria-label={title}>
       <button type="button" className="modal__backdrop" aria-label="إغلاق" onClick={onClose} />
-      <div className={`modal__panel${wide ? ' modal__panel--wide' : ''}`}>
+      <div
+        className={`modal__panel${wide ? ' modal__panel--wide' : ''}`}
+        tabIndex={-1}
+        ref={panelRef}
+      >
         <div className="modal__head">
           <h3>{title}</h3>
           <button type="button" className="modal__close" onClick={onClose} aria-label="إغلاق">

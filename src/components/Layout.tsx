@@ -30,6 +30,7 @@ const primaryLinks = [
 const moreLinks = [
   { to: '/expenses', label: 'المصاريف', Icon: WalletIcon },
   { to: '/inventory', label: 'المخزون', Icon: StockIcon },
+  { to: '/openings', label: 'الأبواب والنوافذ', Icon: ProductIcon },
   { to: '/products', label: 'حاسبة المنتج', Icon: ProductIcon },
   { to: '/calculator', label: 'حاسبة التكلفة', Icon: CalculatorIcon },
   { to: '/prices', label: 'أسعار السوق', Icon: PriceIcon },
@@ -44,6 +45,7 @@ const pageTitles: Record<string, string> = {
   '/debts': 'سجل الديون',
   '/calculator': 'حاسبة التكلفة والربح',
   '/products': 'حاسبة سعر المنتج',
+  '/openings': 'الأبواب والنوافذ',
   '/inventory': 'المخزون والسلع',
   '/expenses': 'المصاريف والأرباح',
   '/prices': 'مؤشرات أسعار السوق',
@@ -85,7 +87,7 @@ export function Layout({ children }: { children: ReactNode }) {
       <header className="app-header">
         <div className="app-header__row">
           <div>
-            <div className="app-header__title">{title}</div>
+            <h1 className="app-header__title">{title}</h1>
             <div className="app-header__sub">
               {profile.businessName || APP_NAME} · {tradeLabel(profile)}
             </div>

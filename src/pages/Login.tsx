@@ -436,7 +436,7 @@ function SignUpFlow({
           <button type="submit" className="btn btn--block mt-8" disabled={busy}>
             {busy ? 'جارٍ…' : 'إنشاء الحساب وفتح التطبيق'}
           </button>
-          <div style={{ textAlign: 'center' }}>
+          <div className="text-center">
             <button
               type="button"
               className="auth__link"
@@ -590,7 +590,7 @@ function CloudForms({
             {busy ? 'جارٍ…' : codeSent ? 'تأكيد الرمز والدخول' : 'إرسال رمز التحقّق'}
           </button>
           {codeSent ? (
-            <div style={{ textAlign: 'center' }}>
+            <div className="text-center">
               <button
                 type="button"
                 className="auth__link"
@@ -636,7 +636,7 @@ function CloudForms({
           <button type="submit" className="btn btn--block mt-8" disabled={busy}>
             {busy ? 'جارٍ…' : isNew ? 'إنشاء الحساب السحابي' : 'دخول'}
           </button>
-          <div style={{ textAlign: 'center' }}>
+          <div className="text-center">
             <button
               type="button"
               className="auth__link"

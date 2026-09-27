@@ -36,7 +36,7 @@ export type MaterialKind =
  * weight — الكيلوغرام (يُحسب من الحجم × كثافة المادة): حديد بالوزن.
  * unit  — القطعة: تسعير ثابت لا يتبع المقاس.
  */
-export type PricingBasis = 'area' | 'length' | 'volume' | 'weight' | 'unit';
+export type PricingBasis = 'area' | 'length' | 'frame' | 'volume' | 'weight' | 'unit';
 
 /** حقول مشتركة لكل السجلات المخزّنة. */
 export interface BaseRecord {
@@ -191,6 +191,14 @@ export interface ProductTemplate extends BaseRecord {
   unitPrice: number;
   /** كثافة المادة كغ/م³ — تُستعمل مع أساس الوزن فقط. */
   density: number;
+  /**
+   * سعر المتر المربّع للصفيحة التي تملأ الإطار: زجاج، لوح، بانو…
+   * صفر يعني بلا صفيحة. يُضاف فوق أساس التسعير، ولا يحلّ محلّه —
+   * فباب الألمنيوم إطارُه بالمتر الطولي وزجاجُه بالمتر المربّع معاً.
+   */
+  sheetPrice: number;
+  /** اسم الصفيحة كما يظهر في عرض السعر: «زجاج 4 مم» مثلاً. */
+  sheetName: string;
   /** نسبة الهالك من قيمة المادة. */
   wastePct: number;
   /** إضافات ثابتة لكل قطعة: إكسسوارات، أقفال، تركيب. */
@@ -224,8 +232,25 @@ export interface Profile {
   defaultLaborRate: number;
   /** نسبة الربح الافتراضية في الحاسبة. */
   defaultMarginPct: number;
+  /**
+   * سعرا حاسبة الفتحات (طاقة، نافذة، باب): المتر الطولي للبروفيل،
+   * والمتر المربّع للزجاج أو الصفيحة. يُدخلهما صاحب الورشة مرّة فيثبتان.
+   */
+  openingRate: number;
+  openingSheetRate: number;
+  /**
+   * عدد قطع البروفيل في كل نوع. نافذة ١×١ فيها ١١ قطعة لا أربع:
+   * الإطار الخارجي وضلفتاه وقضبانه. العدد يختلف بين ورشة وأخرى
+   * وبين تصميم وآخر، فيضبطه صاحب الورشة مرّة لكل نوع.
+   */
+  openingPiecesFanlight: number;
+  openingPiecesWindow: number;
+  openingPiecesDoor: number;
   updatedAt: number;
 }
+
+/** نوع الفتحة في حاسبة الأبواب والنوافذ. */
+export type OpeningKind = 'fanlight' | 'window' | 'door';
 
 export type CollectionName =
   | 'orders'

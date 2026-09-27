@@ -88,7 +88,7 @@ export default function Dashboard() {
         </div>
       ) : null}
 
-      <SectionTitle action={<Link className="small" to="/orders">الكل</Link>}>
+      <SectionTitle action={<Link className="link-action" to="/orders">الكل</Link>}>
         آخر الطلبات
       </SectionTitle>
 

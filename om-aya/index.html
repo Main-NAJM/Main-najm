@@ -1,0 +1,2827 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>أم عمر | بيجامات واكسسوارات الهواتف</title>
+<meta name="description" content="أم عمر — بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، الدفع عند الاستلام، والطلب مباشرة عبر واتساب.">
+<meta name="theme-color" content="#1A0512">
+<meta property="og:title" content="أم عمر | بيجامات واكسسوارات الهواتف">
+<meta property="og:description" content="راحتك واكسسوارات هاتفك في مكان واحد. توصيل لكل الولايات والدفع عند الاستلام.">
+<meta property="og:type" content="website">
+
+<!-- التثبيت على الشاشة الرئيسية. الملفّ المربوط يتبدّل وقت التشغيل: الرابط
+     العادي يثبّت المتجر، و‎?panel=1‎ يثبّت لوحة التحكّم بأيقونتها واسمها. -->
+<link rel="manifest" href="./manifest.webmanifest" id="app-manifest">
+<link rel="apple-touch-icon" href="./icons/apple-touch-icon.png" id="app-touch-icon">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="apple-mobile-web-app-title" content="أم عمر" id="app-ios-title">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Readex+Pro:wght@200;300;400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    /* ألوان مشبعة: فوشي وبنفسجي وفيروزي على خلفية وردية فاتحة أو برقوقية داكنة */
+    --fuchsia:#EC4899;
+    --fuchsia-deep:#BE185D;
+    --violet:#8B5CF6;
+    --violet-deep:#6D28D9;
+    --cyan:#22D3EE;
+    --cyan-deep:#0E7490;
+    --coral:#FB7185;
+    --gold:#F59E0B;
+
+    --plum:#2E0A1E;          /* الحبر — برقوقي شديد القتامة */
+    --plum-2:#5B2B44;
+    --plum-3:#8A6076;
+    --night:#1A0512;         /* خلفية الأقسام الداكنة */
+    --cream:#FFF5FA;
+    --cream-2:#FCE8F1;
+    --panel:#FFFFFF;
+    --line:#F9D4E5;
+    --wa:#128C4A;
+
+    --grad-hot:linear-gradient(115deg, #EC4899 0%, #A855F7 55%, #8B5CF6 100%);
+    --grad-cool:linear-gradient(115deg, #22D3EE 0%, #6366F1 100%);
+    --grad-night:linear-gradient(150deg, #1A0512 0%, #3B0D37 48%, #1E1150 100%);
+
+    --s-1:8px; --s-2:16px; --s-3:24px; --s-4:40px; --s-5:64px; --s-6:96px;
+    --r-lg:26px; --r-md:16px; --r-sm:12px; --r-pill:999px;
+    --wrap:1240px;
+    --shadow:0 4px 24px rgba(46,10,30,.07);
+    --glow-hot:0 14px 38px rgba(236,72,153,.36);
+    --glow-cool:0 14px 38px rgba(99,102,241,.34);
+    --ease:cubic-bezier(.22,.8,.3,1);
+  }
+
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth; -webkit-text-size-adjust:100%;}
+  body{
+    background:var(--cream); color:var(--plum);
+    font-family:'Readex Pro', system-ui, sans-serif;
+    font-size:16px; font-weight:300; line-height:1.85;
+    overflow-x:hidden;
+  }
+  h1,h2,h3{font-weight:700; line-height:1.3; letter-spacing:-.02em;}
+  a{color:inherit; text-decoration:none;}
+  img{max-width:100%; display:block;}
+  button{font:inherit; color:inherit; background:none; border:none; cursor:pointer;}
+  svg{flex:none;}
+  :focus-visible{outline:3px solid var(--violet); outline-offset:3px; border-radius:6px;}
+  /* عناصر كثيرة هنا display:flex أو grid، وهما يتغلّبان على hidden — هذا السطر يحسمها */
+  [hidden]{display:none !important;}
+  .wrap{max-width:var(--wrap); margin:0 auto; padding-inline:clamp(16px, 4vw, 40px);}
+  .sr-only{
+    position:absolute; width:1px; height:1px; overflow:hidden;
+    clip:rect(0 0 0 0); clip-path:inset(50%); white-space:nowrap;
+  }
+
+  /* نصّ بتدرّج لوني — للكلمات المفتاحية وحدها */
+  /* كلمة مضيئة بلون صريح لا بتدرّج مقصوص على النصّ (background-clip:text):
+     مساحة رسم ذاك التدرّج هي مربّع الخطّ، وهمزة «أ» وأسنان «ظ» تتجاوزه فتُقَصّ
+     رؤوسها. اللون الصريح مع الهالة يعطي البريق نفسه ولا يقصّ حرفاً. */
+  .glow-text{color:#F5B8FF; text-shadow:0 0 38px rgba(240,171,252,.55), 0 0 12px rgba(240,171,252,.35);}
+  .kicker{
+    display:inline-block; font-size:.74rem; font-weight:600;
+    letter-spacing:.24em; text-transform:uppercase;
+    color:var(--fuchsia-deep); margin-bottom:var(--s-2);
+  }
+  .kicker-light{color:var(--cyan);}
+
+  /* ---------- الشريط المتحرّك ---------- */
+  .ticker{background:var(--grad-hot); color:#fff; overflow:hidden; font-size:.82rem; font-weight:500;}
+  .ticker-track{display:flex; width:max-content; animation:slide 32s linear infinite;}
+  .ticker-group{display:flex; flex:none;}
+  .ticker span{padding:10px var(--s-3); white-space:nowrap; display:inline-flex; align-items:center; gap:var(--s-2);}
+  .ticker span::after{content:'✦'; font-size:.7rem; opacity:.75;}
+  @keyframes slide{from{transform:translateX(0);} to{transform:translateX(50%);}}
+
+  /* ---------- الترويسة ---------- */
+  header{position:sticky; top:0; z-index:60;}
+  .nav{
+    background:rgba(26,5,18,.72); backdrop-filter:blur(16px) saturate(1.4);
+    border-bottom:1px solid rgba(255,255,255,.08); color:#fff;
+    transition:background .3s var(--ease);
+  }
+  .nav.stuck{background:rgba(26,5,18,.93);}
+  .nav-inner{
+    display:flex; align-items:center; gap:var(--s-3);
+    min-height:70px; max-width:var(--wrap); margin:0 auto;
+    padding-inline:clamp(16px, 4vw, 40px);
+  }
+  .brand{display:flex; align-items:center; gap:10px; white-space:nowrap;}
+  .brand-mark{
+    width:38px; height:38px; border-radius:var(--r-pill); flex:none;
+    background:var(--grad-hot); display:grid; place-items:center;
+    font-size:.95rem; font-weight:700; color:#fff; box-shadow:var(--glow-hot);
+  }
+  .brand b{font-size:1.22rem; font-weight:700; letter-spacing:-.02em;}
+  .brand i{font-style:normal; font-size:.74rem; font-weight:300; color:rgba(255,255,255,.62); letter-spacing:.06em;}
+  .links{display:flex; gap:var(--s-3); margin-inline-start:var(--s-4); font-size:.92rem; font-weight:400;}
+  .links a{position:relative; padding-block:6px; color:rgba(255,255,255,.82);}
+  .links a::after{
+    content:''; position:absolute; inset-inline:0; bottom:0; height:2px; border-radius:2px;
+    background:var(--grad-hot); transform:scaleX(0); transform-origin:inline-end;
+    transition:transform .3s var(--ease);
+  }
+  .links a:hover{color:#fff;}
+  .links a:hover::after{transform:scaleX(1); transform-origin:inline-start;}
+  .nav-actions{display:flex; align-items:center; gap:4px; margin-inline-start:auto;}
+  .ico{
+    display:inline-flex; align-items:center; justify-content:center;
+    width:44px; height:44px; border-radius:var(--r-pill); color:rgba(255,255,255,.88);
+    transition:background .25s var(--ease), color .25s var(--ease), transform .25s var(--ease);
+  }
+  .ico:hover{background:rgba(255,255,255,.14); color:#fff; transform:translateY(-2px);}
+  .cart-toggle{position:relative;}
+  .cart-dot{
+    position:absolute; top:3px; inset-inline-start:3px;
+    min-width:20px; height:20px; padding-inline:5px; border-radius:var(--r-pill);
+    background:var(--grad-hot); color:#fff;
+    font-size:.7rem; font-weight:700; line-height:20px; text-align:center;
+    box-shadow:0 2px 10px rgba(236,72,153,.6);
+  }
+  .cart-dot[hidden]{display:none;}
+
+  /* ---------- تنبيه الإعداد ---------- */
+  .setup{background:#FFF3D6; border-bottom:1px solid #F0DCA6; color:#6B5412; font-size:.86rem;}
+  .setup .wrap{display:flex; gap:10px; align-items:flex-start; padding-block:12px;}
+  .setup code{font-family:ui-monospace, monospace; background:rgba(0,0,0,.07); padding:1px 5px; border-radius:4px;}
+
+  /* ---------- الواجهة ---------- */
+  .hero{
+    position:relative; overflow:hidden; color:#fff;
+    background:var(--grad-night);
+    padding-block:clamp(56px, 8vw, 104px) clamp(64px, 9vw, 116px);
+  }
+  /* كرات ملوّنة ضبابية تعطي العمق واللمعان خلف النصّ */
+  .blob{position:absolute; border-radius:50%; filter:blur(64px); opacity:.55; pointer-events:none;}
+  .blob-1{width:46vw; height:46vw; max-width:520px; max-height:520px; background:#EC4899; top:-14%; inset-inline-end:-8%; animation:float 15s ease-in-out infinite;}
+  .blob-2{width:38vw; height:38vw; max-width:430px; max-height:430px; background:#6366F1; bottom:-20%; inset-inline-start:-6%; animation:float 19s ease-in-out infinite reverse;}
+  .blob-3{width:26vw; height:26vw; max-width:300px; max-height:300px; background:#22D3EE; top:34%; inset-inline-start:34%; opacity:.34; animation:float 23s ease-in-out infinite;}
+  @keyframes float{
+    0%,100%{transform:translate3d(0,0,0) scale(1);}
+    50%{transform:translate3d(0,-26px,0) scale(1.09);}
+  }
+  .hero-grid{position:relative; display:grid; gap:clamp(36px, 5vw, 72px); align-items:center; grid-template-columns:1.08fr .92fr;}
+  .hero h1{font-size:clamp(2.4rem, 6.6vw, 4.5rem); line-height:1.16; margin-bottom:var(--s-3);}
+  .hero p{font-size:clamp(1rem, 1.7vw, 1.16rem); color:rgba(255,255,255,.78); max-width:46ch;}
+  .hero-cta{display:flex; flex-wrap:wrap; gap:12px; margin-top:var(--s-4);}
+  .hero-stats{display:flex; gap:var(--s-4); margin-top:var(--s-5); flex-wrap:wrap;}
+  .stat b{display:block; font-size:1.5rem; font-weight:700; line-height:1.2;}
+  .stat span{font-size:.82rem; color:rgba(255,255,255,.6);}
+
+  /* لوحة الواجهة */
+  .collage{position:relative; aspect-ratio:1 / 1; max-width:470px; width:100%; margin-inline:auto;}
+  .collage-orb{
+    position:absolute; inset:8% 4% 6% 8%; border-radius:46% 54% 52% 48% / 50% 46% 54% 50%;
+    background:var(--grad-hot); display:grid; place-items:center;
+    box-shadow:0 30px 80px rgba(236,72,153,.42);
+    animation:morph 16s ease-in-out infinite;
+  }
+  @keyframes morph{
+    0%,100%{border-radius:46% 54% 52% 48% / 50% 46% 54% 50%;}
+    50%{border-radius:56% 44% 42% 58% / 44% 56% 44% 56%;}
+  }
+  .collage-orb svg{width:52%; height:52%; color:#fff; opacity:.9;}
+  .collage-card{
+    position:absolute; bottom:2%; inset-inline-end:-2%;
+    width:min(236px, 66%); padding:14px;
+    background:rgba(255,255,255,.14); border:1px solid rgba(255,255,255,.26);
+    backdrop-filter:blur(16px); border-radius:var(--r-md);
+    display:flex; align-items:center; gap:12px;
+    box-shadow:0 18px 40px rgba(26,5,18,.4);
+  }
+  .collage-card .tile{
+    width:50px; height:50px; border-radius:var(--r-sm); flex:none;
+    background:rgba(255,255,255,.2); display:grid; place-items:center; color:#fff;
+  }
+  .collage-card small{display:block; font-size:.72rem; color:rgba(255,255,255,.66);}
+  .collage-card strong{display:block; font-size:.9rem; font-weight:500; line-height:1.5;}
+  .collage-card b{font-size:.95rem; font-weight:700; color:#FBCFE8;}
+  .seal{position:absolute; top:-2%; inset-inline-start:-2%; width:clamp(86px, 22%, 120px); aspect-ratio:1; animation:spin 24s linear infinite;}
+  .seal text{font-size:9px; font-weight:600; letter-spacing:.04em; fill:rgba(255,255,255,.85); text-transform:uppercase;
+    direction:ltr; unicode-bidi:isolate;}
+  .seal-core{position:absolute; inset:0; display:grid; place-items:center; color:#fff;}
+  @keyframes spin{to{transform:rotate(-360deg);}}
+
+  /* ---------- شريط الضمانات ---------- */
+  .assure{background:var(--panel); border-bottom:1px solid var(--line);}
+  .assure-grid{display:grid; grid-template-columns:repeat(4, 1fr); max-width:var(--wrap); margin:0 auto;}
+  .assure-item{display:flex; align-items:center; gap:12px; padding:22px clamp(12px, 2.2vw, 28px); border-inline-start:1px solid var(--line);}
+  .assure-item:first-child{border-inline-start:none;}
+  .assure-item .bubble{
+    width:44px; height:44px; border-radius:var(--r-pill); flex:none;
+    display:grid; place-items:center; color:#fff; background:var(--grad-hot);
+  }
+  .assure-item:nth-child(2) .bubble{background:var(--grad-cool);}
+  .assure-item:nth-child(3) .bubble{background:linear-gradient(115deg,#F59E0B,#EC4899);}
+  .assure-item:nth-child(4) .bubble{background:linear-gradient(115deg,#22D3EE,#8B5CF6);}
+  .assure-item b{display:block; font-size:.92rem; font-weight:600; line-height:1.5;}
+  .assure-item small{color:var(--plum-3); font-size:.78rem; line-height:1.4;}
+
+  /* ---------- الأزرار ---------- */
+  .btn{
+    display:inline-flex; align-items:center; justify-content:center; gap:9px;
+    min-height:48px; padding:13px 26px; border-radius:var(--r-pill);
+    font-size:.94rem; font-weight:600; text-align:center;
+    transition:transform .22s var(--ease), box-shadow .28s var(--ease),
+               background .25s var(--ease), color .25s var(--ease), border-color .25s var(--ease), filter .25s var(--ease);
+  }
+  .btn:hover{transform:translateY(-3px);}
+  .btn:active{transform:translateY(-1px);}
+  .btn[disabled]{opacity:.45; cursor:not-allowed; transform:none; box-shadow:none; filter:grayscale(.3);}
+  /* التدرّج الفاتح مع حبر داكن: تباين عالٍ ولون صارخ في آن واحد */
+  .btn-hot{background:var(--grad-hot); color:var(--plum); box-shadow:0 8px 24px rgba(236,72,153,.34);}
+  .btn-hot:hover{box-shadow:var(--glow-hot); filter:saturate(1.15);}
+  .btn-cool{background:var(--grad-cool); color:var(--plum); box-shadow:0 8px 24px rgba(99,102,241,.3);}
+  .btn-cool:hover{box-shadow:var(--glow-cool); filter:saturate(1.15);}
+  .btn-ghost-light{border:1.5px solid rgba(255,255,255,.45); color:#fff;}
+  .btn-ghost-light:hover{background:#fff; color:var(--plum); border-color:#fff;}
+  .btn-ghost{border:1.5px solid var(--line); color:var(--fuchsia-deep); background:var(--panel);}
+  .btn-ghost:hover{border-color:var(--fuchsia); background:var(--cream-2);}
+  .btn-wa{background:var(--wa); color:#fff;}
+  .btn-wa:hover{background:#0D6E39; box-shadow:0 10px 26px rgba(18,140,74,.34);}
+  .btn-wide{width:100%;}
+  .btn-sm{min-height:42px; padding:10px 18px; font-size:.86rem;}
+
+  /* ---------- الأقسام ---------- */
+  section{scroll-margin-top:86px;}
+  .band{padding-block:clamp(56px, 8vw, 100px);}
+  .band-night{background:var(--grad-night); color:#fff;}
+  .band-night h2, .band-night h3{color:#fff;}
+  .band-tint{background:linear-gradient(180deg, var(--cream-2) 0%, var(--cream) 100%);}
+  .head{display:flex; align-items:flex-end; justify-content:space-between; gap:var(--s-3); margin-bottom:var(--s-4); flex-wrap:wrap;}
+  .head h2{font-size:clamp(1.8rem, 4vw, 2.8rem);}
+  .head p{color:var(--plum-3); margin-top:6px; max-width:46ch;}
+  .band-night .head p{color:rgba(255,255,255,.7);}
+
+  /* ---------- مرشّح الفئات ---------- */
+  .filters{display:flex; flex-wrap:wrap; gap:9px; margin-bottom:var(--s-4);}
+  .filter{
+    padding:10px 20px; border-radius:var(--r-pill); border:1.5px solid var(--line);
+    background:var(--panel); font-size:.87rem; font-weight:500; color:var(--plum-2);
+    transition:all .25s var(--ease);
+  }
+  .filter:hover{border-color:var(--fuchsia); color:var(--fuchsia-deep); transform:translateY(-2px);}
+  .filter[aria-pressed="true"]{background:var(--grad-hot); color:var(--plum); border-color:transparent; box-shadow:0 6px 18px rgba(236,72,153,.3);}
+
+  /* ---------- المنتجات ---------- */
+  .products{display:grid; gap:clamp(16px, 2.2vw, 28px); grid-template-columns:repeat(4, 1fr);}
+  .card{
+    display:flex; flex-direction:column; background:var(--panel);
+    border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow);
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);
+  }
+  .card:hover{transform:translateY(-8px); box-shadow:0 22px 48px var(--card-glow, rgba(236,72,153,.26));}
+  .card-media{
+    position:relative; aspect-ratio:1 / 1; overflow:hidden;
+    display:grid; place-items:center; background:var(--card-grad, var(--grad-hot));
+  }
+  .card-media img{width:100%; height:100%; object-fit:cover;}
+  .card-media .glyph{width:44%; height:44%; color:#fff; opacity:.92; filter:drop-shadow(0 6px 14px rgba(0,0,0,.18));}
+  .card-media img, .card-media .glyph{transition:transform .5s var(--ease);}
+  .card:hover .card-media img, .card:hover .card-media .glyph{transform:scale(1.07);}
+  .card-flags{position:absolute; top:12px; inset-inline-start:12px; display:flex; flex-direction:column; align-items:flex-start; gap:6px;}
+  .flag{
+    padding:5px 12px; border-radius:var(--r-pill); font-size:.71rem; font-weight:700;
+    background:rgba(255,255,255,.95); color:var(--plum);
+    box-shadow:0 3px 10px rgba(46,10,30,.14);
+  }
+  .flag-sale{background:var(--plum); color:#fff;}
+  .flag-video{display:inline-flex; align-items:center; gap:5px;}
+  .card-body{padding:18px; display:flex; flex-direction:column; flex:1;}
+  .card-cat{font-size:.72rem; letter-spacing:.1em; color:var(--fuchsia-deep); font-weight:600; margin-bottom:5px;}
+  .card-name{font-size:1rem; font-weight:500; line-height:1.55;}
+  .card-price{display:flex; align-items:baseline; gap:9px; margin:10px 0 16px;}
+  .card-price b{font-size:1.1rem; font-weight:700; color:var(--fuchsia-deep);}
+  .card-price del{font-size:.84rem; color:var(--plum-3);}
+  .card-links{display:flex; gap:8px; margin-top:auto;}
+  .card-links .btn{flex:1;}
+  .card-links .btn-icon{flex:none; width:44px; min-height:44px; padding:0;}
+  .card-social{display:flex; gap:14px; margin-top:12px;}
+  .card-social a{
+    display:inline-flex; align-items:center; gap:5px; font-size:.76rem; font-weight:500;
+    color:var(--plum-3); border-bottom:1px solid transparent; padding-bottom:1px;
+    transition:color .25s var(--ease), border-color .25s var(--ease);
+  }
+  .card-social a:hover{color:var(--fuchsia-deep); border-bottom-color:var(--fuchsia);}
+  .empty{
+    grid-column:1 / -1; text-align:center; color:var(--plum-3);
+    padding:clamp(40px, 7vw, 76px) var(--s-3);
+    background:var(--panel); border:1.5px dashed var(--line); border-radius:var(--r-lg);
+  }
+  .empty-mark{
+    display:grid; place-items:center; width:78px; height:78px; margin:0 auto var(--s-3);
+    border-radius:var(--r-pill); background:var(--grad-hot); color:#fff;
+    box-shadow:0 10px 28px rgba(236,72,153,.28);
+  }
+  .empty h3{font-size:1.25rem; color:var(--plum); margin-bottom:8px;}
+  .empty p{max-width:42ch; margin:0 auto;}
+  .empty-cta{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; margin-top:var(--s-3);}
+
+  /* قسم اكسسوارات الهواتف — هويّته الفيروزية تميّزه عن قسم البيجامات */
+  .phones{--card-glow:rgba(99,102,241,.3);}
+  .phones .card-cat{color:var(--cyan-deep);}
+  .phones .card-price b{color:var(--violet-deep);}
+  .phones .card-social a:hover{color:var(--violet-deep); border-bottom-color:var(--violet);}
+
+  /* ---------- كيف تطلبين ---------- */
+  .steps{display:grid; grid-template-columns:repeat(3, 1fr); gap:clamp(20px, 3vw, 40px); margin-top:var(--s-4);}
+  .step{
+    background:rgba(255,255,255,.07); border:1px solid rgba(255,255,255,.14);
+    border-radius:var(--r-lg); padding:26px;
+  }
+  .step em{
+    display:grid; place-items:center; width:46px; height:46px; border-radius:var(--r-pill);
+    background:var(--grad-hot); color:var(--plum); font-style:normal; font-weight:700;
+    font-size:1.05rem; margin-bottom:16px;
+  }
+  .step:nth-child(2) em{background:var(--grad-cool);}
+  .step:nth-child(3) em{background:linear-gradient(115deg,#F59E0B,#EC4899);}
+  .step h3{font-size:1.08rem; margin-bottom:6px;}
+  .step p{font-size:.9rem; color:rgba(255,255,255,.72); line-height:1.8;}
+
+  /* ---------- الفيديوهات ---------- */
+  .videos{display:grid; gap:clamp(18px, 2.4vw, 28px); grid-template-columns:repeat(auto-fit, minmax(240px, 320px)); justify-content:center;}
+  .reel{background:var(--panel); border-radius:var(--r-lg); overflow:hidden; box-shadow:var(--shadow); display:flex; flex-direction:column;
+    transition:transform .3s var(--ease), box-shadow .3s var(--ease);}
+  .reel:hover{transform:translateY(-8px); box-shadow:0 22px 48px rgba(236,72,153,.24);}
+  .reel-frame{position:relative; aspect-ratio:9 / 16; background:var(--grad-hot);}
+  .reel-frame iframe{position:absolute; inset:0; width:100%; height:100%; border:0;}
+  .reel-soon{position:absolute; inset:0; display:grid; place-content:center; justify-items:center; gap:12px; padding:20px; text-align:center; color:#fff;}
+  .reel-soon span{font-size:.86rem; font-weight:500;}
+  .reel-body{padding:18px; display:flex; flex-direction:column; flex:1;}
+  .tag{
+    display:inline-flex; align-items:center; gap:6px; align-self:flex-start;
+    padding:5px 13px; border-radius:var(--r-pill); font-size:.72rem; font-weight:700; margin-bottom:10px;
+  }
+  .tag-tiktok{background:var(--plum); color:#22D3EE;}
+  .tag-instagram{background:linear-gradient(115deg,#F59E0B,#EC4899 55%,#8B5CF6); color:#fff;}
+  .reel-body h3{font-size:1rem; font-weight:500;}
+  .reel-body p{font-size:.86rem; color:var(--plum-3); margin:4px 0 16px;}
+  .reel-body .btn{margin-top:auto;}
+
+  /* ---------- تواصل ---------- */
+  .contact{position:relative; overflow:hidden; text-align:center; color:#fff; background:var(--grad-hot);}
+  .contact h2{font-size:clamp(1.9rem, 4.6vw, 3.1rem); max-width:16ch; margin-inline:auto; color:#fff;}
+  .contact p{margin:var(--s-2) auto var(--s-4); max-width:44ch; color:rgba(255,255,255,.88);}
+  .contact-row{display:flex; flex-wrap:wrap; gap:12px; justify-content:center; position:relative;}
+  .contact .wrap{position:relative;}
+
+  /* ---------- التذييل ---------- */
+  footer{background:var(--night); color:rgba(255,255,255,.62); padding-block:var(--s-5) var(--s-3); font-size:.87rem;}
+  .foot-grid{display:grid; grid-template-columns:1.5fr 1fr 1fr; gap:var(--s-4); padding-bottom:var(--s-4);}
+  .foot-brand .brand{margin-bottom:12px;}
+  .foot-brand .brand b, .foot-brand .brand i{color:#fff;}
+  .foot-brand p{max-width:34ch; line-height:1.9;}
+  .foot-col h3{font-size:.74rem; letter-spacing:.16em; color:#fff; font-weight:600; margin-bottom:14px;}
+  .foot-col a{display:block; padding-block:5px; transition:color .25s var(--ease);}
+  .foot-col a:hover{color:var(--cyan);}
+  .foot-social{display:flex; gap:8px; margin-top:18px;}
+  .foot-social a{
+    width:44px; height:44px; border-radius:var(--r-pill); border:1px solid rgba(255,255,255,.2);
+    display:inline-flex; align-items:center; justify-content:center;
+    transition:all .25s var(--ease);
+  }
+  .foot-social a:hover{background:var(--grad-hot); border-color:transparent; color:#fff; transform:translateY(-3px);}
+  .foot-base{border-top:1px solid rgba(255,255,255,.12); padding-top:var(--s-3); display:flex; justify-content:space-between; gap:var(--s-2); flex-wrap:wrap; font-size:.8rem;}
+
+  /* ---------- السلة ---------- */
+  .veil{position:fixed; inset:0; z-index:80; background:rgba(26,5,18,.5); backdrop-filter:blur(3px);
+    opacity:0; visibility:hidden; transition:opacity .3s var(--ease), visibility .3s var(--ease);}
+  .veil.open{opacity:1; visibility:visible;}
+  .drawer{
+    position:fixed; inset-block:0; inset-inline-end:0; z-index:90;
+    width:min(420px, 100%); display:flex; flex-direction:column;
+    background:var(--cream); box-shadow:0 0 70px rgba(26,5,18,.3);
+    transform:translateX(-100%); transition:transform .36s var(--ease);
+  }
+  .drawer.open{transform:translateX(0);}
+  .drawer-head{display:flex; align-items:center; gap:12px; padding:20px 24px; background:var(--grad-hot); color:var(--plum);}
+  .drawer-head h2{font-size:1.15rem; margin-inline-end:auto;}
+  .drawer-head .ico{color:var(--plum);}
+  .drawer-head .ico:hover{background:rgba(255,255,255,.3); color:var(--plum);}
+  .drawer-body{flex:1; overflow-y:auto; padding-inline:24px;}
+  .line{display:flex; gap:14px; align-items:center; padding-block:18px; border-bottom:1px solid var(--line);}
+  .line:last-child{border-bottom:none;}
+  .line-tile{width:62px; height:62px; border-radius:var(--r-sm); flex:none; overflow:hidden;
+    display:grid; place-items:center; color:#fff; background:var(--card-grad, var(--grad-hot));}
+  .line-tile img{width:100%; height:100%; object-fit:cover;}
+  .line-tile svg{width:50%; height:50%; opacity:.92;}
+  .line-info{flex:1; min-width:0;}
+  .line-info strong{display:block; font-size:.92rem; font-weight:500; line-height:1.5;}
+  .line-info span{font-size:.86rem; color:var(--fuchsia-deep); font-weight:700;}
+  .stepper{display:flex; align-items:center; gap:4px; border:1.5px solid var(--line); border-radius:var(--r-pill); padding:3px; background:var(--panel);}
+  .stepper button{width:32px; height:32px; border-radius:var(--r-pill); display:grid; place-items:center;
+    font-size:1.05rem; line-height:1; color:var(--fuchsia-deep); transition:all .2s var(--ease);}
+  .stepper button:hover{background:var(--grad-hot); color:var(--plum);}
+  .stepper output{min-width:20px; text-align:center; font-size:.9rem; font-weight:600;}
+  .drawer-empty{text-align:center; color:var(--plum-3); padding:var(--s-5) var(--s-2);}
+  .drawer-empty svg{color:var(--line); margin:0 auto 14px;}
+  .drawer-foot{padding:20px 24px; border-top:1px solid var(--line); background:var(--panel);}
+  .sum{display:flex; justify-content:space-between; align-items:baseline; margin-bottom:4px;}
+  .sum b{font-size:1.35rem; font-weight:700; color:var(--fuchsia-deep);}
+  .note{font-size:.78rem; color:var(--plum-3); text-align:center; margin-top:12px; line-height:1.6;}
+
+  /* ---------- لوحة الإدارة ---------- */
+  .admin-link{
+    color:rgba(255,255,255,.45); font-size:.78rem; text-decoration:underline;
+    text-underline-offset:3px; margin-inline-start:10px; padding:11px 8px;
+  }
+  .admin-link:hover{color:var(--cyan);}
+  /* اللوحة صفحة كاملة لا درجاً جانبياً: ما يُدار منها هو الموقع كلّه، لا
+     المنتجات وحدها، فالعرض الضيّق كان يخنق النماذج الطويلة. */
+  .admin{
+    position:fixed; inset:0; z-index:95; display:flex; flex-direction:column;
+    background:var(--cream);
+    transform:translateY(100%); transition:transform .36s var(--ease);
+  }
+  .admin.open{transform:translateY(0);}
+  .admin-in{width:100%; max-width:860px; margin-inline:auto;}
+  .admin-head{background:var(--grad-cool); color:var(--plum); padding:16px clamp(16px, 4vw, 28px);}
+  .admin-head-row{display:flex; align-items:center; gap:12px;}
+  .admin-head h2{font-size:1.15rem;}
+  .admin-who{font-size:.76rem; opacity:.75; margin-inline-start:auto; direction:ltr;}
+  .admin-head .ico{color:var(--plum);}
+  .admin-head .ico:hover{background:rgba(255,255,255,.3); color:var(--plum);}
+  .admin-body{flex:1; overflow-y:auto; padding:20px clamp(16px, 4vw, 28px) 40px;}
+  .admin-note{font-size:.86rem; color:var(--plum-3); margin-bottom:16px;}
+  .admin-hint{
+    font-size:.8rem; color:var(--plum-3); line-height:1.8;
+    background:var(--panel); border:1px solid var(--line);
+    border-radius:var(--r-sm); padding:10px 12px;
+  }
+  .admin-hint code{
+    font-family:ui-monospace, monospace; font-size:.78rem;
+    background:var(--cream-2); padding:1px 5px; border-radius:4px;
+  }
+
+  /* التبويبات */
+  .admin-tabs{
+    display:flex; gap:6px; overflow-x:auto; margin-bottom:20px;
+    border-bottom:1.5px solid var(--line); padding-bottom:2px;
+  }
+  .admin-tab{
+    flex:none; padding:11px 14px; font-size:.87rem; font-weight:500;
+    color:var(--plum-3); border-bottom:2.5px solid transparent; margin-bottom:-2px;
+    white-space:nowrap; transition:color .2s var(--ease), border-color .2s var(--ease);
+  }
+  .admin-tab:hover{color:var(--fuchsia-deep);}
+  .admin-tab[aria-selected="true"]{color:var(--violet-deep); border-bottom-color:var(--violet);}
+
+  /* صفوف قابلة للحذف: جمل الشريط والفيديوهات */
+  .admin-rows{display:grid; gap:10px;}
+  .admin-line{display:flex; gap:8px; align-items:center;}
+  .admin-line input{flex:1; min-width:0;}
+  .admin-line button{
+    width:44px; height:44px; flex:none; border-radius:var(--r-sm); display:grid; place-items:center;
+    border:1.5px solid var(--line); color:var(--plum-2); background:var(--panel);
+    transition:all .2s var(--ease);
+  }
+  .admin-line button:hover{border-color:#E11D48; color:#E11D48; background:#FFF1F2;}
+  .admin-card{
+    display:grid; gap:10px; padding:14px;
+    background:var(--panel); border:1.5px solid var(--line); border-radius:var(--r-md);
+  }
+  .admin-card-head{display:flex; align-items:center; gap:10px;}
+  .admin-card-head b{font-size:.86rem; font-weight:600; margin-inline-end:auto;}
+  .admin-error{
+    font-size:.84rem; color:#9F1239; background:#FFE4E6;
+    border-radius:var(--r-sm); padding:10px 12px; margin-top:12px;
+  }
+  .admin-form{display:grid; gap:12px; margin-bottom:26px;}
+  .admin-form textarea{
+    font:inherit; font-size:.92rem; font-weight:400; color:var(--plum); line-height:1.8;
+    padding:11px 13px; border:1.5px solid var(--line); border-radius:var(--r-sm);
+    background:var(--panel); width:100%; resize:vertical;
+  }
+  .admin-form textarea:focus{border-color:var(--violet); outline:none;}
+  .admin-form h3{margin-top:10px;}
+  .admin-form h3:first-child{margin-top:0;}
+  .admin-form h3{font-size:1rem;}
+  .admin-form label{display:grid; gap:5px; font-size:.84rem; font-weight:500; color:var(--plum-2);}
+  .admin-form small{font-weight:300; color:var(--plum-3); font-size:.78rem;}
+  .admin-form input, .admin-form select{
+    font:inherit; font-size:.92rem; font-weight:400; color:var(--plum);
+    padding:11px 13px; border:1.5px solid var(--line); border-radius:var(--r-sm);
+    background:var(--panel); width:100%; min-height:44px;
+  }
+  .admin-form input:focus, .admin-form select:focus{border-color:var(--violet); outline:none;}
+  .admin-row{display:grid; grid-template-columns:1fr 1fr; gap:12px;}
+  .admin-photo{display:grid; gap:9px;}
+  .admin-photo-title{font-size:.84rem; font-weight:500; color:var(--plum-2);}
+  .admin-photo-row{display:flex; align-items:center; gap:12px;}
+  .admin-photo-thumb{
+    width:64px; height:64px; flex:none; border-radius:var(--r-sm); overflow:hidden;
+    border:1.5px solid var(--line); background:var(--panel);
+  }
+  .admin-photo-thumb img{width:100%; height:100%; object-fit:cover;}
+  .admin-photo-btns{display:flex; gap:8px; flex-wrap:wrap; flex:1;}
+  .admin-photo-note{font-size:.78rem; color:var(--plum-3); line-height:1.6;}
+  .admin-photo-note.busy{color:var(--violet-deep);}
+  .admin-photo-note.bad{color:#9F1239;}
+  .admin-photo-link summary{
+    font-size:.8rem; color:var(--plum-3); cursor:pointer;
+    padding-block:6px; list-style-position:inside;
+  }
+  .admin-photo-link summary:hover{color:var(--fuchsia-deep);}
+  .admin-photo-link input{margin-top:6px;}
+  .admin-photo-link small{display:block; margin-top:5px;}
+  .admin-actions{display:flex; gap:10px; flex-wrap:wrap;}
+  .admin-actions .btn{flex:1;}
+  .admin-list h3{font-size:1rem; margin-bottom:12px;}
+  .admin-list h3 span{font-weight:400; color:var(--plum-3); font-size:.84rem;}
+  .admin-item{
+    display:flex; align-items:center; gap:12px; padding:12px 0;
+    border-bottom:1px solid var(--line);
+  }
+  .admin-item:last-child{border-bottom:none;}
+  .admin-item .tile{
+    width:44px; height:44px; border-radius:var(--r-sm); flex:none; overflow:hidden;
+    display:grid; place-items:center; color:#fff; background:var(--card-grad, var(--grad-hot));
+  }
+  .admin-item .tile img{width:100%; height:100%; object-fit:cover;}
+  .admin-item .info{flex:1; min-width:0;}
+  .admin-item strong{display:block; font-size:.9rem; font-weight:500; line-height:1.5;}
+  .admin-item small{color:var(--plum-3); font-size:.78rem;}
+  .admin-item .row-actions{display:flex; gap:6px;}
+  .admin-item button{
+    width:44px; height:44px; border-radius:var(--r-sm); display:grid; place-items:center;
+    border:1.5px solid var(--line); color:var(--plum-2); background:var(--panel);
+    transition:all .2s var(--ease);
+  }
+  .admin-item button:hover{border-color:var(--violet); color:var(--violet-deep);}
+  .admin-item button.danger:hover{border-color:#E11D48; color:#E11D48; background:#FFF1F2;}
+  .admin-empty{color:var(--plum-3); font-size:.88rem; padding:18px 0;}
+  .admin-uid{
+    background:#FFF3D6; border:1.5px solid #EFDFB4; border-radius:var(--r-sm);
+    padding:14px; margin-bottom:22px; font-size:.84rem; color:#6B5412; line-height:1.7;
+  }
+  .admin-uid-row{display:flex; gap:8px; align-items:center; margin-top:10px;}
+  .admin-uid code{
+    flex:1; min-width:0; overflow-x:auto; white-space:nowrap;
+    font-family:ui-monospace, monospace; font-size:.82rem;
+    background:rgba(0,0,0,.06); padding:9px 10px; border-radius:6px;
+  }
+
+  /* ---------- إشعار ---------- */
+  .toast{position:fixed; inset-inline:0; bottom:28px; z-index:100; display:flex; justify-content:center;
+    pointer-events:none; opacity:0; transform:translateY(14px);
+    transition:opacity .3s var(--ease), transform .3s var(--ease);}
+  .toast.show{opacity:1; transform:translateY(0);}
+  .toast span{display:inline-flex; align-items:center; gap:9px; background:var(--grad-hot); color:var(--plum);
+    border-radius:var(--r-pill); padding:12px 24px; font-size:.9rem; font-weight:600; box-shadow:var(--glow-hot);}
+
+  /* ---------- ظهور تدريجي ---------- */
+  .rise{opacity:0; transform:translateY(26px); transition:opacity .75s var(--ease), transform .75s var(--ease);}
+  .rise.in{opacity:1; transform:none;}
+
+  /* ---------- الاستجابة ---------- */
+  @media (max-width: 1080px){
+    .products{grid-template-columns:repeat(3, 1fr);}
+    .hero-grid{grid-template-columns:1fr;}
+    .collage{max-width:400px;}
+  }
+  @media (max-width: 860px){
+    .links{display:none;}
+    .brand i{display:none;}
+    .nav-inner{gap:var(--s-2);}
+    .nav-actions{gap:0;}
+    .assure-grid{grid-template-columns:repeat(2, 1fr);}
+    .assure-item:nth-child(3){border-inline-start:none;}
+    .assure-item:nth-child(n+3){border-top:1px solid var(--line);}
+    .steps{grid-template-columns:1fr;}
+    .foot-grid{grid-template-columns:1fr 1fr;}
+    .foot-brand{grid-column:1 / -1;}
+  }
+  @media (max-width: 620px){
+    /* أربعة تبويبات على شاشة ٣٦٠ لا تتّسع بالحشو الكامل، والرابع المخفيّ لا يُبحث عنه */
+    .admin-tabs{gap:2px;}
+    .admin-tab{padding:11px 10px; font-size:.83rem;}
+    .products{grid-template-columns:repeat(2, 1fr);}
+    .card-body{padding:14px;}
+    .card-links .btn-sm{padding-inline:10px; font-size:.8rem;}
+    .assure-grid{grid-template-columns:1fr;}
+    .assure-item:nth-child(n+2){border-inline-start:none; border-top:1px solid var(--line);}
+    .hero-stats{gap:var(--s-3);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    *, *::before, *::after{animation-duration:.01ms !important; animation-iteration-count:1 !important; transition-duration:.01ms !important;}
+    .rise{opacity:1; transform:none;}
+    .btn:hover, .ico:hover, .card:hover, .reel:hover, .filter:hover{transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<div class="ticker" aria-hidden="true">
+  <div class="ticker-track" id="ticker"></div>
+</div>
+
+<header>
+  <div class="nav" id="nav">
+    <div class="nav-inner">
+      <a class="brand" href="#top">
+        <span class="brand-mark" id="brand-mark" aria-hidden="true">أ</span>
+        <span>
+          <b id="brand-name">أم عمر</b>
+          <!-- dir=ltr وإلا نقلت المحاذاة العربية علامة @ إلى آخر المعرّف -->
+          <i id="brand-handle" dir="ltr"></i>
+        </span>
+      </a>
+      <nav class="links" aria-label="أقسام الموقع">
+        <a href="#products" id="nav-sleep">البيجامات</a>
+        <a href="#phones">اكسسوارات الهواتف</a>
+        <a href="#how">كيف تطلبين</a>
+        <a href="#videos">الفيديوهات</a>
+      </nav>
+      <div class="nav-actions" id="nav-actions"></div>
+    </div>
+  </div>
+</header>
+
+<div class="setup" id="setup" hidden>
+  <div class="wrap">
+    <span aria-hidden="true">⚙︎</span>
+    <p id="setup-text"></p>
+  </div>
+</div>
+
+<main id="top">
+
+  <section class="hero">
+    <span class="blob blob-1" aria-hidden="true"></span>
+    <span class="blob blob-2" aria-hidden="true"></span>
+    <span class="blob blob-3" aria-hidden="true"></span>
+
+    <div class="wrap hero-grid">
+      <div class="rise">
+        <span class="kicker kicker-light" id="hero-kicker">Om Aya · راحتك وهاتفك</span>
+        <h1 id="hero-title">راحتكِ في البيت <span class="glow-text">وأناقتكِ</span><br>في مكان واحد.</h1>
+        <p id="hero-text">بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.</p>
+        <div class="hero-cta">
+          <a class="btn btn-hot" href="#products" id="hero-cta-1">تصفّحي البيجامات</a>
+          <a class="btn btn-ghost-light" href="#phones" id="hero-cta-2">اكسسوارات الهواتف</a>
+        </div>
+        <div class="hero-stats">
+          <div class="stat" id="stat-products" hidden><b id="stat-count">—</b><span>منتج مختار</span></div>
+          <div class="stat"><b>58</b><span>ولاية نوصل إليها</span></div>
+          <div class="stat"><b>0 دج</b><span>مقدّماً — الدفع عند الاستلام</span></div>
+        </div>
+      </div>
+
+      <div class="collage rise" aria-hidden="true">
+        <div class="collage-orb" id="collage-orb"></div>
+        <div class="collage-card" id="collage-card" hidden>
+          <span class="tile" id="collage-tile"></span>
+          <span>
+            <small>الأكثر طلباً</small>
+            <strong id="collage-name"></strong>
+            <b id="collage-price"></b>
+          </span>
+        </div>
+        <div class="seal">
+          <svg viewBox="0 0 100 100" xmlns:xlink="http://www.w3.org/1999/xlink">
+            <defs><path id="ring" fill="none" d="M50 50m-37 0a37 37 0 1 1 74 0a37 37 0 1 1-74 0"/></defs>
+            <!-- textLength = محيط الدائرة (2π×37 ≈ 232) فتلتفّ العبارة دورة واحدة بلا تداخل -->
+            <text><textPath href="#ring" xlink:href="#ring" textLength="232" lengthAdjust="spacing">OM OMAR · SLEEPWEAR &amp; TECH ·</textPath></text>
+          </svg>
+          <span class="seal-core" id="seal-core"></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="assure">
+    <div class="assure-grid" id="assure"></div>
+  </section>
+
+  <section class="band" id="products">
+    <div class="wrap">
+      <div class="head rise">
+        <div>
+          <span class="kicker">Sleepwear</span>
+          <h2 id="sleep-title">بيجامات وملابس نوم</h2>
+          <p id="sleep-text">كل قطعة بسعرها الواضح ومقاساتها — بلا مفاجآت عند الطلب.</p>
+        </div>
+        <p class="kicker" style="margin:0;" id="count-label"></p>
+      </div>
+      <div class="filters rise" id="filters" role="group" aria-label="تصفية حسب الفئة"></div>
+      <div class="products" id="grid"></div>
+    </div>
+  </section>
+
+  <section class="band band-tint phones" id="phones">
+    <div class="wrap">
+      <div class="head rise">
+        <div>
+          <span class="kicker" style="color:var(--cyan-deep);">Tech</span>
+          <h2 id="phones-title">اكسسوارات الهواتف الذكية</h2>
+          <p id="phones-text">أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.</p>
+        </div>
+        <div id="phones-cta"></div>
+      </div>
+      <div class="products" id="phones-grid"></div>
+    </div>
+  </section>
+
+  <section class="band band-night" id="how">
+    <div class="wrap">
+      <div class="rise">
+        <span class="kicker kicker-light">How to order</span>
+        <h2>كيف تطلبين؟</h2>
+        <p style="color:rgba(255,255,255,.72); max-width:46ch;">ثلاث خطوات، ولا حاجة لحساب ولا بطاقة بنكية.</p>
+      </div>
+      <div class="steps rise">
+        <div class="step">
+          <em>1</em>
+          <h3>اختاري منتجاتكِ</h3>
+          <p>تصفّحي البيجامات واكسسوارات الهواتف، وأضيفي ما يعجبكِ إلى السلة، وعدّلي الكميات كما تشائين.</p>
+        </div>
+        <div class="step">
+          <em>2</em>
+          <h3>أرسلي السلة على واتساب</h3>
+          <p>زرّ واحد يفتح واتساب برسالة جاهزة فيها منتجاتكِ والكميات والإجمالي.</p>
+        </div>
+        <div class="step">
+          <em>3</em>
+          <h3>استلمي وادفعي</h3>
+          <p>نؤكّد الطلب والعنوان معكِ، ثم يصلكِ إلى ولايتكِ وتدفعين عند الاستلام.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="band" id="videos">
+    <div class="wrap">
+      <div class="head rise">
+        <div>
+          <span class="kicker">On camera</span>
+          <h2>شاهدينا قبل أن تطلبي</h2>
+          <p>النتيجة على الطبيعة، وطريقة الاستخدام، في فيديوهات قصيرة.</p>
+        </div>
+        <div id="follow-btn"></div>
+      </div>
+      <div class="videos rise" id="reels"></div>
+    </div>
+  </section>
+
+  <section class="band contact" id="contact">
+    <span class="blob blob-2" aria-hidden="true" style="opacity:.3;"></span>
+    <div class="wrap">
+      <span class="kicker" style="color:rgba(255,255,255,.85);">Say hello</span>
+      <h2>سؤال قبل الطلب؟</h2>
+      <p>راسلينا مباشرة — نردّ بسرعة، ونساعدكِ تختارين ما يناسبكِ.</p>
+      <div class="contact-row" id="contact-row"></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <div class="foot-grid">
+      <div class="foot-brand">
+        <span class="brand">
+          <span class="brand-mark" id="foot-mark" aria-hidden="true">أ</span>
+          <span><b id="foot-brand-name">أم عمر</b> <i id="foot-handle" dir="ltr"></i></span>
+        </span>
+        <p id="foot-text">بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.</p>
+        <div class="foot-social" id="foot-social"></div>
+      </div>
+      <div class="foot-col">
+        <h3>الموقع</h3>
+        <a href="#products" id="foot-sleep">البيجامات</a>
+        <a href="#phones">اكسسوارات الهواتف</a>
+        <a href="#how">كيف تطلبين</a>
+        <a href="#videos">الفيديوهات</a>
+      </div>
+      <div class="foot-col">
+        <h3>الطلب</h3>
+        <p style="line-height:2;">
+          توصيل لكل الولايات<br>
+          الدفع عند الاستلام<br>
+          رد سريع على واتساب
+        </p>
+      </div>
+    </div>
+    <div class="foot-base">
+      <span>&copy; <span id="year"></span> <span id="foot-copy-name">أم عمر</span> — جميع الحقوق محفوظة</span>
+      <span>
+        <span id="foot-handle-2" dir="ltr"></span>
+        <button class="admin-link" id="admin-open">لوحة التحكّم</button>
+      </span>
+    </div>
+  </div>
+</footer>
+
+<div class="veil" id="veil" hidden></div>
+
+<aside class="drawer" id="drawer" role="dialog" aria-modal="true" aria-labelledby="drawer-title" hidden>
+  <div class="drawer-head">
+    <h2 id="drawer-title">سلة الطلب</h2>
+    <button class="ico" id="drawer-close" aria-label="إغلاق السلة">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+    </button>
+  </div>
+  <div class="drawer-body" id="drawer-body"></div>
+  <div class="drawer-foot">
+    <div class="sum">
+      <span>الإجمالي</span>
+      <b id="sum-total">0</b>
+    </div>
+    <p class="note" style="margin:0 0 14px; text-align:start;">لا تشمل رسوم التوصيل — نؤكّدها معكِ حسب الولاية.</p>
+    <button class="btn btn-wa btn-wide" id="checkout"></button>
+    <p class="note">يُفتح واتساب برسالة جاهزة فيها طلبكِ — راجعيها ثم أرسليها.</p>
+  </div>
+</aside>
+
+<div class="toast" id="toast" role="status" aria-live="polite"><span></span></div>
+
+<!-- لوحة الإدارة: لا تظهر إلا بالضغط على «لوحة الإدارة» في التذييل، ولا تكتب
+     شيئاً إلا بعد دخول صاحبة المتجر. وقواعد قاعدة البيانات هي الحارس الحقيقي:
+     حتى لو فُتحت اللوحة، تُرفض كل كتابة من غير الحساب المصرّح له. -->
+<div class="veil" id="admin-veil" hidden></div>
+<aside class="admin" id="admin" role="dialog" aria-modal="true" aria-labelledby="admin-title" hidden>
+  <div class="admin-head">
+    <div class="admin-in admin-head-row">
+      <h2 id="admin-title">لوحة التحكّم</h2>
+      <span class="admin-who" id="admin-who"></span>
+      <button class="ico" id="admin-close" aria-label="إغلاق اللوحة والعودة إلى المتجر">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" aria-hidden="true"><path d="M6 6l12 12M18 6L6 18"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <div class="admin-body" id="admin-body">
+   <div class="admin-in">
+    <p class="admin-note" id="admin-status">جارٍ الاتصال…</p>
+
+    <form class="admin-form" id="admin-login" hidden>
+      <h3>الدخول</h3>
+      <label>البريد الإلكتروني
+        <input type="email" id="admin-email" autocomplete="username" required>
+      </label>
+      <label>كلمة المرور <small>٦ أحرف على الأقل</small>
+        <input type="password" id="admin-pass" autocomplete="current-password" required minlength="6">
+      </label>
+      <button class="btn btn-hot btn-wide" type="submit">دخول</button>
+      <button class="btn btn-ghost btn-wide" type="button" id="admin-signup">إنشاء حساب — لأول مرّة</button>
+      <p class="admin-error" id="admin-login-error" hidden></p>
+    </form>
+
+    <div id="admin-manage" hidden>
+      <!-- المعرّف هو ما يُوضع في firestore.rules ليُسمح لهذا الحساب بالكتابة،
+           فيُعرض هنا جاهزاً للنسخ بدل البحث عنه في كونسول Firebase. -->
+      <div class="admin-uid" id="admin-uid-box" hidden>
+        <p id="admin-uid-note"></p>
+        <div class="admin-uid-row">
+          <code id="admin-uid" dir="ltr"></code>
+          <button class="btn btn-ghost btn-sm" type="button" id="admin-uid-copy">نسخ</button>
+        </div>
+      </div>
+      <nav class="admin-tabs" id="admin-tabs" role="tablist" aria-label="أقسام لوحة التحكّم">
+        <button class="admin-tab" type="button" role="tab" data-tab="products" aria-selected="true">المنتجات</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="store" aria-selected="false">المتجر</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="texts" aria-selected="false">النصوص</button>
+        <button class="admin-tab" type="button" role="tab" data-tab="videos" aria-selected="false">الفيديوهات</button>
+      </nav>
+
+      <section class="admin-panel" data-panel="products" role="tabpanel">
+      <form class="admin-form" id="admin-form">
+        <h3 id="admin-form-title">منتج جديد</h3>
+        <label>القسم
+          <select id="f-section">
+            <option value="sleep">بيجامات وملابس نوم</option>
+            <option value="phone">اكسسوارات الهواتف</option>
+          </select>
+        </label>
+        <label>اسم المنتج
+          <input type="text" id="f-name" required maxlength="80">
+        </label>
+        <label>الفئة <small>كلمة أو كلمتان — تصير زرّ تصفية. مثل: صيفي، شتوي، أغطية</small>
+          <input type="text" id="f-category" required maxlength="24" list="f-cats">
+          <datalist id="f-cats"></datalist>
+        </label>
+        <div class="admin-row">
+          <label>السعر (د.ج)
+            <input type="number" id="f-price" required min="0" step="1" inputmode="numeric">
+          </label>
+          <label>قبل التخفيض <small>اختياري</small>
+            <input type="number" id="f-was" min="0" step="1" inputmode="numeric">
+          </label>
+        </div>
+        <label>الرسم <small>يظهر إن لم تكن هناك صورة</small>
+          <select id="f-glyph"></select>
+        </label>
+        <!-- صورة المنتج: الاختيار من الهاتف أوّلاً لأن المتجر يُدار من هاتف.
+             تُصغَّر الصورة وتُضغط في المتصفّح ثم تُخزَّن داخل الصفحة نفسها،
+             فلا حاجة لموقع رفع ولا لرابط خارجي قد ينكسر بعد حين. -->
+        <div class="admin-photo">
+          <span class="admin-photo-title">صورة المنتج <small>اختياري — إن لم تضيفيها ظهر الرسم أعلاه</small></span>
+          <div class="admin-photo-row">
+            <span class="admin-photo-thumb" id="f-photo-thumb" hidden></span>
+            <span class="admin-photo-btns">
+              <button class="btn btn-ghost btn-sm" type="button" id="f-photo-pick">اختاري صورة من هاتفك</button>
+              <button class="btn btn-ghost btn-sm" type="button" id="f-photo-clear" hidden>إزالة الصورة</button>
+            </span>
+          </div>
+          <input type="file" id="f-photo" accept="image/*" hidden>
+          <p class="admin-photo-note" id="f-photo-note">تُصغَّر الصورة تلقائياً لتبقى الصفحة سريعة.</p>
+          <details class="admin-photo-link">
+            <summary>أو الصقي رابط صورة جاهزاً</summary>
+            <input type="url" id="f-image" placeholder="https://…/photo.jpg">
+            <small>رابط الصورة نفسها، ينتهي بـ ‎.jpg‎ أو ‎.png‎. رابط حساب أو منشور لا يصلح، ويظهر الرسم مكانه.</small>
+          </details>
+        </div>
+        <label>شارة <small>اختياري — مثل: جديد</small>
+          <input type="text" id="f-badge" maxlength="20">
+        </label>
+        <div class="admin-row">
+          <label>رابط فيديو تيك توك <small>اختياري</small>
+            <input type="url" id="f-tiktok" placeholder="https://…">
+          </label>
+          <label>رابط فيديو انستقرام <small>اختياري</small>
+            <input type="url" id="f-instagram" placeholder="https://…">
+          </label>
+        </div>
+        <div class="admin-actions">
+          <button class="btn btn-hot" type="submit" id="f-save">حفظ المنتج</button>
+          <button class="btn btn-ghost" type="button" id="f-reset" hidden>إلغاء التعديل</button>
+        </div>
+        <p class="admin-error" id="admin-form-error" hidden></p>
+      </form>
+
+      <div class="admin-list">
+        <h3>المنتجات <span id="admin-count"></span></h3>
+        <div id="admin-items"></div>
+      </div>
+      </section>
+
+      <section class="admin-panel" data-panel="store" role="tabpanel" hidden>
+        <form class="admin-form" id="store-form">
+          <h3>بيانات المتجر</h3>
+          <label>اسم المتجر <small>يظهر في الترويسة والتذييل ورسالة الطلب</small>
+            <input type="text" id="s-brand" maxlength="40" required>
+          </label>
+          <div class="admin-row">
+            <label>رقم واتساب <small>برمز الدولة، أرقاماً فقط</small>
+              <!-- الحدّ ٢٤ لا ١٥: لوحة الهاتف تضيف + ومسافات، وهي تُنظَّف عند الحفظ،
+                   فحدٌّ بعدد الأرقام وحدها كان يقطع آخر رقم من الرقم الملصوق. -->
+              <input type="tel" id="s-phone" dir="ltr" inputmode="tel" maxlength="24" placeholder="213696847079">
+            </label>
+            <label>العملة
+              <input type="text" id="s-currency" maxlength="8" placeholder="د.ج">
+            </label>
+          </div>
+          <label>المعرّف <small>يظهر بجانب الاسم وفي الشريط المتحرّك</small>
+            <input type="text" id="s-handle" dir="ltr" maxlength="32" placeholder="@am_aya_x">
+          </label>
+
+          <h3>الحسابات</h3>
+          <p class="admin-hint">كل حساب تتركينه فارغاً يختفي زرّه من الموقع بدل أن يظهر رابطاً معطوباً.</p>
+          <label>انستقرام
+            <input type="url" id="s-instagram" dir="ltr" placeholder="https://www.instagram.com/…">
+          </label>
+          <label>تيك توك
+            <input type="url" id="s-tiktok" dir="ltr" placeholder="https://www.tiktok.com/@…">
+          </label>
+          <label>سناب شات
+            <input type="url" id="s-snapchat" dir="ltr" placeholder="https://www.snapchat.com/add/…">
+          </label>
+          <label>فيسبوك <small>اختياري</small>
+            <input type="url" id="s-facebook" dir="ltr" placeholder="https://www.facebook.com/…">
+          </label>
+
+          <h3>الشريط المتحرّك</h3>
+          <p class="admin-hint">الجمل التي تمرّ في أعلى الصفحة. معرّفكِ يُضاف في آخرها تلقائياً.</p>
+          <div class="admin-rows" id="ticker-rows"></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="ticker-add">أضيفي جملة</button>
+
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="store-save">حفظ</button>
+          </div>
+          <p class="admin-error" id="store-error" hidden></p>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-panel="texts" role="tabpanel" hidden>
+        <form class="admin-form" id="texts-form">
+          <h3>الواجهة</h3>
+          <p class="admin-hint">
+            ضعي الكلمة التي تريدينها <strong>مضيئة</strong> بين قوسين معقوفين هكذا:
+            <code dir="ltr">{وأناقتكِ}</code>. والسطر الجديد يقطع السطر في العنوان.
+          </p>
+          <label>السطر الصغير فوق العنوان
+            <input type="text" id="t-hero-kicker" maxlength="60">
+          </label>
+          <label>العنوان الكبير
+            <textarea id="t-hero-title" rows="2" maxlength="120"></textarea>
+          </label>
+          <label>الفقرة تحته
+            <textarea id="t-hero-text" rows="3" maxlength="300"></textarea>
+          </label>
+
+          <h3>قسم البيجامات</h3>
+          <label>العنوان <small>يظهر أيضاً في قائمة الموقع وزرّ الواجهة</small>
+            <input type="text" id="t-sleep-title" maxlength="40">
+          </label>
+          <label>السطر تحته
+            <textarea id="t-sleep-text" rows="2" maxlength="200"></textarea>
+          </label>
+
+          <h3>قسم اكسسوارات الهواتف</h3>
+          <label>العنوان
+            <input type="text" id="t-phones-title" maxlength="40">
+          </label>
+          <label>السطر تحته
+            <textarea id="t-phones-text" rows="2" maxlength="200"></textarea>
+          </label>
+
+          <h3>التذييل</h3>
+          <label>تعريف المتجر أسفل الصفحة
+            <textarea id="t-foot-text" rows="3" maxlength="300"></textarea>
+          </label>
+
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="texts-save">حفظ</button>
+            <button class="btn btn-ghost" type="button" id="texts-reset">استرجاع النصّ الأصلي</button>
+          </div>
+          <p class="admin-error" id="texts-error" hidden></p>
+        </form>
+      </section>
+
+      <section class="admin-panel" data-panel="videos" role="tabpanel" hidden>
+        <form class="admin-form" id="videos-form">
+          <h3>الفيديوهات</h3>
+          <p class="admin-hint">
+            معرّف الفيديو هو آخر الرابط لا الرابط كلّه: في تيك توك الأرقام بعد
+            <code dir="ltr">/video/</code>، وفي انستقرام الرمز بعد <code dir="ltr">/reel/</code>.
+            واتركيه فارغاً ليظهر مكانه تمهيد بلون الموقع بدل إطار معطوب.
+          </p>
+          <div class="admin-rows" id="video-rows"></div>
+          <button class="btn btn-ghost btn-sm" type="button" id="video-add">أضيفي فيديو</button>
+          <div class="admin-actions">
+            <button class="btn btn-hot" type="submit" id="videos-save">حفظ</button>
+          </div>
+          <p class="admin-error" id="videos-error" hidden></p>
+        </form>
+      </section>
+
+      <button class="btn btn-ghost btn-wide" id="admin-signout">خروج</button>
+    </div>
+   </div>
+  </div>
+</aside>
+
+<noscript>
+  <div class="wrap" style="padding:48px 20px; text-align:center;">
+    <p>لعرض المنتجات وإرسال الطلبات يلزم تفعيل جافاسكربت. للتواصل المباشر راسلينا على واتساب
+    (‎+213 696 847 079‎) أو تابعينا على انستقرام <strong dir="ltr">@am_aya_x</strong>
+    وعلى سناب شات <strong dir="ltr">aichocha2005</strong>.</p>
+  </div>
+</noscript>
+
+<script>
+  /* ==========================================================================
+     بيانات المتجر.
+
+     هذه قيم البداية فقط. ما تحفظه صاحبة المتجر من **لوحة التحكّم** يُخزَّن في
+     الوسم ‎#settings‎ أسفل الصفحة ويحلّ محلّ ما هنا عند كل فتح — فلا حاجة
+     لتعديل هذا الملفّ بعد اليوم.
+     ========================================================================== */
+
+  const STORE = {
+    brand: 'أم عمر',
+    // رقم الواتساب بالصيغة الدولية، أرقاماً فقط بدون + ولا مسافات.
+    phone: '213696847079',
+    instagram: 'https://www.instagram.com/am_aya_x',
+    // تيك توك مُزال بطلب صاحبة المتجر. الخانة باقية في لوحة التحكّم، فإن
+    // عادت ألصقت الرابط هناك وعاد الزرّ وحده.
+    tiktok: '',
+    // معرّف سناب شات مختلف عن معرّف انستقرام، فلكلٍّ رابطه.
+    snapchat: 'https://www.snapchat.com/add/aichocha2005',
+    facebook: '',
+    handle: '@am_aya_x',
+    currency: 'د.ج',
+  };
+
+  // نصوص الصفحة التي تُحرَّر من اللوحة. مفاتيحها هي معرّفات العناصر في الصفحة.
+  const TEXTS = {
+    'hero-kicker':  'Om Omar · راحتك وهاتفك',
+    'hero-title':   'راحتكِ في البيت {وأناقتكِ}\nفي مكان واحد.',
+    'hero-text':    'بيجامات وملابس نوم نسائية، واكسسوارات الهواتف الذكية. اختاري، أضيفي إلى السلة، وأرسلي طلبكِ في رسالة واتساب واحدة.',
+    'sleep-title':  'بيجامات وملابس نوم',
+    'sleep-text':   'كل قطعة بسعرها الواضح ومقاساتها — بلا مفاجآت عند الطلب.',
+    'phones-title': 'اكسسوارات الهواتف الذكية',
+    'phones-text':  'أغطية وحوامل وسمّاعات وشواحن — تكمّل هاتفكِ وتحميه.',
+    'foot-text':    'بيجامات وملابس نوم نسائية واكسسوارات الهواتف الذكية. توصيل لكل الولايات، والدفع عند الاستلام.',
+  };
+
+  // الجمل التي تمرّ في الشريط العلوي.
+  let TICKER = [
+    'توصيل لكل ولايات الوطن',
+    'الدفع عند الاستلام',
+    'أقمشة مريحة',
+    'جديد كل أسبوع',
+  ];
+
+  /* --- البيجامات وملابس النوم -------------------------------------------
+     id       : معرّف فريد لا يتكرّر (تستعمله السلة).
+     glyph    : الرسم الظاهر مكان الصورة — القائمة الكاملة في README.
+     image    : رابط صورة المنتج (اختياري) — يحلّ محلّ الرسم عند وجوده.
+     was      : السعر قبل التخفيض (اختياري) — يُظهر شارة «خصم ٪»، أو 0.
+     badge    : شارة نصّية مثل 'جديد' (اختياري).
+     tiktok / instagram : رابط فيديو المنتج على المنصّة (اختياري).            */
+  const SLEEPWEAR = [
+    // ↓ احذفي الشرطتين المائلتين من أول السطر التالي، واملأيه ببيانات منتجكِ الأول.
+    //   ثم انسخيه لكل منتج جديد، واحرصي أن يكون id مختلفاً في كل مرّة.
+    //   الرسوم المتاحة هنا: pjset / gown / robe / pants / shorts / socks / hanger
+    // { id:'',  name:'',  category:'',  price:0,  was:0,  badge:'',  glyph:'pjset',  image:'',  tiktok:'',  instagram:'' },
+  ];
+
+  /* --- اكسسوارات الهواتف الذكية -----------------------------------------
+     نفس الحقول تماماً. الفئة تظهر فوق اسم المنتج، ولها هويّة لونية فيروزية. */
+  const PHONE = [
+    // ↓ نفس الطريقة تماماً، والرسوم المتاحة هنا: phone / ring / earbuds / powerbank
+    //   / carmount / strap / cable / ringlight
+    // { id:'',  name:'',  category:'',  price:0,  was:0,  badge:'',  glyph:'phone',  image:'',  tiktok:'',  instagram:'' },
+  ];
+
+  /* --- الفيديوهات --------------------------------------------------------
+     embedId : معرّف الفيديو فقط — لا الرابط كاملاً.
+               تيك توك:   https://www.tiktok.com/@am_aya_x/video/7412345678901234567  ←  7412345678901234567
+               انستقرام:  https://www.instagram.com/reel/Cx1y2Z3aBcD/                 ←  Cx1y2Z3aBcD
+     url     : رابط الفيديو كاملاً لزر «شاهدي على…». إن تُرك فارغاً يفتح الزرّ حسابكِ.
+     اتركي embedId فارغاً ليظهر مكان الفيديو تمهيد بلون الموقع بدل إطار معطوب.        */
+  let VIDEOS = [
+    { platform:'instagram', embedId:'', url:'', title:'طقم بيجامة صيفي — القماش على الطبيعة', text:'قطن خفيف، ألوان هادئة، ومقاسات لكل القياسات.' },
+    { platform:'instagram', embedId:'', url:'', title:'كيف تختارين مقاسكِ من البيت',            text:'قياسان فقط بشريط القياس، وتعرفين مقاسكِ.' },
+    { platform:'instagram', embedId:'', url:'', title:'اكسسوارات هاتف تغيّر شكله كلياً',        text:'غطاء وحامل وخيط — تركيبة واحدة أنيقة.' },
+  ];
+
+  /* ==========================================================================
+     ما بعد هذا السطر لا يحتاج تعديلاً.
+     ========================================================================== */
+
+  /* رسوم خطّية — لا رموز تعبيرية، فتبقى متّسقة وتقبل التلوين */
+  const LINE = {
+    /* بيجامات وملابس نوم */
+    pjset:'<path d="M8.6 3.4h6.8l4.4 2.6-1.8 3.8-2.2-1v11.8H8.2V8.8l-2.2 1L4.2 6Z"/><path d="M9.4 3.4a2.6 2.6 0 0 0 5.2 0"/>',
+    gown:'<path d="M9.2 3.4h5.6l1.6 4.4-.9 12.8H8.5L7.6 7.8Z"/><path d="M9.6 3.4 12 6.4l2.4-3"/>',
+    robe:'<path d="M8.8 3.4h6.4l4.2 2.6-1.7 3.8-2.1-1v12.6H8.4V8.8l-2.1 1L4.6 6Z"/><path d="M9.2 4 15.2 10.6"/><path d="M8.4 14.4h7.2"/>',
+    pants:'<path d="M7.2 3.4h9.6l.7 17.2h-3.9L12 10.4l-1.6 10.2H6.5Z"/><path d="M7.2 6.6h9.6"/>',
+    shorts:'<path d="M7 3.4h10l.9 11.4h-4.3L12 8.8l-1.6 6H6.1Z"/><path d="M7 6.6h10"/>',
+    socks:'<path d="M8.4 3.4h5.2v8.6l3.9 2.8a3.3 3.3 0 0 1-3.8 5.4l-4.4-3.1a2.6 2.6 0 0 1-.9-2.1V3.4Z"/><path d="M8.4 6.8h5.2"/>',
+    hanger:'<path d="M12 8.4V7.2A2.4 2.4 0 1 1 14.4 4.8"/><path d="M12 8.4 3.8 14.6a1.3 1.3 0 0 0 .8 2.4h14.8a1.3 1.3 0 0 0 .8-2.4L12 8.4Z"/>',
+
+    /* اكسسوارات الهواتف */
+    phone:'<rect x="6.2" y="2.4" width="11.6" height="19.2" rx="3"/><circle cx="9.6" cy="6.4" r="1.25"/><path d="M10.6 19h2.8"/>',
+    ring:'<rect x="6.4" y="2.5" width="11.2" height="19" rx="3"/><circle cx="12" cy="12" r="3.3"/>',
+    earbuds:'<path d="M7.4 3.6a3 3 0 0 1 3 3v3.1a3 3 0 1 1-6 0V6.6a3 3 0 0 1 3-3Z"/><path d="M4.4 9.7v6.5a2.2 2.2 0 0 0 2.2 2.2h.5"/><path d="M16.6 3.6a3 3 0 0 1 3 3v3.1a3 3 0 1 1-6 0V6.6a3 3 0 0 1 3-3Z"/><path d="M19.6 9.7v6.5a2.2 2.2 0 0 1-2.2 2.2h-.5"/>',
+    powerbank:'<rect x="5.6" y="2.6" width="12.8" height="18.8" rx="2.8"/><path d="M9.4 5.4h5.2"/><path d="M13.1 9.1 10 13.4h3.6l-2.7 4.2"/>',
+    carmount:'<rect x="7.4" y="2.6" width="9.2" height="13.6" rx="2.2"/><path d="M12 16.2v2.4"/><path d="M6.6 21.4a5.4 5.4 0 0 1 10.8 0Z"/>',
+    strap:'<rect x="6.6" y="2.6" width="10.8" height="14.6" rx="2.6"/><path d="M8.6 17.2c0 2.3 1.5 3.6 3.4 3.6s3.4-1.3 3.4-3.6"/><path d="M12 20.8v.8"/>',
+    cable:'<path d="M9.4 2.8h5.2v3.6H9.4z"/><path d="M12 6.4v3.2"/><path d="M8.6 9.6h6.8v3.2a3.4 3.4 0 0 1-3.4 3.4 3.4 3.4 0 0 1-3.4-3.4V9.6Z"/><path d="M12 16.2v5"/>',
+    ringlight:'<circle cx="12" cy="9.6" r="6.2"/><circle cx="12" cy="9.6" r="2.6"/><path d="M12 15.8v3.4"/><path d="M8.6 21.4h6.8"/>',
+
+    /* عامّة */
+    truck:'<path d="M2.8 6.6h10.4v9.8H2.8z"/><path d="M13.2 10.2h3.9l3.1 3v3.2h-7Z"/><circle cx="6.6" cy="18.4" r="1.9"/><circle cx="16.6" cy="18.4" r="1.9"/>',
+    cash:'<rect x="2.6" y="6.2" width="18.8" height="11.6" rx="2.2"/><circle cx="12" cy="12" r="2.7"/><path d="M6.2 9.6v4.8M17.8 9.6v4.8"/>',
+    shield:'<path d="M12 2.9 20 6v5.7c0 4.3-3.2 7.7-8 9.4-4.8-1.7-8-5.1-8-9.4V6l8-3.1Z"/><path d="m8.7 11.9 2.3 2.3 4.3-4.3"/>',
+    chat:'<path d="M20.8 11.6c0 4.2-3.9 7.6-8.8 7.6a10 10 0 0 1-2.6-.34L4 20.8l1.5-4.1a7.2 7.2 0 0 1-2.3-5.1C3.2 7.4 7.1 4 12 4s8.8 3.4 8.8 7.6Z"/>',
+    cart:'<path d="M2.9 3.7h2.2l2.3 10.6a2 2 0 0 0 2 1.6h7.1a2 2 0 0 0 2-1.53L20.5 8.1H6.2"/><circle cx="10" cy="20" r="1.5"/><circle cx="17" cy="20" r="1.5"/>',
+    play:'<path d="M8.6 5.6v12.8L19.4 12 8.6 5.6Z"/>',
+    check:'<path d="M20 6.5 9.6 17 4 11.4"/>',
+    spark:'<path d="M12 2.6 14 9l6.4 2-6.4 2-2 6.4-2-6.4L3.6 11 10 9l2-6.4Z"/>',
+  };
+
+  // الرسوم الطويلة الضيّقة مرسومة في شريط ضيّق من مربّع 24×24، فلو عُرضت بالمربّع
+  // كاملاً بدت شريحة رفيعة داخل إطارها. لكل منها إطار أضيق، وسماكة الخطّ تُقسَم
+  // على معامل التكبير حتى تبقى السماكة الظاهرة واحدة في كل الرسوم.
+  const BOX = {
+    pjset:[3.4, 2.8, 17, 18.4],
+    gown:[6.8, 2.6, 10.4, 18.6],
+    robe:[4, 3, 16, 18.8],
+    shorts:[5.5, 2.8, 13, 12.6],
+    socks:[7.4, 2.8, 11.6, 18.4],
+    pants:[5.7, 2.8, 12.6, 18.4],
+    hanger:[3, 2.2, 18, 15.6],
+    phone:[5.4, 1.6, 13.2, 20.8],
+    ring:[5.6, 1.7, 12.8, 20.6],
+    carmount:[6, 1.8, 12, 20.4],
+    strap:[5.8, 1.8, 12.4, 20.6],
+    powerbank:[4.8, 1.8, 14.4, 20.4],
+    cable:[7.8, 2, 8.4, 20],
+  };
+
+  const line = (name, size = 22, width = 1.6) => {
+    const box = BOX[name] || [0, 0, 24, 24];
+    const scale = 24 / Math.max(box[2], box[3]);
+    return `<svg width="${size}" height="${size}" viewBox="${box.join(' ')}" fill="none" stroke="currentColor" stroke-width="${(width / scale).toFixed(2)}" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${LINE[name] || ''}</svg>`;
+  };
+
+  const SOLID = {
+    facebook:'<path d="M24 12.07C24 5.4 18.63 0 12 0S0 5.4 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.05V9.41c0-3.02 1.79-4.69 4.53-4.69 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.96.93-1.96 1.89v2.25h3.33l-.53 3.49h-2.8V24C19.61 23.1 24 18.1 24 12.07Z"/>',
+    snapchat:'<path d="M12 2.6c3.2 0 5.5 2.4 5.5 5.6v2.4c0 1.4.5 2.6 1.4 3.6.4.5.2 1.2-.4 1.4l-1.5.5a.9.9 0 0 0-.6.7l-.2 1c-.1.5-.6.8-1.1.6l-1.3-.4a2 2 0 0 0-1.7.3l-1.3.9c-.5.3-1.1.3-1.6 0l-1.3-.9a2 2 0 0 0-1.7-.3l-1.3.4c-.5.2-1-.1-1.1-.6l-.2-1a.9.9 0 0 0-.6-.7l-1.5-.5c-.6-.2-.8-.9-.4-1.4.9-1 1.4-2.2 1.4-3.6V8.2c0-3.2 2.3-5.6 5.5-5.6Z"/>',
+    whatsapp:'<path d="M12.04 2C6.58 2 2.13 6.45 2.13 11.91c0 1.75.46 3.45 1.32 4.95L2 22l5.25-1.38a9.9 9.9 0 0 0 4.79 1.22h.01c5.46 0 9.91-4.45 9.91-9.91C21.96 6.45 17.5 2 12.04 2Zm0 18.02h-.01a8.2 8.2 0 0 1-4.19-1.15l-.3-.18-3.12.82.83-3.04-.2-.31a8.2 8.2 0 0 1-1.26-4.37c0-4.54 3.7-8.23 8.25-8.23 2.2 0 4.27.86 5.83 2.42a8.18 8.18 0 0 1 2.41 5.82c0 4.54-3.7 8.22-8.24 8.22Zm4.52-6.16c-.25-.12-1.47-.72-1.69-.81-.23-.08-.39-.12-.56.13-.16.24-.64.8-.78.97-.14.16-.29.18-.54.06-.25-.13-1.05-.39-1.99-1.23-.74-.66-1.23-1.47-1.38-1.72-.14-.25-.01-.38.11-.5.11-.11.25-.29.37-.44.13-.15.17-.25.25-.41.08-.17.04-.31-.02-.44-.06-.12-.56-1.35-.77-1.85-.2-.48-.4-.41-.56-.42h-.47c-.16 0-.43.06-.65.31-.23.25-.86.84-.86 2.05s.88 2.38 1 2.54c.13.17 1.74 2.65 4.21 3.72.59.25 1.05.4 1.4.52.59.18 1.13.16 1.55.1.48-.07 1.47-.6 1.67-1.18.21-.58.21-1.08.15-1.18-.06-.11-.22-.17-.47-.29Z"/>',
+    tiktok:'<path d="M16.6 5.82A4.28 4.28 0 0 1 15.54 3h-3.09v12.4a2.59 2.59 0 0 1-2.59 2.5 2.59 2.59 0 1 1 .77-5.06v-3.1a5.66 5.66 0 0 0-.77-.05A5.68 5.68 0 1 0 15.54 15.4V9.01a7.35 7.35 0 0 0 4.3 1.38V7.3a4.3 4.3 0 0 1-3.24-1.48Z"/>',
+    instagram:'<path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07M12 0C8.74 0 8.33.01 7.05.07 5.78.13 4.9.33 4.14.63c-.79.3-1.46.72-2.13 1.38A5.9 5.9 0 0 0 .63 4.14c-.3.76-.5 1.64-.56 2.91C.01 8.33 0 8.74 0 12s.01 3.67.07 4.95c.06 1.27.26 2.15.56 2.91.3.79.72 1.46 1.38 2.13a5.9 5.9 0 0 0 2.13 1.38c.76.3 1.64.5 2.91.56C8.33 23.99 8.74 24 12 24s3.67-.01 4.95-.07c1.27-.06 2.15-.26 2.91-.56a5.9 5.9 0 0 0 2.13-1.38 5.9 5.9 0 0 0 1.38-2.13c.3-.76.5-1.64.56-2.91.06-1.28.07-1.69.07-4.95s-.01-3.67-.07-4.95c-.06-1.27-.26-2.15-.56-2.91a5.9 5.9 0 0 0-1.38-2.13A5.9 5.9 0 0 0 19.86.63c-.76-.3-1.64-.5-2.91-.56C15.67.01 15.26 0 12 0Zm0 5.84A6.16 6.16 0 1 0 18.16 12 6.16 6.16 0 0 0 12 5.84Zm0 10.16A4 4 0 1 1 16 12a4 4 0 0 1-4 4Zm7.85-10.41a1.44 1.44 0 1 1-1.44-1.44 1.44 1.44 0 0 1 1.44 1.44Z"/>',
+  };
+
+  const solid = (name, size = 20) =>
+    `<svg width="${size}" height="${size}" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${SOLID[name] || ''}</svg>`;
+
+  // تدرّج لوني لكل فئة — هو ما يعطي الشبكة حيويّتها
+  const GRADIENTS = {
+    'صيفي':    ['linear-gradient(135deg,#FB7185,#EC4899)', 'rgba(236,72,153,.3)'],
+    'شتوي':    ['linear-gradient(135deg,#A78BFA,#6D28D9)', 'rgba(109,40,217,.3)'],
+    'أطقم':    ['linear-gradient(135deg,#F472B6,#A855F7)', 'rgba(168,85,247,.3)'],
+    'قمصان':   ['linear-gradient(135deg,#5EEAD4,#22D3EE)', 'rgba(34,211,238,.3)'],
+    'روب':     ['linear-gradient(135deg,#FCD34D,#F59E0B)', 'rgba(245,158,11,.32)'],
+    'حرير':    ['linear-gradient(135deg,#FDA4AF,#F43F5E)', 'rgba(244,63,94,.3)'],
+    'قطن':     ['linear-gradient(135deg,#34D399,#A3E635)', 'rgba(52,211,153,.3)'],
+    'عائلية':  ['linear-gradient(135deg,#60A5FA,#8B5CF6)', 'rgba(96,165,250,.3)'],
+    'أغطية':   ['linear-gradient(135deg,#22D3EE,#6366F1)', 'rgba(99,102,241,.3)'],
+    'حوامل':   ['linear-gradient(135deg,#818CF8,#7C3AED)', 'rgba(124,58,237,.3)'],
+    'صوتيات':  ['linear-gradient(135deg,#34D399,#0EA5E9)', 'rgba(14,165,233,.3)'],
+    'شواحن':   ['linear-gradient(135deg,#FBBF24,#F97316)', 'rgba(249,115,22,.3)'],
+    'تصوير':   ['linear-gradient(135deg,#F0ABFC,#8B5CF6)', 'rgba(139,92,246,.3)'],
+  };
+  const gradFor = (cat) => GRADIENTS[cat] || ['linear-gradient(135deg,#EC4899,#8B5CF6)', 'rgba(236,72,153,.3)'];
+
+  const esc = (value) =>
+    String(value).replace(/[&<>"']/g, (c) =>
+      ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[c]);
+
+  // فاصل آلاف بمسافة غير فاصلة (U+00A0): المسافة العادية تقطع العدد إلى مقطعين
+  // فيعكس ترتيبَهما اتجاهُ الصفحة من اليمين، فيظهر 1600 هكذا: «600 1».
+  const num = (value) => String(value).replace(/\B(?=(\d{3})+(?!\d))/g, ' ');
+  const price = (value) => `${num(value)} ${STORE.currency}`;
+
+  // رقم واتساب صالح: أرقام فقط، من 8 إلى 15 خانة مع رمز الدولة.
+  // الرقم يُعدَّل من اللوحة، فيُحسَب عند كل استعمال لا مرّة واحدة عند التحميل.
+  const phoneReady = () => /^\d{8,15}$/.test(STORE.phone);
+  const wa = (text) => `https://wa.me/${STORE.phone}?text=${encodeURIComponent(text)}`;
+
+  // مصدر المنتجات: قاعدة البيانات متى اتّصلت، وإلا القائمتان المحلّيتان أعلاه.
+  // كل ما دون هذا السطر يقرأ عبر هذه الدوال لا عبر المصفوفتين مباشرة.
+  let LIVE = null;
+  const sleepwear = () => (LIVE ? LIVE.filter((p) => p.section !== 'phone') : SLEEPWEAR);
+  const phones = () => (LIVE ? LIVE.filter((p) => p.section === 'phone') : PHONE);
+  const all = () => [...sleepwear(), ...phones()];
+  const byId = (id) => all().find((p) => p.id === id);
+  const $ = (sel) => document.querySelector(sel);
+
+  // حالة الاتصال بقاعدة البيانات: idle قبل المحاولة، ready بعد أول قراءة، error عند الفشل.
+  const DB = { state: 'idle', detail: '', signedIn: false };
+
+  /* ---------- الشريط المتحرّك ---------- */
+
+  function renderTicker() {
+    const items = [
+      ...TICKER.map((t) => ({ text: t, ltr: false })),
+      STORE.handle && { text: STORE.handle, ltr: true },
+    ].filter(Boolean);
+    const group = `<div class="ticker-group">${items
+      .map((i) => `<span${i.ltr ? ' dir="ltr"' : ''}>${esc(i.text)}</span>`).join('')}</div>`;
+    // نسختان متطابقتان حتى يبدو الدوران متّصلاً بلا قفزة
+    $('#ticker').innerHTML = group + group;
+  }
+
+  /* ---------- الروابط ---------- */
+
+  function channels() {
+    return [
+      phoneReady() && { key:'whatsapp', label:'واتساب', href:wa(`السلام عليكم، لدي استفسار عن منتجات ${STORE.brand}.`) },
+      STORE.instagram && { key:'instagram', label:'انستقرام', href:STORE.instagram },
+      STORE.tiktok && { key:'tiktok', label:'تيك توك', href:STORE.tiktok },
+      STORE.snapchat && { key:'snapchat', label:'سناب شات', href:STORE.snapchat },
+      STORE.facebook && { key:'facebook', label:'فيسبوك', href:STORE.facebook },
+    ].filter(Boolean);
+  }
+
+  function renderChannels() {
+    const list = channels();
+
+    $('#nav-actions').innerHTML =
+      list.map((c) =>
+        `<a class="ico" href="${esc(c.href)}" target="_blank" rel="noopener" aria-label="${c.label}">${solid(c.key)}</a>`).join('') +
+      `<button class="ico cart-toggle" id="cart-toggle" aria-label="فتح سلة الطلب">
+         ${line('cart')}<span class="cart-dot" id="cart-dot" hidden>0</span>
+       </button>`;
+
+    $('#foot-social').innerHTML = list
+      .map((c) => `<a href="${esc(c.href)}" target="_blank" rel="noopener" aria-label="${c.label}">${solid(c.key, 19)}</a>`)
+      .join('');
+
+    $('#contact-row').innerHTML = list.length
+      ? list.map((c, i) =>
+          `<a class="btn ${i === 0 ? 'btn-wa' : 'btn-ghost-light'}" href="${esc(c.href)}" target="_blank" rel="noopener">${solid(c.key, 18)} ${c.label}</a>`).join('')
+      : '<button class="btn btn-ghost-light" disabled>لم تُضبط وسائل التواصل بعد</button>';
+
+    const follow = STORE.instagram || STORE.tiktok;
+    $('#follow-btn').innerHTML = follow
+      ? `<a class="btn btn-ghost btn-sm" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
+      : '';
+
+    $('#phones-cta').innerHTML = phoneReady()
+      ? `<a class="btn btn-cool btn-sm" href="${esc(wa('السلام عليكم، أبحث عن اكسسوار لهاتفي.'))}" target="_blank" rel="noopener">${solid('whatsapp', 16)} اسألي عن موديل هاتفكِ</a>`
+      : '';
+
+    [['#brand-handle'], ['#foot-handle'], ['#foot-handle-2']].forEach(([sel]) => {
+      const el = $(sel);
+      if (el) el.textContent = STORE.handle || '';
+    });
+  }
+
+  /* ---------- نصوص الصفحة ---------- */
+
+  // النصّ يُكتب كنصّ لا HTML، فما تكتبه صاحبة المتجر لا يُفسَّر وسوماً. ويبقى
+  // تمييزان اثنان: {كلمة} تُضاء، وسطر جديد يقطع السطر.
+  function styled(text) {
+    return esc(text)
+      .replace(/\{([^}]*)\}/g, '<span class="glow-text">$1</span>')
+      .replace(/\n/g, '<br>');
+  }
+
+  /* ---------- التثبيت على الشاشة الرئيسية ---------- */
+
+  // ‎?panel=1‎ يفتح لوحة التحكّم مباشرة، وهو أيضاً ما يُثبَّت أيقونةً مستقلّة:
+  // فتُبدَّل بيانات التثبيت كلّها لتصير أيقونة اللوحة واسمها لا أيقونة المتجر.
+  const PANEL_MODE = new URLSearchParams(location.search).get('panel') === '1';
+
+  function applyAppIdentity() {
+    const manifest = $('#app-manifest');
+    const icon = $('#app-touch-icon');
+    const iosTitle = $('#app-ios-title');
+    if (manifest) manifest.href = PANEL_MODE ? './admin.webmanifest' : './manifest.webmanifest';
+    if (icon) icon.href = PANEL_MODE ? './icons/admin-apple-touch-icon.png' : './icons/apple-touch-icon.png';
+    // الاسم تحت الأيقونة على الآيفون — يُقصَر إلى ١٢ محرفاً وإلا قُطع بثلاث نقاط.
+    if (iosTitle) {
+      const brand = (STORE.brand || 'المتجر').trim();
+      iosTitle.content = (PANEL_MODE ? `لوحة ${brand}` : brand).slice(0, 12).trim();
+    }
+  }
+
+  function renderTexts() {
+    Object.entries(TEXTS).forEach(([id, text]) => {
+      const el = document.getElementById(id);
+      if (el) el.innerHTML = styled(text);
+    });
+
+    const brand = STORE.brand || '';
+    ['#brand-name', '#foot-brand-name', '#foot-copy-name'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = brand;
+    });
+    // الحرف في الدائرة أول حرف من اسم المتجر — يتبعه إن تغيّر الاسم.
+    const mark = brand.trim()[0] || 'م';
+    ['#brand-mark', '#foot-mark'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = mark;
+    });
+
+    // عنوان قسم البيجامات يقود أيضاً روابط القائمة وزرّ الواجهة وعنوان التبويب،
+    // فلا تتناقض التسميات. يُؤخذ كما كتبته لا مقطوعاً: «ملابس النوم» كانت تصير «ملابس».
+    const sleep = (TEXTS['sleep-title'] || '').trim();
+    ['#nav-sleep', '#foot-sleep'].forEach((sel) => {
+      const el = $(sel);
+      if (el) el.textContent = sleep;
+    });
+    const cta = $('#hero-cta-1');
+    if (cta) cta.textContent = `تصفّحي ${sleep}`;
+
+    document.title = PANEL_MODE
+      ? `لوحة تحكّم ${brand}`
+      : `${brand} | ${sleep} واكسسوارات الهواتف`;
+    applyAppIdentity();
+  }
+
+  /* ---------- شريط الضمانات ---------- */
+
+  const ASSURANCES = [
+    { icon:'truck',  title:'توصيل لكل الولايات', text:'إلى باب المنزل أو مكتب التوصيل' },
+    { icon:'cash',   title:'الدفع عند الاستلام', text:'تدفعين بعد أن يصلكِ الطلب' },
+    { icon:'shield', title:'أقمشة مختارة',       text:'نجرّب القماش قبل أن نعرضه' },
+    { icon:'chat',   title:'رد سريع',            text:'نجيب على واتساب خلال ساعات' },
+  ];
+
+  function renderAssurances() {
+    $('#assure').innerHTML = ASSURANCES.map((a) => `
+      <div class="assure-item">
+        <span class="bubble">${line(a.icon, 22, 1.7)}</span>
+        <span><b>${esc(a.title)}</b><small>${esc(a.text)}</small></span>
+      </div>`).join('');
+  }
+
+  /* ---------- المنتجات ---------- */
+
+  let activeCategory = 'الكل';
+
+  function renderFilters() {
+    const cats = [...new Set(sleepwear().map((p) => p.category))];
+    // زرّ «الكل» وحده بلا فئات لا يصفّي شيئاً، فيُخفى شريط التصفية كلّه حتى تُضاف منتجات.
+    $('#filters').hidden = cats.length < 2;
+    $('#filters').innerHTML = ['الكل', ...cats].map((c) =>
+      `<button class="filter" data-cat="${esc(c)}" aria-pressed="${c === activeCategory}">${esc(c)}</button>`).join('');
+  }
+
+  function productCard(p) {
+    const [grad, glow] = gradFor(p.category);
+
+    const media = p.image
+      ? `<img src="${esc(p.image)}" alt="${esc(p.name)}" loading="lazy" data-glyph="${esc(p.glyph || 'spark')}">`
+      : `<span class="glyph">${line(p.glyph || 'spark', 110, 1.15)}</span>`;
+
+    const flags = [
+      p.badge && `<span class="flag">${esc(p.badge)}</span>`,
+      // «خصم 18٪» لا «−18٪»: علامة الناقص المنفردة يزحزحها اتجاه الصفحة إلى آخر الشارة
+      p.was > p.price && `<span class="flag flag-sale">خصم ${Math.round((1 - p.price / p.was) * 100)}٪</span>`,
+      (p.tiktok || p.instagram) && `<span class="flag flag-video">${line('play', 11, 2)} فيديو</span>`,
+    ].filter(Boolean).join('');
+
+    const label = `مراسلة عبر واتساب بخصوص ${p.name}`;
+    const order = phoneReady()
+      ? `<a class="btn btn-ghost btn-sm btn-icon" href="${esc(wa(`السلام عليكم، أريد طلب: ${p.name} — ${price(p.price)}.`))}" target="_blank" rel="noopener" aria-label="${esc(label)}" title="${esc(label)}">${solid('whatsapp', 17)}</a>`
+      : `<button class="btn btn-ghost btn-sm btn-icon" disabled aria-label="${esc(label)}" title="لم يُضبط رقم الواتساب بعد">${solid('whatsapp', 17)}</button>`;
+
+    const social = [
+      p.tiktok && `<a href="${esc(p.tiktok)}" target="_blank" rel="noopener">${solid('tiktok', 14)} تيك توك</a>`,
+      p.instagram && `<a href="${esc(p.instagram)}" target="_blank" rel="noopener">${solid('instagram', 14)} انستقرام</a>`,
+    ].filter(Boolean).join('');
+
+    return `
+      <article class="card" style="--card-grad:${grad}; --card-glow:${glow};">
+        <div class="card-media">
+          ${media}
+          ${flags ? `<div class="card-flags">${flags}</div>` : ''}
+        </div>
+        <div class="card-body">
+          <p class="card-cat">${esc(p.category)}</p>
+          <h3 class="card-name">${esc(p.name)}</h3>
+          <p class="card-price">
+            <b>${esc(price(p.price))}</b>
+            ${p.was > p.price ? `<del>${esc(price(p.was))}</del>` : ''}
+          </p>
+          <div class="card-links">
+            <button class="btn btn-hot btn-sm" data-add="${esc(p.id)}">أضيفي للسلة</button>
+            ${order}
+          </div>
+          ${social ? `<div class="card-social">${social}</div>` : ''}
+        </div>
+      </article>`;
+  }
+
+  function renderGrid() {
+    const list = sleepwear();
+    const shown = activeCategory === 'الكل'
+      ? list
+      : list.filter((p) => p.category === activeCategory);
+
+    $('#grid').innerHTML = shown.length
+      ? shown.map(productCard).join('')
+      : list.length
+        ? '<p class="empty">لا منتجات في هذه الفئة بعد.</p>'
+        : emptyState('البيجامات قيد التحضير', 'نختار الأقمشة والموديلات قبل عرضها. تابعينا ليصلكِ الجديد أوّلاً، أو راسلينا عمّا تبحثين عنه.');
+
+    // عدّاد بلا منتجات لا يقول شيئاً
+    $('#count-label').hidden = !list.length;
+    $('#count-label').textContent = `${num(shown.length)} من ${num(list.length)}`;
+  }
+
+  function renderPhones() {
+    const list = phones();
+    $('#phones-grid').innerHTML = list.length
+      ? list.map(productCard).join('')
+      : emptyState('الاكسسوارات قيد التحضير', 'أغطية وحوامل وسمّاعات وشواحن — قريباً. راسلينا وأخبرينا بموديل هاتفكِ وما تحتاجين.');
+  }
+
+  // حالة الفراغ: لا شبكة خالية ولا سطر جافّ، بل دعوة للتواصل ما دام الطلب عبر واتساب
+  function emptyState(title, text) {
+    const ask = phoneReady()
+      ? `<a class="btn btn-hot" href="${esc(wa(`السلام عليكم، متى تتوفّر منتجات ${STORE.brand}؟`))}" target="_blank" rel="noopener">${solid('whatsapp', 17)} راسلينا على واتساب</a>`
+      : '';
+    const follow = STORE.instagram || STORE.tiktok;
+    const followBtn = follow
+      ? `<a class="btn btn-ghost" href="${esc(follow)}" target="_blank" rel="noopener">تابعينا <span dir="ltr">${esc(STORE.handle || '')}</span></a>`
+      : '';
+
+    return `
+      <div class="empty">
+        <span class="empty-mark">${line('spark', 46, 1.3)}</span>
+        <h3>${esc(title)}</h3>
+        <p>${esc(text)}</p>
+        ${ask || followBtn ? `<div class="empty-cta">${ask}${followBtn}</div>` : ''}
+      </div>`;
+  }
+
+  /* ---------- لوحة الواجهة ---------- */
+
+  function renderCollage() {
+    $('#seal-core').innerHTML = `<svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">${LINE.spark}</svg>`;
+
+    const items = all();
+    const star = items.find((p) => p.was > p.price) || items[0];
+
+    // بلا منتجات: تبقى الكرة برمزها العام، وتُخفى بطاقة «الأكثر طلباً» وعدّاد المنتجات
+    // بدل أن تظهرا فارغتين.
+    $('#collage-orb').innerHTML = line(star ? star.glyph || 'spark' : 'spark', 240, 1);
+    $('#collage-card').hidden = !star;
+    $('#stat-products').hidden = !star;
+    if (!star) return;
+
+    $('#collage-tile').innerHTML = line(star.glyph || 'spark', 28, 1.6);
+    $('#collage-name').textContent = star.name;
+    $('#collage-price').textContent = price(star.price);
+    $('#stat-count').textContent = num(items.length);
+  }
+
+  /* ---------- الفيديوهات ---------- */
+
+  const PLATFORMS = {
+    tiktok: {
+      label:'تيك توك', tag:'tag-tiktok',
+      embed:(id) => `https://www.tiktok.com/embed/v2/${encodeURIComponent(id)}`,
+      profile:() => STORE.tiktok,
+    },
+    instagram: {
+      label:'انستقرام', tag:'tag-instagram',
+      embed:(id) => `https://www.instagram.com/reel/${encodeURIComponent(id)}/embed`,
+      profile:() => STORE.instagram,
+    },
+  };
+
+  function renderReels() {
+    $('#reels').innerHTML = VIDEOS.map((v) => {
+      const p = PLATFORMS[v.platform];
+      if (!p) return '';
+
+      const frame = v.embedId
+        ? `<iframe src="${esc(p.embed(v.embedId))}" title="${esc(v.title)}" loading="lazy" allow="autoplay; encrypted-media; picture-in-picture" allowfullscreen></iframe>`
+        : `<div class="reel-soon">${line('play', 34, 1.6)}<span>الفيديو قيد الإضافة</span></div>`;
+
+      const watch = v.url || p.profile();
+
+      return `
+        <article class="reel">
+          <div class="reel-frame">${frame}</div>
+          <div class="reel-body">
+            <span class="tag ${p.tag}">${solid(v.platform, 13)} ${p.label}</span>
+            <h3>${esc(v.title)}</h3>
+            <p>${esc(v.text)}</p>
+            ${watch ? `<a class="btn btn-ghost btn-sm" href="${esc(watch)}" target="_blank" rel="noopener">شاهدي على ${p.label}</a>` : ''}
+          </div>
+        </article>`;
+    }).join('');
+  }
+
+  /* ---------- السلة ---------- */
+
+  const CART_KEY = 'om-aya-cart-v1';
+  let cart = {};
+
+  function loadCart() {
+    try {
+      const saved = JSON.parse(localStorage.getItem(CART_KEY) || '{}');
+      // تُستبعد المنتجات المحذوفة من القائمة والكميات غير الصالحة.
+      return Object.fromEntries(
+        Object.entries(saved).filter(([id, qty]) => byId(id) && Number.isInteger(qty) && qty > 0));
+    } catch {
+      return {};
+    }
+  }
+
+  function saveCart() {
+    try {
+      localStorage.setItem(CART_KEY, JSON.stringify(cart));
+    } catch {
+      // قد يكون التخزين ممنوعاً (تصفّح خاص) — تبقى السلة في الذاكرة وحدها.
+    }
+  }
+
+  const lines = () => Object.entries(cart).map(([id, qty]) => ({ p: byId(id), qty }));
+  const total = () => lines().reduce((sum, l) => sum + l.p.price * l.qty, 0);
+  const count = () => lines().reduce((sum, l) => sum + l.qty, 0);
+
+  function setQty(id, qty) {
+    if (qty > 0) cart[id] = qty;
+    else delete cart[id];
+    saveCart();
+    renderCart();
+  }
+
+  function renderCart() {
+    const n = count();
+    const dot = $('#cart-dot');
+    dot.textContent = num(n);
+    dot.hidden = n === 0;
+    $('#cart-toggle').setAttribute('aria-label', n ? `فتح سلة الطلب — ${num(n)} منتج` : 'فتح سلة الطلب');
+
+    const rows = lines();
+    $('#drawer-body').innerHTML = rows.length
+      ? rows.map(({ p, qty }) => `
+          <div class="line">
+            <span class="line-tile" style="--card-grad:${gradFor(p.category)[0]};">${
+              p.image
+                ? `<img src="${esc(p.image)}" alt="" loading="lazy" data-glyph="${esc(p.glyph || 'spark')}">`
+                : line(p.glyph || 'spark', 32, 1.5)
+            }</span>
+            <span class="line-info">
+              <strong>${esc(p.name)}</strong>
+              <span>${esc(price(p.price * qty))}</span>
+            </span>
+            <span class="stepper">
+              <button data-dec="${esc(p.id)}" aria-label="إنقاص كمية ${esc(p.name)}">−</button>
+              <output aria-label="الكمية">${num(qty)}</output>
+              <button data-inc="${esc(p.id)}" aria-label="زيادة كمية ${esc(p.name)}">+</button>
+            </span>
+          </div>`).join('')
+      : `<div class="drawer-empty">${line('cart', 44, 1.3)}<p>السلة فارغة — أضيفي ما يعجبكِ أولاً.</p></div>`;
+
+    $('#sum-total').textContent = price(total());
+
+    const btn = $('#checkout');
+    btn.disabled = !rows.length || !phoneReady();
+    btn.title = phoneReady() ? '' : 'لم يُضبط رقم الواتساب بعد';
+    btn.innerHTML = `${solid('whatsapp', 18)} ${rows.length ? `إتمام الطلب (${num(n)})` : 'إتمام الطلب عبر واتساب'}`;
+  }
+
+  function orderMessage() {
+    return [
+      `السلام عليكم، أرغب في طلب ما يلي من ${STORE.brand}:`,
+      '',
+      ...lines().map(({ p, qty }) => `• ${p.name} × ${num(qty)} — ${price(p.price * qty)}`),
+      '',
+      `الإجمالي: ${price(total())}`,
+      '',
+      'الاسم:',
+      'الولاية / البلدية:',
+      'رقم الهاتف:',
+    ].join('\n');
+  }
+
+  /* ---------- الدرج والإشعار ---------- */
+
+  const veil = $('#veil');
+  const drawer = $('#drawer');
+  let lastFocused = null;
+
+  function openDrawer() {
+    lastFocused = document.activeElement;
+    veil.hidden = drawer.hidden = false;
+    // يُعرض العنصر أولاً ثم يبدأ الانتقال، وإلا قفز الدرج إلى مكانه دفعة واحدة.
+    requestAnimationFrame(() => {
+      veil.classList.add('open');
+      drawer.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+    $('#drawer-close').focus();
+  }
+
+  function closeDrawer() {
+    veil.classList.remove('open');
+    drawer.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!drawer.classList.contains('open')) veil.hidden = drawer.hidden = true;
+    }, 360);
+    if (lastFocused) lastFocused.focus();
+  }
+
+  let toastTimer;
+  function toast(message) {
+    const el = $('#toast');
+    el.firstElementChild.innerHTML = `${line('check', 17, 2.2)} ${esc(message)}`;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
+  }
+
+  /* ---------- تنبيه الإعداد ---------- */
+
+  // لا يُنبّه إلا على ما يكسر المتجر فعلاً. الفيديو الناقص له تمهيده الخاص.
+  // ونصّه يتبع حالة الاتصال: لا معنى لإرسالها إلى الملفّ وقاعدة البيانات موصولة.
+  function renderSetup() {
+    const contact = [
+      !phoneReady() && 'رقم الواتساب',
+      !STORE.instagram && 'رابط انستقرام',
+      !STORE.tiktok && 'رابط تيك توك',
+    ].filter(Boolean);
+
+    const parts = [];
+    if (contact.length) {
+      parts.push(`لم تُضبط بعد: ${esc(contact.join('، '))} — في <code>STORE</code> أعلى سكربت هذا الملف.`);
+    }
+    if (!all().length) {
+      parts.push(DB.state === 'ready'
+        ? 'لا منتجات بعد — افتحي <strong>لوحة الإدارة</strong> من أسفل الصفحة وأضيفي أول منتج.'
+        : DB.state === 'error'
+          ? `تعذّر الوصول إلى قاعدة بيانات المنتجات${DB.detail ? ` (${esc(DB.detail)})` : ''}.`
+          : 'لم تُربط قاعدة بيانات المنتجات بعد — املأي <code>firebase-config.js</code> بجانب هذا الملف.');
+    }
+
+    if (!parts.length) {
+      $('#setup').hidden = true;
+      return;
+    }
+
+    $('#setup-text').innerHTML = `${parts.join(' ')} ` +
+      '<strong>هذا السطر يراه أي زائر</strong>، ويزول وحده بعد المعالجة.';
+    $('#setup').hidden = false;
+  }
+
+  /* ---------- الحركة عند التمرير ---------- */
+
+  function observeRise() {
+    const items = document.querySelectorAll('.rise');
+    if (!('IntersectionObserver' in window) ||
+        window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      items.forEach((el) => el.classList.add('in'));
+      return;
+    }
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach((entry) => {
+        if (!entry.isIntersecting) return;
+        entry.target.classList.add('in');
+        io.unobserve(entry.target);
+      });
+    }, { threshold: .1, rootMargin: '0px 0px -8% 0px' });
+    items.forEach((el) => io.observe(el));
+  }
+
+  /* ---------- إعادة الرسم عند تغيّر المنتجات ---------- */
+
+  // كل ما يعتمد على المنتجات في مكان واحد، لتستدعيه طبقة قاعدة البيانات عند كل تحديث.
+  function renderCatalogue() {
+    // فئة كانت مختارة ثم حُذف آخر منتج فيها تترك الشبكة فارغة بلا سبب ظاهر.
+    if (activeCategory !== 'الكل' && !sleepwear().some((p) => p.category === activeCategory)) {
+      activeCategory = 'الكل';
+    }
+    renderFilters();
+    renderGrid();
+    renderPhones();
+    renderCollage();
+    renderSetup();
+    // منتج حُذف من المتجر يسقط من السلة المحفوظة كذلك.
+    cart = loadCart();
+    renderCart();
+  }
+
+  // الرسوم التي تُعرض في قائمة «الرسم» داخل لوحة الإدارة، بأسمائها العربية.
+  const PRODUCT_GLYPHS = [
+    ['pjset', 'طقم بيجامة'], ['gown', 'قميص نوم'], ['robe', 'روب'],
+    ['pants', 'سروال'], ['shorts', 'شورت'], ['socks', 'جوارب'],
+    ['hanger', 'علّاقة — عام'],
+    ['phone', 'غطاء هاتف'], ['ring', 'حامل حلقي'], ['earbuds', 'سمّاعات'],
+    ['powerbank', 'شاحن متنقّل'], ['carmount', 'حامل سيارة'], ['strap', 'خيط تعليق'],
+    ['cable', 'كابل شحن'], ['ringlight', 'حلقة إضاءة'], ['spark', 'عام'],
+  ];
+
+  // الواجهة التي تتعامل معها وحدة قاعدة البيانات أسفل الصفحة.
+  window.OmAya = {
+    setProducts(list) {
+      LIVE = Array.isArray(list) ? list : null;
+      renderCatalogue();
+    },
+    setState(state, detail = '') {
+      DB.state = state;
+      DB.detail = detail;
+      renderSetup();
+    },
+    setSignedIn(yes) {
+      DB.signedIn = !!yes;
+    },
+    panelMode: PANEL_MODE,
+    // كل ما تحفظه اللوحة من غير المنتجات يمرّ من هنا: بيانات المتجر ونصوصه
+    // وشريطه وفيديوهاته. القيم المفقودة تبقى على ما كانت.
+    setSettings(data) {
+      if (!data || typeof data !== 'object') return;
+      if (data.store && typeof data.store === 'object') Object.assign(STORE, data.store);
+      if (data.texts && typeof data.texts === 'object') Object.assign(TEXTS, data.texts);
+      if (Array.isArray(data.ticker) && data.ticker.length) TICKER = data.ticker.slice(0, 8);
+      if (Array.isArray(data.videos)) VIDEOS = data.videos.slice(0, 6);
+      renderTexts();
+      renderTicker();
+      renderChannels();
+      renderReels();
+      renderCatalogue();
+    },
+    get settings() {
+      return {
+        store: { ...STORE },
+        texts: { ...TEXTS },
+        ticker: [...TICKER],
+        videos: VIDEOS.map((v) => ({ ...v })),
+      };
+    },
+    get products() { return LIVE || []; },
+    get categories() { return [...new Set(all().map((p) => p.category))].filter(Boolean); },
+    glyphs: PRODUCT_GLYPHS,
+    glyph: (name, size = 24) => line(name || 'spark', size, 1.5),
+    gradient: (category) => gradFor(category)[0],
+    money: price,
+    toast,
+  };
+
+  /* ---------- التشغيل ---------- */
+
+  renderTexts();
+  renderTicker();
+  renderChannels();
+  renderAssurances();
+  renderReels();
+  cart = loadCart();
+  renderCatalogue();
+  // مرّة واحدة: عناصر الظهور التدريجي ثابتة في الصفحة، ولا يعيد رسمُ الشبكات إنشاءها.
+  observeRise();
+  $('#year').textContent = new Date().getFullYear();
+
+  // عامل الخدمة: يجعل المتجر يفتح دون إنترنت بعد أول زيارة، وهو شرط تثبيته
+  // تطبيقاً على أندرويد. يفشل بهدوء داخل المعاينة أو من ملفّ محلّي — وهذا متوقّع.
+  if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
+    addEventListener('load', () => {
+      navigator.serviceWorker.register('./sw.js').catch(() => {});
+    });
+  }
+
+  // رابط لا يشير إلى صورة (أو صورة حُذفت) يترك أيقونة مكسورة في البطاقة.
+  // يُستبدل بالرسم بهدوء. وحدث error لا يتصاعد، فيُلتقط في مرحلة الالتقاط.
+  document.addEventListener('error', (event) => {
+    const img = event.target;
+    if (!(img instanceof HTMLImageElement) || !img.dataset.glyph) return;
+    const inCard = !!img.closest('.card-media');
+    const span = document.createElement('span');
+    if (inCard) span.className = 'glyph';
+    span.innerHTML = line(img.dataset.glyph, inCard ? 110 : 32, inCard ? 1.15 : 1.5);
+    img.replaceWith(span);
+  }, true);
+
+  const nav = $('#nav');
+  const onScroll = () => nav.classList.toggle('stuck', window.scrollY > 8);
+  onScroll();
+  addEventListener('scroll', onScroll, { passive: true });
+
+  document.addEventListener('click', (event) => {
+    const filter = event.target.closest('[data-cat]');
+    if (filter) {
+      activeCategory = filter.dataset.cat;
+      document.querySelectorAll('.filter').forEach((b) =>
+        b.setAttribute('aria-pressed', b.dataset.cat === activeCategory));
+      renderGrid();
+      return;
+    }
+
+    const add = event.target.closest('[data-add]');
+    if (add) {
+      const id = add.dataset.add;
+      setQty(id, (cart[id] || 0) + 1);
+      toast(`أُضيف «${byId(id).name}» إلى السلة`);
+      return;
+    }
+
+    const inc = event.target.closest('[data-inc]');
+    if (inc) { setQty(inc.dataset.inc, (cart[inc.dataset.inc] || 0) + 1); return; }
+
+    const dec = event.target.closest('[data-dec]');
+    if (dec) { setQty(dec.dataset.dec, (cart[dec.dataset.dec] || 0) - 1); return; }
+
+    if (event.target.closest('#cart-toggle')) openDrawer();
+    if (event.target.closest('#drawer-close') || event.target === veil) closeDrawer();
+
+    if (event.target.closest('#checkout') && count() && phoneReady()) {
+      window.open(wa(orderMessage()), '_blank', 'noopener');
+    }
+  });
+
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+  });
+</script>
+
+<!-- المنتجات محفوظة هنا داخل الصفحة نفسها. لوحة الإدارة تعيد كتابة هذا السطر
+     وتحفظ نسخة جديدة من الصفحة، فيراها كل من يفتح الرابط. -->
+<script type="application/json" id="catalogue">[]</script>
+
+<!-- إعدادات المشروع. ملف منفصل ليملأه سكربت الإعداد وخطوة النشر تلقائياً.
+     لا يُستعمل إلا عند استضافة المتجر على نطاق حقيقي. -->
+<!-- إعدادات المتجر ونصوصه وفيديوهاته، كما حفظتها لوحة التحكّم. فارغ يعني
+     «استعملي القيم المكتوبة في السكربت أعلاه». -->
+<script type="application/json" id="settings">{}</script>
+
+<script src="./firebase-config.js"></script>
+
+<!-- ======================================================================
+     قاعدة بيانات المنتجات ولوحة الإدارة.
+     وحدة مستقلّة عمداً: إن تعذّر تحميلها أو لم تُضبط الإعدادات يبقى المتجر
+     يعمل بما في index.html من منتجات، ولا تنكسر الصفحة.
+     ====================================================================== -->
+<script type="module">
+  /* ======================================================================
+     مصدر المنتجات ولوحة الإدارة.
+
+     واجهتان خلفيتان بنفس اللوحة:
+
+     ١) «الصفحة تحفظ نفسها» — حين تعمل الصفحة داخل معاينة claude.ai. المنتجات
+        مخزّنة في الصفحة ذاتها (الوسم #catalogue)، وكل حفظ يكتب نسخة جديدة من
+        الصفحة فيراها كل من يفتح الرابط. لا حساب ولا كلمة مرور: المنصّة تعرف
+        صاحبة الصفحة، والزائرة تحصل على عرض للقراءة فقط.
+
+     ٢) Firestore — حين يُستضاف المتجر على نطاق حقيقي. هناك تعمل قاعدة
+        البيانات وتسجيل الدخول كالمعتاد.
+
+     تُختار الأولى إن كانت متاحة، وإلا الثانية. وإن تعذّرت الاثنتان يبقى المتجر
+     يعرض ما في الصفحة من منتجات ولا ينكسر.
+     ====================================================================== */
+
+  const UI = window.OmAya;
+  const $ = (sel) => document.querySelector(sel);
+
+  const el = {
+    veil: $('#admin-veil'), panel: $('#admin'), open: $('#admin-open'), close: $('#admin-close'),
+    status: $('#admin-status'), login: $('#admin-login'), manage: $('#admin-manage'),
+    who: $('#admin-who'), loginError: $('#admin-login-error'), formError: $('#admin-form-error'),
+    form: $('#admin-form'), formTitle: $('#admin-form-title'), reset: $('#f-reset'),
+    items: $('#admin-items'), count: $('#admin-count'), signout: $('#admin-signout'),
+    cats: $('#f-cats'), glyph: $('#f-glyph'), save: $('#f-save'),
+    uidBox: $('#admin-uid-box'), uid: $('#admin-uid'), uidNote: $('#admin-uid-note'),
+    uidCopy: $('#admin-uid-copy'), catalogue: $('#catalogue'), settingsTag: $('#settings'),
+    tabs: $('#admin-tabs'),
+    storeForm: $('#store-form'), storeError: $('#store-error'),
+    tickerRows: $('#ticker-rows'), tickerAdd: $('#ticker-add'),
+    textsForm: $('#texts-form'), textsError: $('#texts-error'), textsReset: $('#texts-reset'),
+    videosForm: $('#videos-form'), videosError: $('#videos-error'),
+    videoRows: $('#video-rows'), videoAdd: $('#video-add'),
+    photo: $('#f-photo'), photoPick: $('#f-photo-pick'), photoClear: $('#f-photo-clear'),
+    photoThumb: $('#f-photo-thumb'), photoNote: $('#f-photo-note'),
+  };
+
+  const showError = (node, message) => {
+    node.textContent = message;
+    node.hidden = !message;
+  };
+
+  /* ---------- المنتجات المخزّنة في الصفحة ---------- */
+
+  const clean = (v) => ({
+    id: String(v.id || ''),
+    section: v.section === 'phone' ? 'phone' : 'sleep',
+    name: String(v.name || ''),
+    category: String(v.category || ''),
+    price: Number(v.price) || 0,
+    was: Number(v.was) || 0,
+    badge: String(v.badge || ''),
+    glyph: String(v.glyph || 'spark'),
+    image: String(v.image || ''),
+    tiktok: String(v.tiktok || ''),
+    instagram: String(v.instagram || ''),
+    sort: Number(v.sort) || 0,
+  });
+
+  function readEmbedded() {
+    try {
+      const raw = JSON.parse(el.catalogue.textContent || '[]');
+      return Array.isArray(raw) ? raw.map(clean).filter((p) => p.id && p.name) : [];
+    } catch {
+      return [];
+    }
+  }
+
+  let products = readEmbedded().sort((a, b) => a.sort - b.sort);
+  if (products.length) UI.setProducts(products);
+
+  /* ---------- الإعدادات المخزّنة في الصفحة ---------- */
+
+  // ما حفظته اللوحة سابقاً. القيم الأصلية في السكربت أعلى الصفحة هي المرجع،
+  // وهذه تحلّ محلّ ما يقابلها منها فحسب — فلا يكسر مفتاحٌ ناقص شيئاً.
+  function readSettings() {
+    try {
+      const raw = JSON.parse((el.settingsTag && el.settingsTag.textContent) || '{}');
+      return raw && typeof raw === 'object' && !Array.isArray(raw) ? raw : {};
+    } catch {
+      return {};
+    }
+  }
+
+  if (Object.keys(readSettings()).length) UI.setSettings(readSettings());
+
+  // النسخة الحيّة من الإعدادات: المعروض على الصفحة الآن، لا المحفوظ وحده.
+  let settings = UI.settings;
+
+  /* ---------- الدرج ---------- */
+
+  let lastFocused = null;
+  const openPanel = () => {
+    lastFocused = document.activeElement;
+    el.veil.hidden = el.panel.hidden = false;
+    requestAnimationFrame(() => {
+      el.veil.classList.add('open');
+      el.panel.classList.add('open');
+    });
+    document.body.style.overflow = 'hidden';
+    el.close.focus();
+  };
+  const closePanel = () => {
+    el.veil.classList.remove('open');
+    el.panel.classList.remove('open');
+    document.body.style.overflow = '';
+    setTimeout(() => {
+      if (!el.panel.classList.contains('open')) el.veil.hidden = el.panel.hidden = true;
+    }, 360);
+    if (lastFocused) lastFocused.focus();
+  };
+
+  el.open.addEventListener('click', openPanel);
+  el.close.addEventListener('click', closePanel);
+  el.veil.addEventListener('click', closePanel);
+  document.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape' && el.panel.classList.contains('open')) closePanel();
+  });
+
+  // قائمة الرسوم تُبنى من نفس القائمة التي يستعملها المتجر، فلا تفترقان.
+  el.glyph.innerHTML = UI.glyphs
+    .map(([value, label]) => `<option value="${value}">${label}</option>`).join('');
+
+  /* ---------- الواجهة الخلفية الأولى: الصفحة تحفظ نفسها ---------- */
+
+  // الحاويات التي تُملأ وقت التشغيل. تُفرَّغ قبل حفظ نسخة جديدة حتى لا تُخزَّن
+  // الصفحة وفيها نسخة مرسومة من نفسها، فترسمها من جديد عند كل فتح.
+  const RENDERED = [
+    '#ticker', '#nav-actions', '#collage-orb', '#collage-tile', '#seal-core', '#assure',
+    '#filters', '#grid', '#phones-cta', '#phones-grid', '#follow-btn', '#reels',
+    '#contact-row', '#foot-social', '#drawer-body', '#f-cats', '#f-glyph', '#admin-items',
+    '#ticker-rows', '#video-rows',
+  ];
+
+  function pageSource() {
+    const doc = document.documentElement.cloneNode(true);
+
+    RENDERED.forEach((sel) => {
+      const node = doc.querySelector(sel);
+      if (node) node.innerHTML = '';
+    });
+
+    // حالة عابرة لا تُحفظ: أدراج مفتوحة، وقفل التمرير، ونصوص أخطاء.
+    doc.querySelectorAll('.open').forEach((n) => n.classList.remove('open'));
+
+    // disabled خاصيّة تنعكس على الوسم: زرّ الحفظ مُعطَّل أثناء الحفظ، والحفظ هو
+    // اللحظة التي تُنسخ فيها الصفحة — فكان يُخزَّن مُعطَّلاً فلا يعود يعمل أبداً.
+    doc.querySelectorAll('#f-save, #f-photo-pick, #store-save, #texts-save, #videos-save, #admin-login button')
+      .forEach((b) => b.removeAttribute('disabled'));
+    doc.querySelectorAll('details[open]').forEach((d) => d.removeAttribute('open'));
+    ['#admin', '#admin-veil', '#drawer', '#veil'].forEach((sel) => {
+      const n = doc.querySelector(sel);
+      if (n) n.setAttribute('hidden', '');
+    });
+    const body = doc.querySelector('body');
+    if (body) body.removeAttribute('style');
+    ['#admin-login-error', '#admin-form-error', '#store-error', '#texts-error', '#videos-error']
+      .forEach((sel) => {
+        const n = doc.querySelector(sel);
+        if (n) { n.textContent = ''; n.setAttribute('hidden', ''); }
+      });
+    // التبويب المفتوح حالة عابرة كذلك: تُحفظ الصفحة دائماً على تبويب المنتجات.
+    doc.querySelectorAll('#admin-tabs .admin-tab').forEach((t, i) =>
+      t.setAttribute('aria-selected', i === 0 ? 'true' : 'false'));
+    doc.querySelectorAll('.admin-panel').forEach((n, i) => {
+      if (i === 0) n.removeAttribute('hidden');
+      else n.setAttribute('hidden', '');
+    });
+    // مصغّر الصورة في النموذج نسخة ثانية من صورة ثقيلة — يُفرَّغ فلا يتضاعف حجم الصفحة.
+    const thumb = doc.querySelector('#f-photo-thumb');
+    if (thumb) { thumb.innerHTML = ''; thumb.setAttribute('hidden', ''); }
+
+    const data = doc.querySelector('#catalogue');
+    if (data) data.textContent = JSON.stringify(products);
+    const conf = doc.querySelector('#settings');
+    if (conf) conf.textContent = JSON.stringify(settings);
+
+    return `<!DOCTYPE html>\n${doc.outerHTML}`;
+  }
+
+  function pageBackend(artifact, canEdit) {
+    return {
+      kind: 'page',
+      needsLogin: false,
+      canEdit,
+      label: canEdit
+        ? 'كل حفظ يحدّث الصفحة فوراً لكل من يفتح الرابط.'
+        : 'هذه الصفحة للعرض فقط. صاحبة المتجر وحدها تعدّلها.',
+      // الصفحة تُنشر كاملة، فالمنتجات والإعدادات تُحفظان معاً مهما كان النداء.
+      async write() {
+        const html = pageSource();
+        // الصور مخزّنة داخل الصفحة، فللصفحة سقف. يُقال ذلك بوضوح قبل أن يرفضه الخادم.
+        if (html.length > 12 * 1024 * 1024) {
+          throw new Error('الصفحة امتلأت بالصور. احذفي صور بعض المنتجات أو استعملي روابط صور بدلاً منها.');
+        }
+        await artifact.publish(html);
+      },
+    };
+  }
+
+  /* ---------- الواجهة الخلفية الثانية: Firestore ---------- */
+
+  const cfg = window.OM_AYA_FIREBASE || {};
+  const cfgReady = ['apiKey', 'authDomain', 'projectId', 'appId']
+    .every((k) => typeof cfg[k] === 'string' && cfg[k].trim());
+
+  const SDK = 'https://cdn.jsdelivr.net/npm/firebase@11.1.0';
+  const mod = (name) => `${SDK}/${name}/+esm`;
+
+  const AUTH_ERRORS = {
+    'auth/invalid-email': 'صيغة البريد غير صحيحة.',
+    'auth/user-not-found': 'لا يوجد حساب بهذا البريد.',
+    'auth/wrong-password': 'كلمة المرور غير صحيحة.',
+    'auth/invalid-credential': 'البريد أو كلمة المرور غير صحيحة.',
+    'auth/too-many-requests': 'محاولات كثيرة — انتظري قليلاً ثم أعيدي المحاولة.',
+    'auth/network-request-failed': 'تعذّر الاتصال بالشبكة.',
+    'auth/operation-not-allowed': 'الدخول بالبريد وكلمة المرور غير مفعّل في مشروع Firebase.',
+    'auth/email-already-in-use': 'هذا البريد له حساب بالفعل — اضغطي «دخول» بدل «إنشاء حساب».',
+    'auth/weak-password': 'كلمة المرور قصيرة — ستّة أحرف على الأقل.',
+    'permission-denied': 'هذا الحساب غير مصرّح له بالتعديل بعد.',
+  };
+  const say = (err) => AUTH_ERRORS[err && err.code] || (err && err.message) || 'حدث خطأ غير متوقّع.';
+
+  async function firebaseBackend() {
+    let mods;
+    try {
+      mods = await Promise.all([import(mod('app')), import(mod('auth')), import(mod('firestore'))]);
+    } catch {
+      return null;
+    }
+
+    const [{ initializeApp }, authMod, dbMod] = mods;
+    const {
+      getAuth, signInWithEmailAndPassword, createUserWithEmailAndPassword,
+      signOut, onAuthStateChanged,
+    } = authMod;
+    const {
+      getFirestore, collection, doc, onSnapshot, query, orderBy,
+      setDoc, deleteDoc, serverTimestamp,
+    } = dbMod;
+
+    const app = initializeApp(cfg);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const shopDoc = doc(db, 'shop', 'omAya');
+    const ref = collection(db, 'shop', 'omAya', 'products');
+
+    // الإعدادات في مستند المتجر نفسه: تصل إلى كل من يفتح الصفحة كما تصل المنتجات.
+    onSnapshot(shopDoc, (snap) => {
+      const saved = snap.exists() ? (snap.data() || {}).settings : null;
+      if (saved) {
+        UI.setSettings(saved);
+        settings = UI.settings;
+        fillPanel();
+      }
+    }, () => { /* قراءة الإعدادات ليست حرجة — تبقى قيم الصفحة */ });
+
+    onSnapshot(query(ref, orderBy('sort', 'asc')), (snap) => {
+      products = snap.docs.map((d) => clean({ id: d.id, ...(d.data() || {}) }));
+      UI.setProducts(products);
+      UI.setState('ready');
+      renderList();
+    }, (err) => {
+      UI.setState('error', err.code || err.message);
+      el.status.textContent = `تعذّرت قراءة المنتجات: ${err.code || err.message}`;
+    });
+
+    let uid = '';
+    const back = {
+      kind: 'firebase',
+      needsLogin: true,
+      canEdit: false,
+      label: 'ادخلي بحسابك لتعديل المنتجات. الزائرات يرين المتجر بلا دخول.',
+      async write(product, removeId, conf) {
+        // نداء بإعدادات وحدها: تُكتب في مستند المتجر لا في المنتجات.
+        if (conf) {
+          await setDoc(shopDoc, { settings: conf, updatedAt: serverTimestamp() }, { merge: true });
+          return;
+        }
+        if (removeId) {
+          await deleteDoc(doc(ref, removeId));
+          return;
+        }
+        const { id, ...rest } = product;
+        await setDoc(doc(ref, id), { ...rest, updatedAt: serverTimestamp() }, { merge: true });
+      },
+      signIn: (email, pass) => signInWithEmailAndPassword(auth, email, pass),
+      signUp: (email, pass) => createUserWithEmailAndPassword(auth, email, pass),
+      signOut: () => signOut(auth),
+    };
+
+    onAuthStateChanged(auth, (user) => {
+      uid = user ? user.uid : '';
+      back.canEdit = !!user;
+      UI.setSignedIn(!!user);
+      el.who.textContent = user ? user.email || '' : '';
+      el.uidBox.hidden = !uid;
+      if (uid) {
+        el.uid.textContent = uid;
+        el.uidNote.textContent = 'معرّف حسابك — هو ما يُوضع في قواعد الأمان ليُسمح لكِ بالتعديل.';
+      }
+      applyBackend();
+    });
+
+    return back;
+  }
+
+  /* ---------- اختيار الواجهة ---------- */
+
+  let backend = null;
+
+  function applyBackend() {
+    if (!backend) return;
+    el.login.hidden = !backend.needsLogin || backend.canEdit;
+    el.manage.hidden = !backend.canEdit;
+    el.status.textContent = backend.label;
+    el.signout.hidden = backend.kind !== 'firebase';
+    el.uidBox.hidden = backend.kind !== 'firebase' || !el.uid.textContent;
+    showError(el.loginError, '');
+    if (backend.canEdit) {
+      renderList();
+      fillPanel();
+    }
+  }
+
+  async function detectPage() {
+    if (!window.claude || typeof window.claude.use !== 'function') return null;
+    try {
+      const artifact = await window.claude.use('artifact');
+      if (!artifact) return null;
+      let canEdit = true;
+      try {
+        const user = await window.claude.use('user');
+        if (user && typeof user.canEdit === 'function') canEdit = !!user.canEdit();
+      } catch { /* تعذّرت معرفة الصلاحية — تُترك المحاولة للحفظ نفسه */ }
+      return pageBackend(artifact, canEdit);
+    } catch {
+      return null;
+    }
+  }
+
+  (async () => {
+    backend = await detectPage();
+
+    if (!backend && cfgReady) backend = await firebaseBackend();
+
+    if (!backend) {
+      UI.setState(cfgReady ? 'error' : 'unconfigured');
+      el.status.textContent = cfgReady
+        ? 'تعذّر الوصول إلى خدمة حفظ المنتجات من هذه الصفحة.'
+        : 'لم تُربط وسيلة حفظ المنتجات بعد.';
+      return;
+    }
+
+    if (backend.kind === 'page') {
+      UI.setState('ready');
+      UI.setSignedIn(backend.canEdit);
+    }
+    applyBackend();
+
+    // الرابط ‎?panel=1‎ هو ما يُثبَّت تطبيقاً للوحة، فيفتحها عند الإقلاع بدل
+    // أن تُفتح الصفحة على المتجر ثم يُبحث عن الرابط في أسفلها. ومن ليست له
+    // صلاحية يرى المتجر كأي زائرة، فالوضع لا يمنح شيئاً.
+    if (UI.panelMode && backend.canEdit) openPanel();
+  })();
+
+  /* ---------- صورة المنتج ---------- */
+
+  /* الصورة تُخزَّن داخل الصفحة نفسها (نصّاً بصيغة data:)، لأن المتجر يُدار من
+     هاتف ولا موقع رفع في الطريق. ولأنها تُحمَّل مع الصفحة عند كل فتح تُصغَّر
+     وتُضغط أولاً: أطول ضلع ٧٢٠ نقطة، وجودة تنزل تدريجياً حتى يصغر الحجم. */
+
+  const PHOTO_EDGE = 720;
+  const PHOTO_MAX = 180 * 1024;   // بالمحارف بعد الترميز — نحو ١٣٥ كيلوبايت فعلية
+
+  // صورة المنتج الحالي: رابط خارجي أو نصّ data: — فارغة تعني «بلا صورة».
+  let photo = '';
+
+  function showPhoto(src) {
+    photo = src || '';
+    el.photoThumb.innerHTML = photo
+      ? `<img src="${photo.replace(/"/g, '&quot;')}" alt="">` : '';
+    el.photoThumb.hidden = !photo;
+    el.photoClear.hidden = !photo;
+    el.photoPick.textContent = photo ? 'تغيير الصورة' : 'اختاري صورة من هاتفك';
+  }
+
+  function note(text, tone = '') {
+    el.photoNote.textContent = text;
+    el.photoNote.className = `admin-photo-note${tone ? ` ${tone}` : ''}`;
+  }
+
+  const NOTE_IDLE = 'تُصغَّر الصورة تلقائياً لتبقى الصفحة سريعة.';
+
+  function shrink(file) {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onerror = () => reject(new Error('تعذّرت قراءة الملف.'));
+      reader.onload = () => {
+        const img = new Image();
+        img.onerror = () => reject(new Error('هذا الملف ليس صورة يمكن عرضها.'));
+        img.onload = () => {
+          const scale = Math.min(1, PHOTO_EDGE / Math.max(img.width, img.height));
+          const w = Math.max(1, Math.round(img.width * scale));
+          const h = Math.max(1, Math.round(img.height * scale));
+          const canvas = document.createElement('canvas');
+          canvas.width = w;
+          canvas.height = h;
+          const ctx = canvas.getContext('2d');
+          // خلفية بيضاء: الشفافية في PNG تصير سواداً حين تُحوَّل إلى JPEG
+          ctx.fillStyle = '#fff';
+          ctx.fillRect(0, 0, w, h);
+          ctx.drawImage(img, 0, 0, w, h);
+          let quality = 0.82;
+          let out = canvas.toDataURL('image/jpeg', quality);
+          while (out.length > PHOTO_MAX && quality > 0.4) {
+            quality -= 0.12;
+            out = canvas.toDataURL('image/jpeg', quality);
+          }
+          resolve(out);
+        };
+        img.src = reader.result;
+      };
+      reader.readAsDataURL(file);
+    });
+  }
+
+  el.photoPick.addEventListener('click', () => el.photo.click());
+
+  el.photoClear.addEventListener('click', () => {
+    showPhoto('');
+    $('#f-image').value = '';
+    el.photo.value = '';
+    note(NOTE_IDLE);
+  });
+
+  el.photo.addEventListener('change', async () => {
+    const file = el.photo.files && el.photo.files[0];
+    if (!file) return;
+    note('جارٍ تجهيز الصورة…', 'busy');
+    el.photoPick.disabled = true;
+    try {
+      const src = await shrink(file);
+      showPhoto(src);
+      $('#f-image').value = '';
+      note(`جاهزة — ${Math.round(src.length / 1024)} كيلوبايت تقريباً.`);
+    } catch (err) {
+      note(err.message || 'تعذّر تجهيز الصورة.', 'bad');
+    } finally {
+      el.photoPick.disabled = false;
+      // تفريغ الحقل حتى يُقبل اختيار الملفّ نفسه مرّة ثانية
+      el.photo.value = '';
+    }
+  });
+
+  // رابط مكتوب باليد يحلّ محلّ الصورة المختارة، ويظهر في المعاينة نفسها.
+  $('#f-image').addEventListener('change', () => {
+    const url = $('#f-image').value.trim();
+    if (url) showPhoto(url);
+    else if (photo.startsWith('http')) showPhoto('');
+  });
+
+  /* ---------- النموذج ---------- */
+
+  let editingId = null;
+
+  const fields = {
+    section: $('#f-section'), name: $('#f-name'), category: $('#f-category'),
+    price: $('#f-price'), was: $('#f-was'), glyph: el.glyph, image: $('#f-image'),
+    badge: $('#f-badge'), tiktok: $('#f-tiktok'), instagram: $('#f-instagram'),
+  };
+
+  function fillForm(p) {
+    editingId = p ? p.id : null;
+    fields.section.value = p ? p.section : 'sleep';
+    fields.name.value = p ? p.name : '';
+    fields.category.value = p ? p.category : '';
+    fields.price.value = p ? p.price : '';
+    fields.was.value = p && p.was ? p.was : '';
+    fields.glyph.value = p ? p.glyph : 'pjset';
+    // الصورة المخزّنة داخل الصفحة نصّ طويل لا يُعرض في خانة رابط؛ يُعرض مصغّرها وحده.
+    const img = p ? p.image : '';
+    fields.image.value = img.startsWith('data:') ? '' : img;
+    showPhoto(img);
+    note(NOTE_IDLE);
+    fields.badge.value = p ? p.badge : '';
+    fields.tiktok.value = p ? p.tiktok : '';
+    fields.instagram.value = p ? p.instagram : '';
+    el.formTitle.textContent = p ? `تعديل: ${p.name}` : 'منتج جديد';
+    el.reset.hidden = !p;
+    showError(el.formError, '');
+  }
+
+  el.reset.addEventListener('click', () => fillForm(null));
+
+  el.form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.formError, '');
+    if (!backend || !backend.canEdit) return;
+
+    const price = Number(fields.price.value);
+    const was = Number(fields.was.value) || 0;
+    if (!Number.isFinite(price) || price < 0) {
+      showError(el.formError, 'السعر يجب أن يكون رقماً.');
+      return;
+    }
+    // «قبل التخفيض» أصغر من السعر يعطي شارة خصم بالسالب، فيُرفض قبل الحفظ.
+    if (was && was <= price) {
+      showError(el.formError, 'سعر ما قبل التخفيض يجب أن يكون أكبر من السعر الحالي.');
+      return;
+    }
+
+    const product = clean({
+      id: editingId || `p${Date.now().toString(36)}`,
+      section: fields.section.value,
+      name: fields.name.value.trim(),
+      category: fields.category.value.trim(),
+      price, was,
+      glyph: fields.glyph.value,
+      // الصورة المختارة من الهاتف تسبق الرابط المكتوب، وهي ما تراه في المعاينة.
+      image: photo || fields.image.value.trim(),
+      badge: fields.badge.value.trim(),
+      tiktok: fields.tiktok.value.trim(),
+      instagram: fields.instagram.value.trim(),
+      sort: editingId ? (products.find((p) => p.id === editingId) || {}).sort || Date.now() : Date.now(),
+    });
+
+    el.save.disabled = true;
+    const before = products;
+    try {
+      // في واجهة الصفحة تُحدَّث القائمة ثم تُحفظ؛ وفي Firestore يعيدها الاشتراك.
+      if (backend.kind === 'page') {
+        products = [...products.filter((p) => p.id !== product.id), product]
+          .sort((a, b) => a.sort - b.sort);
+        UI.setProducts(products);
+      }
+      await backend.write(product);
+      UI.toast(editingId ? 'حُفظ التعديل' : 'أُضيف المنتج');
+      fillForm(null);
+      renderList();
+    } catch (err) {
+      products = before;
+      UI.setProducts(products);
+      renderList();
+      showError(el.formError, say(err));
+    } finally {
+      el.save.disabled = false;
+    }
+  });
+
+  /* ---------- القائمة ---------- */
+
+  function renderList() {
+    if (!el.items) return;
+
+    el.cats.innerHTML = UI.categories.map((c) => `<option value="${c}"></option>`).join('');
+    el.count.textContent = products.length ? `(${products.length})` : '';
+
+    if (!products.length) {
+      el.items.innerHTML = '<p class="admin-empty">لا منتجات بعد. املأي النموذج أعلاه واضغطي «حفظ المنتج».</p>';
+      return;
+    }
+
+    el.items.innerHTML = products.map((p) => `
+      <div class="admin-item" data-id="${p.id}">
+        <span class="tile" style="--card-grad:${UI.gradient(p.category)};">${
+          p.image
+            ? `<img src="${p.image}" alt="" loading="lazy" data-glyph="${p.glyph || 'spark'}">`
+            : UI.glyph(p.glyph, 22)
+        }</span>
+        <span class="info"><strong></strong><small></small></span>
+        <span class="row-actions">
+          <button type="button" data-edit="${p.id}" aria-label="تعديل">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 20l1-4L16.5 4.5a2.1 2.1 0 0 1 3 3L8 19l-4 1Z"/><path d="M14.5 6.5l3 3"/></svg>
+          </button>
+          <button type="button" class="danger" data-del="${p.id}" aria-label="حذف">
+            <svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>
+          </button>
+        </span>
+      </div>`).join('');
+
+    // الاسم والفئة يُكتبان نصّاً لا HTML، فلا يُفسَّر ما تكتبه صاحبة المتجر كوسوم.
+    products.forEach((p) => {
+      const row = el.items.querySelector(`[data-id="${CSS.escape(p.id)}"]`);
+      if (!row) return;
+      row.querySelector('strong').textContent = p.name;
+      row.querySelector('small').textContent =
+        `${p.section === 'phone' ? 'هواتف' : 'بيجامات'} · ${p.category} · ${UI.money(p.price)}`;
+    });
+  }
+
+  el.items.addEventListener('click', async (e) => {
+    const edit = e.target.closest('[data-edit]');
+    if (edit) {
+      const p = products.find((x) => x.id === edit.dataset.edit);
+      if (p) {
+        fillForm(p);
+        el.form.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }
+      return;
+    }
+
+    const del = e.target.closest('[data-del]');
+    if (!del || !backend || !backend.canEdit) return;
+    const p = products.find((x) => x.id === del.dataset.del);
+    if (!p || !confirm(`حذف «${p.name}» نهائياً؟`)) return;
+
+    const before = products;
+    try {
+      if (backend.kind === 'page') {
+        products = products.filter((x) => x.id !== p.id);
+        UI.setProducts(products);
+      }
+      await backend.write(p, p.id);
+      if (editingId === p.id) fillForm(null);
+      renderList();
+      UI.toast('حُذف المنتج');
+    } catch (err) {
+      products = before;
+      UI.setProducts(products);
+      renderList();
+      showError(el.formError, say(err));
+    }
+  });
+
+  /* ---------- الدخول (لواجهة Firestore وحدها) ---------- */
+
+  async function auth1(fn) {
+    showError(el.loginError, '');
+    const buttons = el.login.querySelectorAll('button');
+    buttons.forEach((b) => { b.disabled = true; });
+    try {
+      await fn($('#admin-email').value.trim(), $('#admin-pass').value);
+      $('#admin-pass').value = '';
+    } catch (err) {
+      showError(el.loginError, say(err));
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+    }
+  }
+
+  el.login.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (backend && backend.signIn) auth1(backend.signIn);
+  });
+
+  $('#admin-signup').addEventListener('click', () => {
+    if (!el.login.reportValidity()) return;
+    if (backend && backend.signUp) auth1(backend.signUp);
+  });
+
+  el.signout.addEventListener('click', () => {
+    if (backend && backend.signOut) backend.signOut();
+  });
+
+  el.uidCopy.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(el.uid.textContent);
+      UI.toast('نُسخ المعرّف');
+    } catch {
+      // نسخ ممنوع في بعض المتصفّحات — يُحدَّد النصّ لتنسخه بنفسها.
+      const r = document.createRange();
+      r.selectNodeContents(el.uid);
+      const sel = getSelection();
+      sel.removeAllRanges();
+      sel.addRange(r);
+    }
+  });
+
+  /* ---------- التبويبات ---------- */
+
+  el.tabs.addEventListener('click', (e) => {
+    const tab = e.target.closest('.admin-tab');
+    if (!tab) return;
+    el.tabs.querySelectorAll('.admin-tab').forEach((t) =>
+      t.setAttribute('aria-selected', String(t === tab)));
+    document.querySelectorAll('.admin-panel').forEach((panel) => {
+      panel.hidden = panel.dataset.panel !== tab.dataset.tab;
+    });
+    el.panel.querySelector('.admin-body').scrollTop = 0;
+  });
+
+  /* ---------- تبويب المتجر والحسابات ---------- */
+
+  const STORE_FIELDS = {
+    brand: '#s-brand', phone: '#s-phone', currency: '#s-currency', handle: '#s-handle',
+    instagram: '#s-instagram', tiktok: '#s-tiktok', snapchat: '#s-snapchat', facebook: '#s-facebook',
+  };
+
+  // زرّ الحذف واحد في كل الصفوف القابلة للحذف.
+  const TRASH = '<svg width="17" height="17" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M4 7h16M10 11v6M14 11v6M6 7l1 13h10l1-13M9 7V4h6v3"/></svg>';
+
+  function tickerRow(value = '') {
+    const row = document.createElement('div');
+    row.className = 'admin-line';
+    row.innerHTML = `<input type="text" maxlength="48" value=""><button type="button" aria-label="حذف الجملة">${TRASH}</button>`;
+    row.querySelector('input').value = value;
+    row.querySelector('button').addEventListener('click', () => row.remove());
+    return row;
+  }
+
+  function fillStoreForm() {
+    Object.entries(STORE_FIELDS).forEach(([key, sel]) => {
+      const input = $(sel);
+      if (input) input.value = settings.store[key] || '';
+    });
+    el.tickerRows.innerHTML = '';
+    settings.ticker.forEach((line) => el.tickerRows.appendChild(tickerRow(line)));
+    showError(el.storeError, '');
+  }
+
+  el.tickerAdd.addEventListener('click', () => {
+    if (el.tickerRows.children.length >= 8) {
+      showError(el.storeError, 'ثماني جمل أكثر من كافية — الشريط يمرّ ولا يُقرأ كلّه.');
+      return;
+    }
+    el.tickerRows.appendChild(tickerRow(''));
+    el.tickerRows.lastElementChild.querySelector('input').focus();
+  });
+
+  el.storeForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.storeError, '');
+
+    const store = {};
+    Object.entries(STORE_FIELDS).forEach(([key, sel]) => {
+      const input = $(sel);
+      store[key] = input ? input.value.trim() : '';
+    });
+    // الرقم يُنظَّف مما تضيفه لوحة المفاتيح: + ومسافات وشرطات.
+    store.phone = store.phone.replace(/[^\d]/g, '');
+    if (!store.brand) {
+      showError(el.storeError, 'اسم المتجر لا يُترك فارغاً.');
+      return;
+    }
+    if (store.phone && !/^\d{8,15}$/.test(store.phone)) {
+      showError(el.storeError, 'رقم الواتساب يُكتب برمز الدولة أرقاماً فقط — مثل 213696847079.');
+      return;
+    }
+    const bad = ['instagram', 'tiktok', 'snapchat', 'facebook']
+      .find((k) => store[k] && !/^https?:\/\//i.test(store[k]));
+    if (bad) {
+      showError(el.storeError, 'روابط الحسابات تبدأ بـ https — انسخي الرابط كاملاً من التطبيق.');
+      return;
+    }
+
+    const ticker = [...el.tickerRows.querySelectorAll('input')]
+      .map((i) => i.value.trim()).filter(Boolean);
+
+    await saveSettings({ store, ticker }, el.storeError, fillStoreForm);
+  });
+
+  /* ---------- تبويب النصوص ---------- */
+
+  const TEXT_FIELDS = [
+    'hero-kicker', 'hero-title', 'hero-text',
+    'sleep-title', 'sleep-text', 'phones-title', 'phones-text', 'foot-text',
+  ];
+
+  // النصوص الأصلية المكتوبة في السكربت — تُلتقط قبل أي تعديل ليعمل زرّ الاسترجاع.
+  const ORIGINAL_TEXTS = { ...UI.settings.texts };
+
+  function fillTextsForm(from = settings.texts) {
+    TEXT_FIELDS.forEach((key) => {
+      const input = $(`#t-${key}`);
+      if (input) input.value = from[key] || '';
+    });
+    showError(el.textsError, '');
+  }
+
+  el.textsReset.addEventListener('click', () => {
+    fillTextsForm(ORIGINAL_TEXTS);
+    UI.toast('رُجّع النصّ الأصلي — اضغطي «حفظ» لتثبيته');
+  });
+
+  el.textsForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.textsError, '');
+    const texts = {};
+    TEXT_FIELDS.forEach((key) => {
+      const input = $(`#t-${key}`);
+      texts[key] = input ? input.value.trim() : '';
+    });
+    if (!texts['sleep-title'] || !texts['phones-title']) {
+      showError(el.textsError, 'عنوانا القسمين لا يُتركان فارغين — هما ما تراه الزائرة أولاً.');
+      return;
+    }
+    await saveSettings({ texts }, el.textsError, fillTextsForm);
+  });
+
+  /* ---------- تبويب الفيديوهات ---------- */
+
+  function videoRow(video = {}, index = 0) {
+    const row = document.createElement('div');
+    row.className = 'admin-card';
+    row.innerHTML = `
+      <div class="admin-card-head">
+        <b>فيديو ${index + 1}</b>
+        <button type="button" class="v-del" aria-label="حذف الفيديو">${TRASH}</button>
+      </div>
+      <div class="admin-row">
+        <label>المنصّة
+          <select class="v-platform">
+            <option value="tiktok">تيك توك</option>
+            <option value="instagram">انستقرام</option>
+          </select>
+        </label>
+        <label>معرّف الفيديو <small>اختياري</small>
+          <input type="text" class="v-id" dir="ltr" maxlength="40">
+        </label>
+      </div>
+      <label>العنوان
+        <input type="text" class="v-title" maxlength="80">
+      </label>
+      <label>السطر تحته
+        <input type="text" class="v-text" maxlength="120">
+      </label>
+      <label>رابط الفيديو <small>اختياري — لزرّ «شاهدي على…»</small>
+        <input type="url" class="v-url" dir="ltr" placeholder="https://…">
+      </label>`;
+    row.querySelector('.v-platform').value = video.platform === 'instagram' ? 'instagram' : 'tiktok';
+    row.querySelector('.v-id').value = video.embedId || '';
+    row.querySelector('.v-title').value = video.title || '';
+    row.querySelector('.v-text').value = video.text || '';
+    row.querySelector('.v-url').value = video.url || '';
+    row.querySelector('.v-del').addEventListener('click', () => {
+      row.remove();
+      renumberVideos();
+    });
+    return row;
+  }
+
+  function renumberVideos() {
+    [...el.videoRows.children].forEach((row, i) => {
+      row.querySelector('.admin-card-head b').textContent = `فيديو ${i + 1}`;
+    });
+  }
+
+  function fillVideosForm() {
+    el.videoRows.innerHTML = '';
+    settings.videos.forEach((v, i) => el.videoRows.appendChild(videoRow(v, i)));
+    showError(el.videosError, '');
+  }
+
+  el.videoAdd.addEventListener('click', () => {
+    if (el.videoRows.children.length >= 6) {
+      showError(el.videosError, 'ستّة فيديوهات هي الحدّ — أكثر منها يثقل الصفحة.');
+      return;
+    }
+    el.videoRows.appendChild(videoRow({}, el.videoRows.children.length));
+  });
+
+  el.videosForm.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    showError(el.videosError, '');
+    const videos = [...el.videoRows.children].map((row) => ({
+      platform: row.querySelector('.v-platform').value,
+      embedId: row.querySelector('.v-id').value.trim(),
+      url: row.querySelector('.v-url').value.trim(),
+      title: row.querySelector('.v-title').value.trim(),
+      text: row.querySelector('.v-text').value.trim(),
+    })).filter((v) => v.title);
+    await saveSettings({ videos }, el.videosError, fillVideosForm);
+  });
+
+  /* ---------- حفظ الإعدادات ---------- */
+
+  // كل التبويبات تمرّ من هنا: تُطبَّق على الصفحة أولاً لتراها كما ستكون، ثم
+  // تُحفظ. وإن فشل الحفظ رجعت الصفحة إلى ما كانت عليه.
+  async function saveSettings(patch, errorNode, refill) {
+    if (!backend || !backend.canEdit) return;
+    const before = settings;
+    const buttons = el.panel.querySelectorAll('#store-save, #texts-save, #videos-save');
+    buttons.forEach((b) => { b.disabled = true; });
+    try {
+      settings = { ...settings, ...patch };
+      UI.setSettings(settings);
+      await backend.write(null, null, settings);
+      UI.toast('حُفظ');
+      if (refill) refill();
+    } catch (err) {
+      settings = before;
+      UI.setSettings(settings);
+      if (refill) refill();
+      showError(errorNode, say(err));
+    } finally {
+      buttons.forEach((b) => { b.disabled = false; });
+    }
+  }
+
+  function fillPanel() {
+    settings = UI.settings;
+    fillStoreForm();
+    fillTextsForm();
+    fillVideosForm();
+  }
+
+  fillForm(null);
+  fillPanel();
+</script>
+</body>
+</html>

@@ -2,14 +2,15 @@ name: نشر على Firebase Hosting
 
 on:
   push:
-    branches: [main]
-  # يسمح بتشغيل النشر يدوياً من تبويب Actions.
+    # يُتابَع الدفع إلى كل الفروع، والنشر محصور في الفرع الرئيسي بشرط الوظيفة أدناه.
+    # السبب: اسم الفرع الرئيسي يُقرأ وقت التشغيل، فلا يتوقّف النشر بصمت إن تغيّر
+    # الفرع الافتراضي للمستودع أو أُعيدت تسميته.
+    branches: ["**"]
   workflow_dispatch:
 
 permissions:
   contents: read
 
-# نشر واحد في كل مرة.
 concurrency:
   group: firebase-hosting
   cancel-in-progress: false
@@ -18,8 +19,12 @@ jobs:
   deploy:
     name: بناء ونشر
     runs-on: ubuntu-latest
-    # لا يعمل إلا إذا أُضيف مفتاح حساب الخدمة، فلا يفشل النشر على المستودعات المستنسخة.
-    if: ${{ github.event_name == 'workflow_dispatch' || github.ref == 'refs/heads/main' }}
+    # لا يُنشر إلا الفرع الرئيسي — main أو الفرع الافتراضي للمستودع أيًّا كان اسمه — أو تشغيل يدوي.
+    if: ${{ github.event_name == 'workflow_dispatch' || github.ref_name == 'main' || github.ref_name == github.event.repository.default_branch }}
+    permissions:
+      contents: read
+      # تلزم للمصادقة بلا مفتاح: GitHub يوقّع هوية التشغيل، وGoogle يتحقّق منها.
+      id-token: write
     steps:
       - name: جلب الشيفرة
         uses: actions/checkout@v4
@@ -30,92 +35,75 @@ jobs:
           node-version: 20
           cache: npm
 
-      # معرّف المشروع ليس سرّاً: يُؤخذ من السرّ أو من متغيّر المستودع، وإلا من .firebaserc.
-      - name: تحديد مشروع Firebase
-        id: project
-        env:
-          SECRET_PROJECT: ${{ secrets.FIREBASE_PROJECT_ID }}
-          VAR_PROJECT: ${{ vars.FIREBASE_PROJECT_ID }}
-        run: |
-          project="$SECRET_PROJECT"
-          [ -z "$project" ] && project="$VAR_PROJECT"
-          if [ -z "$project" ] && [ -f .firebaserc ]; then
-            project="$(python3 -c "import json;print(json.load(open('.firebaserc'))['projects']['default'])" 2>/dev/null || true)"
-          fi
-          if [ -z "$project" ]; then
-            echo "::error::تعذّر تحديد المشروع — أضف .firebaserc أو السرّ FIREBASE_PROJECT_ID"
-            exit 1
-          fi
-          echo "المشروع: $project"
-          echo "id=$project" >> "$GITHUB_OUTPUT"
-
-      # يُقبل المفتاح من أيّ من السرّين، والعبرة بالمحتوى لا بالاسم: أوّل قيمة تكون
-      # ملف حساب خدمة صالحاً (‎"type": "service_account"‎) هي المعتمدة.
-      - name: تجهيز مفتاح حساب الخدمة
-        id: sa
-        env:
-          SA_PRIMARY: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
-          SA_ALT: ${{ secrets.ALIMENIOM }}
-          # أسماء الأسرار المتاحة فقط — لا قيمها — للتشخيص عند غياب المفتاح.
-          ALL_SECRETS: ${{ toJSON(secrets) }}
-        run: |
-          key_file="$RUNNER_TEMP/firebase-sa.json"
-          found_but_invalid=""
-
-          check() {
-            printf '%s' "$1" > "$key_file"
-            python3 -c "import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if d.get('type')=='service_account' and d.get('project_id') else 1)" "$key_file" 2>/dev/null
-          }
-
-          for name in FIREBASE_SERVICE_ACCOUNT ALIMENIOM; do
-            case "$name" in
-              FIREBASE_SERVICE_ACCOUNT) value="$SA_PRIMARY" ;;
-              ALIMENIOM) value="$SA_ALT" ;;
-            esac
-            [ -z "$value" ] && continue
-            if check "$value"; then
-              echo "مفتاح حساب الخدمة صالح، مأخوذ من السرّ: $name"
-              echo "path=$key_file" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-            found_but_invalid="$found_but_invalid $name"
-          done
-
-          rm -f "$key_file"
-          echo "الأسرار المرئية لهذا التشغيل (الأسماء فقط):"
-          printf '%s' "$ALL_SECRETS" | python3 -c "import json,sys;[print(' -',k) for k in sorted(json.load(sys.stdin))]"
-          if [ -n "$found_but_invalid" ]; then
-            echo "::error::السرّ$found_but_invalid موجود لكن محتواه ليس ملف حساب خدمة. القيمة الصحيحة هي محتوى ملف JSON كامل من Firebase ← Project settings ← Service accounts ← Generate new private key، يبدأ بـ {\"type\": \"service_account\"."
-          else
-            echo "::error::لا يوجد مفتاح حساب خدمة. أضف سرّاً باسم FIREBASE_SERVICE_ACCOUNT في تبويب Actions (لا Dependabot ولا Codespaces)، Repository secret لا Environment secret، في مستودع Main-NAJM/Main-najm نفسه."
-          fi
-          exit 1
-
       - name: تثبيت الاعتماديات
         run: npm ci
 
       - name: فحص الأنواع
         run: npm run lint
 
-      # مفاتيح الويب ليست أسراراً (تُشحن داخل الشيفرة على أي حال)، فتُجلب من المشروع
-      # نفسه بمفتاح حساب الخدمة بدل أن يضيفها المستخدم يدوياً ستة أسرار.
-      - name: جلب مفاتيح تطبيق الويب وكتابة .env.local
+      # قواعد الأمان هي الشيء الوحيد الذي يفصل بيانات زبون عن زبون، وخطأ حرف
+      # فيها لا يكسر بناء ولا يظهر في أي شاشة. تُفحص قبل النشر لا بعده.
+      # المحاكي لا يحتاج اعتمادات، فالخطوة تعمل حتى على المستودعات المستنسخة.
+      - name: فحص قواعد أمان Firestore
+        run: npx --yes firebase-tools@13 emulators:exec --only firestore --project demo-rules-check "npm run --silent test:rules"
+
+      # معرّف المشروع ليس سرا: يؤخذ من متغير المستودع إن وجد، وإلا من .firebaserc
+      - name: تحديد مشروع Firebase
+        id: project
         env:
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.sa.outputs.path }}
+          VAR_PROJECT: ${{ vars.FIREBASE_PROJECT_ID }}
+        run: |
+          project="$VAR_PROJECT"
+          if [ -z "$project" ] && [ -f .firebaserc ]; then
+            project="$(python3 -c "import json;print(json.load(open('.firebaserc'))['projects']['default'])")"
+          fi
+          if [ -z "$project" ]; then
+            echo "::error::تعذر تحديد المشروع. أضف .firebaserc أو متغير المستودع FIREBASE_PROJECT_ID"
+            exit 1
+          fi
+          echo "المشروع: $project"
+          echo "id=$project" >> "$GITHUB_OUTPUT"
+
+      # الطريق المفضّل: مصادقة بلا مفتاح. GitHub يوقّع هوية هذا التشغيل، وGoogle
+      # يقبلها من هذا المستودع وحده، فلا يوجد مفتاح دائم يُسرَّب أو تنتهي صلاحيته.
+      # وهو الطريق الوحيد حين تمنع سياسة المؤسسة إنشاء مفاتيح لحسابات الخدمة.
+      # يُفعَّل تلقائيا متى ضُبط متغيّرا المستودع؛ انظر scripts/setup-workload-identity.sh
+      - name: مصادقة Google بلا مفتاح
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER != '' }}
+        uses: google-github-actions/auth@v2
+        with:
+          workload_identity_provider: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ vars.GCP_SERVICE_ACCOUNT }}
+
+      # الطريق البديل حين لا تُضبط المصادقة بلا مفتاح: مفتاح في سرّ المستودع.
+      # المفتاح يكتب في ملف خارج مساحة العمل ولا يطبع أبدا.
+      - name: تجهيز مفتاح حساب الخدمة
+        if: ${{ vars.GCP_WORKLOAD_IDENTITY_PROVIDER == '' }}
+        env:
+          SA: ${{ secrets.FIREBASE_SERVICE_ACCOUNT }}
+        run: |
+          if [ -z "$SA" ]; then
+            echo "::error::لا توجد اعتمادات. الطريق المفضّل بلا مفتاح: شغّل scripts/setup-workload-identity.sh مرة واحدة في Google Cloud Shell ثم أضف المتغيّرين اللذين يطبعهما. البديل: سرّ باسم FIREBASE_SERVICE_ACCOUNT قيمته ملف JSON كامل لحساب خدمة."
+            exit 1
+          fi
+          key_file="$RUNNER_TEMP/firebase-sa.json"
+          printf '%s' "$SA" > "$key_file"
+          if ! python3 -c "import json,sys;d=json.load(open(sys.argv[1]));sys.exit(0 if d.get('type')=='service_account' and d.get('project_id') else 1)" "$key_file"; then
+            rm -f "$key_file"
+            echo "::error::السر FIREBASE_SERVICE_ACCOUNT موجود لكن محتواه ليس ملف حساب خدمة. القيمة الصحيحة ملف JSON كامل يبدأ بـ {\"type\": \"service_account\"."
+            exit 1
+          fi
+          echo "مفتاح حساب الخدمة صالح."
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$key_file" >> "$GITHUB_ENV"
+
+      # مفاتيح الويب ليست أسرارا (تشحن داخل الشيفرة على أي حال)، فتجلب من
+      # المشروع نفسه بدل أن يضيفها المستخدم يدويا ستة أسرار.
+      # الاعتمادات تصل من خطوة المصادقة أيًّا كان طريقها، عبر بيئة الوظيفة.
+      - name: جلب مفاتيح تطبيق الويب وكتابة .env.local
         run: node scripts/firebase-setup.mjs --force
 
       - name: بناء نسخة الإنتاج
-        # استضافة Firebase تخدم التطبيق من الجذر، فلا يُضبط BASE_PATH.
-        # المفاتيح تأتي من .env.local الذي كتبته الخطوة السابقة.
         run: npm run build
 
       - name: النشر على Firebase
-        env:
-          # المفتاح في ملف مؤقّت خارج مساحة العمل، ولا يُطبع أبداً.
-          GOOGLE_APPLICATION_CREDENTIALS: ${{ steps.sa.outputs.path }}
-          FIREBASE_PROJECT_ID: ${{ steps.project.outputs.id }}
-        run: |
-          npx --yes firebase-tools@13 deploy \
-            --only hosting,firestore:rules \
-            --project "$FIREBASE_PROJECT_ID" \
-            --non-interactive
+        run: npx --yes firebase-tools@13 deploy --only hosting,firestore:rules --project "${{ steps.project.outputs.id }}" --non-interactive

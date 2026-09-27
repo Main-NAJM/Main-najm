@@ -81,7 +81,7 @@ ul {
 /* ------------------------------- التخطيط ------------------------------- */
 
 .shell {
-  min-height: 100vh;
+  min-height: 100dvh;
   padding-bottom: calc(72px + env(safe-area-inset-bottom, 0px));
 }
 
@@ -105,8 +105,10 @@ ul {
   line-height: 1.25;
 }
 
-.topbar__title strong {
+.topbar__title h1 {
   font-size: 16px;
+  font-weight: 700;
+  line-height: inherit;
 }
 
 .topbar__title span {
@@ -122,6 +124,22 @@ ul {
   padding: 7px 13px;
   font-size: 13px;
   cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+}
+
+/* رابط «الكل» ونظائره: يبدو نصًّا، ويُلمس كزرّ */
+.link-action {
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  min-width: 44px;
+  justify-content: center;
+  padding-inline: 12px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--brand);
 }
 
 .page {
@@ -277,6 +295,8 @@ ul {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  /* هدف لمس لا يقلّ عن 44px مهما صغُر النص */
+  min-height: 44px;
 }
 
 .btn:disabled {
@@ -297,6 +317,7 @@ ul {
 .btn--sm {
   padding: 6px 11px;
   font-size: 12.5px;
+  min-height: 44px;
 }
 
 .btn--block {
@@ -327,6 +348,7 @@ ul {
   border-radius: var(--radius-sm);
   padding: 10px 12px;
   font-size: 15px;
+  min-height: 44px;
 }
 
 .input:focus {
@@ -470,6 +492,56 @@ ul {
   margin-top: 8px;
 }
 
+.text-end {
+  text-align: end;
+}
+
+.text-center {
+  text-align: center;
+}
+
+.mt-12 {
+  margin-top: 12px;
+}
+
+/* البطاقة حين تكون رابطًا: لا خطّ تحت النص ولا لون رابط */
+a.card {
+  display: block;
+  text-decoration: none;
+  color: inherit;
+}
+
+/* رأس بطاقة قابل للطيّ: زرّ يرث مظهر الرأس بلا أي مظهر زرّ */
+button.card__head {
+  width: 100%;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font: inherit;
+  color: inherit;
+  text-align: inherit;
+}
+
+/* إجماليات ملتصقة بما فوقها — بلا فاصل ولا هامش */
+.totals--flush {
+  margin-top: 0;
+  border-top: none;
+  padding-top: 0;
+}
+
+/* أعمدة جداول الطباعة */
+.sheet .col-20 {
+  width: 20%;
+}
+
+.sheet .col-25 {
+  width: 25%;
+}
+
+.sheet .col-34 {
+  width: 34%;
+}
+
 .spinner {
   display: flex;
   align-items: center;
@@ -517,8 +589,9 @@ ul {
   position: relative;
   width: 100%;
   max-width: 560px;
-  max-height: 92vh;
+  max-height: 92dvh;
   overflow-y: auto;
+  overscroll-behavior: contain;
   background: var(--bg);
   border-radius: 20px 20px 0 0;
   padding-bottom: env(safe-area-inset-bottom, 0px);
@@ -566,7 +639,7 @@ ul {
 /* ------------------------------- الدخول -------------------------------- */
 
 .auth {
-  min-height: 100vh;
+  min-height: 100dvh;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -805,7 +878,7 @@ ul {
 .sheet td {
   border: 1px solid #d8d2c4;
   padding: 7px 9px;
-  text-align: right;
+  text-align: start;
 }
 
 .sheet th {

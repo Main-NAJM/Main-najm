@@ -578,7 +578,7 @@ export default function Orders() {
       >
         {paying ? (
           <>
-            <div className="totals" style={{ marginTop: 0, borderTop: 'none' }}>
+            <div className="totals totals--flush">
               <div>
                 <span>الإجمالي</span>
                 <span>{money(orderTotal(paying), profile.currency)}</span>
@@ -640,7 +640,7 @@ export default function Orders() {
             </p>
             {photoError ? <div className="notice notice--danger mt-8">{photoError}</div> : null}
 
-            <label className="btn btn--block mt-8" style={{ cursor: 'pointer' }}>
+            <label className="btn btn--block mt-8">
               {photoBusy ? 'جارٍ الحفظ…' : 'إضافة صورة'}
               <input
                 type="file"

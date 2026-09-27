@@ -123,7 +123,7 @@ export default function Reports() {
                 <button
                   type="button"
                   className="card__head"
-                  style={{ width: '100%', background: 'none', border: 'none', cursor: 'pointer', textAlign: 'inherit' }}
+                  aria-expanded={open}
                   onClick={() => setOpenMonth(open ? null : month.key)}
                 >
                   <div>

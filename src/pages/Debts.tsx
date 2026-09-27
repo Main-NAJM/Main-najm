@@ -571,23 +571,25 @@ export default function Debts() {
         {(detail?.payments?.length ?? 0) === 0 ? (
           <p className="muted small">لا توجد دفعات مسجّلة بعد.</p>
         ) : (
-          <div className="table-wrap">
+          <div className="table-wrap table-wrap--cards">
             <table className="data">
               <thead>
                 <tr>
                   <th>التاريخ</th>
                   <th className="num">المبلغ</th>
                   <th>ملاحظة</th>
-                  <th />
+                  <th>إجراء</th>
                 </tr>
               </thead>
               <tbody>
                 {detail?.payments.map((payment) => (
                   <tr key={payment.id}>
-                    <td>{formatDate(payment.date)}</td>
-                    <td className="num">{money(payment.amount)}</td>
-                    <td>{payment.note || '—'}</td>
-                    <td>
+                    <td data-label="التاريخ">{formatDate(payment.date)}</td>
+                    <td className="num" data-label="المبلغ">
+                      {money(payment.amount)}
+                    </td>
+                    <td data-label="ملاحظة">{payment.note || '—'}</td>
+                    <td className="actions">
                       <button
                         type="button"
                         className="icon-btn"
