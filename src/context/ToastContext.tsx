@@ -51,8 +51,12 @@ export function ToastProvider({ children }: { children: ReactNode }) {
 
   const notifyError = useCallback(
     (error: unknown) => {
-      const message =
-        error instanceof Error ? error.message : 'حدث خطأ غير متوقّع، أعد المحاولة.';
+      const raw = error instanceof Error ? error.message : '';
+      // رسالة Firestore الإنجليزية لا تقول لصاحب الورشة شيئاً، والسبب دائماً
+      // واحد: صلاحيات المشروع لم تُحدَّث لهذا النوع من السجلات بعد.
+      const message = /insufficient permissions|permission-denied/i.test(raw)
+        ? 'صلاحيات حسابك السحابي لا تسمح بحفظ هذا النوع من السجلات بعد. حدِّث صلاحيات المشروع، أو اعمل بحساب هذا الجهاز ريثما تُحدَّث.'
+        : raw || 'حدث خطأ غير متوقّع، أعد المحاولة.';
       notify(message, 'error');
     },
     [notify],

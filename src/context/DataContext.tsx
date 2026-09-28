@@ -194,7 +194,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
       setLoadedCount((count) => count + 1);
     };
 
-    const handleError = (err: Error) => {
+    // مجموعة يرفضها الخادم تُعدّ «محمّلة وفارغة»: بقيّة التطبيق تعمل بدل أن
+    // تبقى الشاشة معلّقة على انتظار لن ينتهي.
+    const handleError = (name: CollectionName) => (err: Error) => {
+      markLoaded(name);
       setError(err.message || 'تعذّر تحميل البيانات.');
     };
 
@@ -218,7 +221,7 @@ export function DataProvider({ children }: { children: ReactNode }) {
           setCollections((current) => ({ ...current, [name]: rows }));
           markLoaded(name);
         },
-        handleError,
+        handleError(name),
       ),
     );
 
@@ -228,7 +231,10 @@ export function DataProvider({ children }: { children: ReactNode }) {
         setProfile(saved ? { ...defaultProfile(), ...saved } : defaultProfile());
         setProfileLoaded(true);
       },
-      handleError,
+      (err) => {
+        setProfileLoaded(true);
+        setError(err.message || 'تعذّر تحميل البيانات.');
+      },
     );
 
     return () => {
@@ -245,9 +251,11 @@ export function DataProvider({ children }: { children: ReactNode }) {
    * فوق لقطة سليمة أثناء القراءة.
    */
   useEffect(() => {
-    if (!uid || !user?.isLocal) return;
+    if (!uid) return;
+    // يفيد الحسابين: التخزين المحلي هو كل شيء للحساب المحلي، وهو ذاكرة العمل
+    // دون إنترنت للحساب المُزامَن.
     void requestPersistence();
-  }, [uid, user?.isLocal]);
+  }, [uid]);
 
   useEffect(() => {
     if (!uid || !user?.isLocal || loadedCount < 9) return;

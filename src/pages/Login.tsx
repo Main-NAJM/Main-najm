@@ -101,7 +101,23 @@ export default function Login() {
         {view === 'signup' ? (
           <SignUpFlow
             busy={busy}
-            onSubmit={(input) => run(() => registerLocal(input), 'تعذّر إنشاء الحساب.')}
+            cloudAvailable={firebaseAvailable}
+            onSubmit={(input, sync) =>
+              run(
+                () =>
+                  sync
+                    ? signUp(input.name, input.ident, input.password, {
+                        displayName: input.name,
+                        userType: input.userType,
+                        craft: input.craft,
+                        customCraft: input.customCraft,
+                        customMaterial: input.customMaterial,
+                        customBasis: input.customBasis,
+                      })
+                    : registerLocal(input),
+                'تعذّر إنشاء الحساب.',
+              )
+            }
           />
         ) : null}
 
@@ -130,7 +146,7 @@ export default function Login() {
                 go(view === 'cloud' ? 'signin' : 'cloud');
               }}
             >
-              {view === 'cloud' ? 'الرجوع إلى حساب الجهاز' : 'الدخول بحساب سحابي (مزامنة بين الأجهزة)'}
+              {view === 'cloud' ? 'الرجوع إلى حساب هذا الجهاز' : 'الدخول بحساب فيه مزامنة'}
             </button>
           ) : null}
           <button type="button" className="auth__link" onClick={useLocalAccount}>
@@ -140,7 +156,7 @@ export default function Login() {
 
         <p className="auth__note">
           {firebaseAvailable
-            ? 'حساب الجهاز يحفظ بياناتك على هذا الهاتف وحده. للمزامنة بين الأجهزة استعمل الحساب السحابي.'
+            ? 'الحساب ذو المزامنة يحفظ دفترك خارج الهاتف فلا يضيع بضياعه، ويفتحه على كل أجهزتك. أمّا حساب الجهاز فيحفظ على هذا الهاتف وحده.'
             : 'الحساب والبيانات محفوظة على هذا الجهاز ولا تُرسل إلى أي مكان. احتفظ بنسخة احتياطية من الإعدادات.'}
         </p>
 
@@ -234,12 +250,16 @@ interface SignUpValues {
 
 function SignUpFlow({
   busy,
+  cloudAvailable,
   onSubmit,
 }: {
   busy: boolean;
-  onSubmit: (input: SignUpValues) => Promise<void>;
+  cloudAvailable: boolean;
+  onSubmit: (input: SignUpValues, sync: boolean) => Promise<void>;
 }) {
   const [step, setStep] = useState<1 | 2>(1);
+  // المزامنة هي الافتراض متى توفّرت: دفتر لا يعيش إلا في هاتف واحد يضيع بضياعه.
+  const [sync, setSync] = useState(cloudAvailable);
   const [name, setName] = useState('');
   const [ident, setIdent] = useState('');
   const [password, setPassword] = useState('');
@@ -264,11 +284,20 @@ function SignUpFlow({
       return;
     }
     if (!ident.trim()) {
-      setStepError('أدخل رقم هاتفك أو بريدك الإلكتروني.');
+      setStepError(sync ? 'أدخل بريدك الإلكتروني.' : 'أدخل رقم هاتفك أو بريدك الإلكتروني.');
       return;
     }
-    if (password.length < 4) {
-      setStepError('كلمة المرور يجب أن تكون ٤ خانات على الأقل.');
+    // المزامنة تمرّ ببريد إلكتروني: هو ما يستعيد به الحساب على أي جهاز آخر.
+    if (sync && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(ident.trim())) {
+      setStepError('المزامنة تحتاج بريداً إلكترونياً. اكتب بريدك، أو اختر الحفظ على هذا الجهاز.');
+      return;
+    }
+    if (password.length < (sync ? 6 : 4)) {
+      setStepError(
+        sync
+          ? 'كلمة المرور يجب أن تكون ٦ خانات على الأقل.'
+          : 'كلمة المرور يجب أن تكون ٤ خانات على الأقل.',
+      );
       return;
     }
     if (password !== confirm) {
@@ -286,16 +315,19 @@ function SignUpFlow({
       return;
     }
     setStepError(null);
-    void onSubmit({
-      name,
-      ident,
-      password,
-      userType,
-      craft,
-      customCraft,
-      customMaterial,
-      customBasis,
-    });
+    void onSubmit(
+      {
+        name,
+        ident,
+        password,
+        userType,
+        craft,
+        customCraft,
+        customMaterial,
+        customBasis,
+      },
+      sync,
+    );
   };
 
   return (
@@ -309,6 +341,36 @@ function SignUpFlow({
 
       {step === 1 ? (
         <form onSubmit={next} noValidate>
+          {cloudAvailable ? (
+            <div className="sync-pick" role="group" aria-label="أين يُحفظ دفترك">
+              <button
+                type="button"
+                className={`sync-pick__opt${sync ? ' is-active' : ''}`}
+                aria-pressed={sync}
+                onClick={() => {
+                  setSync(true);
+                }}
+              >
+                <span className="sync-pick__title">مع مزامنة — يُنصح</span>
+                <span className="sync-pick__desc">
+                  دفترك محفوظ خارج الهاتف، لا يضيع بضياعه، ويفتح بنفس بياناته على أي جهاز.
+                </span>
+              </button>
+              <button
+                type="button"
+                className={`sync-pick__opt${sync ? '' : ' is-active'}`}
+                aria-pressed={!sync}
+                onClick={() => {
+                  setSync(false);
+                }}
+              >
+                <span className="sync-pick__title">هذا الجهاز فقط</span>
+                <span className="sync-pick__desc">
+                  بلا إنترنت ولا بريد. تضيع البيانات إن ضاع الهاتف أو مُسحت بياناته.
+                </span>
+              </button>
+            </div>
+          ) : null}
           <TextInput
             label="الاسم أو اسم الورشة"
             value={name}
@@ -316,11 +378,15 @@ function SignUpFlow({
             placeholder="مثال: نجارة أبو علي"
           />
           <TextInput
-            label="رقم الهاتف أو البريد الإلكتروني"
+            label={sync ? 'البريد الإلكتروني' : 'رقم الهاتف أو البريد الإلكتروني'}
             value={ident}
             onChange={setIdent}
-            placeholder="0673232932"
-            hint="يكفي أحدهما — وهو ما تدخل به لاحقاً"
+            placeholder={sync ? 'name@example.com' : '0673232932'}
+            hint={
+              sync
+                ? 'به تدخل إلى حسابك من أي جهاز، وبه تستعيد كلمة المرور'
+                : 'يكفي أحدهما — وهو ما تدخل به لاحقاً'
+            }
             dir="ltr"
           />
           <TextInput
@@ -328,7 +394,7 @@ function SignUpFlow({
             type="password"
             value={password}
             onChange={setPassword}
-            hint="٤ خانات على الأقل"
+            hint={sync ? '٦ خانات على الأقل' : '٤ خانات على الأقل'}
           />
           <TextInput
             label="تأكيد كلمة المرور"

@@ -2628,3 +2628,55 @@ table.data th.num {
 .shield__row > .badge {
   flex: none;
 }
+
+/* --------------------------------------------- اختيار مكان حفظ الدفتر */
+
+/* قرار يُتّخذ مرّة ويحكم مصير البيانات كلّها، فيُعرض بطاقتين تشرحان الأثر
+   لا مجرّد مربّع اختيار يمرّ عليه المستخدم دون أن يقرأه. */
+.sync-pick {
+  display: grid;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.sync-pick__opt {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  text-align: start;
+  padding: 12px 13px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  cursor: pointer;
+  transition:
+    border-color var(--fast) var(--ease),
+    background var(--fast) var(--ease);
+}
+
+.sync-pick__opt.is-active {
+  border-color: var(--gold);
+  background: var(--gold-tint);
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .sync-pick__opt:not(.is-active):hover {
+    border-color: var(--ink-3);
+  }
+}
+
+.sync-pick__title {
+  font-size: 13.5px;
+  font-weight: 700;
+  color: var(--ink);
+}
+
+.sync-pick__opt.is-active .sync-pick__title {
+  color: var(--gold);
+}
+
+.sync-pick__desc {
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--ink-3);
+}

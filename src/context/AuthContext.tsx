@@ -25,6 +25,7 @@ import {
   type User,
 } from 'firebase/auth';
 import { auth, authErrorMessage, isFirebaseConfigured } from '@/lib/firebase';
+import { initCloudAccount, type CloudTrade } from '@/data/cloudSync';
 import { getLocalUid } from '@/data/localStore';
 import {
   clearSession,
@@ -66,7 +67,7 @@ interface AuthContextValue {
     customBasis?: PricingBasis;
   }) => void;
   signIn: (email: string, password: string) => Promise<void>;
-  signUp: (name: string, email: string, password: string) => Promise<void>;
+  signUp: (name: string, email: string, password: string, trade?: CloudTrade) => Promise<void>;
   resetPassword: (email: string) => Promise<void>;
   /** دخول بحساب Google — نافذة منبثقة مع رجوع إلى إعادة التوجيه إن مُنعت. */
   signInWithGoogle: () => Promise<void>;
@@ -211,21 +212,32 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   }, []);
 
-  const signUp = useCallback(async (name: string, email: string, password: string) => {
-    if (!auth) throw new Error('لم تُضبط إعدادات Firebase.');
-    try {
-      const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
-      const trimmed = name.trim();
-      if (trimmed) {
-        await updateProfile(credential.user, { displayName: trimmed });
-        setUser(toAppUser({ ...credential.user, displayName: trimmed } as User));
+  const signUp = useCallback(
+    async (name: string, email: string, password: string, trade?: CloudTrade) => {
+      if (!auth) throw new Error('لم تُضبط إعدادات Firebase.');
+      try {
+        const credential = await createUserWithEmailAndPassword(auth, email.trim(), password);
+        const trimmed = name.trim();
+        if (trimmed) {
+          await updateProfile(credential.user, { displayName: trimmed });
+          setUser(toAppUser({ ...credential.user, displayName: trimmed } as User));
+        }
+        // المهنة تُكتب في السحابة فور الإنشاء، فيتكيّف التطبيق معها من أوّل فتح
+        // تماماً كحساب الجهاز. فشلها لا يمنع الدخول — تُضبط من الإعدادات.
+        if (trade) {
+          await initCloudAccount(credential.user.uid, {
+            ...trade,
+            displayName: trimmed || trade.displayName,
+          }).catch(() => undefined);
+        }
+        writeLocalModeFlag(false);
+        setLocalMode(false);
+      } catch (error) {
+        throw wrapError(error);
       }
-      writeLocalModeFlag(false);
-      setLocalMode(false);
-    } catch (error) {
-      throw wrapError(error);
-    }
-  }, []);
+    },
+    [],
+  );
 
   const resetPassword = useCallback(async (email: string) => {
     if (!auth) throw new Error('لم تُضبط إعدادات Firebase.');

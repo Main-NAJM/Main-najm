@@ -10,6 +10,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
 import { mergeInto, scanDevice, type DeviceDataSet } from '@/data/rescue';
+import { uploadToCloud } from '@/data/cloudSync';
 import { countLabel, formatDateTime, formatInt } from '@/lib/format';
 import { Modal } from './ui';
 
@@ -21,9 +22,41 @@ const setTitle = (set: DeviceDataSet): string => {
 const setSummary = (set: DeviceDataSet): string =>
   set.counts.map((row) => `${formatInt(row.count)} ${row.label}`).join(' · ');
 
+/**
+ * وجهة الاستعادة تتبع نوع الحساب المفتوح: دفتر الجهاز يُضمّ محلياً، والحساب
+ * ذو المزامنة يُرفع إليه الدفتر فيصير في السحابة ولا يعود حبيس الهاتف.
+ */
+const restoreSet = async (
+  set: DeviceDataSet,
+  uid: string,
+  storeKind: string,
+): Promise<{ added: number; refused: string[] }> => {
+  if (storeKind === 'local') return { added: mergeInto(set.uid, uid).added, refused: [] };
+  const sourceUid = set.uid.endsWith('#snapshot') ? set.uid.slice(0, -'#snapshot'.length) : set.uid;
+  const result = await uploadToCloud(sourceUid, uid);
+  return { added: result.uploaded, refused: result.refused };
+};
+
+const REFUSED_LABELS: Record<string, string> = {
+  orders: 'الطلبيات',
+  products: 'قوالب التسعير',
+  inventory: 'المخزون',
+  expenses: 'المصاريف',
+  workers: 'العمّال',
+  appointments: 'المواعيد',
+  calculations: 'حسابات التكلفة',
+  marketPrices: 'أسعار السوق',
+  debts: 'الديون',
+};
+
+const refusedNote = (refused: string[]): string =>
+  `لم تُقبل بعد: ${refused.map((name) => REFUSED_LABELS[name] ?? name).join('، ')} — ` +
+  'صلاحيات المشروع لم تُحدَّث لها، وهي باقية سليمة على الجهاز.';
+
 export function DataRescue() {
   const { user } = useAuth();
-  const { orders, debts, appointments, expenses, workers, inventory, calculations } = useData();
+  const { orders, debts, appointments, expenses, workers, inventory, calculations, storeKind } =
+    useData();
   const { notify, notifyError } = useToast();
 
   const [open, setOpen] = useState(false);
@@ -48,24 +81,23 @@ export function DataRescue() {
 
   if (!uid || sets.length === 0) return null;
 
-  const restore = (set: DeviceDataSet) => {
+  const restore = async (set: DeviceDataSet) => {
     setBusy(set.uid);
     try {
-      const result = mergeInto(set.uid, uid);
-      if (result.added === 0) {
+      const { added, refused } = await restoreSet(set, uid, storeKind);
+      if (added === 0 && refused.length === 0) {
         notify('لا جديد في هذا الدفتر — كل ما فيه موجود عندك أصلاً.');
       } else {
-        notify(
-          `استُرجع ${countLabel(result.added, {
-            one: 'سجل واحد',
-            two: 'سجلّان',
-            few: 'سجلات',
-            many: 'سجلاً',
-          })} إلى حسابك.`,
-        );
+        const moved = `${storeKind === 'local' ? 'استُرجع' : 'رُفع'} ${countLabel(added, {
+          one: 'سجل واحد',
+          two: 'سجلّان',
+          few: 'سجلات',
+          many: 'سجلاً',
+        })} إلى حسابك.`;
+        notify(refused.length > 0 ? `${moved} ${refusedNote(refused)}` : moved, refused.length > 0 ? 'error' : 'ok');
       }
       setNonce((value) => value + 1);
-      setOpen(false);
+      if (refused.length === 0) setOpen(false);
     } catch (error) {
       notifyError(error instanceof Error ? error : new Error('تعذّرت الاستعادة.'));
     } finally {
@@ -92,7 +124,9 @@ export function DataRescue() {
               .
             </strong>
             <span className="small">
-              غالباً دخلتَ بحساب ثانٍ غير الذي كنت تعمل عليه. يمكن استرجاع الدفتر كما هو.
+              {storeKind === 'local'
+                ? 'غالباً دخلتَ بحساب ثانٍ غير الذي كنت تعمل عليه. يمكن استرجاع الدفتر كما هو.'
+                : 'هذا دفترك القديم المحفوظ على الهاتف. ارفعه إلى حسابك ليصير مُزامَناً ولا يضيع بضياع الجهاز.'}
             </span>
           </div>
           <div className="rescue-bar__actions">
@@ -103,7 +137,7 @@ export function DataRescue() {
                 setOpen(true);
               }}
             >
-              استرجاع بياناتي
+              {storeKind === 'local' ? 'استرجاع بياناتي' : 'رفع دفتري إلى حسابي'}
             </button>
             <button
               type="button"
@@ -158,7 +192,7 @@ export function DataRescue() {
                   className="btn btn--sm"
                   disabled={busy === set.uid}
                   onClick={() => {
-                    restore(set);
+                    void restore(set);
                   }}
                 >
                   {busy === set.uid ? 'جارٍ…' : 'استرجاع'}
@@ -175,6 +209,7 @@ export function DataRescue() {
 /** نفس القائمة داخل الإعدادات — تُعرض دائماً لا عند الفراغ فقط. */
 export function DataRescueList() {
   const { user } = useAuth();
+  const { storeKind } = useData();
   const { notify, notifyError } = useToast();
   const [busy, setBusy] = useState<string | null>(null);
   const [nonce, setNonce] = useState(0);
@@ -193,19 +228,19 @@ export function DataRescueList() {
     );
   }
 
-  const restore = (set: DeviceDataSet) => {
+  const restore = async (set: DeviceDataSet) => {
     setBusy(set.uid);
     try {
-      const result = mergeInto(set.uid, uid);
+      const { added, refused } = await restoreSet(set, uid, storeKind);
+      const moved = `${storeKind === 'local' ? 'استُرجع' : 'رُفع'} ${countLabel(added, {
+        one: 'سجل واحد',
+        two: 'سجلّان',
+        few: 'سجلات',
+        many: 'سجلاً',
+      })} إلى حسابك.`;
       notify(
-        result.added === 0
-          ? 'لا جديد في هذا الدفتر.'
-          : `استُرجع ${countLabel(result.added, {
-              one: 'سجل واحد',
-              two: 'سجلّان',
-              few: 'سجلات',
-              many: 'سجلاً',
-            })} إلى حسابك.`,
+        added === 0 && refused.length === 0 ? 'لا جديد في هذا الدفتر.' : moved + (refused.length > 0 ? ` ${refusedNote(refused)}` : ''),
+        refused.length > 0 ? 'error' : 'ok',
       );
       setNonce((value) => value + 1);
     } catch (error) {
@@ -232,7 +267,7 @@ export function DataRescueList() {
               className="btn btn--sm"
               disabled={busy === set.uid}
               onClick={() => {
-                restore(set);
+                void restore(set);
               }}
             >
               {busy === set.uid ? 'جارٍ…' : 'استرجاع'}
