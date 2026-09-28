@@ -4,6 +4,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { APP_NAME } from '@/lib/constants';
 import { tradeLabel } from '@/lib/trades';
+import { DataRescue } from './DataRescue';
 import { InstallPrompt } from './InstallPrompt';
 import {
   CalculatorIcon,
@@ -118,6 +119,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
       <main className="app-main">
         <InstallPrompt />
+        <DataRescue />
         {children}
       </main>
 

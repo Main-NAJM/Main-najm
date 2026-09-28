@@ -176,3 +176,19 @@ export const addMonths = (key: string, months: number): string => {
   const shifted = new Date(year, month - 1 + months, 1);
   return `${shifted.getFullYear()}-${String(shifted.getMonth() + 1).padStart(2, '0')}`;
 };
+
+/**
+ * صيغة العدد العربية الصحيحة: «سجل واحد» لا «1 سجلاً»، و«سجلّان» لا «2 سجل».
+ * تمرَّر الصيغ الأربع لأنّ التمييز يتغيّر بتغيّر الاسم وجنسه.
+ */
+export const countLabel = (
+  count: number,
+  forms: { one: string; two: string; few: string; many: string },
+): string => {
+  const n = Math.abs(Math.round(count));
+  if (n === 1) return forms.one;
+  if (n === 2) return forms.two;
+  const lastTwo = n % 100;
+  if (lastTwo >= 3 && lastTwo <= 10) return `${formatInt(n)} ${forms.few}`;
+  return `${formatInt(n)} ${forms.many}`;
+};

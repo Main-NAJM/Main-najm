@@ -3,6 +3,7 @@ import { useAuth } from '@/context/AuthContext';
 import { useData } from '@/context/DataContext';
 import { useToast } from '@/context/ToastContext';
 import {
+  Badge,
   ConfirmDialog,
   Modal,
   NumberInput,
@@ -15,10 +16,20 @@ import { useTheme } from '@/hooks/useTheme';
 import { THEME_CHOICES } from '@/lib/theme';
 import { changePassword } from '@/data/accounts';
 import { clearLocalData, exportLocalData, importLocalData } from '@/data/localStore';
+import {
+  backupIsStale,
+  clearSnapshot,
+  lastBackupAt,
+  markBackupTaken,
+  persistenceState,
+  requestPersistence,
+  type PersistState,
+} from '@/data/rescue';
+import { DataRescueList } from '@/components/DataRescue';
 import { isUsingEmulators } from '@/lib/firebase';
 import { TRADE_CHOICES, tradeLabel } from '@/lib/trades';
 import { APP_NAME, CURRENCIES, PRICING_BASES, USER_TYPES } from '@/lib/constants';
-import { formatDateTime, toNumber } from '@/lib/format';
+import { formatDate, formatDateTime, toNumber } from '@/lib/format';
 import type { Craft, PricingBasis, Profile, UserType } from '@/lib/types';
 
 export default function Settings() {
@@ -32,6 +43,13 @@ export default function Settings() {
   const [saving, setSaving] = useState(false);
   const [confirmClear, setConfirmClear] = useState(false);
   const [changingPassword, setChangingPassword] = useState(false);
+  const [persist, setPersist] = useState<PersistState>('unsupported');
+  const [backupAt, setBackupAt] = useState<number | null>(() => lastBackupAt());
+  const stale = backupIsStale();
+
+  useEffect(() => {
+    void persistenceState().then(setPersist);
+  }, []);
   const fileInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
@@ -91,6 +109,8 @@ export default function Settings() {
       window.setTimeout(() => {
         URL.revokeObjectURL(url);
       }, 2000);
+      markBackupTaken();
+      setBackupAt(Date.now());
       notify('حُفظت نسخة احتياطية.');
     } catch (error) {
       notifyError(error);
@@ -115,6 +135,7 @@ export default function Settings() {
   const doClear = () => {
     if (!user) return;
     clearLocalData(user.uid);
+    clearSnapshot(user.uid);
     setConfirmClear(false);
     notify('حُذفت كل البيانات المحلية.');
   };
@@ -373,11 +394,65 @@ export default function Settings() {
         </div>
       </div>
 
+      {storeKind === 'local' ? (
+        <div className="card">
+          <SectionTitle>حماية البيانات</SectionTitle>
+          <p className="small muted">
+            دفترك محفوظ داخل هذا الجهاز وحده. ثلاثة أشياء تحميه، وهذه حالتها الآن.
+          </p>
+
+          <div className="shield">
+            <div className={`shield__row${persist === 'persisted' ? ' is-ok' : ' is-warn'}`}>
+              <div>
+                <strong>تخزين دائم</strong>
+                <span className="small">
+                  {persist === 'persisted'
+                    ? 'المتصفّح لن يحذف بياناتك عند ضيق مساحة الهاتف.'
+                    : persist === 'denied'
+                      ? 'المتصفّح قد يحذف بياناتك إن ضاقت مساحة الهاتف. ثبّت التطبيق على الشاشة الرئيسية ليمنحه الصفة الدائمة.'
+                      : 'هذا المتصفّح لا يعلن عن حالة التخزين. ثبّت التطبيق وخذ نسخة احتياطية.'}
+                </span>
+              </div>
+              {persist === 'persisted' ? (
+                <Badge tone="ok">محميّ</Badge>
+              ) : (
+                <button
+                  type="button"
+                  className="btn btn--soft btn--sm"
+                  onClick={() => {
+                    void requestPersistence().then(setPersist);
+                  }}
+                >
+                  تفعيل
+                </button>
+              )}
+            </div>
+
+            <div className={`shield__row${backupAt && !stale ? ' is-ok' : ' is-warn'}`}>
+              <div>
+                <strong>آخر نسخة احتياطية</strong>
+                <span className="small">
+                  {backupAt
+                    ? `${formatDate(new Date(backupAt).toISOString())}${stale ? ' — مضى عليها وقت طويل.' : ''}`
+                    : 'لم تأخذ نسخة بعد. النسخة ملف واحد يعيد كل شيء لو ضاع الجهاز.'}
+                </span>
+              </div>
+              <button type="button" className="btn btn--sm" onClick={doExport}>
+                {backupAt ? 'نسخة جديدة' : 'خذ نسخة الآن'}
+              </button>
+            </div>
+          </div>
+
+          <SectionTitle>دفاتر أخرى على هذا الجهاز</SectionTitle>
+          <DataRescueList />
+        </div>
+      ) : null}
+
       <div className="card">
         <SectionTitle>النسخ الاحتياطي والبيانات</SectionTitle>
         <p className="small muted">
-          احفظ نسخة من بياناتك على جهازك، أو استعدها لاحقاً. يُنصح بأخذ نسخة كل فترة في الوضع
-          المحلي.
+          احفظ نسخة من بياناتك على جهازك، أو استعدها لاحقاً. تطبيق الهاتف والموقع لكلٍّ منهما
+          تخزينه الخاصّ، وملف النسخة هو ما ينقل الدفتر بينهما.
         </p>
         <div className="card__actions">
           <button type="button" className="btn btn--ghost btn--sm" onClick={doExport}>

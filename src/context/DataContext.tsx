@@ -17,6 +17,7 @@ import {
   readLocalProfile,
   seedLocalCollection,
 } from '@/data/localStore';
+import { requestPersistence, writeSnapshot } from '@/data/rescue';
 import {
   defaultProfile,
   seedAppointments,
@@ -237,6 +238,26 @@ export function DataProvider({ children }: { children: ReactNode }) {
       unsubProfile();
     };
   }, [uid, store]);
+
+  /**
+   * حماية البيانات على الجهاز: يُطلب من المتصفّح ألّا يحذفها عند ضيق المساحة،
+   * وتُحفظ لقطة تلقائية بعد اكتمال التحميل — بعده فقط، كي لا تُكتب لقطة فارغة
+   * فوق لقطة سليمة أثناء القراءة.
+   */
+  useEffect(() => {
+    if (!uid || !user?.isLocal) return;
+    void requestPersistence();
+  }, [uid, user?.isLocal]);
+
+  useEffect(() => {
+    if (!uid || !user?.isLocal || loadedCount < 9) return;
+    const timer = window.setTimeout(() => {
+      writeSnapshot(uid);
+    }, 4000);
+    return () => {
+      window.clearTimeout(timer);
+    };
+  }, [uid, user?.isLocal, loadedCount]);
 
   const create = useCallback<DataContextValue['create']>(
     async (name, data) => {

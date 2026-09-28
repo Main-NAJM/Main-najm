@@ -2550,3 +2550,81 @@ table.data th.num {
   min-height: 44px;
   margin-block: -8px;
 }
+
+/* ------------------------------------------------- شريط استعادة البيانات */
+
+/* تنبيه فَقْد الدفتر: نصّ وأزرار في صفّ واحد، وينكسر رأسياً على الشاشة الضيّقة. */
+.rescue-bar {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.rescue-bar > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 12rem;
+  flex: 1 1 14rem;
+}
+
+.rescue-bar__actions {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex: none;
+}
+
+/* ------------------------------------------------------ لوح حماية البيانات */
+
+.shield {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 16px;
+}
+
+.shield__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 11px 13px;
+  background: var(--surface-2);
+  border: 1px solid var(--line);
+  border-radius: var(--r-sm);
+  /* شريط الحالة على الحافّة الابتدائية: أخضر مطمئن أو ذهبي يستدعي فعلاً. */
+  border-inline-start: 3px solid var(--line);
+}
+
+.shield__row.is-ok {
+  border-inline-start-color: var(--ok);
+}
+
+.shield__row.is-warn {
+  border-inline-start-color: var(--warn);
+}
+
+.shield__row > div:first-child {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  min-width: 0;
+}
+
+.shield__row strong {
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.shield__row .small {
+  color: var(--ink-3);
+  line-height: 1.55;
+}
+
+.shield__row > .btn,
+.shield__row > .badge {
+  flex: none;
+}
