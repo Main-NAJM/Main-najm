@@ -1,6 +1,6 @@
 /* عامل الخدمة لتطبيق حرفة برو — تخزين مؤقّت يسمح بالعمل دون إنترنت. */
 
-const VERSION = 'herfah-pro-v8';
+const VERSION = 'herfah-pro-v9';
 const APP_SHELL = `${VERSION}-shell`;
 const RUNTIME = `${VERSION}-runtime`;
 
